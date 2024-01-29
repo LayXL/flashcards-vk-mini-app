@@ -4,8 +4,6 @@ import { appRouter } from "./appRouter"
 import { createContext } from "./trpc"
 import cors from "@fastify/cors"
 
-console.log(true)
-
 const server = fastify({
     maxParamLength: 5000,
 })

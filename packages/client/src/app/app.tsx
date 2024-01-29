@@ -5,8 +5,6 @@ import { Router } from "./router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { trpc } from "../shared/api"
 import { httpBatchLink } from "@trpc/client"
-import { useRecoilValue } from "recoil"
-import { headersState } from "../shared/store"
 
 const router = createHashRouter([
     {
@@ -24,20 +22,17 @@ const router = createHashRouter([
 export const App = () => {
     const [queryClient] = useState(() => new QueryClient())
 
-    const headers = useRecoilValue(headersState)
-
-    const trpcClient = useMemo(
-        () =>
-            trpc.createClient({
-                links: [
-                    httpBatchLink({
-                        url: import.meta.env.VITE_API_URL,
-                        // @ts-expect-error fix
-                        headers,
-                    }),
-                ],
-            }),
-        [headers]
+    const [trpcClient] = useState(() =>
+        trpc.createClient({
+            links: [
+                httpBatchLink({
+                    url: import.meta.env.VITE_API_URL,
+                    headers: {
+                        Authorization: `${window.location.search.slice(1)}`,
+                    },
+                }),
+            ],
+        })
     )
 
     return (
