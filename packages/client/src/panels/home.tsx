@@ -10,6 +10,7 @@ export const Home = () => {
     return (
         <>
             <PanelHeader children={"Стопки"} />
+
             <Paragraph>Это главная панелька</Paragraph>
 
             <Button

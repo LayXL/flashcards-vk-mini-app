@@ -1,24 +1,8 @@
-import bridge from "@vkontakte/vk-bridge"
 import React from "react"
 import ReactDOM from "react-dom/client"
-import "@vkontakte/vkui/dist/vkui.css"
-import { createHashRouter } from "@vkontakte/vk-mini-apps-router"
 import { RecoilRoot } from "recoil"
-
-const router = createHashRouter([
-    {
-        path: "/",
-        panel: "home",
-        view: "main",
-    },
-    {
-        path: "/secondPanel",
-        panel: "secondPanel",
-        view: "main",
-    },
-])
-
-bridge.send("VKWebAppInit", {})
+import { App } from "./app"
+import "@vkontakte/vkui/dist/vkui.css"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>

@@ -5,15 +5,17 @@ import { SecondPanel } from "../panels/second-panel"
 import { useEffect } from "react"
 import bridge from "@vkontakte/vk-bridge"
 import { useSetRecoilState } from "recoil"
-import { vkSignDataAtom } from "../shared/store"
+import { vkSignDataState } from "../shared/store"
 
 export const Router = () => {
     const { view: activeView } = useActiveVkuiLocation()
     const activePanel = useGetPanelForView("main")
 
-    const setSign = useSetRecoilState(vkSignDataAtom)
+    const setSign = useSetRecoilState(vkSignDataState)
 
     useEffect(() => {
+        bridge.send("VKWebAppInit", {})
+
         bridge.send("VKWebAppGetLaunchParams").then((data) => {
             if (!data.vk_app_id) return
 

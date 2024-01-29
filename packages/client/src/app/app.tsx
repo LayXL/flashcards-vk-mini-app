@@ -1,54 +1,58 @@
 import { AppRoot, ConfigProvider, AdaptivityProvider } from "@vkontakte/vkui"
-import { useCallback, useMemo, useState } from "react"
-import { RouterProvider } from "@vkontakte/vk-mini-apps-router"
+import { useMemo, useState } from "react"
+import { RouterProvider, createHashRouter } from "@vkontakte/vk-mini-apps-router"
 import { Router } from "./router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { trpc } from "../shared/api"
 import { httpBatchLink } from "@trpc/client"
 import { useRecoilValue } from "recoil"
-import { vkSignDataAtom } from "../shared/store"
+import { headersState } from "../shared/store"
+
+const router = createHashRouter([
+    {
+        path: "/",
+        panel: "home",
+        view: "main",
+    },
+    {
+        path: "/secondPanel",
+        panel: "secondPanel",
+        view: "main",
+    },
+])
 
 export const App = () => {
     const [queryClient] = useState(() => new QueryClient())
 
-    const sign = useRecoilValue(vkSignDataAtom)
+    const headers = useRecoilValue(headersState)
 
-    const headers = useCallback(
-        () => ({
-            Authorization: Object.entries(sign ?? {})
-                .sort(([keyA], [keyB]) => (keyA < keyB ? -1 : keyA > keyB ? 1 : 0))
-                .map(([key, value]) => `${key}=${value}`)
-                .join("&"),
-            "Bypass-Tunnel-Reminder": true,
-        }),
-        [sign]
+    const trpcClient = useMemo(
+        () =>
+            trpc.createClient({
+                links: [
+                    httpBatchLink({
+                        url: import.meta.env.VITE_API_URL,
+                        // @ts-expect-error fix
+                        headers,
+                    }),
+                ],
+            }),
+        [headers]
     )
 
-    const trpcClient = useMemo(() => {
-        return trpc.createClient({
-            links: [
-                httpBatchLink({
-                    url: import.meta.env.VITE_API_URL,
-                    // @ts-expect-error fix
-                    headers,
-                }),
-            ],
-        })
-    }, [headers])
-
     return (
-        <trpc.Provider client={trpcClient} queryClient={queryClient}>
-            <QueryClientProvider client={queryClient}>
-                <ConfigProvider>
-                    <AdaptivityProvider>
+        <ConfigProvider>
+            <AdaptivityProvider>
+                <trpc.Provider client={trpcClient} queryClient={queryClient}>
+                    <QueryClientProvider client={queryClient}>
                         <AppRoot>
                             <RouterProvider router={router}>
                                 <Router />
                             </RouterProvider>
                         </AppRoot>
-                    </AdaptivityProvider>
-                </ConfigProvider>
-            </QueryClientProvider>
-        </trpc.Provider>
+                    </QueryClientProvider>
+                </trpc.Provider>
+            </AdaptivityProvider>
+        </ConfigProvider>
     )
 }

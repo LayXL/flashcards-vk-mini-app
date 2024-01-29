@@ -1,6 +1,6 @@
-import { atom } from "recoil"
+import { atom, selector } from "recoil"
 
-export const vkSignDataAtom = atom<object | null>({
-    key: "VKSignDataAtom",
+export const vkSignDataState = atom<object | null>({
+    key: "VKSignData",
     default: null,
 })
