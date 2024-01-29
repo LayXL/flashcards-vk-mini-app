@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.17.19",
+    "@trpc/client": "^11.0.0-next-beta.242",
+    "@trpc/react-query": "^11.0.0-next-beta.242",
+    "@trpc/server": "^11.0.0-next-beta.242",
     "@vkontakte/vk-bridge": "^2.13.0",
     "@vkontakte/vk-mini-apps-router": "^1.4.2",
     "@vkontakte/vkui": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "recoil": "^0.7.7",
     "styled-components": "^6.1.8"
   },
   "devDependencies": {

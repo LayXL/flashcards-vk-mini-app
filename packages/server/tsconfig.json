@@ -4,7 +4,12 @@
         "target": "ES2022",
         "sourceMap": true,
         "outDir": "dist",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "rootDirs": ["src"],
+        "lib": ["es2020"],
+        "esModuleInterop": true,
+        "types": ["node"],
+        "ignoreDeprecations": "5.0"
     },
     "exclude": [
         "node_modules"

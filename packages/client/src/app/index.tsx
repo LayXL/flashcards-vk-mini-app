@@ -1,10 +1,9 @@
 import bridge from "@vkontakte/vk-bridge"
-import { AppRoot, ConfigProvider, AdaptivityProvider } from "@vkontakte/vkui"
 import React from "react"
 import ReactDOM from "react-dom/client"
 import "@vkontakte/vkui/dist/vkui.css"
-import { RouterProvider, createHashRouter } from "@vkontakte/vk-mini-apps-router"
-import { Router } from "./router"
+import { createHashRouter } from "@vkontakte/vk-mini-apps-router"
+import { RecoilRoot } from "recoil"
 
 const router = createHashRouter([
     {
@@ -23,14 +22,8 @@ bridge.send("VKWebAppInit", {})
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <ConfigProvider>
-            <AdaptivityProvider>
-                <AppRoot>
-                    <RouterProvider router={router}>
-                        <Router />
-                    </RouterProvider>
-                </AppRoot>
-            </AdaptivityProvider>
-        </ConfigProvider>
+        <RecoilRoot>
+            <App />
+        </RecoilRoot>
     </React.StrictMode>
 )
