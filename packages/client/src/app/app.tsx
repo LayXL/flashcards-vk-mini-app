@@ -1,23 +1,10 @@
 import { AppRoot, ConfigProvider, AdaptivityProvider } from "@vkontakte/vkui"
-import { useMemo, useState } from "react"
-import { RouterProvider, createHashRouter } from "@vkontakte/vk-mini-apps-router"
+import { useEffect, useState } from "react"
 import { Router } from "./router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { trpc } from "../shared/api"
 import { httpBatchLink } from "@trpc/client"
-
-const router = createHashRouter([
-    {
-        path: "/",
-        panel: "home",
-        view: "main",
-    },
-    {
-        path: "/secondPanel",
-        panel: "secondPanel",
-        view: "main",
-    },
-])
+import bridge from "@vkontakte/vk-bridge"
 
 export const App = () => {
     const [queryClient] = useState(() => new QueryClient())
@@ -35,15 +22,17 @@ export const App = () => {
         })
     )
 
+    useEffect(() => {
+        bridge.send("VKWebAppInit", {})
+    }, [])
+
     return (
         <ConfigProvider>
             <AdaptivityProvider>
                 <trpc.Provider client={trpcClient} queryClient={queryClient}>
                     <QueryClientProvider client={queryClient}>
                         <AppRoot>
-                            <RouterProvider router={router}>
-                                <Router />
-                            </RouterProvider>
+                            <Router />
                         </AppRoot>
                     </QueryClientProvider>
                 </trpc.Provider>
