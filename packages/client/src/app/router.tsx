@@ -1,5 +1,4 @@
 import {
-    RouterProvider,
     createHashRouter,
     useActiveVkuiLocation,
     useGetPanelForView,
@@ -8,7 +7,8 @@ import { Root, View, Panel } from "@vkontakte/vkui"
 import { Home } from "../panels/home"
 import { SecondPanel } from "../panels/second-panel"
 
-const router = createHashRouter([
+// eslint-disable-next-line react-refresh/only-export-components
+export const router = createHashRouter([
     {
         path: "/",
         panel: "home",
@@ -22,17 +22,15 @@ const router = createHashRouter([
 ])
 
 export const Router = () => {
-    const { view: activeView } = useActiveVkuiLocation()
+    const { view } = useActiveVkuiLocation()
     const activePanel = useGetPanelForView("main")
 
     return (
-        <RouterProvider router={router}>
-            <Root activeView={activeView!}>
-                <View nav={"main"} activePanel={activePanel!}>
-                    <Panel nav={"home"} children={<Home />} />
-                    <Panel nav={"secondPanel"} children={<SecondPanel />} />
-                </View>
-            </Root>
-        </RouterProvider>
+        <Root activeView={view!}>
+            <View nav={"main"} activePanel={activePanel!}>
+                <Panel nav={"home"} children={<Home />} />
+                <Panel nav={"secondPanel"} children={<SecondPanel />} />
+            </View>
+        </Root>
     )
 }
