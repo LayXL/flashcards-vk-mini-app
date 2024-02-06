@@ -17,9 +17,9 @@ export const Home = () => {
 
             <Button
                 onClick={() => {
-                    routeNavigator.push("/secondPanel")
+                    routeNavigator.push("/wordly")
                 }}
-                children={"Перейти на вторую панель"}
+                children={"Перейти в Wordly"}
             />
         </>
     )
