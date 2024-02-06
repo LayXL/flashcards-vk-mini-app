@@ -1,10 +1,11 @@
 import { AppRoot, ConfigProvider, AdaptivityProvider } from "@vkontakte/vkui"
 import { useEffect, useState } from "react"
-import { Router } from "./router"
+import { Router, router } from "./router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { trpc } from "../shared/api"
 import { httpBatchLink } from "@trpc/client"
 import bridge from "@vkontakte/vk-bridge"
+import { RouterProvider } from "@vkontakte/vk-mini-apps-router"
 
 export const App = () => {
     const [queryClient] = useState(() => new QueryClient())
@@ -32,7 +33,9 @@ export const App = () => {
                 <trpc.Provider client={trpcClient} queryClient={queryClient}>
                     <QueryClientProvider client={queryClient}>
                         <AppRoot>
-                            <Router />
+                            <RouterProvider router={router}>
+                                <Router />
+                            </RouterProvider>
                         </AppRoot>
                     </QueryClientProvider>
                 </trpc.Provider>
