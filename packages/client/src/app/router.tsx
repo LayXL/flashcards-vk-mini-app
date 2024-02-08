@@ -3,9 +3,9 @@ import {
     useActiveVkuiLocation,
     useGetPanelForView,
 } from "@vkontakte/vk-mini-apps-router"
-import { View, Panel, Epic, Tabbar, TabbarItem } from "@vkontakte/vkui"
+import { View, Panel, Epic } from "@vkontakte/vkui"
 import { Home } from "../panels/home"
-import { SecondPanel } from "../panels/second-panel"
+import { TabBar } from "../features/tab-bar/ui/tab-bar"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const router = createHashRouter([
@@ -26,17 +26,9 @@ export const Router = () => {
     const activePanel = useGetPanelForView("main")
 
     return (
-        <Epic
-            activeStory={view!}
-            tabbar={
-                <Tabbar>
-                    <TabbarItem text={"Главная"} />
-                </Tabbar>
-            }
-        >
+        <Epic activeStory={view!} tabbar={<TabBar />}>
             <View nav={"main"} activePanel={activePanel!}>
                 <Panel nav={"home"} children={<Home />} />
-                <Panel nav={"secondPanel"} children={<SecondPanel />} />
             </View>
         </Epic>
     )

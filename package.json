@@ -4,7 +4,14 @@
     "version": "1.0.0",
     "repository": "https://github.com/LayXL/flashcards-vk-mini-app.git",
     "license": "MIT",
+    "scripts": {
+        "dev": "concurrently 'yarn:dev:client'",
+        "dev:client": "cd packages/client && yarn dev"
+    },
     "workspaces": [
         "packages/*"
-    ]
+    ],
+    "dependencies": {
+        "concurrently": "^8.2.2"
+    }
 }
