@@ -3,9 +3,10 @@ import {
     useActiveVkuiLocation,
     useGetPanelForView,
 } from "@vkontakte/vk-mini-apps-router"
-import { Root, View, Panel } from "@vkontakte/vkui"
+import { View, Panel, Epic } from "@vkontakte/vkui"
 import { Home } from "../panels/home"
 import { WordlyPanel } from "../panels/wordly"
+import { TabBar } from "../features/tab-bar/ui/tab-bar"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const router = createHashRouter([
@@ -26,11 +27,11 @@ export const Router = () => {
     const activePanel = useGetPanelForView("main")
 
     return (
-        <Root activeView={view!}>
+        <Epic activeStory={view!} tabbar={<TabBar />}>
             <View nav={"main"} activePanel={activePanel!}>
                 <Panel nav={"home"} children={<Home />} />
                 <Panel nav={"wordly"} children={<WordlyPanel />} />
             </View>
-        </Root>
+        </Epic>
     )
 }

@@ -1,14 +1,20 @@
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
-import { PanelHeader, Paragraph, Button } from "@vkontakte/vkui"
+import { PanelHeader, Paragraph, Button, Div } from "@vkontakte/vkui"
 
 export const Home = () => {
     const routeNavigator = useRouteNavigator()
+
+    // const { isLoading } = trpc.healthCheck.useQuery()
+
+    // if (isLoading) return
 
     return (
         <>
             <PanelHeader children={"Стопки"} />
 
-            <Paragraph>Это главная панелька</Paragraph>
+            <Div>
+                <Paragraph>Это главная страница</Paragraph>
+            </Div>
 
             <Button
                 onClick={() => {
