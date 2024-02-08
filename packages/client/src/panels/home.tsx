@@ -5,9 +5,9 @@ import { trpc } from "../shared/api"
 export const Home = () => {
     const routeNavigator = useRouteNavigator()
 
-    const { isLoading } = trpc.healthCheck.useQuery()
+    // const { isLoading } = trpc.healthCheck.useQuery()
 
-    if (isLoading) return
+    // if (isLoading) return
 
     return (
         <>

@@ -3,7 +3,7 @@ import {
     useActiveVkuiLocation,
     useGetPanelForView,
 } from "@vkontakte/vk-mini-apps-router"
-import { Root, View, Panel } from "@vkontakte/vkui"
+import { View, Panel, Epic, Tabbar, TabbarItem } from "@vkontakte/vkui"
 import { Home } from "../panels/home"
 import { SecondPanel } from "../panels/second-panel"
 
@@ -26,11 +26,18 @@ export const Router = () => {
     const activePanel = useGetPanelForView("main")
 
     return (
-        <Root activeView={view!}>
+        <Epic
+            activeStory={view!}
+            tabbar={
+                <Tabbar>
+                    <TabbarItem text={"Главная"} />
+                </Tabbar>
+            }
+        >
             <View nav={"main"} activePanel={activePanel!}>
                 <Panel nav={"home"} children={<Home />} />
                 <Panel nav={"secondPanel"} children={<SecondPanel />} />
             </View>
-        </Root>
+        </Epic>
     )
 }
