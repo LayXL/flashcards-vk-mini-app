@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-table": "^8.11.8",
     "class-variance-authority": "^0.7.0",
+    "classnames": "^2.5.1",
     "clsx": "^2.1.0",
     "lucide-react": "^0.323.0",
     "react": "^18.2.0",
