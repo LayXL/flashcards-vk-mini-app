@@ -75,15 +75,6 @@ model Tag {
   name String
 }
 
-model Category {
-  id               Int    @id @default(autoincrement())
-  name             String
-  parentCategoryId Int
-
-  parentCategory   Category   @relation("CategoryToCategory", fields: [parentCategoryId], references: [id])
-  childrenCategory Category[] @relation("CategoryToCategory")
-}
-
 model UserTranslationRepetition {
   userId        Int
   translationId Int
