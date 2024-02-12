@@ -8,8 +8,89 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  vkId      String   @unique
-  vkData    Json?
-  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  id                         Int                         @id @default(autoincrement())
+  vkId                       String                      @unique
+  vkData                     Json?
+  createdAt                  DateTime                    @default(now()) @db.Timestamptz(3)
+  translations               Translation[]
+  stacks                     Stack[]
+  stacksTranslations         TranslationInStack[]
+  userTranslationRepetitions UserTranslationRepetition[]
+}
+
+model Translation {
+  id                         Int                         @id @default(autoincrement())
+  authorId                   Int
+  vernacular                 String
+  foreign                    String
+  stacks                     TranslationInStack[]
+  userTranslationRepetitions UserTranslationRepetition[]
+  languageId                 Int
+
+  author   User     @relation(fields: [authorId], references: [id])
+  language Language @relation(fields: [languageId], references: [id])
+}
+
+model Stack {
+  id           Int                  @id @default(autoincrement())
+  authorId     Int
+  translations TranslationInStack[]
+  tagsId       Int[]
+
+  author User @relation(fields: [authorId], references: [id])
+}
+
+model TranslationInStack {
+  translationId Int
+  stackId       Int
+  addedBy       Int
+  addedAt       DateTime @default(now())
+
+  translation Translation @relation(fields: [translationId], references: [id])
+  stack       Stack       @relation(fields: [stackId], references: [id])
+  addedByUser User        @relation(fields: [addedBy], references: [id])
+
+  @@id([translationId, stackId])
+}
+
+model Language {
+  id           Int                 @id @default(autoincrement())
+  name         String
+  iconUrl      String
+  variations   LanguageVariation[]
+  translations Translation[]
+}
+
+model LanguageVariation {
+  id         Int    @id @default(autoincrement())
+  languageId Int
+  name       String
+  iconUrl    String
+
+  language Language @relation(fields: [languageId], references: [id])
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model Category {
+  id               Int    @id @default(autoincrement())
+  name             String
+  parentCategoryId Int
+
+  parentCategory   Category   @relation("CategoryToCategory", fields: [parentCategoryId], references: [id])
+  childrenCategory Category[] @relation("CategoryToCategory")
+}
+
+model UserTranslationRepetition {
+  userId        Int
+  translationId Int
+  repeatedAt    DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id])
+  translation Translation @relation(fields: [translationId], references: [id])
+
+  @@id([userId, translationId, repeatedAt])
 }
