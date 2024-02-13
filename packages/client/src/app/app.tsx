@@ -28,18 +28,18 @@ export const App = () => {
     }, [])
 
     return (
-        <ConfigProvider>
-            <AdaptivityProvider>
-                <trpc.Provider client={trpcClient} queryClient={queryClient}>
-                    <QueryClientProvider client={queryClient}>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+            <QueryClientProvider client={queryClient}>
+                <ConfigProvider>
+                    <AdaptivityProvider>
                         <AppRoot>
                             <RouterProvider router={router}>
                                 <Router />
                             </RouterProvider>
                         </AppRoot>
-                    </QueryClientProvider>
-                </trpc.Provider>
-            </AdaptivityProvider>
-        </ConfigProvider>
+                    </AdaptivityProvider>
+                </ConfigProvider>
+            </QueryClientProvider>
+        </trpc.Provider>
     )
 }

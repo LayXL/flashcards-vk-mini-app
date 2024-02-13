@@ -4,7 +4,16 @@ import {
     useGetPanelForView,
     useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
-import { View, Panel, Epic, SplitLayout, ModalRoot, ModalPage } from "@vkontakte/vkui"
+import {
+    View,
+    Panel,
+    Epic,
+    SplitLayout,
+    ModalRoot,
+    ModalPage,
+    Root,
+    SplitCol,
+} from "@vkontakte/vkui"
 import { Home } from "../panels/home"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { TranslationAdd } from "../modals/translation-add"
@@ -48,11 +57,13 @@ export const Router = () => {
 
     return (
         <SplitLayout modal={modals}>
-            <Epic activeStory={view!} tabbar={<TabBar />}>
-                <View nav={"main"} activePanel={activePanel!}>
-                    <Panel nav={"home"} children={<Home />} />
-                </View>
-            </Epic>
+            <SplitCol>
+                <Root activeView={view!}>
+                    <View nav={"main"} activePanel={activePanel!}>
+                        <Panel nav={"home"} children={<Home />} />
+                    </View>
+                </Root>
+            </SplitCol>
         </SplitLayout>
     )
 }
