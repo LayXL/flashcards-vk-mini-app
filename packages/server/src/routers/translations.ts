@@ -2,7 +2,7 @@ import { prisma, privateProcedure, router } from "../trpc"
 import { z } from "zod"
 
 export const translations = router({
-    create: privateProcedure
+    add: privateProcedure
         .input(
             z.object({
                 languageId: z.number(),

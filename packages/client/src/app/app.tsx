@@ -1,4 +1,4 @@
-import { AppRoot, ConfigProvider, AdaptivityProvider } from "@vkontakte/vkui"
+import { AppRoot, ConfigProvider, AdaptivityProvider, SplitLayout } from "@vkontakte/vkui"
 import { useEffect, useState } from "react"
 import { Router, router } from "./router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -20,7 +20,7 @@ export const App = () => {
                     },
                 }),
             ],
-        })
+        }),
     )
 
     useEffect(() => {

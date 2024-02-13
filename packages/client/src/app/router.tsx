@@ -2,15 +2,24 @@ import {
     createHashRouter,
     useActiveVkuiLocation,
     useGetPanelForView,
+    useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
-import { View, Panel, Epic } from "@vkontakte/vkui"
+import { View, Panel, Epic, SplitLayout, ModalRoot, ModalPage } from "@vkontakte/vkui"
 import { Home } from "../panels/home"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
+import { TranslationAdd } from "../modals/translation-add"
+import { Transcriptions } from "../modals/transcriptions"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const router = createHashRouter([
     {
         path: "/",
+        panel: "home",
+        view: "main",
+    },
+    {
+        path: "/",
+        modal: "translationAdd",
         panel: "home",
         view: "main",
     },
@@ -22,14 +31,24 @@ export const router = createHashRouter([
 ])
 
 export const Router = () => {
-    const { view } = useActiveVkuiLocation()
+    const { view, modal } = useActiveVkuiLocation()
+    const routeNavigator = useRouteNavigator()
     const activePanel = useGetPanelForView("main")
 
+    const modals = (
+        <ModalRoot activeModal={modal} onClose={() => routeNavigator.hideModal()}>
+            <ModalPage nav={"translationAdd"} children={<TranslationAdd />} />
+            <ModalPage nav={"transcriptions"} children={<Transcriptions />} settlingHeight={100} />
+        </ModalRoot>
+    )
+
     return (
-        <Epic activeStory={view!} tabbar={<TabBar />}>
-            <View nav={"main"} activePanel={activePanel!}>
-                <Panel nav={"home"} children={<Home />} />
-            </View>
-        </Epic>
+        <SplitLayout modal={modals}>
+            <Epic activeStory={view!} tabbar={<TabBar />}>
+                <View nav={"main"} activePanel={activePanel!}>
+                    <Panel nav={"home"} children={<Home />} />
+                </View>
+            </Epic>
+        </SplitLayout>
     )
 }

@@ -1039,6 +1039,13 @@
   dependencies:
     "@vkontakte/icons-sprite" "2.0.0"
 
+"@vkontakte/icons@^2.97.0":
+  version "2.97.0"
+  resolved "https://registry.yarnpkg.com/@vkontakte/icons/-/icons-2.97.0.tgz#50363b8fe19a3395cefb7766aa64e77ca2ed18ae"
+  integrity sha512-lRiMLL35UOC5PVnL53sbVmRGgg+LWS6UqHzaBNMg+pwxQ40n9dIsVgQgtnk5t04fRXT5OgVUFTBrYBaVD6+jug==
+  dependencies:
+    "@vkontakte/icons-sprite" "2.0.0"
+
 "@vkontakte/vk-bridge@^2.13.0":
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/@vkontakte/vk-bridge/-/vk-bridge-2.13.0.tgz#ea1085e0274b4d7955768a04ada0dbba91f51950"
