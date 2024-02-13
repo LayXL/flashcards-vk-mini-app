@@ -5,8 +5,9 @@
     "repository": "https://github.com/LayXL/flashcards-vk-mini-app.git",
     "license": "MIT",
     "scripts": {
-        "dev": "concurrently 'yarn:dev:client'",
+        "dev": "concurrently 'yarn:dev:client' 'yarn:dev:server'",
         "dev:client": "cd packages/client && yarn dev",
+        "dev:server": "cd packages/server && yarn dev",
         "migrate-dev": "cd packages/server && prisma migrate dev"
     },
     "workspaces": [

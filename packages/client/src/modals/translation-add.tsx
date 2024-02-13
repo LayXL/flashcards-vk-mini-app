@@ -1,26 +1,24 @@
 import {
     Button,
-    ChipsInput,
     Div,
     FormItem,
     Group,
     Input,
     ModalPageHeader,
     PanelHeaderClose,
-    Select,
     SimpleCell,
 } from "@vkontakte/vkui"
 import { useModalHistory } from "../shared/hooks/useModalHistory"
 import { useRecoilState } from "recoil"
 import { newTranslation } from "../shared/store"
-import { useState } from "react"
+import { trpc } from "../shared/api"
 
 export const TranslationAdd = () => {
     const modalsHistory = useModalHistory()
 
-    const [translationData, setTranslationData] = useRecoilState(newTranslation)
+    const { mutate: addTranslation } = trpc.translations.add.useMutation()
 
-    const [newTag, setNewTag] = useState("")
+    const [translationData, setTranslationData] = useRecoilState(newTranslation)
 
     return (
         <>
@@ -30,22 +28,6 @@ export const TranslationAdd = () => {
             />
 
             <Group>
-                {/* <FormItem top={"Язык перевода"}>
-                    <Select
-                        value={translationData.languageId}
-                        placeholder={"Не выбран"}
-                        options={[
-                            {
-                                label: "Английский",
-                                value: 1,
-                            },
-                        ]}
-                        onChange={({ currentTarget: { value } }) => {
-                            setTranslationData((prev) => ({ ...prev, languageId: parseInt(value) }))
-                        }}
-                    />
-                </FormItem> */}
-
                 <FormItem top={"На родном языке"}>
                     <Input
                         value={translationData.vernacular}
@@ -68,23 +50,32 @@ export const TranslationAdd = () => {
             <Group>
                 <SimpleCell
                     expandable={"always"}
-                    children={"Транскрипции"}
-                    onClick={() => modalsHistory.openModal("transcriptions")}
+                    children={"Дополнительная информация"}
+                    onClick={() => modalsHistory.openModal("translationAddMoreInfo")}
                 />
 
-                <FormItem top={"Метки"}>
-                    <ChipsInput
-                        inputValue=""
-                        onInputChange={(e) => {
-                            e.currentTarget.value
+                <Div>
+                    <Button
+                        stretched
+                        size="l"
+                        children={"Добавить"}
+                        onClick={() => {
+                            addTranslation({
+                                languageId: translationData.languageId ?? 1,
+                                languageVariationId:
+                                    translationData.languageVariationId ?? undefined,
+                                vernacular: translationData.vernacular,
+                                foreign: translationData.vernacular,
+                                tags: translationData.tags,
+                                transcriptions: translationData.transcriptions
+                                    .filter(({ transcription }) => transcription)
+                                    .map(({ transcription, languageVariationId }) => ({
+                                        languageVariationId: languageVariationId ?? undefined,
+                                        transcription: transcription ?? "",
+                                    })),
+                            })
                         }}
                     />
-                </FormItem>
-            </Group>
-
-            <Group>
-                <Div>
-                    <Button stretched size="l" children={"Добавить"} />
                 </Div>
             </Group>
         </>

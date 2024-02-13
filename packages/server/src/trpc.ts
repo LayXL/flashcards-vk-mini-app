@@ -45,6 +45,20 @@ export const privateProcedure = t.procedure.use(async (opts) => {
             code: "UNAUTHORIZED",
         })
 
+    const user = await prisma.user.findFirst({
+        where: {
+            vkId: opts.ctx.vkId.toString(),
+        },
+    })
+
+    if (!user) {
+        await prisma.user.create({
+            data: {
+                vkId: opts.ctx.vkId.toString(),
+            },
+        })
+    }
+
     return opts.next({
         ctx: {
             ...opts.ctx,

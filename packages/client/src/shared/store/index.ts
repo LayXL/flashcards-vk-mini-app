@@ -13,6 +13,7 @@ export const modalsHistory = atom<string[]>({
 export const newTranslation = atom<{
     languageId?: number
     languageVariationId?: number | null
+    example?: string | null
     vernacular: string
     foreign: string
     tags: string[]
@@ -28,6 +29,7 @@ export const newTranslation = atom<{
         languageVariationId: null,
         vernacular: "",
         foreign: "",
+        example: "",
         tags: [],
         transcriptions: [
             {

@@ -8,7 +8,7 @@ import { View, Panel, Epic, SplitLayout, ModalRoot, ModalPage } from "@vkontakte
 import { Home } from "../panels/home"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { TranslationAdd } from "../modals/translation-add"
-import { Transcriptions } from "../modals/transcriptions"
+import { TranslationAddMoreInfo } from "../modals/translation-add-more-info"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const router = createHashRouter([
@@ -38,7 +38,11 @@ export const Router = () => {
     const modals = (
         <ModalRoot activeModal={modal} onClose={() => routeNavigator.hideModal()}>
             <ModalPage nav={"translationAdd"} children={<TranslationAdd />} />
-            <ModalPage nav={"transcriptions"} children={<Transcriptions />} settlingHeight={100} />
+            <ModalPage
+                nav={"translationAddMoreInfo"}
+                children={<TranslationAddMoreInfo />}
+                settlingHeight={100}
+            />
         </ModalRoot>
     )
 

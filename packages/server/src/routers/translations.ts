@@ -18,7 +18,7 @@ export const translations = router({
                     .array(),
             })
         )
-        .query(async ({ ctx, input }) => {
+        .mutation(async ({ ctx, input }) => {
             const { vernacular, foreign, tags, languageId, languageVariationId, transcriptions } =
                 input
 
