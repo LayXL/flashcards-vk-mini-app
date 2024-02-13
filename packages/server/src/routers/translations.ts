@@ -25,6 +25,7 @@ export const translations = router({
                 vernacular: z.string().min(1).max(100),
                 foreign: z.string().min(1).max(100),
                 tags: z.string().array().max(100),
+                example: z.string().min(1).max(100).optional(),
                 transcriptions: z
                     .object({
                         languageVariationId: z.number().optional(),
@@ -34,8 +35,15 @@ export const translations = router({
             })
         )
         .mutation(async ({ ctx, input }) => {
-            const { vernacular, foreign, tags, languageId, languageVariationId, transcriptions } =
-                input
+            const {
+                vernacular,
+                foreign,
+                tags,
+                languageId,
+                languageVariationId,
+                transcriptions,
+                example,
+            } = input
 
             return await prisma.translation.create({
                 data: {
@@ -46,6 +54,7 @@ export const translations = router({
                     },
                     foreign,
                     vernacular,
+                    example,
                     language: {
                         connect: {
                             id: languageId,

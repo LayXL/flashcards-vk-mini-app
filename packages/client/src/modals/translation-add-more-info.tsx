@@ -120,7 +120,7 @@ export const TranslationAddMoreInfo = () => {
                     <Button
                         stretched
                         size="l"
-                        children={"Добавить ещё"}
+                        children={"Добавить ещё транскрипцию"}
                         onClick={() => {
                             setTranslationData(({ transcriptions, ...prev }) => {
                                 return {

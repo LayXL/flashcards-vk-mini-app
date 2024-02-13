@@ -11,6 +11,8 @@ export const modalsHistory = atom<string[]>({
 })
 
 export const newTranslation = atom<{
+    translationId?: number
+    isEditing?: boolean
     languageId?: number
     languageVariationId?: number | null
     example?: string | null
@@ -25,6 +27,7 @@ export const newTranslation = atom<{
 }>({
     key: "newTranslation",
     default: {
+        isEditing: false,
         languageId: 1, // todo fix
         languageVariationId: null,
         vernacular: "",

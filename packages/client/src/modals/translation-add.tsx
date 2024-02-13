@@ -1,5 +1,6 @@
 import {
     Button,
+    CellButton,
     Div,
     FormItem,
     Group,
@@ -12,6 +13,7 @@ import { useModalHistory } from "../shared/hooks/useModalHistory"
 import { useRecoilState } from "recoil"
 import { newTranslation } from "../shared/store"
 import { trpc } from "../shared/api"
+import { useCallback } from "react"
 
 export const TranslationAdd = () => {
     const modalsHistory = useModalHistory()
@@ -26,14 +28,37 @@ export const TranslationAdd = () => {
 
     const [translationData, setTranslationData] = useRecoilState(newTranslation)
 
+    const onSave = useCallback(() => {
+        addTranslation({
+            languageId: translationData.languageId ?? 1,
+            languageVariationId: translationData.languageVariationId ?? undefined,
+            vernacular: translationData.vernacular,
+            foreign: translationData.vernacular,
+            example: translationData.example ?? undefined,
+            tags: translationData.tags,
+            transcriptions: translationData.transcriptions
+                .filter(({ transcription }) => transcription)
+                .map(({ transcription, languageVariationId }) => ({
+                    languageVariationId: languageVariationId ?? undefined,
+                    transcription: transcription ?? "",
+                })),
+        })
+    }, [addTranslation, translationData])
+
     return (
         <>
             <ModalPageHeader
                 before={<PanelHeaderClose onClick={() => modalsHistory.close()} />}
-                children={"Добавить перевод"}
+                children={translationData.isEditing ? "Изменить перевод" : "Добавить перевод"}
             />
 
             <Group>
+                {translationData.isEditing && (
+                    <FormItem top={"Язык перевода"}>
+                        <Input />
+                    </FormItem>
+                )}
+
                 <FormItem top={"На родном языке"}>
                     <Input
                         value={translationData.vernacular}
@@ -43,7 +68,10 @@ export const TranslationAdd = () => {
                     />
                 </FormItem>
 
-                <FormItem top={"На языке перевода"}>
+                <FormItem
+                    top={"На языке перевода"}
+                    bottom={!translationData.isEditing && "Язык можно сменить в настройках"}
+                >
                     <Input
                         value={translationData.foreign}
                         onChange={({ currentTarget: { value } }) => {
@@ -60,27 +88,16 @@ export const TranslationAdd = () => {
                     onClick={() => modalsHistory.openModal("translationAddMoreInfo")}
                 />
 
+                {translationData.isEditing && (
+                    <CellButton onClick={() => {}} mode={"danger"} children={"Удалить перевод"} />
+                )}
+
                 <Div>
                     <Button
-                        stretched
-                        size="l"
-                        children={"Добавить"}
-                        onClick={() => {
-                            addTranslation({
-                                languageId: translationData.languageId ?? 1,
-                                languageVariationId:
-                                    translationData.languageVariationId ?? undefined,
-                                vernacular: translationData.vernacular,
-                                foreign: translationData.vernacular,
-                                tags: translationData.tags,
-                                transcriptions: translationData.transcriptions
-                                    .filter(({ transcription }) => transcription)
-                                    .map(({ transcription, languageVariationId }) => ({
-                                        languageVariationId: languageVariationId ?? undefined,
-                                        transcription: transcription ?? "",
-                                    })),
-                            })
-                        }}
+                        stretched={true}
+                        size={"l"}
+                        children={translationData.isEditing ? "Изменить" : "Добавить"}
+                        onClick={onSave}
                     />
                 </Div>
             </Group>

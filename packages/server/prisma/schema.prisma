@@ -25,6 +25,7 @@ model Translation {
   authorId                   Int
   vernacular                 String
   foreign                    String
+  example                    String?
   stacks                     TranslationInStack[]
   userTranslationRepetitions UserTranslationRepetition[]
   languageId                 Int
