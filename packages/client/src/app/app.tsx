@@ -30,7 +30,7 @@ export const App = () => {
     return (
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <QueryClientProvider client={queryClient}>
-                <ConfigProvider>
+                <ConfigProvider transitionMotionEnabled={false}>
                     <AdaptivityProvider>
                         <AppRoot>
                             <RouterProvider router={router}>

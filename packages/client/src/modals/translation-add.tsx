@@ -16,7 +16,13 @@ import { trpc } from "../shared/api"
 export const TranslationAdd = () => {
     const modalsHistory = useModalHistory()
 
-    const { mutate: addTranslation } = trpc.translations.add.useMutation()
+    const utils = trpc.useUtils()
+
+    const { mutate: addTranslation } = trpc.translations.add.useMutation({
+        onSuccess: () => {
+            utils.translations.getUserTranslations.refetch()
+        },
+    })
 
     const [translationData, setTranslationData] = useRecoilState(newTranslation)
 

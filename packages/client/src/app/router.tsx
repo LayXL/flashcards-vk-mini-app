@@ -1,7 +1,6 @@
 import {
     createHashRouter,
     useActiveVkuiLocation,
-    useGetPanelForView,
     useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
 import {
@@ -15,9 +14,9 @@ import {
     SplitCol,
 } from "@vkontakte/vkui"
 import { Home } from "../panels/home"
-import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { TranslationAdd } from "../modals/translation-add"
 import { TranslationAddMoreInfo } from "../modals/translation-add-more-info"
+import { Profile } from "../panels/profile"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const router = createHashRouter([
@@ -33,16 +32,15 @@ export const router = createHashRouter([
         view: "main",
     },
     {
-        path: "/secondPanel",
-        panel: "secondPanel",
-        view: "main",
+        path: "/profile",
+        panel: "profile",
+        view: "profile",
     },
 ])
 
 export const Router = () => {
-    const { view, modal } = useActiveVkuiLocation()
+    const { view, modal, panel } = useActiveVkuiLocation()
     const routeNavigator = useRouteNavigator()
-    const activePanel = useGetPanelForView("main")
 
     const modals = (
         <ModalRoot activeModal={modal} onClose={() => routeNavigator.hideModal()}>
@@ -58,11 +56,16 @@ export const Router = () => {
     return (
         <SplitLayout modal={modals}>
             <SplitCol>
-                <Root activeView={view!}>
-                    <View nav={"main"} activePanel={activePanel!}>
-                        <Panel nav={"home"} children={<Home />} />
-                    </View>
-                </Root>
+                <Epic activeStory="root">
+                    <Root nav="root" activeView={view!}>
+                        <View nav={"main"} activePanel={panel!}>
+                            <Panel nav={"home"} children={<Home />} />
+                        </View>
+                        <View nav={"profile"} activePanel={panel!}>
+                            <Panel nav={"profile"} children={<Profile />} />
+                        </View>
+                    </Root>
+                </Epic>
             </SplitCol>
         </SplitLayout>
     )

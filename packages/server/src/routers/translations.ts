@@ -2,6 +2,21 @@ import { prisma, privateProcedure, router } from "../trpc"
 import { z } from "zod"
 
 export const translations = router({
+    getUserTranslations: privateProcedure.query(async ({ ctx }) => {
+        return await prisma.translation.findMany({
+            where: {
+                author: {
+                    vkId: ctx.vkId.toString(),
+                },
+            },
+            include: {
+                language: true,
+                languageVariation: true,
+                tags: true,
+                transcriptions: true,
+            },
+        })
+    }),
     add: privateProcedure
         .input(
             z.object({
