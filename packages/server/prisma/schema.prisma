@@ -28,10 +28,23 @@ model Translation {
   stacks                     TranslationInStack[]
   userTranslationRepetitions UserTranslationRepetition[]
   languageId                 Int
+  languageVariationId        Int?
 
-  tags     Tag[]
-  author   User     @relation(fields: [authorId], references: [id])
-  language Language @relation(fields: [languageId], references: [id])
+  tags              Tag[]
+  author            User               @relation(fields: [authorId], references: [id])
+  language          Language           @relation(fields: [languageId], references: [id])
+  languageVariation LanguageVariation? @relation(fields: [languageVariationId], references: [id])
+  transcriptions    Transcription[]
+}
+
+model Transcription {
+  id                  Int    @id @default(autoincrement())
+  translationId       Int
+  languageVariationId Int?
+  transcription       String
+
+  translation       Translation        @relation(fields: [translationId], references: [id])
+  languageVariation LanguageVariation? @relation(fields: [languageVariationId], references: [id])
 }
 
 model Stack {
@@ -71,12 +84,14 @@ model LanguageVariation {
   name       String
   iconUrl    String
 
-  language Language @relation(fields: [languageId], references: [id])
+  language       Language        @relation(fields: [languageId], references: [id])
+  transcriptions Transcription[]
+  translations   Translation[]
 }
 
 model Tag {
   id           Int           @id @default(autoincrement())
-  name         String
+  name         String        @unique
   translations Translation[]
 }
 

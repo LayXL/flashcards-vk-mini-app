@@ -6,7 +6,17 @@ const caller = t.createCallerFactory(appRouter)({
 })
 
 const cb = () => {
-    return caller.test.similarity()
+    return caller.translations.create({
+        vernacular: "Заселение",
+        foreign: "Check in",
+        languageId: 1,
+        transcriptions: [
+            {
+                transcription: "|ˈtʃekɪn|",
+            },
+        ],
+        tags: ["туризм"],
+    })
 }
 
 cb().then((data) => {
