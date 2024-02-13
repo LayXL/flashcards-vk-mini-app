@@ -16,6 +16,8 @@ model User {
   stacks                     Stack[]
   stacksTranslations         TranslationInStack[]
   userTranslationRepetitions UserTranslationRepetition[]
+  selectedLanguageId         Int?
+  selectedLanguage           Language?                   @relation(fields: [selectedLanguageId], references: [id])
 }
 
 model Translation {
@@ -27,6 +29,7 @@ model Translation {
   userTranslationRepetitions UserTranslationRepetition[]
   languageId                 Int
 
+  tags     Tag[]
   author   User     @relation(fields: [authorId], references: [id])
   language Language @relation(fields: [languageId], references: [id])
 }
@@ -58,6 +61,7 @@ model Language {
   name         String
   iconUrl      String
   variations   LanguageVariation[]
+  users        User[]
   translations Translation[]
 }
 
@@ -71,8 +75,9 @@ model LanguageVariation {
 }
 
 model Tag {
-  id   Int    @id @default(autoincrement())
-  name String
+  id           Int           @id @default(autoincrement())
+  name         String
+  translations Translation[]
 }
 
 model UserTranslationRepetition {

@@ -32,6 +32,7 @@
         "mongoose": "^7.5.2",
         "mongoose-zod": "^0.1.1",
         "nodemon": "^3.0.3",
+        "prisma": "^5.9.1",
         "superjson": "^2.2.1",
         "trpc-openapi": "^1.2.0",
         "ts-dotenv": "^0.9.1",

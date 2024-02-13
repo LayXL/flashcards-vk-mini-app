@@ -6,7 +6,8 @@
     "license": "MIT",
     "scripts": {
         "dev": "concurrently 'yarn:dev:client'",
-        "dev:client": "cd packages/client && yarn dev"
+        "dev:client": "cd packages/client && yarn dev",
+        "migrate-dev": "cd packages/server && prisma migrate dev"
     },
     "workspaces": [
         "packages/*"
