@@ -2,7 +2,7 @@ FROM node:alpine
 WORKDIR /usr/local
 COPY package.json .
 
-RUN npm install yarn -g
+RUN npm install yarn
 RUN npm install typescript -g
 
 COPY packages ./packages
