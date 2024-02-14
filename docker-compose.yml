@@ -14,6 +14,9 @@ services:
       - .env
     image: postgres:16.1-bullseye
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
     ports:
       - "5445:5432"
+  
+volumes:
+  db:

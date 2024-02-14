@@ -1,15 +1,18 @@
-FROM imbios/bun-node
-
+FROM node:alpine
 WORKDIR /usr/local
-
-COPY bun.lockb .
 COPY package.json .
+
+RUN npm install yarn -g
+RUN npm install typescript -g
+
 COPY packages ./packages
 
-RUN bun install
+RUN yarn install
 
-RUN bunx prisma generate --schema=./packages/db/prisma/schema.prisma
+RUN npx prisma generate --schema=./packages/db/prisma/schema.prisma
 
 WORKDIR /usr/local/packages/server
 
-ENTRYPOINT ["bun", "src/server.ts"]
+RUN tsc
+
+CMD ["node", "./dist/index.js"]
