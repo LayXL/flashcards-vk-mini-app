@@ -9,7 +9,7 @@ COPY packages ./packages
 
 RUN yarn install
 
-RUN npx prisma generate --schema=./packages/db/prisma/schema.prisma
+RUN npx prisma generate --schema=./packages/server/prisma/schema.prisma
 
 WORKDIR /usr/local/packages/server
 
