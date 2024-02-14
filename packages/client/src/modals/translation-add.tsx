@@ -20,30 +20,54 @@ export const TranslationAdd = () => {
 
     const utils = trpc.useUtils()
 
-    const { mutate: addTranslation } = trpc.translations.add.useMutation({
-        onSuccess: () => {
-            utils.translations.getUserTranslations.refetch()
-        },
-    })
+    const { mutate: addTranslation, isPending: isAddingTranslation } =
+        trpc.translations.add.useMutation({
+            onSuccess: () => {
+                modalsHistory.close()
+                utils.translations.getUserTranslations.refetch()
+            },
+        })
+
+    const { mutate: editTranslation, isPending: isEditingTranslation } =
+        trpc.translations.edit.useMutation({
+            onSuccess: () => {
+                modalsHistory.close()
+                utils.translations.getUserTranslations.refetch()
+            },
+        })
 
     const [translationData, setTranslationData] = useRecoilState(newTranslation)
 
     const onSave = useCallback(() => {
-        addTranslation({
-            languageId: translationData.languageId ?? 1,
-            languageVariationId: translationData.languageVariationId ?? undefined,
-            vernacular: translationData.vernacular,
-            foreign: translationData.vernacular,
-            example: translationData.example ?? undefined,
-            tags: translationData.tags,
-            transcriptions: translationData.transcriptions
-                .filter(({ transcription }) => transcription)
-                .map(({ transcription, languageVariationId }) => ({
-                    languageVariationId: languageVariationId ?? undefined,
-                    transcription: transcription ?? "",
-                })),
-        })
-    }, [addTranslation, translationData])
+        if (translationData.isEditing) {
+            if (!translationData.translationId) return
+
+            editTranslation({
+                id: translationData.translationId,
+                languageId: translationData.languageId ?? 1,
+                languageVariationId: translationData.languageVariationId ?? undefined,
+                vernacular: translationData.vernacular,
+                foreign: translationData.foreign,
+                example: translationData.example ?? undefined,
+                tags: translationData.tags,
+            })
+        } else {
+            addTranslation({
+                languageId: translationData.languageId ?? 1,
+                languageVariationId: translationData.languageVariationId ?? undefined,
+                vernacular: translationData.vernacular,
+                foreign: translationData.foreign,
+                example: translationData.example ?? undefined,
+                tags: translationData.tags,
+                transcriptions: translationData.transcriptions
+                    .filter(({ transcription }) => transcription)
+                    .map(({ transcription, languageVariationId }) => ({
+                        languageVariationId: languageVariationId ?? undefined,
+                        transcription: transcription ?? "",
+                    })),
+            })
+        }
+    }, [addTranslation, editTranslation, translationData])
 
     return (
         <>
@@ -84,7 +108,7 @@ export const TranslationAdd = () => {
             <Group>
                 <SimpleCell
                     expandable={"always"}
-                    children={"Дополнительная информация"}
+                    children={"Дополнительно"}
                     onClick={() => modalsHistory.openModal("translationAddMoreInfo")}
                 />
 
@@ -94,6 +118,7 @@ export const TranslationAdd = () => {
 
                 <Div>
                     <Button
+                        loading={isAddingTranslation || isEditingTranslation}
                         stretched={true}
                         size={"l"}
                         children={translationData.isEditing ? "Изменить" : "Добавить"}

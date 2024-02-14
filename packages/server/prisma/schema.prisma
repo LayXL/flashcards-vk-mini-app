@@ -30,6 +30,8 @@ model Translation {
   userTranslationRepetitions UserTranslationRepetition[]
   languageId                 Int
   languageVariationId        Int?
+  createdAt                  DateTime                    @default(now())
+  updatedAt                  DateTime                    @default(now())
 
   tags              Tag[]
   author            User               @relation(fields: [authorId], references: [id])

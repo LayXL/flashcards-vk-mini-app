@@ -95,4 +95,48 @@ export const translations = router({
                 },
             })
         }),
+    edit: privateProcedure
+        .input(
+            z.object({
+                id: z.number(),
+                languageId: z.number().optional(),
+                languageVariationId: z.number().optional(),
+                vernacular: z.string().min(1).max(100).optional(),
+                foreign: z.string().min(1).max(100).optional(),
+                tags: z.string().array().max(100).optional(),
+                example: z.string().min(1).max(100).optional(),
+            })
+        )
+        .mutation(async ({ input, ctx }) => {
+            const { id, vernacular, foreign, tags, languageId, languageVariationId, example } =
+                input
+
+            return await prisma.translation.update({
+                where: {
+                    id,
+                    author: {
+                        vkId: ctx.vkId.toString(),
+                    },
+                },
+                data: {
+                    languageId,
+                    languageVariationId,
+                    example,
+                    vernacular,
+                    foreign,
+                    tags: {
+                        set: [],
+                        connectOrCreate: tags.map((name) => ({
+                            where: {
+                                name,
+                            },
+                            create: {
+                                name,
+                            },
+                        })),
+                    },
+                    updatedAt: new Date(),
+                },
+            })
+        }),
 })
