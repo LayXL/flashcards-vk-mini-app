@@ -79,12 +79,10 @@ export const Game = () => {
                 <>
                     <PanelHeader
                         before={<PanelHeaderBack onClick={stopGame} />}
-                        children={"Ну пепец"}
+                        children={"Результаты"}
                     />
 
-                    <Div>
-                        <Title>Ты выиграл тг прем</Title>
-                    </Div>
+                    <Div></Div>
 
                     <TabBar />
                 </>
