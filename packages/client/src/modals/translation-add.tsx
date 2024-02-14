@@ -48,7 +48,14 @@ export const TranslationAdd = () => {
                 languageVariationId: translationData.languageVariationId ?? undefined,
                 vernacular: translationData.vernacular,
                 foreign: translationData.foreign,
-                example: translationData.example ?? undefined,
+                foreignDescription:
+                    (translationData.foreignDescription?.length ?? 0) > 0
+                        ? translationData.foreignDescription ?? undefined
+                        : undefined,
+                example:
+                    (translationData.example?.length ?? 0) > 0
+                        ? translationData.example ?? undefined
+                        : undefined,
                 tags: translationData.tags,
             })
         } else {
@@ -57,8 +64,15 @@ export const TranslationAdd = () => {
                 languageVariationId: translationData.languageVariationId ?? undefined,
                 vernacular: translationData.vernacular,
                 foreign: translationData.foreign,
-                example: translationData.example ?? undefined,
+                example:
+                    (translationData.example?.length ?? 0) > 0
+                        ? translationData.example ?? undefined
+                        : undefined,
                 tags: translationData.tags,
+                foreignDescription:
+                    (translationData.foreignDescription?.length ?? 0) > 0
+                        ? translationData.foreignDescription ?? undefined
+                        : undefined,
                 transcriptions: translationData.transcriptions
                     .filter(({ transcription }) => transcription)
                     .map(({ transcription, languageVariationId }) => ({

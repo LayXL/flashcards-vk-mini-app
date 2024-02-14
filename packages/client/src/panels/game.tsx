@@ -1,4 +1,4 @@
-import { Button, Div, PanelHeader, PanelHeaderBack, Title } from "@vkontakte/vkui"
+import { Button, Div, PanelHeader, PanelHeaderBack } from "@vkontakte/vkui"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useStep } from "usehooks-ts"

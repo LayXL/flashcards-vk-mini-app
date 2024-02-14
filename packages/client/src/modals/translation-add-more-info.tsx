@@ -10,6 +10,7 @@ import {
     ModalPageHeader,
     PanelHeaderBack,
     Select,
+    Textarea,
 } from "@vkontakte/vkui"
 import { Icon28DeleteOutline } from "@vkontakte/icons"
 import { useModalHistory } from "../shared/hooks/useModalHistory"
@@ -32,10 +33,19 @@ export const TranslationAddMoreInfo = () => {
 
             <Group>
                 <FormItem top={"Пример использования"}>
-                    <Input
+                    <Textarea
                         value={translationData.example ?? ""}
                         onChange={({ currentTarget: { value } }) => {
                             setTranslationData((prev) => ({ ...prev, example: value }))
+                        }}
+                    />
+                </FormItem>
+
+                <FormItem top={"Описание на языке перевода"}>
+                    <Textarea
+                        value={translationData.foreignDescription ?? ""}
+                        onChange={({ currentTarget: { value } }) => {
+                            setTranslationData((prev) => ({ ...prev, foreignDescription: value }))
                         }}
                     />
                 </FormItem>

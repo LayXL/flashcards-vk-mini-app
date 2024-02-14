@@ -44,6 +44,7 @@ export const UserTranslations = () => {
                                     transcription: transcription.transcription,
                                     languageVariationId: transcription.languageVariationId,
                                 })),
+                                foreignDescription: translation.foreignDescription ?? "",
                                 languageId: translation.languageId,
                                 languageVariationId: translation.languageVariationId,
                             })

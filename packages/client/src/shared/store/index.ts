@@ -18,6 +18,7 @@ export const newTranslation = atom<{
     example?: string | null
     vernacular: string
     foreign: string
+    foreignDescription: string
     tags: string[]
     transcriptions: {
         id: number
@@ -33,6 +34,7 @@ export const newTranslation = atom<{
         vernacular: "",
         foreign: "",
         example: "",
+        foreignDescription: "",
         tags: [],
         transcriptions: [
             {

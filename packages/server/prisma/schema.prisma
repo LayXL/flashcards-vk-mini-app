@@ -30,6 +30,7 @@ model Translation {
   userTranslationRepetitions UserTranslationRepetition[]
   languageId                 Int
   languageVariationId        Int?
+  foreignDescription         String?
   createdAt                  DateTime                    @default(now())
   updatedAt                  DateTime                    @default(now())
 
