@@ -1,0 +1,19 @@
+version: "3.5"
+services:
+  server:
+    restart: always
+    network_mode: host
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    env_file:
+      - .env
+  db:
+    restart: always
+    env_file:
+      - .env
+    image: postgres:16.1-bullseye
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "5445:5432"
