@@ -1,7 +1,7 @@
 import { Div, Tappable, Card, Title } from "@vkontakte/vkui"
 import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
 import { useState } from "react"
-import { TranslationViewModal } from "../../../widgets/translation-view-modal"
+import { TranslationViewModal } from "../../../widgets/translation-view"
 
 type TranslationCardProps = {
     id: number
@@ -14,14 +14,12 @@ export const TranslationCard = ({ id, vernacular, foreign }: TranslationCardProp
 
     return (
         <>
-            <Div>
-                <Tappable onClick={() => setIsOpened(true)} activeMode={"opacity"}>
-                    <Card mode="outline" style={{ padding: 16, height: 96 }}>
-                        <Title>{vernacular}</Title>
-                        <Title>{foreign}</Title>
-                    </Card>
-                </Tappable>
-            </Div>
+            <Tappable onClick={() => setIsOpened(true)} activeMode={"opacity"}>
+                <Card mode="outline" style={{ padding: 16, height: 96 }}>
+                    <Title>{vernacular}</Title>
+                    <Title>{foreign}</Title>
+                </Card>
+            </Tappable>
             <ModalWrapper isOpened={isOpened} onClose={() => setIsOpened(false)}>
                 <TranslationViewModal id={id} />
             </ModalWrapper>

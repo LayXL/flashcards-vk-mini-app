@@ -6,7 +6,7 @@ import { useSetRecoilState } from "recoil"
 import { newTranslation } from "../shared/store"
 import { Icon24PenOutline } from "@vkontakte/icons"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
-import { AddTranslationToStack } from "./add-translation-to-stack"
+import { TranslationAddToStack } from "./translation-add-to-stack"
 import { useModalState } from "../shared/hooks/useModalState"
 
 type TranslationViewModalProps = {
@@ -36,6 +36,12 @@ export const TranslationViewModal = ({ id }: TranslationViewModalProps) => {
                 <Group>
                     <Div>
                         <ButtonGroup stretched={true}>
+                            <Button
+                                stretched={true}
+                                size={"l"}
+                                children={"Сохранить"}
+                                onClick={open}
+                            />
                             {data?.canEdit && (
                                 <Button
                                     size={"l"}
@@ -63,20 +69,14 @@ export const TranslationViewModal = ({ id }: TranslationViewModalProps) => {
                                     }}
                                 />
                             )}
-                            <Button
-                                stretched={true}
-                                size={"l"}
-                                children={"Сохранить"}
-                                onClick={open}
-                            />
                         </ButtonGroup>
                     </Div>
                 </Group>
             </ModalBody>
 
             <ModalWrapper isOpened={isOpened} onClose={close}>
-                <ModalBody>
-                    <AddTranslationToStack translationId={id} />
+                <ModalBody fullscreen={true}>
+                    <TranslationAddToStack onClose={close} translationId={id} />
                 </ModalBody>
             </ModalWrapper>
         </>

@@ -29,11 +29,13 @@ export const UserTranslations = () => {
             {isLoading && <PanelSpinner />}
 
             {userTranslations?.map((translation) => (
-                <TranslationCard
-                    id={translation.id}
-                    vernacular={translation.vernacular}
-                    foreign={translation.foreign}
-                />
+                <Div key={translation.id}>
+                    <TranslationCard
+                        id={translation.id}
+                        vernacular={translation.vernacular}
+                        foreign={translation.foreign}
+                    />
+                </Div>
             ))}
         </>
     )

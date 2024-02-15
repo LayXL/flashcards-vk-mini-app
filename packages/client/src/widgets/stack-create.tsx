@@ -5,6 +5,7 @@ import {
     Group,
     Input,
     ModalPageHeader,
+    PanelHeader,
     PanelHeaderClose,
     Textarea,
 } from "@vkontakte/vkui"
@@ -37,12 +38,11 @@ export const StackCreateModal = () => {
     }
 
     return (
-        <ModalBody>
-            <ModalPageHeader
+        <>
+            <PanelHeader
                 before={<PanelHeaderClose onClick={() => modal?.onClose()} />}
                 children={"Создать стопку"}
             />
-
             <Group>
                 <Controller
                     control={control}
@@ -80,7 +80,6 @@ export const StackCreateModal = () => {
                     )}
                 />
             </Group>
-
             <Div>
                 <Button
                     stretched={true}
@@ -89,6 +88,6 @@ export const StackCreateModal = () => {
                     onClick={handleSubmit(onSubmit)}
                 />
             </Div>
-        </ModalBody>
+        </>
     )
 }

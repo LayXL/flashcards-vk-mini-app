@@ -56,7 +56,7 @@ const Body = styled(motion.div)<{ $fullscreen: boolean }>`
     border-radius: 16px 16px 0 0;
     max-height: 100vh;
     overflow: scroll;
-    background-color: var(--vkui--color_background_modal);
+    background-color: var(--vkui--color_background_content);
     padding-bottom: env(safe-area-inset-bottom);
 
     margin-top: env(safe-area-inset-top);
