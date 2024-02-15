@@ -4,6 +4,7 @@ import {
     Icon24Play,
     Icon28Profile,
     Icon24Fire,
+    Icon28Cards2,
 } from "@vkontakte/icons"
 
 export const tabs = [
@@ -13,12 +14,12 @@ export const tabs = [
         view: "main",
         url: "/",
     },
-    // {
-    //     label: "Категории",
-    //     icon: Icon28AllCategoriesOutline,
-    //     view: "categories",
-    //     url: "/",
-    // },
+    {
+        label: "Стопки",
+        icon: Icon28Cards2,
+        view: "stacks",
+        url: "/stacks",
+    },
     {
         label: "Играть",
         icon: Icon24Play,
@@ -26,10 +27,10 @@ export const tabs = [
         url: "/play",
     },
     {
-        label: "Для вас",
+        label: "Новое",
         icon: Icon24Fire,
-        view: "forYou",
-        url: "/forYou",
+        view: "new",
+        url: "/new",
     },
     {
         label: "Профиль",
