@@ -34,4 +34,8 @@ server.listen({
     port: parseInt(process.env.SERVER_PORT) || 3000,
 })
 
+process.on("SIGTERM", () => {
+    server.close()
+})
+
 console.log(`Server started on ${parseInt(process.env.SERVER_PORT) || 3000} port`)
