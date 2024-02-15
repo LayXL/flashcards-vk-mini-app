@@ -19,7 +19,6 @@ import { TranslationAddMoreInfo } from "../modals/translation-add-more-info"
 import { Profile } from "../panels/profile"
 import { Game } from "../panels/game"
 import { New } from "../panels/new"
-import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { Stacks } from "../panels/stacks"
 
 // eslint-disable-next-line react-refresh/only-export-components
