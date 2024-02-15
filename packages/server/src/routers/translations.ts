@@ -17,6 +17,25 @@ export const translations = router({
             },
         })
     }),
+    getSingle: privateProcedure
+        .input(z.object({ id: z.number() }))
+        .query(async ({ input, ctx }) => {
+            const data = await prisma.translation.findFirst({
+                where: {
+                    id: input.id,
+                },
+                include: {
+                    tags: true,
+                    transcriptions: true,
+                    author: true,
+                },
+            })
+
+            return {
+                ...data,
+                canEdit: data.author.vkId === ctx.vkId.toString(),
+            }
+        }),
     add: privateProcedure
         .input(
             z.object({

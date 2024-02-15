@@ -52,12 +52,15 @@ model Transcription {
 }
 
 model Stack {
-  id           Int                  @id @default(autoincrement())
-  authorId     Int
-  translations TranslationInStack[]
-  tagsId       Int[]
+  id          Int     @id @default(autoincrement())
+  authorId    Int
+  name        String
+  description String?
+  isVerified  Boolean @default(false)
 
-  author User @relation(fields: [authorId], references: [id])
+  translations TranslationInStack[]
+  tags         Tag[]
+  author       User                 @relation(fields: [authorId], references: [id])
 }
 
 model TranslationInStack {
@@ -97,6 +100,7 @@ model Tag {
   id           Int           @id @default(autoincrement())
   name         String        @unique
   translations Translation[]
+  stacks       Stack[]
 }
 
 model UserTranslationRepetition {

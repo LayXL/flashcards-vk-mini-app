@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.9",
     "@tanstack/react-query": "^5.17.19",
     "@trpc/client": "^11.0.0-next-beta.242",
     "@trpc/react-query": "^11.0.0-next-beta.242",
@@ -19,8 +20,11 @@
     "@vkontakte/vk-mini-apps-router": "^1.4.2",
     "@vkontakte/vk-tunnel": "^0.1.4",
     "@vkontakte/vkui": "^6.0.0",
+    "@vkontakte/vkui-tokens": "^4.43.1",
+    "framer-motion": "^11.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.50.1",
     "recoil": "^0.7.7",
     "styled-components": "^6.1.8",
     "usehooks-ts": "^2.14.0"
