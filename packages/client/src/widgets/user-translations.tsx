@@ -16,8 +16,8 @@ export const UserTranslations = () => {
         <>
             <Div>
                 <Button
-                    stretched
-                    size="l"
+                    stretched={true}
+                    size={"l"}
                     children={"Добавить перевод"}
                     onClick={() => {
                         resetTranslationData()
