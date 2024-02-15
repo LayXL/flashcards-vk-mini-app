@@ -95,4 +95,31 @@ export const stacks = router({
                 },
             })
         }),
+    removeTranslation: privateProcedure
+        .input(
+            z.object({
+                stackId: z.number(),
+                translationId: z.number(),
+            })
+        )
+        .mutation(async ({ ctx, input }) => {
+            return await prisma.stack.update({
+                where: {
+                    id: input.stackId,
+                    author: {
+                        vkId: ctx.vkId.toString(),
+                    },
+                },
+                data: {
+                    translations: {
+                        delete: {
+                            translationId_stackId: {
+                                translationId: input.translationId,
+                                stackId: input.stackId,
+                            },
+                        },
+                    },
+                },
+            })
+        }),
 })

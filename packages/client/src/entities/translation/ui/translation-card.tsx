@@ -1,4 +1,4 @@
-import { Div, Tappable, Card, Title } from "@vkontakte/vkui"
+import { Tappable, Card, Title } from "@vkontakte/vkui"
 import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
 import { useState } from "react"
 import { TranslationViewModal } from "../../../widgets/translation-view"

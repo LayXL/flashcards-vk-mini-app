@@ -1,7 +1,8 @@
-import { Div, ModalPageHeader, PanelHeaderBack } from "@vkontakte/vkui"
+import { CellButton, Div, PanelHeader, PanelHeaderBack } from "@vkontakte/vkui"
 import { trpc } from "../shared/api"
 import { useModal } from "../features/modal/contexts/modal-context"
 import { TranslationCard } from "../entities/translation/ui/translation-card"
+import { Fragment } from "react"
 
 type StackViewProps = {
     id: number
@@ -9,11 +10,15 @@ type StackViewProps = {
 
 export const StackView = ({ id }: StackViewProps) => {
     const modal = useModal()
-    const { data } = trpc.stacks.getSingle.useQuery({ id })
+    const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
+
+    const { mutate: deleteTranslationFromStack } = trpc.stacks.removeTranslation.useMutation({
+        onSuccess: () => refetch(),
+    })
 
     return (
         <>
-            <ModalPageHeader
+            <PanelHeader
                 before={<PanelHeaderBack onClick={() => modal?.onClose()} />}
                 children={data?.name}
             />
@@ -22,12 +27,24 @@ export const StackView = ({ id }: StackViewProps) => {
 
             <Div>
                 {data?.translations.map(({ translation }) => (
-                    <TranslationCard
-                        id={translation.id}
-                        key={translation.id}
-                        vernacular={translation.vernacular}
-                        foreign={translation.foreign}
-                    />
+                    <Fragment key={translation.id}>
+                        <TranslationCard
+                            id={translation.id}
+                            key={translation.id}
+                            vernacular={translation.vernacular}
+                            foreign={translation.foreign}
+                        />
+                        <CellButton
+                            onClick={() =>
+                                deleteTranslationFromStack({
+                                    translationId: translation.id,
+                                    stackId: id,
+                                })
+                            }
+                            mode={"danger"}
+                            children={"Убрать перевод из стопки"}
+                        />
+                    </Fragment>
                 ))}
             </Div>
         </>
