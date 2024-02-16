@@ -1,5 +1,6 @@
 import z from "zod"
 import { prisma, privateProcedure } from "../trpc"
+import { stacks } from "./stacks"
 
 export const search = privateProcedure
     .input(
@@ -8,9 +9,7 @@ export const search = privateProcedure
         })
     )
     .query(async ({ input: { query }, ctx }) => {
-        const queryVariations = [query]
-            .map((query) => `*"${query.replace(/\s/g, "*")}"*`)
-            .join(" | ")
+        const queryVariations = [query].map((query) => `*${query.replace(/\s/g, "*")}*`).join(" | ")
 
         console.log(queryVariations)
 
@@ -30,6 +29,17 @@ export const search = privateProcedure
                     {
                         foreignDescription: {
                             search: queryVariations,
+                        },
+                    },
+                    {
+                        stacks: {
+                            some: {
+                                stack: {
+                                    name: {
+                                        search: queryVariations,
+                                    },
+                                },
+                            },
                         },
                     },
                 ],
