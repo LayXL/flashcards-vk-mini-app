@@ -34,11 +34,6 @@ type TranslationViewModalProps = {
 }
 
 export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
-    const { data: userInfo } = useQuery({
-        queryKey: ["userInfo"],
-        queryFn: () => bridge.send("VKWebAppGetUserInfo"),
-    })
-
     const { data, refetch } = trpc.translations.getSingle.useQuery({ id })
 
     const { mutate: react } = trpc.translations.addReaction.useMutation({
@@ -149,29 +144,26 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                         />
                     ))}
 
-                    <Div style={{ display: "flex", gap: 12 }}>
-                        <Avatar size={52} src={userInfo?.photo_100} />
-                        <WriteBar
-                            style={{ borderRadius: 12, flex: 1 }}
-                            placeholder={"Комментарий"}
-                            value={commentText}
-                            onChange={({ currentTarget: { value } }) => setCommentText(value)}
-                            readOnly={isAddingComment}
-                            after={
-                                commentText.length > 0 && (
-                                    <WriteBarIcon
-                                        mode={"send"}
-                                        onClick={() =>
-                                            addComment({
-                                                translationId: id,
-                                                text: commentText,
-                                            })
-                                        }
-                                    />
-                                )
-                            }
-                        />
-                    </Div>
+                    <WriteBar
+                        style={{ borderRadius: 12, flex: 1 }}
+                        placeholder={"Комментарий"}
+                        value={commentText}
+                        onChange={({ currentTarget: { value } }) => setCommentText(value)}
+                        readOnly={isAddingComment}
+                        after={
+                            commentText.length > 0 && (
+                                <WriteBarIcon
+                                    mode={"send"}
+                                    onClick={() =>
+                                        addComment({
+                                            translationId: id,
+                                            text: commentText,
+                                        })
+                                    }
+                                />
+                            )
+                        }
+                    />
                 </Group>
 
                 <Group>
