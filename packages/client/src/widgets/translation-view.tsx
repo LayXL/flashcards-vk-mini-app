@@ -12,6 +12,7 @@ import {
     Header,
     Link,
     PanelHeader,
+    ModalPageHeader,
 } from "@vkontakte/vkui"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { trpc } from "../shared/api"
@@ -23,6 +24,9 @@ import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { useModalState } from "../shared/hooks/useModalState"
 import { useCallback, useState } from "react"
+import { TranslationComments } from "./translation-comments"
+import bridge from "@vkontakte/vk-bridge"
+import { useQuery } from "@tanstack/react-query"
 
 type TranslationViewModalProps = {
     id: number
@@ -30,9 +34,12 @@ type TranslationViewModalProps = {
 }
 
 export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
+    const { data: userInfo } = useQuery({
+        queryKey: ["userInfo"],
+        queryFn: () => bridge.send("VKWebAppGetUserInfo"),
+    })
+
     const { data, refetch } = trpc.translations.getSingle.useQuery({ id })
-    const { isOpened, close, open } = useModalState(false)
-    const [commentText, setCommentText] = useState("")
 
     const { mutate: react } = trpc.translations.addReaction.useMutation({
         onSuccess: () => refetch(),
@@ -50,6 +57,10 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
             },
         })
 
+    const addToStack = useModalState(false)
+    const viewComments = useModalState(false)
+    const [commentText, setCommentText] = useState("")
+
     const toggleReaction = useCallback(() => {
         return data?.isReacted ? unreact({ translationId: id }) : react({ translationId: id })
     }, [data?.isReacted, id, react, unreact])
@@ -61,13 +72,14 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
     return (
         <>
             <ModalBody>
-                <PanelHeader before={<PanelHeaderBack onClick={onClose} />}>
+                <ModalPageHeader before={<PanelHeaderBack onClick={onClose} />}>
                     <PanelHeaderContent
-                        before={<Avatar size={36} />}
+                        // TODO fix
+                        before={<Avatar size={36} src={(data?.author.avatarUrls ?? {})["100"]} />}
                         status={"n переводов"}
-                        children={data?.author.id}
+                        children={data?.author.firstName}
                     />
-                </PanelHeader>
+                </ModalPageHeader>
 
                 <Group>
                     <SimpleCell subtitle={"На родном языке"} children={data?.vernacular} />
@@ -88,7 +100,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                                     stretched={true}
                                     size={"l"}
                                     children={"Сохранить"}
-                                    onClick={open}
+                                    onClick={addToStack.open}
                                 />
                                 {data?.canEdit && (
                                     <Button
@@ -125,19 +137,20 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                 <Group>
                     <Header
                         children={`${data?.commentsCount} комментариев`}
-                        aside={<Link children={"Показать все"} />}
+                        aside={<Link children={"Показать все"} onClick={viewComments.open} />}
                     />
 
-                    {data?.comments.map((x) => (
+                    {data?.comments.map((comment) => (
                         <SimpleCell
-                            before={<Avatar size={32} />}
-                            children={x.user.vkId}
-                            subtitle={x.text}
+                            // TODO fix
+                            before={<Avatar size={32} src={comment.user.avatarUrls["100"]} />}
+                            children={comment.user.firstName}
+                            subtitle={comment.text}
                         />
                     ))}
 
                     <Div style={{ display: "flex", gap: 12 }}>
-                        <Avatar size={52} />
+                        <Avatar size={52} src={userInfo?.photo_100} />
                         <WriteBar
                             style={{ borderRadius: 12, flex: 1 }}
                             placeholder={"Комментарий"}
@@ -168,9 +181,15 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                 </Group>
             </ModalBody>
 
-            <ModalWrapper isOpened={isOpened} onClose={close}>
+            <ModalWrapper isOpened={addToStack.isOpened} onClose={addToStack.close}>
                 <ModalBody fullscreen={true}>
-                    <TranslationAddToStack onClose={close} translationId={id} />
+                    <TranslationAddToStack onClose={addToStack.close} translationId={id} />
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper isOpened={viewComments.isOpened} onClose={viewComments.close}>
+                <ModalBody>
+                    <TranslationComments onClose={viewComments.close} translationId={id} />
                 </ModalBody>
             </ModalWrapper>
         </>

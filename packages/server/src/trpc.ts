@@ -2,9 +2,10 @@ import { PrismaClient } from "@prisma/client"
 import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server"
 import * as trpcFastify from "@trpc/server/adapters/fastify"
 import { isValidSign } from "./util/isValidSign"
+import { vkApi } from "./vkApi"
 
 type ctxData = {
-    vkId: number | undefined | null
+    vkId: string | undefined | null
 }
 
 export const createContext = async ({
@@ -25,7 +26,7 @@ export const createContext = async ({
     }
 
     return {
-        vkId: getUserIdFromHeader(),
+        vkId: getUserIdFromHeader().toString(),
     }
 }
 
@@ -47,14 +48,14 @@ export const privateProcedure = t.procedure.use(async (opts) => {
 
     const user = await prisma.user.findFirst({
         where: {
-            vkId: opts.ctx.vkId.toString(),
+            vkId: opts.ctx.vkId,
         },
     })
 
     if (!user) {
         await prisma.user.create({
             data: {
-                vkId: opts.ctx.vkId.toString(),
+                vkId: opts.ctx.vkId,
             },
         })
     }

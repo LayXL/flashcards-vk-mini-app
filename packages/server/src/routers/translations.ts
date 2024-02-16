@@ -27,7 +27,14 @@ export const translations = router({
                 include: {
                     tags: true,
                     transcriptions: true,
-                    author: true,
+                    author: {
+                        select: {
+                            vkId: true,
+                            firstName: true,
+                            lastName: true,
+                            avatarUrls: true,
+                        },
+                    },
                     reactions: {
                         where: {
                             user: {
@@ -40,6 +47,9 @@ export const translations = router({
                             user: {
                                 select: {
                                     vkId: true,
+                                    firstName: true,
+                                    lastName: true,
+                                    avatarUrls: true,
                                 },
                             },
                         },
@@ -291,5 +301,29 @@ export const translations = router({
                     isDeleted: true,
                 },
             })
+        }),
+    getComments: privateProcedure
+        .input(z.object({ translationId: z.number() }))
+        .query(async ({ input, ctx }) => {
+            const comments = await prisma.comment.findMany({
+                where: {
+                    translationId: input.translationId,
+                },
+                include: {
+                    user: {
+                        select: {
+                            vkId: true,
+                            firstName: true,
+                            lastName: true,
+                            avatarUrls: true,
+                        },
+                    },
+                },
+            })
+
+            return comments.map((comment) => ({
+                ...comment,
+                text: comment.isDeleted ? "" : comment.text,
+            }))
         }),
 })
