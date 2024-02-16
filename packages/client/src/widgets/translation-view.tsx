@@ -8,14 +8,38 @@ import { Icon24PenOutline } from "@vkontakte/icons"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { useModalState } from "../shared/hooks/useModalState"
+import { useCallback } from "react"
 
 type TranslationViewModalProps = {
     id: number
 }
 
 export const TranslationViewModal = ({ id }: TranslationViewModalProps) => {
-    const { data } = trpc.translations.getSingle.useQuery({ id })
+    const { setData } = trpc.useUtils().translations.getSingle
+
+    const { data, refetch } = trpc.translations.getSingle.useQuery({ id })
     const { isOpened, close, open } = useModalState(false)
+
+    const { mutate: react } = trpc.translations.addReaction.useMutation({
+        onSuccess: () => {
+            setData({ id }, (prev) =>
+                prev === undefined ? undefined : { ...prev, isReacted: true },
+            )
+            refetch()
+        },
+    })
+    const { mutate: unreact } = trpc.translations.removeReaction.useMutation({
+        onSuccess: () => {
+            setData({ id }, (prev) =>
+                prev === undefined ? undefined : { ...prev, isReacted: false },
+            )
+            refetch()
+        },
+    })
+
+    const toggleReaction = useCallback(() => {
+        return data?.isReacted ? unreact({ translationId: id }) : react({ translationId: id })
+    }, [data?.isReacted, id, react, unreact])
 
     const modalHistory = useModalHistory()
 
@@ -24,7 +48,7 @@ export const TranslationViewModal = ({ id }: TranslationViewModalProps) => {
     return (
         <>
             <ModalBody>
-                <ModalPageHeader children="Перевод" />
+                <ModalPageHeader children={"Перевод"} />
 
                 <Group>
                     <SimpleCell subtitle={"На родном языке"} children={data?.vernacular} />
@@ -32,6 +56,15 @@ export const TranslationViewModal = ({ id }: TranslationViewModalProps) => {
                     <SimpleCell subtitle={"Описание"} children={data?.foreignDescription} />
                     <SimpleCell subtitle={"Пример использования"} children={data?.example} />
                 </Group>
+
+                <Div>
+                    <Button
+                        size={"l"}
+                        stretched={true}
+                        children={data?.isReacted ? "Убрать лайк" : "Поставить лайк"}
+                        onClick={toggleReaction}
+                    />
+                </Div>
 
                 <Group>
                     <Div>

@@ -20,7 +20,7 @@ export const translations = router({
     getSingle: privateProcedure
         .input(z.object({ id: z.number() }))
         .query(async ({ input, ctx }) => {
-            const data = await prisma.translation.findFirst({
+            const { reactions, ...data } = await prisma.translation.findFirst({
                 where: {
                     id: input.id,
                 },
@@ -28,11 +28,19 @@ export const translations = router({
                     tags: true,
                     transcriptions: true,
                     author: true,
+                    reactions: {
+                        where: {
+                            user: {
+                                vkId: ctx.vkId.toString(),
+                            },
+                        },
+                    },
                 },
             })
 
             return {
                 ...data,
+                isReacted: reactions.length !== 0,
                 canEdit: data.author.vkId === ctx.vkId.toString(),
             }
         }),
@@ -168,6 +176,64 @@ export const translations = router({
                         })),
                     },
                     updatedAt: new Date(),
+                },
+            })
+        }),
+    addReaction: privateProcedure
+        .input(z.object({ translationId: z.number() }))
+        .mutation(async ({ ctx, input }) => {
+            // TODO позволять реагировать только на публичные переводы
+            return await prisma.reactionOnTranslation.create({
+                data: {
+                    translation: {
+                        connect: {
+                            id: input.translationId,
+                        },
+                    },
+                    user: {
+                        connect: {
+                            vkId: ctx.vkId.toString(),
+                        },
+                    },
+                },
+            })
+        }),
+    removeReaction: privateProcedure
+        .input(z.object({ translationId: z.number() }))
+        .mutation(async ({ ctx, input }) => {
+            return await prisma.reactionOnTranslation.deleteMany({
+                where: {
+                    translation: {
+                        id: input.translationId,
+                    },
+                    user: {
+                        vkId: ctx.vkId.toString(),
+                    },
+                },
+            })
+        }),
+    addComment: privateProcedure
+        .input(
+            z.object({
+                translationId: z.number(),
+                text: z.string().min(3).max(512).trim(),
+            })
+        )
+        .mutation(async ({ ctx, input }) => {
+            // TODO позволять комментировать только на публичные переводы
+            return await prisma.comment.create({
+                data: {
+                    translation: {
+                        connect: {
+                            id: input.translationId,
+                        },
+                    },
+                    user: {
+                        connect: {
+                            vkId: ctx.vkId.toString(),
+                        },
+                    },
+                    text: input.text,
                 },
             })
         }),
