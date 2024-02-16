@@ -19,6 +19,8 @@ model User {
   userTranslationRepetitions UserTranslationRepetition[]
   selectedLanguageId         Int?
   selectedLanguage           Language?                   @relation(fields: [selectedLanguageId], references: [id])
+  reactions                  ReactionOnTranslation[]
+  comments                   Comment[]
 }
 
 model Translation {
@@ -36,10 +38,38 @@ model Translation {
   updatedAt                  DateTime                    @default(now())
 
   tags              Tag[]
-  author            User               @relation(fields: [authorId], references: [id])
-  language          Language           @relation(fields: [languageId], references: [id])
-  languageVariation LanguageVariation? @relation(fields: [languageVariationId], references: [id])
+  author            User                    @relation(fields: [authorId], references: [id])
+  language          Language                @relation(fields: [languageId], references: [id])
+  languageVariation LanguageVariation?      @relation(fields: [languageVariationId], references: [id])
   transcriptions    Transcription[]
+  reactions         ReactionOnTranslation[]
+  comments          Comment[]
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+
+  translationId Int
+  userId        Int
+  createdAt     DateTime @default(now())
+  isEdited      Boolean  @default(false)
+  isDeleted     Boolean  @default(false)
+
+  text String
+
+  translation Translation @relation(fields: [translationId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
+}
+
+model ReactionOnTranslation {
+  translationId Int
+  userId        Int
+  createdAt     DateTime @default(now())
+
+  translation Translation @relation(fields: [translationId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
+
+  @@id([translationId, userId])
 }
 
 model Transcription {
