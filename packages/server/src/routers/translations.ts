@@ -35,6 +35,29 @@ export const translations = router({
                             },
                         },
                     },
+                    comments: {
+                        include: {
+                            user: {
+                                select: {
+                                    vkId: true,
+                                },
+                            },
+                        },
+                        where: {
+                            isDeleted: false,
+                        },
+                        orderBy: {
+                            createdAt: "asc",
+                        },
+                        take: 1,
+                    },
+                },
+            })
+
+            const commentsCount = await prisma.comment.count({
+                where: {
+                    translationId: input.id,
+                    isDeleted: false,
                 },
             })
 
@@ -42,6 +65,7 @@ export const translations = router({
                 ...data,
                 isReacted: reactions.length !== 0,
                 canEdit: data.author.vkId === ctx.vkId.toString(),
+                commentsCount,
             }
         }),
     add: privateProcedure
@@ -216,7 +240,7 @@ export const translations = router({
         .input(
             z.object({
                 translationId: z.number(),
-                text: z.string().min(3).max(512).trim(),
+                text: z.string().min(1).max(512).trim(),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -234,6 +258,37 @@ export const translations = router({
                         },
                     },
                     text: input.text,
+                },
+            })
+        }),
+    deleteComment: privateProcedure
+        .input(
+            z.object({
+                commentId: z.number(),
+            })
+        )
+        .mutation(async ({ ctx, input }) => {
+            // TODO позволять комментировать только на публичные переводы
+            return await prisma.comment.update({
+                where: {
+                    id: input.commentId,
+                    OR: [
+                        {
+                            user: {
+                                vkId: ctx.vkId.toString(),
+                            },
+                        },
+                        {
+                            translation: {
+                                author: {
+                                    vkId: ctx.vkId.toString(),
+                                },
+                            },
+                        },
+                    ],
+                },
+                data: {
+                    isDeleted: true,
                 },
             })
         }),
