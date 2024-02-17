@@ -1,6 +1,5 @@
 import z from "zod"
 import { prisma, privateProcedure } from "../trpc"
-import { stacks } from "./stacks"
 
 export const search = privateProcedure
     .input(
@@ -10,8 +9,6 @@ export const search = privateProcedure
     )
     .query(async ({ input: { query }, ctx }) => {
         const queryVariations = [query].map((query) => `*${query.replace(/\s/g, "*")}*`).join(" | ")
-
-        console.log(queryVariations)
 
         const foundTranslations = await prisma.translation.findMany({
             where: {
