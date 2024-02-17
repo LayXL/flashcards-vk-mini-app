@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react"
-import { trpc } from "../shared/api"
 import { PanelHeader, PanelHeaderClose, Search as SearchBar } from "@vkontakte/vkui"
+import { useEffect, useRef, useState } from "react"
 import { useDebounceValue, useTimeout } from "usehooks-ts"
+import { trpc } from "../shared/api"
 
 type SearchProps = {
     onClose?: () => void

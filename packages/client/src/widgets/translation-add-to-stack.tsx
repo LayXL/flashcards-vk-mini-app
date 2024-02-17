@@ -1,11 +1,11 @@
 import { Button, Div, PanelHeader, PanelHeaderClose } from "@vkontakte/vkui"
-import { trpc } from "../shared/api"
-import { StackCard } from "../entities/stack/ui/stack-card"
 import { useCallback } from "react"
-import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
+import { StackCard } from "../entities/stack/ui/stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
-import { StackCreateModal } from "./stack-create"
+import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
+import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
+import { StackCreateModal } from "./stack-create"
 
 type TranslationAddToStackProps = {
     translationId: number

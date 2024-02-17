@@ -1,11 +1,11 @@
 import { Button, Div } from "@vkontakte/vkui"
-import { trpc } from "../shared/api"
-import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { useState } from "react"
-import { StackCreateModal } from "./stack-create"
 import { StackCard } from "../entities/stack/ui/stack-card"
-import { useModalState } from "../shared/hooks/useModalState"
 import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
+import { trpc } from "../shared/api"
+import { useModalState } from "../shared/hooks/useModalState"
+import { StackCreateModal } from "./stack-create"
 import { StackView } from "./stack-view"
 
 export const UserStacks = () => {

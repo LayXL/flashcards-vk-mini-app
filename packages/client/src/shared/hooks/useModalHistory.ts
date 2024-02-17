@@ -1,6 +1,6 @@
+import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 import { useSetRecoilState } from "recoil"
 import { modalsHistory } from "../store"
-import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 
 export const useModalHistory = () => {
     const setModalHistory = useSetRecoilState(modalsHistory)

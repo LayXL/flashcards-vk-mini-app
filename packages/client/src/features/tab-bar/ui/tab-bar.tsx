@@ -1,7 +1,7 @@
-import { Tabbar } from "@vkontakte/vkui"
-import { TabBarItem } from "./tab-bar-item"
 import { useActiveVkuiLocation, useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
+import { Tabbar } from "@vkontakte/vkui"
 import { tabs } from "../lib/tabs"
+import { TabBarItem } from "./tab-bar-item"
 
 export const TabBar = () => {
     const { view } = useActiveVkuiLocation()

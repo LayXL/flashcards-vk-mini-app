@@ -1,8 +1,8 @@
 import { CellButton, Div, PanelHeader, PanelHeaderBack } from "@vkontakte/vkui"
-import { trpc } from "../shared/api"
-import { useModal } from "../features/modal/contexts/modal-context"
-import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { Fragment } from "react"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
+import { useModal } from "../features/modal/contexts/modal-context"
+import { trpc } from "../shared/api"
 
 type StackViewProps = {
     id: number

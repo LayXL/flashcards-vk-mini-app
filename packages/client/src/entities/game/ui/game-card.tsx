@@ -1,4 +1,4 @@
-import { Card, Title, Button } from "@vkontakte/vkui"
+import { Button, Card, Title } from "@vkontakte/vkui"
 import styled from "styled-components"
 
 type GameCardProps = {

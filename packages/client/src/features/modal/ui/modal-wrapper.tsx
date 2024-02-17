@@ -1,7 +1,7 @@
-import styled from "styled-components"
 import { FloatingPortal } from "@floating-ui/react"
-import { ReactNode } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { ReactNode } from "react"
+import styled from "styled-components"
 import { ModalContext } from "../contexts/modal-context"
 
 type ModalWrapperProps = {

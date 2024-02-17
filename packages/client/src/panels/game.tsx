@@ -1,9 +1,9 @@
 import { Button, Div, PanelHeader, PanelHeaderBack } from "@vkontakte/vkui"
+import { useCallback, useMemo, useState } from "react"
+import { useStep } from "usehooks-ts"
+import { GameCard } from "../entities/game/ui/game-card"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
-import { useStep } from "usehooks-ts"
-import { useCallback, useMemo, useState } from "react"
-import { GameCard } from "../entities/game/ui/game-card"
 
 export const Game = () => {
     const [currentStep, { setStep }] = useStep(3)

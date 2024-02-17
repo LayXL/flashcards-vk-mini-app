@@ -1,19 +1,17 @@
+import { FloatingPortal } from "@floating-ui/react"
 import {
-    PanelHeader,
-    PanelHeaderBack,
     Avatar,
+    Div,
+    Group,
+    ModalPageHeader,
+    PanelHeaderBack,
     SimpleCell,
     WriteBar,
     WriteBarIcon,
-    Div,
-    FixedLayout,
-    Group,
-    ModalPageHeader,
 } from "@vkontakte/vkui"
-import { trpc } from "../shared/api"
-import { useState } from "react"
-import { FloatingPortal } from "@floating-ui/react"
 import { motion } from "framer-motion"
+import { useState } from "react"
+import { trpc } from "../shared/api"
 
 type TranslationCommentsProps = {
     translationId: number

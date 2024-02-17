@@ -1,8 +1,8 @@
 import { Search } from "@vkontakte/vkui"
-import { ModalWrapper } from "../../modal/ui/modal-wrapper"
-import { ModalBody } from "../../modal/ui/modal-body"
-import { Search as SearchWidget } from "../../../widgets/search"
 import { useModalState } from "../../../shared/hooks/useModalState"
+import { Search as SearchWidget } from "../../../widgets/search"
+import { ModalBody } from "../../modal/ui/modal-body"
+import { ModalWrapper } from "../../modal/ui/modal-wrapper"
 
 export const SearchBar = () => {
     const { isOpened, close, open } = useModalState(false)

@@ -1,3 +1,4 @@
+import { Icon28DeleteOutline } from "@vkontakte/icons"
 import {
     Button,
     CellButton,
@@ -12,11 +13,10 @@ import {
     Select,
     Textarea,
 } from "@vkontakte/vkui"
-import { Icon28DeleteOutline } from "@vkontakte/icons"
-import { useModalHistory } from "../shared/hooks/useModalHistory"
-import { useRecoilState } from "recoil"
-import { newTranslation } from "../shared/store"
 import { useState } from "react"
+import { useRecoilState } from "recoil"
+import { useModalHistory } from "../shared/hooks/useModalHistory"
+import { newTranslation } from "../shared/store"
 
 export const TranslationAddMoreInfo = () => {
     const modalsHistory = useModalHistory()

@@ -1,17 +1,6 @@
-import {
-    Button,
-    Div,
-    FormItem,
-    Group,
-    Input,
-    ModalPageHeader,
-    PanelHeader,
-    PanelHeaderClose,
-    Textarea,
-} from "@vkontakte/vkui"
-import { ModalBody } from "../features/modal/ui/modal-body"
-import { useModal } from "../features/modal/contexts/modal-context"
+import { Button, Div, FormItem, Group, Input, PanelHeader, PanelHeaderClose } from "@vkontakte/vkui"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { useModal } from "../features/modal/contexts/modal-context"
 import { trpc } from "../shared/api"
 
 type StackFormInputs = {

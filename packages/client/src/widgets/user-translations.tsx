@@ -1,9 +1,9 @@
 import { Button, Div, PanelSpinner } from "@vkontakte/vkui"
-import { useModalHistory } from "../shared/hooks/useModalHistory"
-import { trpc } from "../shared/api"
 import { useResetRecoilState } from "recoil"
-import { newTranslation } from "../shared/store"
 import { TranslationCard } from "../entities/translation/ui/translation-card"
+import { trpc } from "../shared/api"
+import { useModalHistory } from "../shared/hooks/useModalHistory"
+import { newTranslation } from "../shared/store"
 
 export const UserTranslations = () => {
     const modalHistory = useModalHistory()

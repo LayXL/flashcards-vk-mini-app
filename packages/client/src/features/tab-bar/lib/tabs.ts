@@ -1,11 +1,4 @@
-import {
-    Icon24Home,
-    Icon28AllCategoriesOutline,
-    Icon24Play,
-    Icon28Profile,
-    Icon24Fire,
-    Icon28Cards2,
-} from "@vkontakte/icons"
+import { Icon24Fire, Icon24Home, Icon24Play, Icon28Cards2, Icon28Profile } from "@vkontakte/icons"
 
 export const tabs = [
     {

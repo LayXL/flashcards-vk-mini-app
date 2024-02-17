@@ -1,7 +1,7 @@
-import { Tappable, Card, Title } from "@vkontakte/vkui"
+import { Card, Tappable, Title } from "@vkontakte/vkui"
 import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
-import { TranslationView } from "../../../widgets/translation-view"
 import { useModalState } from "../../../shared/hooks/useModalState"
+import { TranslationView } from "../../../widgets/translation-view"
 
 type TranslationCardProps = {
     id: number

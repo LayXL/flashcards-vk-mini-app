@@ -9,11 +9,11 @@ import {
     PanelHeaderClose,
     SimpleCell,
 } from "@vkontakte/vkui"
-import { useModalHistory } from "../shared/hooks/useModalHistory"
-import { useRecoilState } from "recoil"
-import { newTranslation } from "../shared/store"
-import { trpc } from "../shared/api"
 import { useCallback } from "react"
+import { useRecoilState } from "recoil"
+import { trpc } from "../shared/api"
+import { useModalHistory } from "../shared/hooks/useModalHistory"
+import { newTranslation } from "../shared/store"
 
 export const TranslationAdd = () => {
     const modalsHistory = useModalHistory()
