@@ -19,6 +19,7 @@ import { useSetRecoilState } from "recoil"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { useModalHistory } from "../shared/hooks/useModalHistory"
 import { useModalState } from "../shared/hooks/useModalState"
 import { newTranslation } from "../shared/store"
@@ -67,7 +68,12 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                 <ModalPageHeader before={<PanelHeaderBack onClick={onClose} />}>
                     <PanelHeaderContent
                         // TODO fix
-                        before={<Avatar size={36} src={(data?.author.avatarUrls ?? {})["100"]} />}
+                        before={
+                            <Avatar
+                                size={36}
+                                src={getSuitableAvatarUrl(data?.author.avatarUrls, 32)}
+                            />
+                        }
                         status={"n переводов"}
                         children={data?.author.firstName}
                     />
@@ -135,7 +141,12 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     {data?.comments.map((comment) => (
                         <SimpleCell
                             // TODO fix
-                            before={<Avatar size={32} src={comment.user.avatarUrls["100"]} />}
+                            before={
+                                <Avatar
+                                    size={32}
+                                    src={getSuitableAvatarUrl(comment.user.avatarUrls, 32)}
+                                />
+                            }
                             children={comment.user.firstName}
                             subtitle={comment.text}
                         />

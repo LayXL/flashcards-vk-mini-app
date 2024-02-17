@@ -12,6 +12,7 @@ import {
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { trpc } from "../shared/api"
+import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 
 type TranslationCommentsProps = {
     translationId: number
@@ -42,7 +43,12 @@ export const TranslationComments = ({ translationId: id, onClose }: TranslationC
                 {data?.map((comment) => (
                     <SimpleCell
                         // TODO fix
-                        before={<Avatar size={32} src={comment.user.avatarUrls["100"]} />}
+                        before={
+                            <Avatar
+                                size={32}
+                                src={getSuitableAvatarUrl(comment.user.avatarUrls, 32)}
+                            />
+                        }
                         children={comment.user.firstName}
                         subtitle={comment.text}
                     />
