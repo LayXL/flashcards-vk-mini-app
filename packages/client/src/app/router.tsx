@@ -4,21 +4,21 @@ import {
     useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
 import {
-    View,
-    Panel,
     Epic,
-    SplitLayout,
-    ModalRoot,
     ModalPage,
+    ModalRoot,
+    Panel,
     Root,
     SplitCol,
+    SplitLayout,
+    View,
 } from "@vkontakte/vkui"
-import { Home } from "../panels/home"
 import { TranslationAdd } from "../modals/translation-add"
 import { TranslationAddMoreInfo } from "../modals/translation-add-more-info"
-import { Profile } from "../panels/profile"
 import { Game } from "../panels/game"
+import { Home } from "../panels/home"
 import { New } from "../panels/new"
+import { Profile } from "../panels/profile"
 import { Stacks } from "../panels/stacks"
 
 // eslint-disable-next-line react-refresh/only-export-components
