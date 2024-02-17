@@ -1,10 +1,5 @@
-import {
-    Icon16MoreHorizontal,
-    Icon24Add,
-    Icon28LikeFillRed,
-    Icon28MoreHorizontal,
-} from "@vkontakte/icons"
-import { Caption, Title, Text, Button, IconButton } from "@vkontakte/vkui"
+import { Icon24Add, Icon28LikeFillRed, Icon28MoreHorizontal } from "@vkontakte/icons"
+import { Button, Caption, IconButton, Text, Title } from "@vkontakte/vkui"
 import styled from "styled-components"
 import { FlagIcon } from "../../flag/ui/flag-icon"
 
@@ -14,24 +9,24 @@ type DetailedTranslationCardProps = {
     foreign: string
 }
 
-export const DetailedTranslationCard = ({}: DetailedTranslationCardProps) => {
+export const DetailedTranslationCard = ({ id }: DetailedTranslationCardProps) => {
     return (
         <>
             <Wrapper>
                 <Primary>
                     <HeaderInformation>
-                        <FlagIcon flag="ame"/>
+                        <FlagIcon flag="ame" />
                         <Title style={{ flex: 1 }} children="Availability" />
                         <Icon28MoreHorizontal />
                     </HeaderInformation>
                     <Title level="3" weight="1" children="Доступность" />
                     <Transcriptions>
                         <Transcription>
-                            <FlagIcon flag="bre"/>
+                            <FlagIcon flag="bre" />
                             <Caption level="2" children="|əveɪləˈbɪlɪtɪ|" />
                         </Transcription>
                         <Transcription>
-                            <FlagIcon flag="ame"/>
+                            <FlagIcon flag="ame" />
                             <Caption level="2" children="|əˌveɪləˈbɪlətɪ|" />
                         </Transcription>
                     </Transcriptions>
@@ -82,7 +77,9 @@ export const DetailedTranslationCard = ({}: DetailedTranslationCardProps) => {
 
 const Wrapper = styled.div`
     border-radius: 16px;
-    box-shadow: 0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0px 2px 24px 0px rgba(0, 0, 0, 0.08),
+        0px 0px 2px 0px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 `
 
@@ -101,13 +98,6 @@ const Secondary = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
-`
-
-const Flag = styled.div`
-    background-color: #808080;
-    height: 16px;
-    width: 16px;
-    border-radius: 2px;
 `
 
 const HeaderInformation = styled.div`
@@ -147,10 +137,10 @@ const Tag = styled.div`
     border-radius: 8px;
 `
 const AddButton = styled.div`
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 `
 
 const ExampleWrapper = styled.div`
