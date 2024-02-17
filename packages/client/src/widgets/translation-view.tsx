@@ -1,33 +1,29 @@
+import { Icon24PenOutline } from "@vkontakte/icons"
 import {
-    Div,
-    Button,
-    SimpleCell,
-    Group,
-    ButtonGroup,
-    WriteBar,
-    WriteBarIcon,
     Avatar,
-    PanelHeaderBack,
-    PanelHeaderContent,
+    Button,
+    ButtonGroup,
+    Div,
+    Group,
     Header,
     Link,
-    PanelHeader,
     ModalPageHeader,
+    PanelHeaderBack,
+    PanelHeaderContent,
+    SimpleCell,
+    WriteBar,
+    WriteBarIcon,
 } from "@vkontakte/vkui"
+import { useCallback, useState } from "react"
+import { useSetRecoilState } from "recoil"
 import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { useModalHistory } from "../shared/hooks/useModalHistory"
-import { useSetRecoilState } from "recoil"
-import { newTranslation } from "../shared/store"
-import { Icon24PenOutline } from "@vkontakte/icons"
-import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
-import { TranslationAddToStack } from "./translation-add-to-stack"
 import { useModalState } from "../shared/hooks/useModalState"
-import { useCallback, useState } from "react"
+import { newTranslation } from "../shared/store"
+import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationComments } from "./translation-comments"
-import bridge from "@vkontakte/vk-bridge"
-import { useQuery } from "@tanstack/react-query"
-import { FlagIcon } from "../entities/flag/ui/flag-icon"
 
 type TranslationViewModalProps = {
     id: number
