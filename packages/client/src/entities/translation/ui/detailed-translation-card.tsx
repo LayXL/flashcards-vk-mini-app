@@ -4,8 +4,9 @@ import {
     Icon28LikeFillRed,
     Icon28MoreHorizontal,
 } from "@vkontakte/icons"
-import { Caption, Title, Text, Tex, Button, IconButton, Div } from "@vkontakte/vkui"
+import { Caption, Title, Text, Button, IconButton } from "@vkontakte/vkui"
 import styled from "styled-components"
+import { FlagIcon } from "../../flag/ui/flag-icon"
 
 type DetailedTranslationCardProps = {
     id: number
@@ -19,18 +20,18 @@ export const DetailedTranslationCard = ({}: DetailedTranslationCardProps) => {
             <Wrapper>
                 <Primary>
                     <HeaderInformation>
-                        <Flag />
+                        <FlagIcon flag="ame"/>
                         <Title style={{ flex: 1 }} children="Availability" />
                         <Icon28MoreHorizontal />
                     </HeaderInformation>
                     <Title level="3" weight="1" children="Доступность" />
                     <Transcriptions>
                         <Transcription>
-                            <Flag />
+                            <FlagIcon flag="bre"/>
                             <Caption level="2" children="|əveɪləˈbɪlɪtɪ|" />
                         </Transcription>
                         <Transcription>
-                            <Flag />
+                            <FlagIcon flag="ame"/>
                             <Caption level="2" children="|əˌveɪləˈbɪlətɪ|" />
                         </Transcription>
                     </Transcriptions>
