@@ -1,8 +1,5 @@
-import { Icon24PenOutline } from "@vkontakte/icons"
 import {
     Avatar,
-    Button,
-    ButtonGroup,
     Div,
     Group,
     Header,
@@ -16,6 +13,7 @@ import {
 } from "@vkontakte/vkui"
 import { useCallback, useState } from "react"
 import { useSetRecoilState } from "recoil"
+import { DetailedTranslationCard } from "../entities/translation/ui/detailed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
@@ -79,7 +77,10 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     />
                 </ModalPageHeader>
 
-                <Group>
+                <Div>
+                    <DetailedTranslationCard />
+                </Div>
+                {/* <Group>
                     <SimpleCell subtitle={"На родном языке"} children={data?.vernacular} />
                     <SimpleCell subtitle={"На языке перевода"} children={data?.foreign} />
                     <SimpleCell subtitle={"Описание"} children={data?.foreignDescription} />
@@ -130,7 +131,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                             </ButtonGroup>
                         </ButtonGroup>
                     </Div>
-                </Group>
+                </Group> */}
 
                 <Group>
                     <Header
