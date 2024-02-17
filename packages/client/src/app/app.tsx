@@ -6,6 +6,7 @@ import { trpc } from "../shared/api"
 import { httpBatchLink } from "@trpc/client"
 import bridge from "@vkontakte/vk-bridge"
 import { RouterProvider } from "@vkontakte/vk-mini-apps-router"
+import { createGlobalStyle } from "styled-components"
 
 export const App = () => {
     const [queryClient] = useState(
@@ -39,6 +40,7 @@ export const App = () => {
                     <AdaptivityProvider>
                         <AppRoot>
                             <RouterProvider router={router}>
+                                <GlobalStyles/>
                                 <Router />
                             </RouterProvider>
                         </AppRoot>
@@ -48,3 +50,13 @@ export const App = () => {
         </trpc.Provider>
     )
 }
+
+const GlobalStyles = createGlobalStyle`
+    *{
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    *::-webkit-scrollbar{
+        display: none;
+    }
+`
