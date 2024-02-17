@@ -27,6 +27,7 @@ import { useCallback, useState } from "react"
 import { TranslationComments } from "./translation-comments"
 import bridge from "@vkontakte/vk-bridge"
 import { useQuery } from "@tanstack/react-query"
+import { FlagIcon } from "../entities/flag/ui/flag-icon"
 
 type TranslationViewModalProps = {
     id: number
