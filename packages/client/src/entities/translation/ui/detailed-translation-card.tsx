@@ -1,6 +1,7 @@
 import { Icon24Add, Icon28LikeFillRed, Icon28MoreHorizontal } from "@vkontakte/icons"
 import { Button, Caption, IconButton, Text, Title } from "@vkontakte/vkui"
 import styled from "styled-components"
+import { vkTheme } from "../../../shared/helpers/vkTheme"
 import { FlagIcon } from "../../flag/ui/flag-icon"
 
 type DetailedTranslationCardProps = {
@@ -14,12 +15,16 @@ export const DetailedTranslationCard = ({ id }: DetailedTranslationCardProps) =>
         <>
             <Wrapper>
                 <Primary>
-                    <HeaderInformation>
-                        <FlagIcon flag="ame" />
-                        <Title style={{ flex: 1 }} children="Availability" />
-                        <Icon28MoreHorizontal />
-                    </HeaderInformation>
-                    <Title level="3" weight="1" children="Доступность" />
+                    <Translation>
+                        <Header>
+                            <FlagIcon flag="ame" />
+                            <Title style={{ flex: 1 }} children="Availability" />
+                            <Icon28MoreHorizontal />
+                        </Header>
+
+                        <Title level="3" weight="1" children="Доступность" />
+                    </Translation>
+
                     <Transcriptions>
                         <Transcription>
                             <FlagIcon flag="bre" />
@@ -30,6 +35,7 @@ export const DetailedTranslationCard = ({ id }: DetailedTranslationCardProps) =>
                             <Caption level="2" children="|əˌveɪləˈbɪlətɪ|" />
                         </Transcription>
                     </Transcriptions>
+
                     <Tags>
                         <Tag>
                             <Caption level="2" children="#туризм" />
@@ -59,16 +65,16 @@ export const DetailedTranslationCard = ({ id }: DetailedTranslationCardProps) =>
                 </Primary>
                 <Secondary>
                     <ExampleWrapper>
-                        <Text weight="2" children="Контекст" />
+                        <Text weight="2" children="Пример" />
                         <Text
                             weight="3"
                             children="The fact that something is possible to get, buy, have or find"
                         />
                     </ExampleWrapper>
-                    <AddButton>
+                    <Actions>
                         <Button size="l" before={<Icon24Add />} children="Добавить" />
                         <IconButton children={<Icon28LikeFillRed />} />
-                    </AddButton>
+                    </Actions>
                 </Secondary>
             </Wrapper>
         </>
@@ -84,23 +90,29 @@ const Wrapper = styled.div`
 `
 
 const Primary = styled.div`
-    background: var(--Light-Button-Muted-Foreground, #2688eb);
-    padding: 24px 20px;
+    background: ${vkTheme.colorBackgroundAccent.normal.value};
+    padding: 24px 20px 16px;
     color: white;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 `
 
 const Secondary = styled.div`
-    background: var(--Light-Background-Content, #fff);
-    padding: 24px 20px;
+    background: ${vkTheme.colorBackgroundModal.normal.value};
+    padding: 20px 20px 20px 20px;
     display: flex;
     flex-direction: column;
     gap: 24px;
 `
 
-const HeaderInformation = styled.div`
+const Translation = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+`
+
+const Header = styled.div`
     display: flex;
     align-items: center;
     gap: 6px;
@@ -127,8 +139,10 @@ const Tags = styled.div`
     flex-direction: row;
     gap: 8px;
     overflow: scroll;
-    margin-right: -20px;
+    margin: 0 -20px;
+    padding: 0 20px;
 `
+
 const Tag = styled.div`
     padding: 6px 8px;
     align-items: center;
@@ -136,7 +150,8 @@ const Tag = styled.div`
     color: #2c2d2e;
     border-radius: 8px;
 `
-const AddButton = styled.div`
+
+const Actions = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
