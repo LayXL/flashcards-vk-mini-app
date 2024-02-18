@@ -12,19 +12,14 @@ import {
     WriteBarIcon,
 } from "@vkontakte/vkui"
 import { useCallback, useState } from "react"
-import { useSetRecoilState } from "recoil"
 import { DetailedTranslationCard } from "../entities/translation/ui/detailed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
-import { useModalHistory } from "../shared/hooks/useModalHistory"
 import { useModalState } from "../shared/hooks/useModalState"
-import { newTranslation } from "../shared/store"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationComments } from "./translation-comments"
-import { translations } from "../../../server/src/routers/translations"
-import flags from "../entities/flag/lib/flags"
 
 type TranslationViewModalProps = {
     id: number
@@ -58,10 +53,6 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
         return data?.isReacted ? unreact({ translationId: id }) : react({ translationId: id })
     }, [data?.isReacted, id, react, unreact])
 
-    const modalHistory = useModalHistory()
-
-    const setTranslationData = useSetRecoilState(newTranslation)
-
     return (
         <>
             <ModalBody>
@@ -89,12 +80,10 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                             transcription: transcription.transcription,
                             icon: transcription.languageVariation?.iconUrl,
                         }))}
-                        tags={data?.tags.map((tag)=>(
-                            tag.name
-                        ))} 
+                        tags={data?.tags.map((tag) => tag.name)}
                         example={data?.example}
-                        onLike={toggleReaction}
-                        isLiked={data?.isReacted}
+                        onReactClick={toggleReaction}
+                        isReacted={data?.isReacted}
                         onAddInStack={addToStack.open}
                     />
                 </Div>

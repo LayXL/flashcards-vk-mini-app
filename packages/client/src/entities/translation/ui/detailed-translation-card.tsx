@@ -10,19 +10,19 @@ import { vkTheme } from "../../../shared/helpers/vkTheme"
 import { FlagIcon } from "../../flag/ui/flag-icon"
 
 type DetailedTranslationCardProps = {
-    id: number
-    vernacular: string
-    foreign: string
+    id?: number
+    vernacular?: string
+    foreign?: string
     languageVariationIcon?: string
-    transcriptions: {
-        icon: string
+    transcriptions?: {
+        icon?: string
         transcription: string
     }[]
-    tags: string[]
-    example: string
-    onLike: () => void
-    isLiked: boolean
-    onAddInStack: () => void
+    tags?: string[]
+    example?: string | null
+    onReactClick?: () => void
+    onAddInStack?: () => void
+    isReacted?: boolean
 }
 
 export const DetailedTranslationCard = ({
@@ -32,77 +32,72 @@ export const DetailedTranslationCard = ({
     transcriptions,
     tags,
     example,
-    onLike,
-    isLiked,
+    onReactClick: onLike,
+    isReacted: isLiked = false,
     onAddInStack,
-}: DetailedTranslationCardProps) => {
-    console.log(transcriptions)
-    return (
-        <>
-            <Wrapper>
-                <Primary>
-                    <Translation>
-                        <Header>
-                            {languageVariationIcon && <FlagIcon flag={languageVariationIcon} />}
-                            <Title style={{ flex: 1 }} children={foreign} />
+}: DetailedTranslationCardProps) => (
+    <Wrapper>
+        <Primary>
+            <Translation>
+                <Header>
+                    {languageVariationIcon && <FlagIcon flag={languageVariationIcon} />}
+                    <Title style={{ flex: 1 }} children={foreign} />
 
-                            <Tappable
-                                hoverMode={"opacity"}
-                                activeMode={"opacity"}
-                                children={<Icon28MoreHorizontal />}
-                            />
-                        </Header>
+                    <Tappable
+                        hoverMode={"opacity"}
+                        activeMode={"opacity"}
+                        children={<Icon28MoreHorizontal />}
+                    />
+                </Header>
 
-                        <Title level="3" weight="1" children={vernacular} />
-                    </Translation>
+                <Title level="3" weight="1" children={vernacular} />
+            </Translation>
 
-                    {transcriptions.length > 0 && (
-                        <Transcriptions>
-                            {transcriptions?.map((transcription) => (
-                                <Transcription>
-                                    {transcription.icon && <FlagIcon flag={transcription.icon} />}
-                                    <Caption level="2" children={transcription.transcription} />
-                                </Transcription>
-                            ))}
-                        </Transcriptions>
-                    )}
-                    {tags.length > 0 && (
-                        <Tags>
-                            {tags &&
-                                tags?.map((tag) => (
-                                    <Tag>
-                                        <Caption level="2" children={"#" + tag} />
-                                    </Tag>
-                                ))}
-                        </Tags>
-                    )}
-                </Primary>
-                <Secondary>
-                    {example && (
-                        <ExampleWrapper>
-                            <Text weight="2" children="Пример" />
-                            <Text weight="3" children={example} />
-                        </ExampleWrapper>
-                    )}
-                    <Actions>
-                        <Button
-                            size="l"
-                            before={<Icon24Add />}
-                            children="Добавить"
-                            onClick={onAddInStack}
-                        />
-                        <Tappable
-                            hoverMode={"opacity"}
-                            activeMode={"opacity"}
-                            onClick={onLike}
-                            children={isLiked ? <Icon28LikeFillRed /> : <Icon28LikeOutline />}
-                        />
-                    </Actions>
-                </Secondary>
-            </Wrapper>
-        </>
-    )
-}
+            {(transcriptions?.length ?? 0) > 0 && (
+                <Transcriptions>
+                    {transcriptions?.map((transcription) => (
+                        <Transcription>
+                            {transcription.icon && <FlagIcon flag={transcription.icon} />}
+                            <Caption level="2" children={transcription.transcription} />
+                        </Transcription>
+                    ))}
+                </Transcriptions>
+            )}
+            {(tags?.length ?? 0) > 0 && (
+                <Tags>
+                    {tags &&
+                        tags?.map((tag) => (
+                            <Tag>
+                                <Caption level="2" children={"#" + tag} />
+                            </Tag>
+                        ))}
+                </Tags>
+            )}
+        </Primary>
+        <Secondary>
+            {example && (
+                <ExampleWrapper>
+                    <Text weight="2" children="Пример" />
+                    <Text weight="3" children={example} />
+                </ExampleWrapper>
+            )}
+            <Actions>
+                <Button
+                    size="l"
+                    before={<Icon24Add />}
+                    children="Добавить"
+                    onClick={onAddInStack}
+                />
+                <Tappable
+                    hoverMode={"opacity"}
+                    activeMode={"opacity"}
+                    onClick={onLike}
+                    children={isLiked ? <Icon28LikeFillRed /> : <Icon28LikeOutline />}
+                />
+            </Actions>
+        </Secondary>
+    </Wrapper>
+)
 
 const Wrapper = styled.div`
     border-radius: 16px;
