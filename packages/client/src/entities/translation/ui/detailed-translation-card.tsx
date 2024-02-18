@@ -1,4 +1,4 @@
-import { Icon24Add, Icon28LikeFillRed, Icon28MoreHorizontal } from "@vkontakte/icons"
+import { Icon24Add, Icon28LikeFillRed, Icon28LikeOutline, Icon28MoreHorizontal } from "@vkontakte/icons"
 import { Button, Caption, IconButton, Text, Title } from "@vkontakte/vkui"
 import styled from "styled-components"
 import { vkTheme } from "../../../shared/helpers/vkTheme"
@@ -8,59 +8,61 @@ type DetailedTranslationCardProps = {
     id: number
     vernacular: string
     foreign: string
+    languageVariationIcon?: string,
+    transcriptions: {
+        icon: string,
+        transcription: string
+    }[],
+    tags: string[]
+    example: string
+    onLike:() => void
+    isLiked: boolean
+    onAddInStack:()=> void
 }
 
-export const DetailedTranslationCard = ({ id }: DetailedTranslationCardProps) => {
+export const DetailedTranslationCard = ({
+    id,
+    vernacular,
+    foreign,
+    languageVariationIcon,
+    transcriptions,
+    tags,
+    example,
+    onLike,
+    isLiked,
+    onAddInStack,
+}: DetailedTranslationCardProps) => {
+    console.log(languageVariationIcon)
     return (
         <>
             <Wrapper>
                 <Primary>
                     <Translation>
                         <Header>
-                            <FlagIcon flag="ame" />
-                            <Title style={{ flex: 1 }} children="Availability" />
+                            {languageVariationIcon && <FlagIcon flag={languageVariationIcon}/>}
+                            <Title style={{ flex: 1 }} children={foreign} />
                             <Icon28MoreHorizontal />
                         </Header>
 
-                        <Title level="3" weight="1" children="Доступность" />
+                        <Title level="3" weight="1" children={vernacular} />
                     </Translation>
 
                     <Transcriptions>
-                        <Transcription>
-                            <FlagIcon flag="bre" />
-                            <Caption level="2" children="|əveɪləˈbɪlɪtɪ|" />
+                        {
+                            transcriptions?.map((transcription)=>(
+                                <Transcription>
+                            <FlagIcon flag={transcription.icon} />
+                            <Caption level="2" children={transcription.transcription} />
                         </Transcription>
-                        <Transcription>
-                            <FlagIcon flag="ame" />
-                            <Caption level="2" children="|əˌveɪləˈbɪlətɪ|" />
-                        </Transcription>
+                            ))
+                        }
                     </Transcriptions>
-
                     <Tags>
-                        <Tag>
-                            <Caption level="2" children="#туризм" />
+                        {tags && tags?.map((tag)=>(
+                            <Tag>
+                            <Caption level="2" children={'#' + tag} />
                         </Tag>
-                        <Tag>
-                            <Caption level="2" children="#туризм" />
-                        </Tag>
-                        <Tag>
-                            <Caption level="2" children="#туризм" />
-                        </Tag>
-                        <Tag>
-                            <Caption level="2" children="#туризм" />
-                        </Tag>
-                        <Tag>
-                            <Caption level="2" children="#туризм" />
-                        </Tag>
-                        <Tag>
-                            <Caption level="2" children="#туризм" />
-                        </Tag>
-                        <Tag>
-                            <Caption level="2" children="#туризм" />
-                        </Tag>
-                        <Tag>
-                            <Caption level="2" children="#туризм" />
-                        </Tag>
+                        ))}
                     </Tags>
                 </Primary>
                 <Secondary>
@@ -68,12 +70,12 @@ export const DetailedTranslationCard = ({ id }: DetailedTranslationCardProps) =>
                         <Text weight="2" children="Пример" />
                         <Text
                             weight="3"
-                            children="The fact that something is possible to get, buy, have or find"
+                            children={example}
                         />
                     </ExampleWrapper>
                     <Actions>
-                        <Button size="l" before={<Icon24Add />} children="Добавить" />
-                        <IconButton children={<Icon28LikeFillRed />} />
+                        <Button size="l" before={<Icon24Add />} children="Добавить" onClick={onAddInStack}/>
+                        <IconButton onClick={onLike} children={isLiked?<Icon28LikeFillRed />:<Icon28LikeOutline />} />
                     </Actions>
                 </Secondary>
             </Wrapper>
@@ -83,9 +85,7 @@ export const DetailedTranslationCard = ({ id }: DetailedTranslationCardProps) =>
 
 const Wrapper = styled.div`
     border-radius: 16px;
-    box-shadow:
-        0px 2px 24px 0px rgba(0, 0, 0, 0.08),
-        0px 0px 2px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 `
 

@@ -26,7 +26,12 @@ export const translations = router({
                 },
                 include: {
                     tags: true,
-                    transcriptions: true,
+                    transcriptions: {
+                        include: {
+                            languageVariation: true
+                        }
+                    },
+                    languageVariation: true,
                     author: {
                         select: {
                             vkId: true,

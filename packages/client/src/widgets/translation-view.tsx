@@ -23,6 +23,8 @@ import { useModalState } from "../shared/hooks/useModalState"
 import { newTranslation } from "../shared/store"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationComments } from "./translation-comments"
+import { translations } from "../../../server/src/routers/translations"
+import flags from "../entities/flag/lib/flags"
 
 type TranslationViewModalProps = {
     id: number
@@ -78,7 +80,23 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                 </ModalPageHeader>
 
                 <Div>
-                    <DetailedTranslationCard />
+                    <DetailedTranslationCard
+                        id={data?.id}
+                        vernacular={data?.vernacular}
+                        foreign={data?.foreign}
+                        languageVariationIcon={data?.languageVariation?.iconUrl}
+                        transcriptions={data?.transcriptions.map((transcription) => ({
+                            transcription: transcription.transcription,
+                            icon: transcription.languageVariation?.iconUrl,
+                        }))}
+                        tags={data?.tags.map((tag)=>(
+                            tag.name
+                        ))} 
+                        example={data?.example}
+                        onLike={toggleReaction}
+                        isLiked={data?.isReacted}
+                        onAddInStack={addToStack.open}
+                    />
                 </Div>
                 {/* <Group>
                     <SimpleCell subtitle={"На родном языке"} children={data?.vernacular} />
