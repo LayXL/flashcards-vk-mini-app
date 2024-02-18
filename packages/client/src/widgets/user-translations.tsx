@@ -1,16 +1,15 @@
 import { Button, Div, PanelSpinner } from "@vkontakte/vkui"
-import { useResetRecoilState } from "recoil"
 import { TranslationCard } from "../entities/translation/ui/translation-card"
+import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
-import { useModalHistory } from "../shared/hooks/useModalHistory"
-import { newTranslation } from "../shared/store"
+import { useModalState } from "../shared/hooks/useModalState"
+import { TranslationAdd } from "./translation-add"
 
 export const UserTranslations = () => {
-    const modalHistory = useModalHistory()
-
-    const resetTranslationData = useResetRecoilState(newTranslation)
-
     const { data: userTranslations, isLoading } = trpc.translations.getUserTranslations.useQuery()
+
+    const addTranslationModal = useModalState()
 
     return (
         <>
@@ -19,10 +18,7 @@ export const UserTranslations = () => {
                     stretched={true}
                     size={"l"}
                     children={"Добавить перевод"}
-                    onClick={() => {
-                        resetTranslationData()
-                        modalHistory.openModal("translationAdd")
-                    }}
+                    onClick={addTranslationModal.open}
                 />
             </Div>
 
@@ -37,6 +33,15 @@ export const UserTranslations = () => {
                     />
                 </Div>
             ))}
+
+            <ModalWrapper
+                isOpened={addTranslationModal.isOpened}
+                onClose={addTranslationModal.close}
+            >
+                <ModalBody>
+                    <TranslationAdd />
+                </ModalBody>
+            </ModalWrapper>
         </>
     )
 }
