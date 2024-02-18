@@ -1,5 +1,10 @@
-import { Icon24Add, Icon28LikeFillRed, Icon28LikeOutline, Icon28MoreHorizontal } from "@vkontakte/icons"
-import { Button, Caption, IconButton, Text, Title } from "@vkontakte/vkui"
+import {
+    Icon24Add,
+    Icon28LikeFillRed,
+    Icon28LikeOutline,
+    Icon28MoreHorizontal,
+} from "@vkontakte/icons"
+import { Button, Caption, Tappable, Text, Title } from "@vkontakte/vkui"
 import styled from "styled-components"
 import { vkTheme } from "../../../shared/helpers/vkTheme"
 import { FlagIcon } from "../../flag/ui/flag-icon"
@@ -8,20 +13,19 @@ type DetailedTranslationCardProps = {
     id: number
     vernacular: string
     foreign: string
-    languageVariationIcon?: string,
+    languageVariationIcon?: string
     transcriptions: {
-        icon: string,
+        icon: string
         transcription: string
-    }[],
+    }[]
     tags: string[]
     example: string
-    onLike:() => void
+    onLike: () => void
     isLiked: boolean
-    onAddInStack:()=> void
+    onAddInStack: () => void
 }
 
 export const DetailedTranslationCard = ({
-    id,
     vernacular,
     foreign,
     languageVariationIcon,
@@ -32,50 +36,67 @@ export const DetailedTranslationCard = ({
     isLiked,
     onAddInStack,
 }: DetailedTranslationCardProps) => {
-    console.log(languageVariationIcon)
+    console.log(transcriptions)
     return (
         <>
             <Wrapper>
                 <Primary>
                     <Translation>
                         <Header>
-                            {languageVariationIcon && <FlagIcon flag={languageVariationIcon}/>}
+                            {languageVariationIcon && <FlagIcon flag={languageVariationIcon} />}
                             <Title style={{ flex: 1 }} children={foreign} />
-                            <Icon28MoreHorizontal />
+
+                            <Tappable
+                                hoverMode={"opacity"}
+                                activeMode={"opacity"}
+                                children={<Icon28MoreHorizontal />}
+                            />
                         </Header>
 
                         <Title level="3" weight="1" children={vernacular} />
                     </Translation>
 
-                    <Transcriptions>
-                        {
-                            transcriptions?.map((transcription)=>(
+                    {transcriptions.length > 0 && (
+                        <Transcriptions>
+                            {transcriptions?.map((transcription) => (
                                 <Transcription>
-                            <FlagIcon flag={transcription.icon} />
-                            <Caption level="2" children={transcription.transcription} />
-                        </Transcription>
-                            ))
-                        }
-                    </Transcriptions>
-                    <Tags>
-                        {tags && tags?.map((tag)=>(
-                            <Tag>
-                            <Caption level="2" children={'#' + tag} />
-                        </Tag>
-                        ))}
-                    </Tags>
+                                    {transcription.icon && <FlagIcon flag={transcription.icon} />}
+                                    <Caption level="2" children={transcription.transcription} />
+                                </Transcription>
+                            ))}
+                        </Transcriptions>
+                    )}
+                    {tags.length > 0 && (
+                        <Tags>
+                            {tags &&
+                                tags?.map((tag) => (
+                                    <Tag>
+                                        <Caption level="2" children={"#" + tag} />
+                                    </Tag>
+                                ))}
+                        </Tags>
+                    )}
                 </Primary>
                 <Secondary>
-                    <ExampleWrapper>
-                        <Text weight="2" children="Пример" />
-                        <Text
-                            weight="3"
-                            children={example}
-                        />
-                    </ExampleWrapper>
+                    {example && (
+                        <ExampleWrapper>
+                            <Text weight="2" children="Пример" />
+                            <Text weight="3" children={example} />
+                        </ExampleWrapper>
+                    )}
                     <Actions>
-                        <Button size="l" before={<Icon24Add />} children="Добавить" onClick={onAddInStack}/>
-                        <IconButton onClick={onLike} children={isLiked?<Icon28LikeFillRed />:<Icon28LikeOutline />} />
+                        <Button
+                            size="l"
+                            before={<Icon24Add />}
+                            children="Добавить"
+                            onClick={onAddInStack}
+                        />
+                        <Tappable
+                            hoverMode={"opacity"}
+                            activeMode={"opacity"}
+                            onClick={onLike}
+                            children={isLiked ? <Icon28LikeFillRed /> : <Icon28LikeOutline />}
+                        />
                     </Actions>
                 </Secondary>
             </Wrapper>
@@ -85,7 +106,9 @@ export const DetailedTranslationCard = ({
 
 const Wrapper = styled.div`
     border-radius: 16px;
-    box-shadow: 0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0px 2px 24px 0px rgba(0, 0, 0, 0.08),
+        0px 0px 2px 0px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 `
 

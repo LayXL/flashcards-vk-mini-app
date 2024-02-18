@@ -10,14 +10,21 @@ import { StackCreateModal } from "./stack-create"
 type TranslationAddToStackProps = {
     translationId: number
     onClose: () => void
+    onSuccess?: () => void
 }
 
-export const TranslationAddToStack = ({ translationId, onClose }: TranslationAddToStackProps) => {
+export const TranslationAddToStack = ({
+    translationId,
+    onClose,
+    onSuccess,
+}: TranslationAddToStackProps) => {
     const { isOpened, close, open } = useModalState()
 
     const { data } = trpc.stacks.getUserStacks.useQuery()
 
-    const { mutate: addTranslationToStack } = trpc.stacks.addTranslation.useMutation()
+    const { mutate: addTranslationToStack } = trpc.stacks.addTranslation.useMutation({
+        onSuccess: onSuccess || onClose,
+    })
 
     const onClickStack = useCallback(
         (stackId: number) => () => {

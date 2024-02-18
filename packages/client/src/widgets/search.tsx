@@ -9,6 +9,7 @@ import {
 } from "@vkontakte/vkui"
 import { useEffect, useRef, useState } from "react"
 import { useDebounceValue, useTimeout } from "usehooks-ts"
+import { SearchStackCard } from "../entities/stack/ui/search-stack-card"
 import { SearchTranslationCard } from "../entities/translation/ui/search-translation-card"
 import { trpc } from "../shared/api"
 
@@ -49,45 +50,33 @@ export const Search = ({ onClose }: SearchProps) => {
                 onChange={({ currentTarget: { value } }) => setSearchQuery(value)}
             />
 
+            {(data?.translations?.length ?? 0) > 0 && (
+                <Group>
+                    <Header aside={<Link children={"Показать все"} />} children={"Переводы"} />
+
+                    <Div>
+                        <div style={{ display: "flex", gap: 12, overflow: "visible" }}>
+                            {data?.translations.map((translation) => (
+                                <SearchTranslationCard
+                                    key={translation.id}
+                                    id={translation.id}
+                                    vernacular={translation.vernacular}
+                                    foreign={translation.foreign}
+                                    languageVariationsFlags={["ame"]}
+                                />
+                            ))}
+                        </div>
+                    </Div>
+                </Group>
+            )}
+
             <Group>
-                <Header aside={<Link children={"Показать все"} />}>Переводы</Header>
+                <Header aside={<Link children={"Показать все"} />} children={"Стопки"} />
 
                 <Div>
                     <div style={{ display: "flex", gap: 12, overflow: "visible" }}>
-                        {data?.translations.map((translation) => (
-                            <SearchTranslationCard
-                                id={translation.id}
-                                vernacular={translation.vernacular}
-                                foreign={translation.foreign}
-                                languageVariationsFlags={["ame"]}
-                            />
-                        ))}
-
-                        {/* <SearchTranslationCard
-                            id={2}
-                            vernacular={"Индустрия гостеприимства"}
-                            foreign={"Hospitality industry"}
-                            languageVariationsFlags={["ame"]}
-                        />
-                        <SearchTranslationCard
-                            id={2}
-                            vernacular={"Индустрия гостеприимства"}
-                            foreign={"Hospitality industry"}
-                            languageVariationsFlags={["bre", "ame"]}
-                        /> */}
+                        <SearchStackCard />
                     </div>
-                </Div>
-            </Group>
-
-            <Group>
-                <Header aside={<Link children={"Показать все"} />}>Стопки</Header>
-
-                <Div>
-                    {/* <div style={{ display: "flex", gap: 12, overflow: "visible" }}>
-                        <SearchStackCard />
-                        <SearchStackCard />
-                        <SearchStackCard />
-                    </div> */}
                 </Div>
             </Group>
         </>

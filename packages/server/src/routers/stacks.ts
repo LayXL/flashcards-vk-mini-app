@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server"
 import z from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
 
@@ -118,6 +119,72 @@ export const stacks = router({
                                 stackId: input.stackId,
                             },
                         },
+                    },
+                },
+            })
+        }),
+    duplicate: privateProcedure
+        .input(z.object({ stackId: z.number() }))
+        .mutation(async ({ ctx, input }) => {
+            // TODO позволять реагировать только на публичные стопки
+
+            const stackData = await prisma.stack.findFirst({
+                where: {
+                    id: input.stackId,
+                },
+                select: {
+                    name: true,
+                    description: true,
+                    // tags: true,
+                    // translations: true,
+                },
+            })
+
+            if (!stackData)
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                })
+
+            return await prisma.stack.create({
+                data: {
+                    author: {
+                        connect: {
+                            vkId: ctx.vkId,
+                        },
+                    },
+                    ...stackData,
+                },
+            })
+        }),
+    addReaction: privateProcedure
+        .input(z.object({ stackId: z.number() }))
+        .mutation(async ({ ctx, input }) => {
+            // TODO позволять реагировать только на публичные стопки
+            return await prisma.reactionOnStack.create({
+                data: {
+                    stack: {
+                        connect: {
+                            id: input.stackId,
+                        },
+                    },
+                    user: {
+                        connect: {
+                            vkId: ctx.vkId,
+                        },
+                    },
+                },
+            })
+        }),
+    removeReaction: privateProcedure
+        .input(z.object({ stackId: z.number() }))
+        .mutation(async ({ ctx, input }) => {
+            return await prisma.reactionOnStack.deleteMany({
+                where: {
+                    stack: {
+                        id: input.stackId,
+                    },
+                    user: {
+                        vkId: ctx.vkId,
                     },
                 },
             })

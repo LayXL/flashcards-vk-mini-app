@@ -22,7 +22,8 @@ model User {
   userTranslationRepetitions UserTranslationRepetition[]
   selectedLanguageId         Int?
   selectedLanguage           Language?                   @relation(fields: [selectedLanguageId], references: [id])
-  reactions                  ReactionOnTranslation[]
+  reactionsOnTranslations    ReactionOnTranslation[]
+  reactoinsOnStacks          ReactionOnStack[]
   comments                   Comment[]
 }
 
@@ -64,6 +65,17 @@ model Comment {
   user        User        @relation(fields: [userId], references: [id])
 }
 
+model ReactionOnStack {
+  stackId   Int
+  userId    Int
+  createdAt DateTime @default(now())
+
+  stack Stack @relation(fields: [stackId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@id([stackId, userId])
+}
+
 model ReactionOnTranslation {
   translationId Int
   userId        Int
@@ -86,15 +98,19 @@ model Transcription {
 }
 
 model Stack {
-  id          Int     @id @default(autoincrement())
-  authorId    Int
-  name        String
-  description String?
-  isVerified  Boolean @default(false)
+  id              Int     @id @default(autoincrement())
+  authorId        Int
+  name            String
+  description     String?
+  isVerified      Boolean @default(false)
+  inheritsStackId Int?
 
-  translations TranslationInStack[]
-  tags         Tag[]
-  author       User                 @relation(fields: [authorId], references: [id])
+  translations   TranslationInStack[]
+  reactions      ReactionOnStack[]
+  tags           Tag[]
+  author         User                 @relation(fields: [authorId], references: [id])
+  inheritStack   Stack?               @relation("inherit", fields: [inheritsStackId], references: [id])
+  inheritedStack Stack[]              @relation("inherit")
 }
 
 model TranslationInStack {
