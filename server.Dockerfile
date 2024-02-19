@@ -15,4 +15,4 @@ WORKDIR /usr/local/packages/server
 
 RUN tsc
 
-CMD ["node", "./dist/index.js"]
+CMD ["node", "./dist/server.js"]
