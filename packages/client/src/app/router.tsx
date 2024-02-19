@@ -3,18 +3,7 @@ import {
     useActiveVkuiLocation,
     useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
-import {
-    Epic,
-    ModalPage,
-    ModalRoot,
-    Panel,
-    Root,
-    SplitCol,
-    SplitLayout,
-    View,
-} from "@vkontakte/vkui"
-import { TranslationAdd } from "../modals/translation-add"
-import { TranslationAddMoreInfo } from "../modals/translation-add-more-info"
+import { Epic, ModalRoot, Panel, Root, SplitCol, SplitLayout, View } from "@vkontakte/vkui"
 import { Game } from "../panels/game"
 import { Home } from "../panels/home"
 import { New } from "../panels/new"
@@ -62,12 +51,7 @@ export const Router = () => {
 
     const modals = (
         <ModalRoot activeModal={modal} onClose={() => routeNavigator.hideModal()}>
-            <ModalPage nav={"translationAdd"} children={<TranslationAdd />} />
-            <ModalPage
-                nav={"translationAddMoreInfo"}
-                children={<TranslationAddMoreInfo />}
-                settlingHeight={100}
-            />
+            <></>
         </ModalRoot>
     )
 

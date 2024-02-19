@@ -1,10 +1,12 @@
 import {
     Icon24Add,
+    Icon28DeleteOutline,
+    Icon28EditOutline,
     Icon28LikeFillRed,
     Icon28LikeOutline,
     Icon28MoreHorizontal,
 } from "@vkontakte/icons"
-import { Button, Caption, Tappable, Text, Title } from "@vkontakte/vkui"
+import { Button, Caption, CellButton, Popover, Tappable, Text, Title } from "@vkontakte/vkui"
 import styled from "styled-components"
 import { vkTheme } from "../../../shared/helpers/vkTheme"
 import { FlagIcon } from "../../flag/ui/flag-icon"
@@ -22,6 +24,8 @@ type DetailedTranslationCardProps = {
     example?: string | null
     onReactClick?: () => void
     onAddInStack?: () => void
+    onEdit?: () => void
+    onDelete?: () => void
     isReacted?: boolean
 }
 
@@ -32,9 +36,11 @@ export const DetailedTranslationCard = ({
     transcriptions,
     tags,
     example,
-    onReactClick: onLike,
+    onReactClick,
     isReacted: isLiked = false,
     onAddInStack,
+    onEdit,
+    onDelete,
 }: DetailedTranslationCardProps) => (
     <Wrapper>
         <Primary>
@@ -43,10 +49,44 @@ export const DetailedTranslationCard = ({
                     {languageVariationIcon && <FlagIcon flag={languageVariationIcon} />}
                     <Title style={{ flex: 1 }} children={foreign} />
 
-                    <Tappable
-                        hoverMode={"opacity"}
-                        activeMode={"opacity"}
-                        children={<Icon28MoreHorizontal />}
+                    <Popover
+                        trigger="click"
+                        placement="bottom"
+                        content={({ onClose }) => (
+                            <div
+                                style={{
+                                    backgroundColor: "var(--vkui--color_background_modal_inverse)",
+                                    borderRadius: 8,
+                                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+                                }}
+                            >
+                                <CellButton
+                                    role={"menuitem"}
+                                    before={<Icon28EditOutline />}
+                                    onClick={() => {
+                                        onEdit && onEdit()
+                                        onClose()
+                                    }}
+                                    children={"Редактировать"}
+                                />
+                                <CellButton
+                                    role={"menuitem"}
+                                    before={<Icon28DeleteOutline />}
+                                    onClick={() => {
+                                        onDelete && onDelete()
+                                        onClose()
+                                    }}
+                                    children={"Удалить"}
+                                />
+                            </div>
+                        )}
+                        children={
+                            <Tappable
+                                hoverMode={"opacity"}
+                                activeMode={"opacity"}
+                                children={<Icon28MoreHorizontal />}
+                            />
+                        }
                     />
                 </Header>
 
@@ -91,7 +131,7 @@ export const DetailedTranslationCard = ({
                 <Tappable
                     hoverMode={"opacity"}
                     activeMode={"opacity"}
-                    onClick={onLike}
+                    onClick={onReactClick}
                     children={isLiked ? <Icon28LikeFillRed /> : <Icon28LikeOutline />}
                 />
             </Actions>

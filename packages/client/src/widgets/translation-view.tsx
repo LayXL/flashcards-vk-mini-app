@@ -18,6 +18,7 @@ import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { useModalState } from "../shared/hooks/useModalState"
+import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationComments } from "./translation-comments"
 
@@ -47,11 +48,15 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
 
     const addToStack = useModalState(false)
     const viewComments = useModalState(false)
+    const editTranslation = useModalState(false)
     const [commentText, setCommentText] = useState("")
 
     const toggleReaction = useCallback(() => {
         return data?.isReacted ? unreact({ translationId: id }) : react({ translationId: id })
     }, [data?.isReacted, id, react, unreact])
+
+    // TODO finalize
+    const onDelete = () => {}
 
     return (
         <>
@@ -85,6 +90,8 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                         onReactClick={toggleReaction}
                         isReacted={data?.isReacted}
                         onAddInStack={addToStack.open}
+                        onEdit={editTranslation.open}
+                        onDelete={onDelete}
                     />
                 </Div>
 
@@ -146,6 +153,27 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
             <ModalWrapper isOpened={viewComments.isOpened} onClose={viewComments.close}>
                 <ModalBody>
                     <TranslationComments onClose={viewComments.close} translationId={id} />
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper isOpened={editTranslation.isOpened} onClose={editTranslation.close}>
+                <ModalBody>
+                    {data && (
+                        <TranslationAdd
+                            defaultValues={{
+                                id: data.id,
+                                languageVariationId: data.languageVariationId ?? undefined,
+                                foreign: data.foreign,
+                                vernacular: data.vernacular,
+                                languageId: data.languageId,
+                                example: data.example ?? undefined,
+                                foreignDescription: data.foreignDescription ?? undefined,
+                                tags: data.tags.map(({ name }) => name),
+                                transcriptions: data.transcriptions,
+                            }}
+                            onClose={editTranslation.close}
+                        />
+                    )}
                 </ModalBody>
             </ModalWrapper>
         </>

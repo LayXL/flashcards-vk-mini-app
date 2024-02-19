@@ -1,4 +1,4 @@
-import { Icon28Delete } from "@vkontakte/icons"
+import { Icon28AddOutline, Icon28Delete } from "@vkontakte/icons"
 import {
     Button,
     CellButton,
@@ -6,17 +6,20 @@ import {
     Div,
     FormItem,
     Group,
+    Header,
     Input,
     ModalPageHeader,
     PanelHeaderBack,
     PanelHeaderClose,
+    Select,
     SimpleCell,
     Textarea,
 } from "@vkontakte/vkui"
 import { useState } from "react"
-import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { Controller, SubmitHandler, useFieldArray, useForm } from "react-hook-form"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
+import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
 
 type TranslationFormInputs = {
@@ -29,7 +32,7 @@ type TranslationFormInputs = {
     example?: string
     tags?: string[]
     transcriptions?: {
-        id: number
+        id?: number
         languageVariationId?: number | null
         transcription: string | null
     }[]
@@ -43,12 +46,91 @@ type TranslationAddProps = {
 export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) => {
     const additionalInfoModal = useModalState()
 
-    const { control, handleSubmit } = useForm<TranslationFormInputs>({})
+    const utils = trpc.useUtils()
+
+    // TODO remove hard-code
+    const { data: languageVariations } = trpc.languages.getLanguageVariations.useQuery({
+        languageId: 1,
+    })
+
+    const { control, handleSubmit } = useForm<TranslationFormInputs>({
+        defaultValues,
+    })
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "transcriptions",
+    })
+
+    const { mutate: addTranslation, isPending: isAddingTranslation } =
+        trpc.translations.add.useMutation({
+            onSuccess: () => {
+                onClose && onClose()
+                utils.translations.getUserTranslations.refetch()
+
+                if (defaultValues?.id) {
+                    utils.translations.getSingle.refetch({ id: defaultValues.id })
+                }
+            },
+        })
+
+    const { mutate: editTranslation, isPending: isEditingTranslation } =
+        trpc.translations.edit.useMutation({
+            onSuccess: () => {
+                onClose && onClose()
+                utils.translations.getUserTranslations.refetch()
+
+                if (defaultValues?.id) {
+                    utils.translations.getSingle.refetch({ id: defaultValues.id })
+                }
+            },
+        })
+
+    const isLoading = isAddingTranslation || isEditingTranslation
 
     const [newTag, setNewTag] = useState("")
 
     const onSubmit: SubmitHandler<TranslationFormInputs> = (data) => {
-        console.log(data)
+        if (defaultValues) {
+            if (!data.id) return
+
+            editTranslation({
+                id: data.id,
+                ...data,
+                languageId: 1,
+                languageVariationId: data.languageVariationId
+                    ? data.languageVariationId > 0
+                        ? data.languageVariationId
+                        : null
+                    : undefined,
+                transcriptions:
+                    data.transcriptions
+                        ?.filter((transcription) => transcription.transcription?.length !== 0)
+                        .map((transcription) => ({
+                            id: transcription.id,
+                            transcription: transcription.transcription as string,
+                            languageVariationId: transcription.languageVariationId ?? undefined,
+                        })) ?? [],
+                tags: data.tags ?? [],
+            })
+        } else {
+            addTranslation({
+                ...data,
+                languageId: 1,
+                languageVariationId: data.languageVariationId
+                    ? data.languageVariationId > 0
+                        ? data.languageVariationId
+                        : undefined
+                    : undefined,
+                transcriptions:
+                    data.transcriptions
+                        ?.filter((transcription) => transcription.transcription?.length !== 0)
+                        .map((transcription) => ({
+                            transcription: transcription.transcription as string,
+                            languageVariationId: transcription.languageVariationId ?? undefined,
+                        })) ?? [],
+                tags: data.tags ?? [],
+            })
+        }
     }
 
     return (
@@ -94,32 +176,53 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                         </FormItem>
                     )}
                 />
+            </Group>
+
+            <Group>
+                <Controller
+                    control={control}
+                    name={"languageVariationId"}
+                    rules={{
+                        required: false,
+                    }}
+                    render={({ field }) => (
+                        <FormItem top={"Диалект"}>
+                            <Select
+                                placeholder={"Не обязательно"}
+                                options={[
+                                    {
+                                        label: "Не выбрано",
+                                        value: -1,
+                                    },
+                                    ...(languageVariations?.map((variation) => ({
+                                        label: variation.name,
+                                        value: variation.id,
+                                    })) ?? []),
+                                ]}
+                                value={field.value?.toString()}
+                                onChange={({ currentTarget: { value } }) =>
+                                    field.onChange(parseInt(value))
+                                }
+                            />
+                        </FormItem>
+                    )}
+                />
 
                 <SimpleCell
                     expandable={"always"}
                     children={"Дополнительно"}
                     onClick={additionalInfoModal.open}
                 />
-            </Group>
 
-            <Group>
-                <Group>
-                    <CellButton
-                        before={<Icon28Delete />}
-                        onClick={() => {}}
-                        mode={"danger"}
-                        children={"Удалить перевод"}
+                <Div>
+                    <Button
+                        loading={isLoading}
+                        stretched={true}
+                        size={"l"}
+                        children={defaultValues ? "Изменить" : "Добавить"}
+                        onClick={handleSubmit(onSubmit)}
                     />
-
-                    <Div>
-                        <Button
-                            stretched={true}
-                            size={"l"}
-                            children={defaultValues ? "Изменить" : "Добавить"}
-                            onClick={handleSubmit(onSubmit)}
-                        />
-                    </Div>
-                </Group>
+                </Div>
             </Group>
 
             <ModalWrapper
@@ -137,7 +240,10 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                             control={control}
                             name={"example"}
                             render={({ field, fieldState }) => (
-                                <FormItem top={"Пример использования"}>
+                                <FormItem
+                                    top={"Пример использования"}
+                                    status={fieldState.error ? "error" : "default"}
+                                >
                                     <Textarea value={field.value} onChange={field.onChange} />
                                 </FormItem>
                             )}
@@ -147,7 +253,10 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                             control={control}
                             name={"foreignDescription"}
                             render={({ field, fieldState }) => (
-                                <FormItem top={"Описание на языке перевода"}>
+                                <FormItem
+                                    top={"Описание на языке перевода"}
+                                    status={fieldState.error ? "error" : "default"}
+                                >
                                     <Textarea value={field.value} onChange={field.onChange} />
                                 </FormItem>
                             )}
@@ -157,7 +266,10 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                             control={control}
                             name={"tags"}
                             render={({ field, fieldState }) => (
-                                <FormItem top={"Метки"}>
+                                <FormItem
+                                    top={"Метки"}
+                                    status={fieldState.error ? "error" : "default"}
+                                >
                                     <ChipsInput
                                         inputValue={newTag}
                                         onInputChange={({ currentTarget: { value } }) => {
@@ -178,15 +290,79 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                                             value: i,
                                         }))}
                                         onChange={(tags) => {
-                                            field.onChange(
-                                                tags.map(({ label }, i) => ({ label, value: i })),
-                                            )
+                                            field.onChange(tags.map(({ label }) => label))
                                         }}
                                     />
                                 </FormItem>
                             )}
                         />
                     </Group>
+
+                    {fields.map((field, i) => (
+                        <Group key={field.id}>
+                            <Header>Транскрипция</Header>
+                            <Controller
+                                control={control}
+                                name={`transcriptions.${i}.languageVariationId`}
+                                render={({ field }) => (
+                                    <FormItem top={"Диалект"}>
+                                        <Select
+                                            placeholder={"Не обязательно"}
+                                            options={[
+                                                {
+                                                    label: "Британский английский",
+                                                    value: 1,
+                                                },
+                                                {
+                                                    label: "Американский английский",
+                                                    value: 2,
+                                                },
+                                            ]}
+                                            value={field.value as unknown as string}
+                                            onChange={({ currentTarget: { value } }) =>
+                                                field.onChange(parseInt(value))
+                                            }
+                                        />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <Controller
+                                control={control}
+                                name={`transcriptions.${i}.transcription`}
+                                render={({ field }) => (
+                                    <FormItem top={"Транскрипция"}>
+                                        <Input
+                                            value={field.value ?? ""}
+                                            onChange={field.onChange}
+                                        />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <CellButton
+                                mode={"danger"}
+                                before={<Icon28Delete />}
+                                children={"Удалить транскрипцию"}
+                                onClick={() => remove(i)}
+                            />
+                        </Group>
+                    ))}
+
+                    <CellButton
+                        before={<Icon28AddOutline />}
+                        children={"Добавить транскрипцию"}
+                        onClick={() => append({ transcription: null })}
+                    />
+
+                    <Div>
+                        <Button
+                            stretched={true}
+                            size={"l"}
+                            children={"Готово"}
+                            onClick={additionalInfoModal.close}
+                        />
+                    </Div>
                 </ModalBody>
             </ModalWrapper>
         </>

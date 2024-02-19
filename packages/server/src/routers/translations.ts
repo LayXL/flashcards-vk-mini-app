@@ -1,5 +1,5 @@
-import { prisma, privateProcedure, router } from "../trpc"
 import { z } from "zod"
+import { prisma, privateProcedure, router } from "../trpc"
 
 export const translations = router({
     getUserTranslations: privateProcedure.query(async ({ ctx }) => {
@@ -28,8 +28,8 @@ export const translations = router({
                     tags: true,
                     transcriptions: {
                         include: {
-                            languageVariation: true
-                        }
+                            languageVariation: true,
+                        },
                     },
                     languageVariation: true,
                     author: {
@@ -169,12 +169,20 @@ export const translations = router({
             z.object({
                 id: z.number(),
                 languageId: z.number().optional(),
-                languageVariationId: z.number().optional(),
+                languageVariationId: z.number().optional().nullable(),
                 vernacular: z.string().min(1).max(100).optional(),
                 foreign: z.string().min(1).max(100).optional(),
                 foreignDescription: z.string().min(1).max(512).optional(),
                 tags: z.string().array().max(100).optional(),
                 example: z.string().min(1).max(512).optional(),
+                transcriptions: z
+                    .object({
+                        id: z.number().optional(),
+                        languageVariationId: z.number().optional(),
+                        transcription: z.string().min(1).max(100),
+                    })
+                    .array()
+                    .optional(),
             })
         )
         .mutation(async ({ input, ctx }) => {
@@ -187,13 +195,14 @@ export const translations = router({
                 languageVariationId,
                 example,
                 foreignDescription,
+                transcriptions,
             } = input
 
-            return await prisma.translation.update({
+            const res = await prisma.translation.update({
                 where: {
                     id,
                     author: {
-                        vkId: ctx.vkId.toString(),
+                        vkId: ctx.vkId,
                     },
                 },
                 data: {
@@ -214,9 +223,64 @@ export const translations = router({
                             },
                         })),
                     },
+                    transcriptions: {
+                        createMany: {
+                            data: [
+                                ...transcriptions
+                                    ?.filter(({ id }) => !id)
+                                    .map(({ transcription, languageVariationId }) => ({
+                                        transcription: transcription,
+                                        languageVariationId: languageVariationId,
+                                    })),
+                            ],
+                        },
+                    },
                     updatedAt: new Date(),
                 },
+                include: {
+                    transcriptions: true,
+                },
             })
+
+            const oldTranscriptions = transcriptions?.filter(({ id }) => id)
+
+            for (const oldTranscription of oldTranscriptions) {
+                await prisma.transcription.update({
+                    where: {
+                        id: oldTranscription.id,
+                        translation: {
+                            id,
+                            author: {
+                                vkId: ctx.vkId.toString(),
+                            },
+                        },
+                    },
+                    data: {
+                        languageVariationId: oldTranscription.languageVariationId,
+                        transcription: oldTranscription.transcription,
+                    },
+                })
+            }
+
+            const removedTranscriptions = res.transcriptions.filter(
+                ({ id }) => !transcriptions.map((t) => t.id).includes(id)
+            )
+
+            for (const removedTranscription of removedTranscriptions) {
+                await prisma.transcription.delete({
+                    where: {
+                        id: removedTranscription.id,
+                        translation: {
+                            id,
+                            author: {
+                                vkId: ctx.vkId.toString(),
+                            },
+                        },
+                    },
+                })
+            }
+
+            return true
         }),
     addReaction: privateProcedure
         .input(z.object({ translationId: z.number() }))

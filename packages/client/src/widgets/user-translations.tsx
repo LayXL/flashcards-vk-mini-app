@@ -1,4 +1,4 @@
-import { Button, Div, PanelSpinner } from "@vkontakte/vkui"
+import { Button, Div, PanelSpinner, Spacing } from "@vkontakte/vkui"
 import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
@@ -34,12 +34,14 @@ export const UserTranslations = () => {
                 </Div>
             ))}
 
+            <Spacing size={256} />
+
             <ModalWrapper
                 isOpened={addTranslationModal.isOpened}
                 onClose={addTranslationModal.close}
             >
                 <ModalBody>
-                    <TranslationAdd />
+                    <TranslationAdd onClose={addTranslationModal.close} />
                 </ModalBody>
             </ModalWrapper>
         </>

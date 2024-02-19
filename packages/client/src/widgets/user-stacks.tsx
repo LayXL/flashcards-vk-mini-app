@@ -1,4 +1,4 @@
-import { Button, Div } from "@vkontakte/vkui"
+import { Button, Div, Spacing } from "@vkontakte/vkui"
 import { useState } from "react"
 import { StackCard } from "../entities/stack/ui/stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -35,6 +35,8 @@ export const UserStacks = () => {
                     <StackCardWithModal key={stack.id} id={stack.id} name={stack.name} />
                 ))}
             </Div>
+
+            <Spacing size={256} />
         </>
     )
 }
