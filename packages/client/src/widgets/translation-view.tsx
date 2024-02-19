@@ -63,13 +63,14 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
             <ModalBody>
                 <ModalPageHeader before={<PanelHeaderBack onClick={onClose} />}>
                     <PanelHeaderContent
-                        // TODO fix
                         before={
                             <Avatar
                                 size={36}
+                                // TODO fix
                                 src={getSuitableAvatarUrl(data?.author.avatarUrls, 32)}
                             />
                         }
+                        // TODO finalize
                         status={"n переводов"}
                         children={data?.author.firstName}
                     />
