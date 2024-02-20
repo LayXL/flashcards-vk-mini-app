@@ -95,8 +95,8 @@ export const DetailedTranslationCard = ({
 
             {(transcriptions?.length ?? 0) > 0 && (
                 <Transcriptions>
-                    {transcriptions?.map((transcription) => (
-                        <Transcription>
+                    {transcriptions?.map((transcription, i) => (
+                        <Transcription key={i}>
                             {transcription.icon && <FlagIcon flag={transcription.icon} />}
                             <Caption level="2" children={transcription.transcription} />
                         </Transcription>
@@ -106,8 +106,8 @@ export const DetailedTranslationCard = ({
             {(tags?.length ?? 0) > 0 && (
                 <Tags>
                     {tags &&
-                        tags?.map((tag) => (
-                            <Tag>
+                        tags?.map((tag, i) => (
+                            <Tag key={i}>
                                 <Caption level="2" children={"#" + tag} />
                             </Tag>
                         ))}

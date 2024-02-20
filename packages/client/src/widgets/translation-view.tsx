@@ -1,3 +1,4 @@
+import { Icon28CheckCircleOutline } from "@vkontakte/icons"
 import {
     Avatar,
     Div,
@@ -8,6 +9,7 @@ import {
     PanelHeaderBack,
     PanelHeaderContent,
     SimpleCell,
+    Snackbar,
     WriteBar,
     WriteBarIcon,
 } from "@vkontakte/vkui"
@@ -17,7 +19,9 @@ import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
+import { plural } from "../shared/helpers/plural"
 import { useModalState } from "../shared/hooks/useModalState"
+import { StackView } from "./stack-view"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationComments } from "./translation-comments"
@@ -48,8 +52,12 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
 
     const addToStack = useModalState(false)
     const viewComments = useModalState(false)
+    const viewStack = useModalState(false)
     const editTranslation = useModalState(false)
+    const addedTranslationToStack = useModalState(false)
     const [commentText, setCommentText] = useState("")
+
+    const [viewStackId, setViewStackId] = useState<number | null>(null)
 
     const toggleReaction = useCallback(() => {
         return data?.isReacted ? unreact({ translationId: id }) : react({ translationId: id })
@@ -71,7 +79,11 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                             />
                         }
                         // TODO finalize
-                        status={"n переводов"}
+                        status={plural(data?.authorTranslationsCount ?? 0, [
+                            "перевод",
+                            "перевода",
+                            "переводов",
+                        ])}
                         children={data?.author.firstName}
                     />
                 </ModalPageHeader>
@@ -104,6 +116,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
 
                     {data?.comments.map((comment) => (
                         <SimpleCell
+                            key={comment.id}
                             // TODO fix
                             before={
                                 <Avatar
@@ -147,13 +160,27 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
 
             <ModalWrapper isOpened={addToStack.isOpened} onClose={addToStack.close}>
                 <ModalBody fullscreen={true}>
-                    <TranslationAddToStack onClose={addToStack.close} translationId={id} />
+                    <TranslationAddToStack
+                        onClose={addToStack.close}
+                        onSuccess={(id) => {
+                            addToStack.close()
+                            setViewStackId(id)
+                            addedTranslationToStack.open()
+                        }}
+                        translationId={id}
+                    />
                 </ModalBody>
             </ModalWrapper>
 
             <ModalWrapper isOpened={viewComments.isOpened} onClose={viewComments.close}>
                 <ModalBody>
                     <TranslationComments onClose={viewComments.close} translationId={id} />
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper isOpened={viewStack.isOpened} onClose={viewStack.close}>
+                <ModalBody fullscreen={true}>
+                    {viewStackId && <StackView id={viewStackId} />}
                 </ModalBody>
             </ModalWrapper>
 
@@ -177,6 +204,16 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     )}
                 </ModalBody>
             </ModalWrapper>
+
+            {addedTranslationToStack.isOpened && (
+                <Snackbar
+                    onClose={addedTranslationToStack.close}
+                    before={<Icon28CheckCircleOutline fill="var(--vkui--color_icon_positive)" />}
+                    // action={"Открыть"}
+                    // onActionClick={viewStack.open}
+                    children={"Перевод добавлен в стопку"}
+                />
+            )}
         </>
     )
 }

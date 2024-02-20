@@ -76,8 +76,18 @@ export const translations = router({
                 },
             })
 
+            const authorTranslationsCount = await prisma.translation.count({
+                where: {
+                    author: {
+                        // todo isPublic
+                        vkId: ctx.vkId,
+                    },
+                },
+            })
+
             return {
                 ...data,
+                authorTranslationsCount,
                 isReacted: reactions.length !== 0,
                 canEdit: data.author.vkId === ctx.vkId.toString(),
                 commentsCount,

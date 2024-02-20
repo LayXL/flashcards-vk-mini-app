@@ -1,4 +1,4 @@
-import { CellButton, Div, PanelHeader, PanelHeaderBack } from "@vkontakte/vkui"
+import { CellButton, Div, ModalPageHeader, PanelHeaderBack } from "@vkontakte/vkui"
 import { Fragment } from "react"
 import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { useModal } from "../features/modal/contexts/modal-context"
@@ -18,7 +18,7 @@ export const StackView = ({ id }: StackViewProps) => {
 
     return (
         <>
-            <PanelHeader
+            <ModalPageHeader
                 before={<PanelHeaderBack onClick={() => modal?.onClose()} />}
                 children={data?.name}
             />
