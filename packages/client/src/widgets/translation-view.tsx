@@ -21,7 +21,6 @@ import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { plural } from "../shared/helpers/plural"
 import { useModalState } from "../shared/hooks/useModalState"
-import { AvatarUrls } from "../shared/types"
 import { StackView } from "./stack-view"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
@@ -76,10 +75,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                             <Avatar
                                 size={36}
                                 // TODO fix
-                                src={getSuitableAvatarUrl(
-                                    data?.author.avatarUrls as AvatarUrls,
-                                    32,
-                                )}
+                                src={getSuitableAvatarUrl(data?.author.avatarUrls, 32)}
                             />
                         }
                         // TODO finalize

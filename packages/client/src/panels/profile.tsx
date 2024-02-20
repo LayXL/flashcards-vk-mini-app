@@ -1,5 +1,5 @@
 import { Icon24Settings } from "@vkontakte/icons"
-import { Div, PanelHeader, PanelHeaderButton, SegmentedControl } from "@vkontakte/vkui"
+import { PanelHeader, PanelHeaderButton, Tabs, TabsItem } from "@vkontakte/vkui"
 import { useState } from "react"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { UserStacks } from "../widgets/user-stacks"
@@ -15,21 +15,18 @@ export const Profile = () => {
                 children={"Профиль"}
             />
 
-            <Div>
-                <SegmentedControl
-                    options={[
-                        {
-                            label: "Стопки",
-                            value: "stacks",
-                        },
-                        {
-                            label: "Переводы",
-                            value: "translations",
-                        },
-                    ]}
-                    onChange={(tab) => setTab(tab?.toString() ?? "stacks")}
+            <Tabs>
+                <TabsItem
+                    onClick={() => setTab("stacks")}
+                    selected={tab === "stacks"}
+                    children={"Стопки"}
                 />
-            </Div>
+                <TabsItem
+                    onClick={() => setTab("translations")}
+                    selected={tab === "translations"}
+                    children={"Переводы"}
+                />
+            </Tabs>
 
             {tab === "stacks" && <UserStacks />}
 
