@@ -1,24 +1,17 @@
 import { appRouter } from "./appRouter"
-import { t } from "./trpc"
+import { prisma, t } from "./trpc"
 
 const caller = t.createCallerFactory(appRouter)({
     vkId: "1",
+    prisma: prisma,
 })
 
 const cb = () => {
-    // return caller.translations.create({
-    //     vernacular: "Заселение",
-    //     foreign: "Check in",
-    //     languageId: 1,
-    //     transcriptions: [
-    //         {
-    //             transcription: "|ˈtʃekɪn|",
-    //         },
-    //     ],
-    //     tags: ["туризм"],
-    // })
+    return caller.game.start({
+        stackIds: [1],
+    })
 }
 
-// cb().then((data) => {
-//     console.log(data)
-// })
+cb().then((data) => {
+    console.log(data)
+})

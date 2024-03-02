@@ -25,6 +25,7 @@ model User {
   reactionsOnTranslations    ReactionOnTranslation[]
   reactoinsOnStacks          ReactionOnStack[]
   comments                   Comment[]
+  GameSession                GameSession[]
 }
 
 model Translation {
@@ -41,13 +42,14 @@ model Translation {
   createdAt                  DateTime                    @default(now())
   updatedAt                  DateTime                    @default(now())
 
-  tags              Tag[]
-  author            User                    @relation(fields: [authorId], references: [id])
-  language          Language                @relation(fields: [languageId], references: [id])
-  languageVariation LanguageVariation?      @relation(fields: [languageVariationId], references: [id])
-  transcriptions    Transcription[]
-  reactions         ReactionOnTranslation[]
-  comments          Comment[]
+  tags                     Tag[]
+  author                   User                       @relation(fields: [authorId], references: [id])
+  language                 Language                   @relation(fields: [languageId], references: [id])
+  languageVariation        LanguageVariation?         @relation(fields: [languageVariationId], references: [id])
+  transcriptions           Transcription[]
+  reactions                ReactionOnTranslation[]
+  comments                 Comment[]
+  TranslationInGameSession TranslationInGameSession[]
 }
 
 model Comment {
@@ -111,6 +113,7 @@ model Stack {
   author         User                 @relation(fields: [authorId], references: [id])
   inheritStack   Stack?               @relation("inherit", fields: [inheritsStackId], references: [id])
   inheritedStack Stack[]              @relation("inherit")
+  gameSessions   GameSession[]
 }
 
 model TranslationInStack {
@@ -162,4 +165,40 @@ model UserTranslationRepetition {
   translation Translation @relation(fields: [translationId], references: [id])
 
   @@id([userId, translationId, repeatedAt])
+}
+
+enum GameSessionStatus {
+  playing
+  cancelled
+  ended
+}
+
+model GameSession {
+  id        Int               @id @default(autoincrement())
+  userId    Int
+  startedAt DateTime          @default(now())
+  status    GameSessionStatus @default(playing)
+
+  stacks       Stack[]
+  user         User                       @relation(fields: [userId], references: [id])
+  translations TranslationInGameSession[]
+}
+
+enum TranslationInGameSessionStatus {
+  correct
+  incorrect
+  unanswered
+}
+
+model TranslationInGameSession {
+  gameSessionId Int
+  translationId Int
+  order         Int
+  status        TranslationInGameSessionStatus @default(unanswered)
+  answeredAt    DateTime?
+
+  gameSession GameSession @relation(fields: [gameSessionId], references: [id])
+  translation Translation @relation(fields: [translationId], references: [id])
+
+  @@id([gameSessionId, order])
 }

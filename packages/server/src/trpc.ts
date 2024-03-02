@@ -2,16 +2,10 @@ import { PrismaClient } from "@prisma/client"
 import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server"
 import * as trpcFastify from "@trpc/server/adapters/fastify"
 import { isValidSign } from "./util/isValidSign"
-import { vkApi } from "./vkApi"
 
-type ctxData = {
-    vkId: string | undefined | null
-}
+export const prisma = new PrismaClient()
 
-export const createContext = async ({
-    req,
-    res,
-}: trpcFastify.CreateFastifyContextOptions): Promise<ctxData> => {
+export const createContext = async ({ req, res }: trpcFastify.CreateFastifyContextOptions) => {
     function getUserIdFromHeader() {
         if (req.headers.authorization) {
             const vkData = Object.fromEntries(
@@ -27,12 +21,11 @@ export const createContext = async ({
 
     return {
         vkId: getUserIdFromHeader().toString(),
+        prisma,
     }
 }
 
 export type Context = inferAsyncReturnType<typeof createContext>
-
-export const prisma = new PrismaClient()
 
 export const t = initTRPC.context<Context>().create()
 
