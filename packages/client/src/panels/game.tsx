@@ -19,7 +19,7 @@ const GameResults = ({ id, onClose }: { id: number; onClose: () => void }) => {
 
             <Div>
                 {data?.translations.map((translation) => (
-                    <div>
+                    <div className="flex flex-col p-3">
                         <div>{translation.translation.foreign}</div>
                         <div>{translation.translation.vernacular}</div>
                         <div>{translation.status}</div>
@@ -75,8 +75,6 @@ export const Game = () => {
         <>
             <PanelHeader children={"Играть"} />
 
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
-
             <Div>
                 <Button
                     loading={isPending}
@@ -93,7 +91,7 @@ export const Game = () => {
 
             <Div>
                 {recentlyGames?.map((game) => (
-                    <div>{game.id}</div>
+                    <div className="p-3">{game.id}</div>
                 ))}
             </Div>
 

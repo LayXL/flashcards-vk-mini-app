@@ -6,6 +6,7 @@ import { AdaptivityProvider, AppRoot, ConfigProvider } from "@vkontakte/vkui"
 import { useEffect, useState } from "react"
 import { createGlobalStyle } from "styled-components"
 import { trpc } from "../shared/api"
+import "./index.css"
 import { Router, router } from "./router"
 
 export const App = () => {
