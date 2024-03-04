@@ -25,7 +25,11 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
         intervalMs: 100,
     })
 
-    const strokeOffset = useTransform(count, [duration, 0], [0, 502.6548245744])
+    const strokeOffset = useTransform(
+        count,
+        [(data.gameSession.gameDuration ?? 0) * 10, 0],
+        [0, 502.6548245744],
+    )
 
     const currentCardData = useMemo(
         () => data?.cards[currentCardIndex],
