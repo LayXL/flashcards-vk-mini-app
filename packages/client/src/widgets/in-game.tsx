@@ -56,7 +56,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     }, [count, onEndGame])
 
     useEffect(() => {
-        // startCountdown()
+        startCountdown()
     }, [startCountdown])
 
     return (
