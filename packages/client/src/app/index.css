@@ -12,3 +12,8 @@
 .flex-row-reverse {
     display: flex;
 }
+
+div[class^='vkui'],
+div[class*=' vkui'] {
+    box-sizing: content-box;
+}
