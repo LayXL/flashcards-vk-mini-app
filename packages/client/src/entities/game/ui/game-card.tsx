@@ -1,5 +1,4 @@
-import { Button, Card, Title } from "@vkontakte/vkui"
-import styled from "styled-components"
+import { Button, Title } from "@vkontakte/vkui"
 
 type GameCardProps = {
     title: string
@@ -9,44 +8,28 @@ type GameCardProps = {
 
 export const GameCard = ({ title, choices, onSelect }: GameCardProps) => {
     return (
-        <StyledCard>
-            <TitleWrapper>
-                <Title children={title} />
-            </TitleWrapper>
+        <div className="flex-col">
+            <div className="h-[20px] overflow-hidden relative">
+                <div className="absolute left-[24px] right-[24px] rounded-2xl aspect-square bg-vk-modal opacity-75"></div>
+                <div className="absolute left-[12px] right-[12px] top-[8px] rounded-2xl aspect-square bg-vk-modal"></div>
+            </div>
+            <div className="p-3 bg-vk-secondary rounded-2xl">
+                <div className="aspect-[4/3] max-h-[50vh] w-full flex-col gap-3 items-center justify-center">
+                    <Title children={title} />
+                </div>
 
-            <Buttons>
-                {choices.map((choice, i) => (
-                    <Button
-                        key={i}
-                        stretched={true}
-                        size={"l"}
-                        children={choice}
-                        onClick={() => onSelect(i)}
-                    />
-                ))}
-            </Buttons>
-        </StyledCard>
+                <div className="flex-col gap-3">
+                    {choices.map((choice, i) => (
+                        <Button
+                            key={i}
+                            stretched={true}
+                            size={"l"}
+                            children={choice}
+                            onClick={() => onSelect(i)}
+                        />
+                    ))}
+                </div>
+            </div>
+        </div>
     )
 }
-
-const StyledCard = styled(Card)`
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    aspect-ratio: 1;
-    user-select: none;
-`
-
-const TitleWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-`
-
-const Buttons = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-`

@@ -24,4 +24,6 @@ export const updateInfo = privateProcedure.query(async ({ ctx }) => {
             },
         },
     })
+
+    return true
 })

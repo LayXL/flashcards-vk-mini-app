@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server"
 import z from "zod"
-import { prisma, privateProcedure, router } from "../trpc"
+import { privateProcedure, router } from "../trpc"
 import { shuffle } from "../util/shuffle"
 
 export const game = router({
@@ -8,6 +8,8 @@ export const game = router({
         .input(
             z.object({
                 stackIds: z.number().array(),
+                gameDuration: z.number().min(10).max(240).optional(),
+                correctAnswerAddDuration: z.number().min(0).max(10).optional().default(1),
             })
         )
         .mutation(async ({ input, ctx }) => {
@@ -18,7 +20,26 @@ export const game = router({
                     where: {
                         OR: input.stackIds.map((id) => ({
                             stack: {
-                                id,
+                                AND: [
+                                    {
+                                        id,
+                                    },
+                                    {
+                                        OR: [
+                                            {
+                                                author: {
+                                                    vkId: ctx.vkId,
+                                                },
+                                            },
+                                            {
+                                                isVerified: true,
+                                            },
+                                            {
+                                                // TODO check public
+                                            },
+                                        ],
+                                    },
+                                ],
                             },
                         })),
                     },
@@ -34,7 +55,7 @@ export const game = router({
                     .values()
             )
 
-            const queryResults = (await prisma.$queryRawUnsafe(`
+            const queryResults = (await ctx.prisma.$queryRawUnsafe(`
                 select t1.id      as "id",
                        t2.foreign as "similar"
                 from public."Translation" t1
@@ -65,7 +86,7 @@ export const game = router({
                 ]),
             }))
 
-            await prisma.gameSession.updateMany({
+            await ctx.prisma.gameSession.updateMany({
                 where: {
                     user: {
                         vkId: ctx.vkId,
@@ -76,7 +97,7 @@ export const game = router({
                 },
             })
 
-            const gameSession = await prisma.gameSession.create({
+            const gameSession = await ctx.prisma.gameSession.create({
                 data: {
                     user: {
                         connect: {
@@ -94,6 +115,8 @@ export const game = router({
                             id,
                         })),
                     },
+                    gameDuration: input.gameDuration,
+                    correctAnswerAddDuration: input.correctAnswerAddDuration,
                 },
             })
 
@@ -102,6 +125,19 @@ export const game = router({
                 cards: cards.map(({ title, choices, order }) => ({ title, choices, order })),
             }
         }),
+    cancel: privateProcedure.mutation(async ({ ctx }) => {
+        return await ctx.prisma.gameSession.updateMany({
+            where: {
+                user: {
+                    vkId: ctx.vkId,
+                },
+                status: "playing",
+            },
+            data: {
+                status: "cancelled",
+            },
+        })
+    }),
     answer: privateProcedure
         .input(
             z.object({
@@ -171,6 +207,16 @@ export const game = router({
 
             return data
         }),
+    getCurrentGame: privateProcedure.query(async ({ ctx }) => {
+        return await ctx.prisma.gameSession.findFirst({
+            where: {
+                user: {
+                    vkId: ctx.vkId,
+                },
+                status: "playing",
+            },
+        })
+    }),
     getRecentlyGames: privateProcedure.query(async ({ ctx }) => {
         return await ctx.prisma.gameSession.findMany({
             where: {
@@ -178,10 +224,13 @@ export const game = router({
                     vkId: ctx.vkId,
                 },
             },
+            orderBy: {
+                startedAt: "desc",
+            },
         })
     }),
     getGameResults: privateProcedure.input(z.number()).query(async ({ ctx, input }) => {
-        return await ctx.prisma.gameSession.findFirst({
+        const data = await ctx.prisma.gameSession.findFirst({
             where: {
                 id: input,
                 user: {
@@ -196,5 +245,9 @@ export const game = router({
                 },
             },
         })
+
+        const correct = data.translations.filter((x) => x.status === "correct")
+
+        return { ...data, answerAccuracy: correct.length / data.translations.length }
     }),
 })

@@ -1,31 +1,27 @@
-import { Button, Div, ModalPageHeader, PanelHeader, PanelHeaderBack } from "@vkontakte/vkui"
-import { useCallback, useMemo, useState } from "react"
-import { GameCard } from "../entities/game/ui/game-card"
+import { Button, Div, PanelHeader } from "@vkontakte/vkui"
+import { useCallback } from "react"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
+import { GameResults } from "../widgets/game-results"
+import { InGame } from "../widgets/in-game"
 
-const GameResults = ({ id, onClose }: { id: number; onClose: () => void }) => {
-    const { data } = trpc.game.getGameResults.useQuery(id)
+const RecentGameCard = ({ id }: { id: number }) => {
+    const { isOpened, open, close } = useModalState()
 
     return (
         <>
-            <ModalPageHeader
-                before={<PanelHeaderBack onClick={onClose} />}
-                children={"Результат"}
-            />
+            <div onClick={open} className="p-3 bg-secondary rounded-xl cursor-pointer">
+                {id}
+            </div>
 
-            <Div>
-                {data?.translations.map((translation) => (
-                    <div className="flex flex-col p-3">
-                        <div>{translation.translation.foreign}</div>
-                        <div>{translation.translation.vernacular}</div>
-                        <div>{translation.status}</div>
-                    </div>
-                ))}
-            </Div>
+            <ModalWrapper isOpened={isOpened} onClose={close}>
+                <ModalBody fullscreen={true}>
+                    <GameResults id={id} onClose={close} />
+                </ModalBody>
+            </ModalWrapper>
         </>
     )
 }
@@ -35,7 +31,7 @@ export const Game = () => {
     const gameResultsModal = useModalState()
 
     const {
-        mutate: startGame,
+        mutate: start,
         reset: resetGameData,
         isPending,
         data,
@@ -47,14 +43,15 @@ export const Game = () => {
 
     const { data: recentlyGames } = trpc.game.getRecentlyGames.useQuery()
 
-    const { mutate: answer } = trpc.game.answer.useMutation({
-        onSuccess: () => {
-            if (currentCardIndex === data?.cards.length) return endGame()
-        },
-    })
+    const startGame = useCallback(() => {
+        start({
+            stackIds: [1],
+            gameDuration: 60,
+            correctAnswerAddDuration: 1,
+        })
+    }, [start])
 
     const stopGame = useCallback(() => {
-        setCurrentCardIndex(0)
         gameModal.close()
         resetGameData()
     }, [gameModal, resetGameData])
@@ -63,13 +60,6 @@ export const Game = () => {
         gameModal.close()
         gameResultsModal.open()
     }, [gameModal, gameResultsModal])
-
-    const [currentCardIndex, setCurrentCardIndex] = useState(0)
-
-    const currentCardData = useMemo(
-        () => data?.cards[currentCardIndex],
-        [currentCardIndex, data?.cards],
-    )
 
     return (
         <>
@@ -81,17 +71,13 @@ export const Game = () => {
                     stretched={true}
                     size={"l"}
                     children={"Начать"}
-                    onClick={() => {
-                        startGame({
-                            stackIds: [1],
-                        })
-                    }}
+                    onClick={startGame}
                 />
             </Div>
 
-            <Div>
+            <Div className="flex-col gap-2">
                 {recentlyGames?.map((game) => (
-                    <div className="p-3">{game.id}</div>
+                    <RecentGameCard key={game.id} id={game.id} />
                 ))}
             </Div>
 
@@ -99,25 +85,7 @@ export const Game = () => {
 
             <ModalWrapper isOpened={gameModal.isOpened} onClose={stopGame}>
                 <ModalBody fullscreen={true}>
-                    <ModalPageHeader
-                        before={<PanelHeaderBack onClick={stopGame} />}
-                        children={"Игра"}
-                    />
-
-                    <Div>
-                        <GameCard
-                            title={currentCardData?.title ?? ""}
-                            choices={currentCardData?.choices ?? []}
-                            onSelect={(choice) => {
-                                answer({
-                                    order: currentCardData?.order ?? 0,
-                                    answer: currentCardData?.choices[choice] ?? "",
-                                })
-
-                                setCurrentCardIndex((prev) => prev + 1)
-                            }}
-                        />
-                    </Div>
+                    {data && <InGame onEndGame={endGame} onStopGame={stopGame} data={data} />}
                 </ModalBody>
             </ModalWrapper>
 

@@ -5,3 +5,10 @@
 .vkuiIcon {
     box-sizing: content-box;
 }
+
+.flex-col,
+.flex-row,
+.flex-col-reverse,
+.flex-row-reverse {
+    display: flex;
+}

@@ -3,7 +3,9 @@ import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server"
 import * as trpcFastify from "@trpc/server/adapters/fastify"
 import { isValidSign } from "./util/isValidSign"
 
-export const prisma = new PrismaClient()
+export const prisma = new PrismaClient().$extends({
+    result: {},
+})
 
 export const createContext = async ({ req, res }: trpcFastify.CreateFastifyContextOptions) => {
     function getUserIdFromHeader() {

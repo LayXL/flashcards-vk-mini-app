@@ -179,6 +179,9 @@ model GameSession {
   startedAt DateTime          @default(now())
   status    GameSessionStatus @default(playing)
 
+  gameDuration             Int?
+  correctAnswerAddDuration Int?
+
   stacks       Stack[]
   user         User                       @relation(fields: [userId], references: [id])
   translations TranslationInGameSession[]
