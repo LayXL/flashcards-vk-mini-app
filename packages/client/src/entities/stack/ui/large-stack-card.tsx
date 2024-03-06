@@ -1,87 +1,91 @@
-import { Subhead } from "@vkontakte/vkui"
-import styled from "styled-components"
+import { Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
+import { Caption, Subhead } from "@vkontakte/vkui"
 
 type LargeStackCardProps = {
     title: string
+    translationsCount: number
+    onClick?: () => void
+    onPlay?: () => void
+    imageUrl: string
 }
 
-export const LargeStackCard = ({ title }: LargeStackCardProps) => {
+export const LargeStackCard = ({
+    title,
+    translationsCount,
+    onClick,
+    onPlay,
+    imageUrl,
+}: LargeStackCardProps) => {
+    const mask = "linear-gradient(180deg, #fff 60%, rgba(255, 255, 255, 0) 80%)"
+
     return (
-        <Wrapper>
-            <Card>
-                <Background>
-                    <Image src={"https://i.imgur.com/AErRDzr.png"} />
-                    <Blur />
-                    <MaskImage src={"https://i.imgur.com/AErRDzr.png"} />
-                </Background>
-                <Content>
-                    <TitleWrapper>
-                        <Title children={title} />
-                    </TitleWrapper>
-                </Content>
-            </Card>
-        </Wrapper>
+        <div
+            className="w-full min-w-[160px] max-w-[320px] aspect-[9/11] flex-col cursor-pointer"
+            onClick={onClick}
+        >
+            <div className="w-full">
+                <div className="h-[6px] px-6">
+                    <div className="relative w-full h-full rounded-t-[10px] overflow-hidden">
+                        <div
+                            style={{
+                                background: `url('${imageUrl}') no-repeat top center/cover`,
+                            }}
+                            className="absolute object-cover w-full h-full"
+                        />
+                        {/* <div className="backdrop-blur-[16px] absolute inset-0" /> */}
+                    </div>
+                </div>
+                <div className="h-[8px] px-3">
+                    <div className="relative w-full h-full rounded-t-[10px] overflow-hidden">
+                        <div
+                            style={{
+                                background: [
+                                    "linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3))",
+                                    `url('${imageUrl}') no-repeat top center/cover`,
+                                ].join(","),
+                            }}
+                            className="absolute object-cover w-full h-full"
+                        />
+                        {/* <div className="backdrop-blur-[16px] absolute inset-0" /> */}
+                    </div>
+                </div>
+            </div>
+            <div className="flex-1 bg-vk-secondary rounded-xl relative overflow-hidden">
+                <div className="absolute inset-0 overflow-hidden">
+                    <img src={imageUrl} className="w-full h-full object-cover" />
+                    <div className="backdrop-blur-[32px] absolute inset-0" />
+                    <div
+                        className="absolute inset-0"
+                        style={{
+                            WebkitMaskImage: mask,
+                            maskImage: mask,
+                        }}
+                    >
+                        <img src={imageUrl} className="w-full h-full object-cover" />
+                    </div>
+                </div>
+                <div className="absolute inset-0 flex-col justify-between">
+                    <div></div>
+                    <div className="flex-col p-3 gap-2">
+                        <div>
+                            <Subhead weight="1" children={title} />
+                        </div>
+                        <div className="flex-row justify-between items-center">
+                            <div className="flex-row gap-1">
+                                <Icon16Cards2 />
+                                <Caption children={translationsCount} />
+                            </div>
+                            <Icon24PlayCircle
+                                className="cursor-pointer"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onPlay && onPlay()
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }
-
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-`
-
-const Card = styled.div`
-    height: 198px;
-    width: 170px;
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-`
-
-const Background = styled.div`
-    position: absolute;
-    inset: 0;
-`
-
-const Blur = styled.div`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(12px);
-`
-
-const Image = styled.img`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-`
-
-const MaskImage = styled(Image)`
-    mask-image: linear-gradient(180deg, #fff 70%, rgba(255, 255, 255, 0) 30%);
-`
-
-const Content = styled.div`
-    display: flex;
-    position: absolute;
-    inset: 0;
-    border: 0.5px solid rgba(0, 0, 0, 0.1);
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    gap: 4px;
-    padding: 12px;
-`
-
-const TitleWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 4px;
-`
-
-const Title = styled(Subhead).attrs({ weight: "1" })`
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    text-overflow: ellipsis;
-`

@@ -1,3 +1,4 @@
+import { feed } from "./routers/feed"
 import { game } from "./routers/game"
 import { languages } from "./routers/languages"
 import { search } from "./routers/search"
@@ -14,6 +15,7 @@ export const appRouter = router({
     game,
     search,
     updateInfo,
+    feed,
 })
 
 export type AppRouter = typeof appRouter
