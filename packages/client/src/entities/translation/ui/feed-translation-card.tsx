@@ -25,15 +25,15 @@ export const FeedTranslationCard = ({
             onClick={onClick}
         >
             <div className="flex justify-between">
-                <Subhead weight="1" children={foreign} />
+                <Subhead className="line-clamp-1" weight="1" children={foreign} />
             </div>
             <div className="flex">
-                <Caption children={vernacular} className="text-subhead" />
+                <Caption children={vernacular} className="text-subhead line-clamp-1" />
             </div>
             <div className="flex justify-between">
                 <div className="flex gap-2 items-center">
                     <Avatar size={24} src={authorAvatarUrl} />
-                    <Caption children={authorName} className="text-subhead" />
+                    <Caption children={authorName} className="text-subhead line-clamp-1" />
                 </div>
                 <Icon28AddSquareOutline
                     onClick={(e) => {

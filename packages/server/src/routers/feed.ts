@@ -73,6 +73,9 @@ export const feed = router({
                 },
                 take: 10,
                 skip: input.cursor * 10,
+                orderBy: {
+                    createdAt: "desc",
+                },
             })
 
             return {

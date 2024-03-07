@@ -1,7 +1,6 @@
 import { PanelHeader, Spinner } from "@vkontakte/vkui"
 import { useCallback, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -57,49 +56,53 @@ export const New = () => {
                 hasMore={hasNextPage}
                 next={fetchNextPage}
                 loader={<Spinner className="py-12" />}
-                className="pb-24"
+                className="pb-24 gap-3"
+                style={{
+                    display: "grid",
+                    gridAutoRows: 100,
+                    gridAutoFlow: "dense",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                }}
             >
-                <ResponsiveMasonry
-                    columnsCountBreakPoints={{
-                        420: 2,
-                        520: 3,
-                        720: 4,
-                        940: 5,
-                        1020: 6,
-                    }}
-                >
-                    <Masonry className="p-3" gutter="12px">
-                        {infiniteData?.map((x) =>
-                            x.type === "stack" ? (
-                                <LargeStackCard
-                                    key={x.stackData.id}
-                                    title={x.stackData.name}
-                                    translationsCount={x.stackData.translationsCount}
-                                    imageUrl={"/public/illustrations/artist.webp"}
-                                    onClick={onClickStack(x.stackData.id)}
-                                />
-                            ) : x.type === "translation" ? (
-                                <FeedTranslationCard
-                                    key={x.translationData.id}
-                                    foreign={x.translationData.foreign}
-                                    vernacular={x.translationData.vernacular}
-                                    authorName={x.translationData.author.firstName ?? ""}
-                                    authorAvatarUrl={
-                                        getSuitableAvatarUrl(
-                                            x.translationData.author.avatarUrls,
-                                            32,
-                                        ) ?? ""
-                                    }
-                                    onAdd={() => {}}
-                                    onClick={onClickTranslation(x.translationData.id)}
-                                    onShowMore={() => {}}
-                                />
-                            ) : (
-                                <></>
-                            ),
-                        )}
-                    </Masonry>
-                </ResponsiveMasonry>
+                {infiniteData?.map((x) =>
+                    x.type === "stack" ? (
+                        <div
+                            style={{
+                                gridRowEnd: "span 2",
+                            }}
+                        >
+                            <LargeStackCard
+                                key={x.stackData.id}
+                                title={x.stackData.name}
+                                translationsCount={x.stackData.translationsCount}
+                                imageUrl={"/public/illustrations/artist.webp"}
+                                onClick={onClickStack(x.stackData.id)}
+                            />
+                        </div>
+                    ) : x.type === "translation" ? (
+                        <div
+                            style={{
+                                gridRowEnd: "span 1",
+                            }}
+                        >
+                            <FeedTranslationCard
+                                key={x.translationData.id}
+                                foreign={x.translationData.foreign}
+                                vernacular={x.translationData.vernacular}
+                                authorName={x.translationData.author.firstName ?? ""}
+                                authorAvatarUrl={
+                                    getSuitableAvatarUrl(x.translationData.author.avatarUrls, 32) ??
+                                    ""
+                                }
+                                onAdd={() => {}}
+                                onClick={onClickTranslation(x.translationData.id)}
+                                onShowMore={() => {}}
+                            />
+                        </div>
+                    ) : (
+                        <></>
+                    ),
+                )}
             </InfiniteScroll>
 
             <ModalWrapper isOpened={stackViewModal.isOpened} onClose={stackViewModal.close}>
