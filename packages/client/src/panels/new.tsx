@@ -56,7 +56,7 @@ export const New = () => {
                 hasMore={hasNextPage}
                 next={fetchNextPage}
                 loader={<Spinner className="py-12" />}
-                className="pb-24 gap-3"
+                className="pb-24 gap-3 px-3"
                 style={{
                     display: "grid",
                     gridAutoRows: 100,
