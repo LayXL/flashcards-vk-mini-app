@@ -17,9 +17,13 @@ export const FeedTranslationCard = ({
     authorName,
     authorAvatarUrl,
     onAdd,
+    onClick,
 }: FeedTranslationCardProps) => {
     return (
-        <div className="flex flex-col gap-2 bg-secondary p-3 pr-[9px] rounded-xl">
+        <div
+            className="flex flex-col gap-2 bg-secondary p-3 pr-[9px] rounded-xl cursor-pointer"
+            onClick={onClick}
+        >
             <div className="flex justify-between">
                 <Subhead weight="1" children={foreign} />
             </div>

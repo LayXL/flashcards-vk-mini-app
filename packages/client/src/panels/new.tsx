@@ -8,18 +8,25 @@ import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
+import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackView } from "../widgets/stack-view"
+import { TranslationView } from "../widgets/translation-view"
 
 export const New = () => {
     const [selectedStack, setSelectedStack] = useState<number | null>(null)
     const stackViewModal = useModalState()
 
+    const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
+    const translationViewModal = useModalState()
+
     const { data, fetchNextPage, hasNextPage } = trpc.feed.get.useInfiniteQuery(
         {},
         {
             getNextPageParam: ({ cursor }) => cursor,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
         },
     )
 
@@ -33,6 +40,14 @@ export const New = () => {
         [stackViewModal],
     )
 
+    const onClickTranslation = useCallback(
+        (id: number) => () => {
+            setSelectedTranslation(id)
+            translationViewModal.open()
+        },
+        [translationViewModal],
+    )
+
     return (
         <>
             <PanelHeader children={"Новое"} />
@@ -40,10 +55,9 @@ export const New = () => {
             <InfiniteScroll
                 dataLength={infiniteData?.length ?? 0}
                 hasMore={hasNextPage}
-                next={() => {
-                    fetchNextPage()
-                }}
-                loader={<Spinner className="pt-12 pb-24" />}
+                next={fetchNextPage}
+                loader={<Spinner className="py-12" />}
+                className="pb-24"
             >
                 <ResponsiveMasonry
                     columnsCountBreakPoints={{
@@ -60,7 +74,7 @@ export const New = () => {
                                 <LargeStackCard
                                     key={x.stackData.id}
                                     title={x.stackData.name}
-                                    translationsCount={0}
+                                    translationsCount={x.stackData.translationsCount}
                                     imageUrl={"/public/illustrations/artist.webp"}
                                     onClick={onClickStack(x.stackData.id)}
                                 />
@@ -69,10 +83,15 @@ export const New = () => {
                                     key={x.translationData.id}
                                     foreign={x.translationData.foreign}
                                     vernacular={x.translationData.vernacular}
-                                    authorName="Trash"
-                                    authorAvatarUrl="/public/illustrations/artist.webp"
+                                    authorName={x.translationData.author.firstName ?? ""}
+                                    authorAvatarUrl={
+                                        getSuitableAvatarUrl(
+                                            x.translationData.author.avatarUrls,
+                                            32,
+                                        ) ?? ""
+                                    }
                                     onAdd={() => {}}
-                                    onClick={() => {}}
+                                    onClick={onClickTranslation(x.translationData.id)}
                                     onShowMore={() => {}}
                                 />
                             ) : (
@@ -87,6 +106,18 @@ export const New = () => {
                 <ModalBody fullscreen={true}>
                     {selectedStack && <StackView id={selectedStack} />}
                 </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper
+                isOpened={translationViewModal.isOpened}
+                onClose={translationViewModal.close}
+            >
+                {selectedTranslation && (
+                    <TranslationView
+                        id={selectedTranslation}
+                        onClose={translationViewModal.close}
+                    />
+                )}
             </ModalWrapper>
 
             <TabBar />

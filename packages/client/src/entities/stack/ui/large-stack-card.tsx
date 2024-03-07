@@ -1,5 +1,6 @@
 import { Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
 import { Caption, Subhead } from "@vkontakte/vkui"
+import { useBoolean } from "usehooks-ts"
 
 type LargeStackCardProps = {
     title: string
@@ -17,6 +18,8 @@ export const LargeStackCard = ({
     imageUrl,
 }: LargeStackCardProps) => {
     const mask = "linear-gradient(180deg, #fff 60%, rgba(255, 255, 255, 0) 80%)"
+
+    const { value: isImageFailed, setTrue: setImageFailed } = useBoolean(!imageUrl)
 
     return (
         <div
@@ -41,8 +44,11 @@ export const LargeStackCard = ({
                             style={{
                                 background: [
                                     "linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3))",
-                                    `url('${imageUrl}') no-repeat top center/cover`,
-                                ].join(","),
+                                    !isImageFailed &&
+                                        `url('${imageUrl}') no-repeat top center/cover`,
+                                ]
+                                    .filter(Boolean)
+                                    .join(","),
                             }}
                             className="absolute object-cover w-full h-full"
                         />
@@ -52,7 +58,9 @@ export const LargeStackCard = ({
             </div>
             <div className="flex-1 bg-vk-secondary rounded-xl relative overflow-hidden">
                 <div className="absolute inset-0 overflow-hidden">
-                    <img src={imageUrl} className="w-full h-full object-cover" />
+                    {!isImageFailed && (
+                        <img src={imageUrl} className="w-full h-full object-cover" />
+                    )}
                     <div className="backdrop-blur-[32px] absolute inset-0" />
                     <div
                         className="absolute inset-0"
@@ -61,7 +69,13 @@ export const LargeStackCard = ({
                             maskImage: mask,
                         }}
                     >
-                        <img src={imageUrl} className="w-full h-full object-cover" />
+                        {!isImageFailed && (
+                            <img
+                                src={imageUrl}
+                                className="w-full h-full object-cover"
+                                onError={setImageFailed}
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="absolute inset-0 flex-col justify-between">

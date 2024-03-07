@@ -16,11 +16,28 @@ export const feed = router({
                     .discriminatedUnion("type", [
                         z.object({
                             type: z.literal("stack"),
-                            stackData: z.custom<Prisma.StackGetPayload<{}>>(),
+                            stackData: z.intersection(
+                                z.custom<Prisma.StackGetPayload<{}>>(),
+                                z.object({
+                                    translationsCount: z.number(),
+                                })
+                            ),
                         }),
                         z.object({
                             type: z.literal("translation"),
-                            translationData: z.custom<Prisma.TranslationGetPayload<{}>>(),
+                            translationData: z.custom<
+                                Prisma.TranslationGetPayload<{
+                                    include: {
+                                        author: {
+                                            select: {
+                                                firstName: true
+                                                lastName: true
+                                                avatarUrls: true
+                                            }
+                                        }
+                                    }
+                                }>
+                            >(),
                         }),
                     ])
                     .array(),
@@ -31,12 +48,29 @@ export const feed = router({
             // todo is public
             const stacks = await ctx.prisma.stack.findMany({
                 where: {},
+                include: {
+                    author: true,
+                },
                 take: 5,
                 skip: input.cursor * 5,
             })
 
+            let stackTranslationsCount: Record<number, number> = {}
+
+            for (const stack of stacks) {
+                stackTranslationsCount[stack.id] = await ctx.prisma.translationInStack.count({
+                    where: {
+                        stackId: stack.id,
+                        // todo is public
+                    },
+                })
+            }
+
             const translations = await ctx.prisma.translation.findMany({
                 where: {},
+                include: {
+                    author: true,
+                },
                 take: 10,
                 skip: input.cursor * 10,
             })
@@ -45,7 +79,10 @@ export const feed = router({
                 items: shuffle([
                     ...stacks.map((stackData) => ({
                         type: "stack" as const,
-                        stackData,
+                        stackData: {
+                            ...stackData,
+                            translationsCount: stackTranslationsCount[stackData.id],
+                        },
                     })),
                     ...translations.map((translationData) => ({
                         type: "translation" as const,
