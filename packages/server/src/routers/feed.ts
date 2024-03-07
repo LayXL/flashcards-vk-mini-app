@@ -1,10 +1,15 @@
 import { Prisma } from "@prisma/client"
 import z from "zod"
-import { prisma, privateProcedure, router } from "../trpc"
+import { privateProcedure, router } from "../trpc"
 import { shuffle } from "../util/shuffle"
 
 export const feed = router({
     get: privateProcedure
+        .input(
+            z.object({
+                cursor: z.number().nullish().default(0),
+            })
+        )
         .output(
             z.object({
                 items: z
@@ -19,18 +24,21 @@ export const feed = router({
                         }),
                     ])
                     .array(),
+                cursor: z.number().nullable(),
             })
         )
-        .query(async () => {
+        .query(async ({ ctx, input }) => {
             // todo is public
-            const stacks = await prisma.stack.findMany({
+            const stacks = await ctx.prisma.stack.findMany({
                 where: {},
                 take: 5,
+                skip: input.cursor * 5,
             })
 
-            const translations = await prisma.translation.findMany({
+            const translations = await ctx.prisma.translation.findMany({
                 where: {},
                 take: 10,
+                skip: input.cursor * 10,
             })
 
             return {
@@ -44,6 +52,7 @@ export const feed = router({
                         translationData,
                     })),
                 ]),
+                cursor: stacks.length === 0 && translations.length === 0 ? null : input.cursor + 1,
             }
         }),
 })
