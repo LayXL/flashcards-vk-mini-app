@@ -61,7 +61,7 @@ export const New = () => {
                     display: "grid",
                     gridAutoRows: 100,
                     gridAutoFlow: "dense",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
                 }}
             >
                 {infiniteData?.map((x) =>
