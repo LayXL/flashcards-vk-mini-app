@@ -405,4 +405,30 @@ export const translations = router({
                 text: comment.isDeleted ? "" : comment.text,
             }))
         }),
+    findDuplications: privateProcedure
+        .input(
+            z.object({
+                vernacular: z.string().min(1).max(128).trim(),
+                foreign: z.string().min(1).max(128).trim(),
+            })
+        )
+        .query(async ({ input }) => {
+            const result = (await prisma.$queryRaw`
+                select id
+                from "Translation"
+                where "isPrivate" = false
+                and (
+                    lower("foreign")=lower('${input.foreign}')
+                    or lower("vernacular")=lower('${input.vernacular}')
+                )
+            `) as { id: number }[]
+
+            return await prisma.translation.findMany({
+                where: {
+                    OR: result.map(({ id }) => ({
+                        id,
+                    })),
+                },
+            })
+        }),
 })
