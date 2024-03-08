@@ -1,5 +1,5 @@
-import { censhorshipFilter } from "./src/censorship-filter"
+import { isHaveBadWords } from "./src/isHaveBadWords"
 
 export default {
-    censhorshipFilter,
+    isHaveBadWords,
 }
