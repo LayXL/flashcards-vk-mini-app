@@ -6,9 +6,9 @@ COPY yarn.lock .
 RUN npm install yarn
 RUN npm install typescript -g
 
-COPY packages ./packages
+COPY packages/server ./packages/server
 
-RUN yarn install --prefer-offline --frozen-lockfile
+RUN yarn install --prefer-offline --frozen-lockfile --production
 
 RUN npx prisma generate --schema=./packages/server/prisma/schema.prisma
 
