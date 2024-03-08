@@ -72,7 +72,7 @@ export const UserStacks = () => {
 
             {/* todo infinite scroll */}
             <Div
-                className="grid grid-cols-cards gap-3"
+                className="grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"
                 children={data?.items.map((stack) => (
                     <StackCardWithModal
                         key={stack.id}

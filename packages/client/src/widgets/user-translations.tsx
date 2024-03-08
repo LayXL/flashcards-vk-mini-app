@@ -47,6 +47,7 @@ export const UserTranslations = () => {
             <Div className="grid gap-3 grid-cols-cards">
                 {userTranslations?.map((translation) => (
                     <TranslationCardWithModal
+                        key={translation.id}
                         id={translation.id}
                         foreign={translation.foreign}
                         vernacular={translation.vernacular}
