@@ -15,7 +15,9 @@ export const TabBar = () => {
                     label={tab.label}
                     icon={tab.icon}
                     selected={view === tab.view}
-                    onClick={() => routeNavigator.push(tab.url)}
+                    onClick={() => {
+                        routeNavigator.push(tab.url)
+                    }}
                 />
             ))}
         />

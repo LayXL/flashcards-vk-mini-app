@@ -7,7 +7,7 @@ type LargeStackCardProps = {
     translationsCount: number
     onClick?: () => void
     onPlay?: () => void
-    imageUrl: string
+    imageUrl?: string
 }
 
 export const LargeStackCard = ({
