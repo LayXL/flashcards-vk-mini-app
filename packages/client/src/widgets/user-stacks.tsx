@@ -46,7 +46,7 @@ export const UserStacks = () => {
                     children={"Сохранённые"}
                     onClick={() => {
                         vibrateOnClick()
-                        filter === "saved" ? setFilter("all") : setFilter("saved")
+                        setFilter(filter === "saved" ? "all" : "saved")
                     }}
                 />
                 <SubnavigationButton
@@ -57,7 +57,7 @@ export const UserStacks = () => {
                     children={"Созданные мной"}
                     onClick={() => {
                         vibrateOnClick()
-                        filter === "created" ? setFilter("all") : setFilter("created")
+                        setFilter(filter === "created" ? "all" : "created")
                     }}
                 />
             </SubnavigationBar>

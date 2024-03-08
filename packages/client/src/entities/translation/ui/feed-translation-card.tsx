@@ -4,11 +4,11 @@ import { Avatar, Caption, Subhead } from "@vkontakte/vkui"
 type FeedTranslationCardProps = {
     foreign: string
     vernacular: string
-    authorName: string
-    authorAvatarUrl: string
+    authorName?: string
+    authorAvatarUrl?: string
     onAdd: () => void
     onClick: () => void
-    onShowMore: () => void
+    onShowMore?: () => void
 }
 
 export const FeedTranslationCard = ({
@@ -32,8 +32,10 @@ export const FeedTranslationCard = ({
             </div>
             <div className="flex justify-between">
                 <div className="flex gap-2 items-center">
-                    <Avatar size={24} src={authorAvatarUrl} />
-                    <Caption children={authorName} className="text-subhead line-clamp-1" />
+                    {authorAvatarUrl && <Avatar size={24} src={authorAvatarUrl} />}
+                    {authorName && (
+                        <Caption children={authorName} className="text-subhead line-clamp-1" />
+                    )}
                 </div>
                 <Icon28AddSquareOutline
                     onClick={(e) => {
