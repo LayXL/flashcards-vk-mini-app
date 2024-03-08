@@ -1,14 +1,17 @@
 FROM node:alpine
 WORKDIR /usr/local
-COPY package.json .
+
 COPY yarn.lock .
+
+COPY package.json .
+COPY /packages/server/package.json ./packages/server
 
 RUN npm install yarn
 RUN npm install typescript -g
 
-COPY packages/server ./packages/server
-
 RUN yarn install --prefer-offline --frozen-lockfile
+
+COPY packages/server ./packages/server
 
 RUN npx prisma generate --schema=./packages/server/prisma/schema.prisma
 
