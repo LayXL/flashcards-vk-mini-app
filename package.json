@@ -8,6 +8,7 @@
         "dev": "concurrently 'yarn:dev:client' 'yarn:dev:server'",
         "dev:client": "cd packages/client && yarn dev",
         "dev:server": "cd packages/server && yarn dev",
+        "build:client": "cd packages/client && yarn run build",
         "migrate-dev": "cd packages/server && prisma migrate dev",
         "lt": "node lt.js"
     },
