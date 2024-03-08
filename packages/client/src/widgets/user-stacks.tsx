@@ -1,40 +1,87 @@
-import { Button, Div, Spacing } from "@vkontakte/vkui"
+import { Icon24AddCircle, Icon24BookmarkOutline } from "@vkontakte/icons"
+import {
+    Avatar,
+    Div,
+    PanelSpinner,
+    Spacing,
+    SubnavigationBar,
+    SubnavigationButton,
+} from "@vkontakte/vkui"
 import { useState } from "react"
-import { StackCard } from "../entities/stack/ui/stack-card"
+import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
-import { trpc } from "../shared/api"
+import { RouterInput, trpc } from "../shared/api"
+import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
+import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
 import { StackView } from "./stack-view"
 
 export const UserStacks = () => {
-    const { data } = trpc.stacks.getUserStacks.useQuery()
+    const [filter, setFilter] = useState<RouterInput["stacks"]["getUserStacks"]["filter"]>("all")
 
-    const [isOpened, setIsOpened] = useState(false)
+    const { data: userInfo } = trpc.getUser.useQuery()
+
+    const { data, isLoading } = trpc.stacks.getUserStacks.useQuery({
+        filter,
+    })
+
+    const createStackModal = useModalState()
 
     return (
         <>
-            <Div>
-                <Button
-                    stretched={true}
-                    size={"l"}
-                    children={"Добавить стопку"}
-                    onClick={() => setIsOpened(true)}
+            <SubnavigationBar>
+                <SubnavigationButton
+                    before={<Icon24AddCircle />}
+                    children={"Создать"}
+                    onClick={() => {
+                        vibrateOnClick()
+                        createStackModal.open()
+                    }}
                 />
-            </Div>
+                <SubnavigationButton
+                    selected={filter === "saved"}
+                    before={<Icon24BookmarkOutline />}
+                    children={"Сохранённые"}
+                    onClick={() => {
+                        vibrateOnClick()
+                        filter === "saved" ? setFilter("all") : setFilter("saved")
+                    }}
+                />
+                <SubnavigationButton
+                    selected={filter === "created"}
+                    before={
+                        <Avatar size={24} src={getSuitableAvatarUrl(userInfo?.avatarUrls, 32)} />
+                    }
+                    children={"Созданные мной"}
+                    onClick={() => {
+                        vibrateOnClick()
+                        filter === "created" ? setFilter("all") : setFilter("created")
+                    }}
+                />
+            </SubnavigationBar>
 
-            <ModalWrapper isOpened={isOpened} onClose={() => setIsOpened(false)}>
+            <ModalWrapper isOpened={createStackModal.isOpened} onClose={createStackModal.close}>
                 <ModalBody>
                     <StackCreateModal />
                 </ModalBody>
             </ModalWrapper>
 
-            <Div>
-                {data?.map((stack) => (
-                    <StackCardWithModal key={stack.id} id={stack.id} name={stack.name} />
+            {isLoading && <PanelSpinner />}
+
+            {/* todo infinite scroll */}
+            <Div
+                className="grid grid-cols-cards gap-3"
+                children={data?.items.map((stack) => (
+                    <StackCardWithModal
+                        key={stack.id}
+                        id={stack.id}
+                        name={stack.name}
+                        translationsCount={stack.translationsCount}
+                    />
                 ))}
-            </Div>
+            />
 
             <Spacing size={256} />
         </>
@@ -44,14 +91,24 @@ export const UserStacks = () => {
 type StackCardWithModalProps = {
     id: number
     name: string
+    translationsCount: number
 }
 
-const StackCardWithModal = ({ id, name }: StackCardWithModalProps) => {
+const StackCardWithModal = ({ id, name, translationsCount }: StackCardWithModalProps) => {
     const { isOpened, open, close } = useModalState()
 
     return (
         <>
-            <StackCard name={name} onClick={open} />
+            <LargeStackCard
+                title={name}
+                translationsCount={translationsCount}
+                onClick={() => {
+                    vibrateOnClick()
+                    open()
+                }}
+                // todo
+                imageUrl=""
+            />
 
             <ModalWrapper isOpened={isOpened} onClose={close}>
                 <ModalBody fullscreen={true}>

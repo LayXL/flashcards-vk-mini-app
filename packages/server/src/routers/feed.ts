@@ -45,9 +45,17 @@ export const feed = router({
             })
         )
         .query(async ({ ctx, input }) => {
-            // todo is public
             const stacks = await ctx.prisma.stack.findMany({
-                where: {},
+                where: {
+                    isPrivate: false,
+                    translations: {
+                        some: {
+                            translation: {
+                                isPrivate: false,
+                            },
+                        },
+                    },
+                },
                 include: {
                     author: true,
                 },
@@ -61,13 +69,17 @@ export const feed = router({
                 stackTranslationsCount[stack.id] = await ctx.prisma.translationInStack.count({
                     where: {
                         stackId: stack.id,
-                        // todo is public
+                        translation: {
+                            isPrivate: false,
+                        },
                     },
                 })
             }
 
             const translations = await ctx.prisma.translation.findMany({
-                where: {},
+                where: {
+                    isPrivate: false,
+                },
                 include: {
                     author: true,
                 },

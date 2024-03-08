@@ -1,5 +1,6 @@
 import { Icon28AddOutline, Icon28Delete } from "@vkontakte/icons"
 import {
+    Banner,
     Button,
     CellButton,
     ChipsInput,
@@ -17,6 +18,8 @@ import {
 } from "@vkontakte/vkui"
 import { useState } from "react"
 import { Controller, SubmitHandler, useFieldArray, useForm } from "react-hook-form"
+import { useDebounceValue } from "usehooks-ts"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
@@ -53,13 +56,16 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
         languageId: 1,
     })
 
-    const { control, handleSubmit } = useForm<TranslationFormInputs>({
+    const { control, handleSubmit, watch } = useForm<TranslationFormInputs>({
         defaultValues,
     })
     const { fields, append, remove } = useFieldArray({
         control,
         name: "transcriptions",
     })
+
+    const [vernacular] = useDebounceValue(watch("vernacular"), 600)
+    const [foreign] = useDebounceValue(watch("foreign"), 600)
 
     const { mutate: addTranslation, isPending: isAddingTranslation } =
         trpc.translations.add.useMutation({
@@ -84,6 +90,16 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                 }
             },
         })
+
+    const { data: duplications } = trpc.translations.findDuplications.useQuery(
+        {
+            foreign,
+            vernacular,
+        },
+        {
+            enabled: foreign?.length > 0 && vernacular?.length > 0,
+        },
+    )
 
     const isLoading = isAddingTranslation || isEditingTranslation
 
@@ -139,6 +155,24 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                 before={<PanelHeaderClose onClick={onClose} />}
                 children={defaultValues ? "Изменить перевод" : "Добавить перевод"}
             />
+
+            {duplications && (duplications?.length ?? 0) > 0 && (
+                <Div>
+                    <Banner
+                        header={"Похожий перевод уже есть в Лёрнинг"}
+                        subheader={"Используйте уже существующий перевод"}
+                        actions={
+                            <>
+                                <TranslationCard
+                                    id={duplications[0].id}
+                                    vernacular={duplications[0].vernacular}
+                                    foreign={duplications[0].foreign}
+                                />
+                            </>
+                        }
+                    />
+                </Div>
+            )}
 
             <Group>
                 <Controller

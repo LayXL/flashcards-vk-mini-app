@@ -1,26 +1,43 @@
-import { Button, Div, PanelSpinner, Spacing } from "@vkontakte/vkui"
+import { Icon24AddCircle, Icon24BookmarkOutline } from "@vkontakte/icons"
+import {
+    Avatar,
+    Div,
+    PanelSpinner,
+    Spacing,
+    SubnavigationBar,
+    SubnavigationButton,
+} from "@vkontakte/vkui"
 import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { useModalState } from "../shared/hooks/useModalState"
 import { TranslationAdd } from "./translation-add"
 
 export const UserTranslations = () => {
     const { data: userTranslations, isLoading } = trpc.translations.getUserTranslations.useQuery()
 
+    const { data: userInfo } = trpc.getUser.useQuery()
+
     const addTranslationModal = useModalState()
 
     return (
         <>
-            <Div>
-                <Button
-                    stretched={true}
-                    size={"l"}
-                    children={"Добавить перевод"}
+            <SubnavigationBar>
+                <SubnavigationButton
+                    before={<Icon24AddCircle />}
+                    children={"Создать"}
                     onClick={addTranslationModal.open}
                 />
-            </Div>
+                <SubnavigationButton before={<Icon24BookmarkOutline />} children={"Сохранённые"} />
+                <SubnavigationButton
+                    before={
+                        <Avatar size={24} src={getSuitableAvatarUrl(userInfo?.avatarUrls, 32)} />
+                    }
+                    children={"Созданные мной"}
+                />
+            </SubnavigationBar>
 
             {isLoading && <PanelSpinner />}
 

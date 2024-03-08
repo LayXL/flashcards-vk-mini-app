@@ -96,6 +96,7 @@ export const translations = router({
     add: privateProcedure
         .input(
             z.object({
+                isPrivate: z.boolean().default(false),
                 languageId: z.number(),
                 languageVariationId: z.number().optional(),
                 vernacular: z.string().min(1).max(100),
@@ -121,6 +122,7 @@ export const translations = router({
                 transcriptions,
                 example,
                 foreignDescription,
+                isPrivate,
             } = input
 
             return await prisma.translation.create({
@@ -165,6 +167,7 @@ export const translations = router({
                             })),
                         },
                     },
+                    isPrivate,
                 },
                 include: {
                     language: true,
@@ -418,10 +421,12 @@ export const translations = router({
                 from "Translation"
                 where "isPrivate" = false
                 and (
-                    lower("foreign")=lower('${input.foreign}')
-                    or lower("vernacular")=lower('${input.vernacular}')
+                    lower("foreign")=lower(${input.foreign})
+                    or lower("vernacular")=lower(${input.vernacular})
                 )
             `) as { id: number }[]
+
+            console.log(result)
 
             return await prisma.translation.findMany({
                 where: {

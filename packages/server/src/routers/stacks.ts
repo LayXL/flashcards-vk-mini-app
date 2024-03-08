@@ -8,6 +8,7 @@ export const stacks = router({
             z.object({
                 name: z.string().min(3).max(96).trim(),
                 description: z.string().min(3).max(256).trim().optional(),
+                isPrivate: z.boolean().default(false),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -20,18 +21,67 @@ export const stacks = router({
                     },
                     name: input.name,
                     description: input.description,
+                    isPrivate: input.isPrivate,
                 },
             })
         }),
-    getUserStacks: privateProcedure.query(async ({ ctx }) => {
-        return await prisma.stack.findMany({
-            where: {
-                author: {
-                    vkId: ctx.vkId.toString(),
-                },
-            },
-        })
-    }),
+    getUserStacks: privateProcedure
+        .input(
+            z.object({
+                cursor: z.number().nullish().default(0),
+                limit: z.number().min(1).max(100).default(10),
+                filter: z.enum(["all", "saved", "created"]).default("all"),
+            })
+        )
+        .query(async ({ ctx, input }) => {
+            const stacks = await prisma.stack.findMany({
+                where:
+                    input.filter === "all"
+                        ? {
+                              author: {
+                                  vkId: ctx.vkId,
+                              },
+                          }
+                        : input.filter === "saved"
+                        ? {
+                              isPrivate: false,
+                              reactions: {
+                                  some: {
+                                      user: {
+                                          vkId: ctx.vkId,
+                                      },
+                                  },
+                              },
+                          }
+                        : {
+                              author: {
+                                  vkId: ctx.vkId,
+                              },
+                          },
+                take: input.limit + 1,
+            })
+
+            let stackTranslationsCount: Record<number, number> = {}
+
+            for (const stack of stacks) {
+                stackTranslationsCount[stack.id] = await ctx.prisma.translationInStack.count({
+                    where: {
+                        stackId: stack.id,
+                        translation: {
+                            isPrivate: false,
+                        },
+                    },
+                })
+            }
+
+            return {
+                items: stacks.slice(0, input.limit).map((stack) => ({
+                    ...stack,
+                    translationsCount: stackTranslationsCount[stack.id],
+                })),
+                cursor: stacks.slice(-1)[0]?.id || null,
+            }
+        }),
     getSingle: privateProcedure
         .input(
             z.object({
@@ -131,6 +181,7 @@ export const stacks = router({
             const stackData = await prisma.stack.findFirst({
                 where: {
                     id: input.stackId,
+                    isPrivate: false,
                 },
                 select: {
                     name: true,
@@ -159,12 +210,12 @@ export const stacks = router({
     addReaction: privateProcedure
         .input(z.object({ stackId: z.number() }))
         .mutation(async ({ ctx, input }) => {
-            // TODO позволять реагировать только на публичные стопки
             return await prisma.reactionOnStack.create({
                 data: {
                     stack: {
                         connect: {
                             id: input.stackId,
+                            isPrivate: false,
                         },
                     },
                     user: {

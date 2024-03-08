@@ -8,6 +8,10 @@ export default {
     },
     theme: {
         extend: {
+            padding: {
+                "vertical-regular": "var(--vkui--size_base_padding_vertical--regular)",
+                "horizontal-regular": "var(--vkui--size_base_padding_horizontal--regular)",
+            },
             colors: {
                 dynamic: {
                     red: vkTheme.colorAccentRed.normal.value,
@@ -46,6 +50,9 @@ export default {
             },
             dropShadow: {
                 card: "0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08);",
+            },
+            gridTemplateColumns: {
+                cards: "repeat(auto-fill, minmax(160px, 1fr))",
             },
         },
     },

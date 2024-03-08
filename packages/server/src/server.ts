@@ -1,8 +1,8 @@
-import fastify from "fastify"
+import cors from "@fastify/cors"
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify"
+import fastify from "fastify"
 import { appRouter } from "./appRouter"
 import { createContext } from "./trpc"
-import cors from "@fastify/cors"
 
 const server = fastify({
     maxParamLength: 5000,
@@ -32,10 +32,6 @@ server.register(fastifyTRPCPlugin, {
 
 server.listen({
     port: parseInt(process.env.SERVER_PORT) || 3000,
-})
-
-process.on("SIGTERM", () => {
-    server.close()
 })
 
 console.log(`Server started on ${parseInt(process.env.SERVER_PORT) || 3000} port`)

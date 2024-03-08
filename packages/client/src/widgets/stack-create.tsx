@@ -15,7 +15,7 @@ export const StackCreateModal = () => {
     const { mutate: createStack } = trpc.stacks.create.useMutation({
         onSuccess: () => {
             modal?.onClose()
-            utils.stacks.getUserStacks.refetch()
+            utils.stacks.getUserStacks.refetch({})
         },
     })
 

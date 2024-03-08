@@ -1,5 +1,6 @@
 import { feed } from "./routers/feed"
 import { game } from "./routers/game"
+import { getUser } from "./routers/getUser"
 import { languages } from "./routers/languages"
 import { search } from "./routers/search"
 import { stacks } from "./routers/stacks"
@@ -15,6 +16,7 @@ export const appRouter = router({
     game,
     search,
     updateInfo,
+    getUser,
     feed,
 })
 

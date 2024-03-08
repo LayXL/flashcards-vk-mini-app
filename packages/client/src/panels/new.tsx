@@ -1,4 +1,4 @@
-import { PanelHeader, Spinner } from "@vkontakte/vkui"
+import { PanelHeader, Spacing, Spinner } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
@@ -8,10 +8,12 @@ import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
+import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useIsScrollable } from "../shared/hooks/useIsScrollable"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackView } from "../widgets/stack-view"
+import { TranslationAddToStack } from "../widgets/translation-add-to-stack"
 import { TranslationView } from "../widgets/translation-view"
 
 export const New = () => {
@@ -20,6 +22,7 @@ export const New = () => {
 
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
     const translationViewModal = useModalState()
+    const translationAddModal = useModalState()
 
     const { data, fetchNextPage, hasNextPage, isLoading } = trpc.feed.get.useInfiniteQuery(
         {},
@@ -36,6 +39,7 @@ export const New = () => {
 
     const onClickStack = useCallback(
         (id: number) => () => {
+            vibrateOnClick()
             setSelectedStack(id)
             stackViewModal.open()
         },
@@ -44,10 +48,20 @@ export const New = () => {
 
     const onClickTranslation = useCallback(
         (id: number) => () => {
+            vibrateOnClick()
             setSelectedTranslation(id)
             translationViewModal.open()
         },
         [translationViewModal],
+    )
+
+    const onClickAddTranslation = useCallback(
+        (id: number) => () => {
+            vibrateOnClick()
+            setSelectedTranslation(id)
+            translationAddModal.open()
+        },
+        [translationAddModal],
     )
 
     useEffect(() => {
@@ -67,7 +81,7 @@ export const New = () => {
                 hasMore={hasNextPage}
                 next={fetchNextPage}
                 loader={<></>}
-                className="pb-24 pt-3 px-3"
+                className="py-3 px-3"
             >
                 <div
                     className="grid gap-3"
@@ -79,12 +93,7 @@ export const New = () => {
                 >
                     {infiniteData?.map((x, i) =>
                         x.type === "stack" ? (
-                            <div
-                                style={{
-                                    gridRowEnd: "span 2",
-                                }}
-                                key={i}
-                            >
+                            <div className="row-span-2" key={i}>
                                 <LargeStackCard
                                     title={x.stackData.name}
                                     translationsCount={x.stackData.translationsCount}
@@ -92,12 +101,7 @@ export const New = () => {
                                 />
                             </div>
                         ) : x.type === "translation" ? (
-                            <div
-                                style={{
-                                    gridRowEnd: "span 1",
-                                }}
-                                key={i}
-                            >
+                            <div className="row-span-1" key={i}>
                                 <FeedTranslationCard
                                     foreign={x.translationData.foreign}
                                     vernacular={x.translationData.vernacular}
@@ -109,7 +113,7 @@ export const New = () => {
                                         ) ?? ""
                                     }
                                     onClick={onClickTranslation(x.translationData.id)}
-                                    onAdd={() => {}}
+                                    onAdd={onClickAddTranslation(x.translationData.id)}
                                     onShowMore={() => {}}
                                 />
                             </div>
@@ -121,9 +125,25 @@ export const New = () => {
                 {isLoading && <Spinner className="py-12" />}
             </InfiniteScroll>
 
+            <Spacing size={256} />
+
             <ModalWrapper isOpened={stackViewModal.isOpened} onClose={stackViewModal.close}>
                 <ModalBody fullscreen={true}>
                     {selectedStack && <StackView id={selectedStack} />}
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper
+                isOpened={translationAddModal.isOpened}
+                onClose={translationAddModal.close}
+            >
+                <ModalBody fullscreen={true}>
+                    {selectedTranslation && (
+                        <TranslationAddToStack
+                            translationId={selectedTranslation}
+                            onClose={translationAddModal.close}
+                        />
+                    )}
                 </ModalBody>
             </ModalWrapper>
 

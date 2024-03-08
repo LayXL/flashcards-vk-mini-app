@@ -23,7 +23,7 @@ export const LargeStackCard = ({
 
     return (
         <div
-            className="w-full min-w-[160px] max-w-[320px] h-full flex-col cursor-pointer"
+            className="w-full min-h-[212px] min-w-[160px] max-w-[320px] h-full flex-col cursor-pointer"
             onClick={onClick}
         >
             <div className="w-full">
@@ -89,13 +89,15 @@ export const LargeStackCard = ({
                                 <Icon16Cards2 />
                                 <Caption children={translationsCount} />
                             </div>
-                            <Icon24PlayCircle
-                                className="cursor-pointer"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    onPlay && onPlay()
-                                }}
-                            />
+                            {onPlay && (
+                                <Icon24PlayCircle
+                                    className="cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        onPlay && onPlay()
+                                    }}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

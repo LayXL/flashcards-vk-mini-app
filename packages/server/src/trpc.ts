@@ -4,7 +4,14 @@ import * as trpcFastify from "@trpc/server/adapters/fastify"
 import { isValidSign } from "./util/isValidSign"
 
 export const prisma = new PrismaClient().$extends({
-    result: {},
+    result: {
+        user: {
+            avatarUrls: {
+                needs: { avatarUrls: true },
+                compute: (data) => data.avatarUrls as Record<string | number, string>,
+            },
+        },
+    },
 })
 
 export const createContext = async ({ req, res }: trpcFastify.CreateFastifyContextOptions) => {

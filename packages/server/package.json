@@ -5,7 +5,7 @@
     "license": "Apache-2.0",
     "scripts": {
         "build": "npx tsc",
-        "dev": "nodemon --exec 'npx ts-node src/server.ts'",
+        "dev": "nodemon",
         "test": "ts-node src/test.ts"
     },
     "devDependencies": {
@@ -20,12 +20,12 @@
         "typescript": "^5.3.3"
     },
     "dependencies": {
-        "@fastify/cors": "^9.0.0",
+        "@fastify/cors": "^9.0.1",
         "@prisma/client": "^5.8.1",
         "@trpc/server": "^11.0.0-next-beta.242",
         "cors": "^2.8.5",
         "date-fns": "^2.30.0",
-        "fastify": "^4.25.2",
+        "fastify": "^4.26.2",
         "luxon": "^3.4.4",
         "nodemon": "^3.0.3",
         "prisma": "^5.9.1",
