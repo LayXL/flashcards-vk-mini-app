@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server"
-import * as trpcFastify from "@trpc/server/adapters/fastify"
+import * as trpcExpress from "@trpc/server/adapters/express"
 import { isValidSign } from "./util/isValidSign"
 
 export const prisma = new PrismaClient().$extends({
@@ -14,7 +14,7 @@ export const prisma = new PrismaClient().$extends({
     },
 })
 
-export const createContext = async ({ req, res }: trpcFastify.CreateFastifyContextOptions) => {
+export const createContext = async ({ req, res }: trpcExpress.CreateExpressContextOptions) => {
     function getUserIdFromHeader() {
         if (req.headers.authorization) {
             const vkData = Object.fromEntries(

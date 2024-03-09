@@ -1,37 +1,21 @@
-import cors from "@fastify/cors"
-import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify"
-import fastify from "fastify"
+import * as trpcExpress from "@trpc/server/adapters/express"
+import cors from "cors"
+import express from "express"
 import { appRouter } from "./appRouter"
 import { createContext } from "./trpc"
 
-const server = fastify({
-    maxParamLength: 5000,
-})
+const app = express()
 
-server.register(cors, {
-    origin: "*",
-    allowedHeaders: [
-        "Origin",
-        "X-Requested-With",
-        "Accept",
-        "Content-Type",
-        "Authorization",
-        "Cookie",
-        "bypass-tunnel-reminder",
-    ],
-    methods: ["GET", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
-})
+app.use(cors())
 
-server.register(fastifyTRPCPlugin, {
-    prefix: "/api",
-    trpcOptions: {
+app.use(
+    "/api",
+    trpcExpress.createExpressMiddleware({
         router: appRouter,
         createContext,
-    },
-})
+    })
+)
 
-server.listen({
-    port: parseInt(process.env.SERVER_PORT) || 3000,
+app.listen(parseInt(process.env.SERVER_PORT) || 3000, () => {
+    console.log(`Server started on ${process.env.SERVER_PORT || 3000} port`)
 })
-
-console.log(`Server started on ${parseInt(process.env.SERVER_PORT) || 3000} port`)
