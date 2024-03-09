@@ -15,6 +15,7 @@ import { useModal } from "../features/modal/contexts/modal-context"
 import { trpc } from "../shared/api"
 import {
     Icon24Add,
+    Icon24Like,
     Icon24LikeOutline,
     Icon24MoreHorizontal,
     Icon28MoreHorizontal,
@@ -33,7 +34,13 @@ export const StackView = ({ id }: StackViewProps) => {
         onSuccess: () => refetch(),
     })
 
-    const {mutate: addReaction} = trpc.stacks.addReaction.useMutation()
+    const {mutate: addReaction} = trpc.stacks.addReaction.useMutation({
+        onSuccess: () => refetch(),
+    })
+
+    const {mutate: removeReaction} = trpc.stacks.removeReaction.useMutation({
+        onSuccess: () => refetch(),
+    })
 
     return (
         <>
@@ -49,8 +56,8 @@ export const StackView = ({ id }: StackViewProps) => {
                         <Icon24MoreHorizontal />
                     </div>
                     <div className="w-[200px] aspect-square bg-vk-default rounded-xl"></div>
-                    <div className="rounded-full p-2.5 bg-vk-default text-accent" onClick={()=> addReaction({stackId:id})}>
-                        <Icon24LikeOutline />
+                    <div className="rounded-full p-2.5 bg-vk-default text-accent" onClick={() =>data?.isLiked ? removeReaction({stackId:id}) : addReaction({stackId:id})}>
+                        {data?.isLiked ? <Icon24Like/> : <Icon24LikeOutline />}
                     </div>
                 </div>
                 <Div>
