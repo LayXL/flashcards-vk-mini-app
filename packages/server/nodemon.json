@@ -10,5 +10,6 @@
         "src"
     ],
     "exec": "ts-node src/server.ts",
-    "quiet": true
+    "quiet": true,
+    "delay": "500"
 }
