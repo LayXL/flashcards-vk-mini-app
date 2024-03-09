@@ -89,7 +89,7 @@ export const stacks = router({
             })
         )
         .query(async ({ ctx, input }) => {
-            return await prisma.stack.findFirst({
+            const data = await prisma.stack.findFirst({
                 where: {
                     id: input.id,
                     author: {
@@ -104,6 +104,20 @@ export const stacks = router({
                     },
                 },
             })
+
+            const isLiked = await prisma.reactionOnStack.count({
+                where: {
+                    stackId: input.id,
+                    user: {
+                        vkId: ctx.vkId,
+                    },
+                },
+            })
+
+            return {
+                ...data,
+                isLiked,
+            }
         }),
     addTranslation: privateProcedure
         .input(
