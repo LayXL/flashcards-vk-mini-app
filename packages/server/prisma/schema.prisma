@@ -25,7 +25,9 @@ model User {
   reactionsOnTranslations    ReactionOnTranslation[]
   reactoinsOnStacks          ReactionOnStack[]
   comments                   Comment[]
-  GameSession                GameSession[]
+  gameSessions               GameSession[]
+  userProfile                UserProfile?
+  UserDailyStatistic         UserDailyStatistic[]
 }
 
 model Translation {
@@ -132,9 +134,10 @@ model TranslationInStack {
 }
 
 model Language {
-  id           Int                 @id @default(autoincrement())
-  name         String
-  iconUrl      String
+  id      Int    @id @default(autoincrement())
+  name    String
+  iconUrl String
+
   variations   LanguageVariation[]
   users        User[]
   translations Translation[]
@@ -152,8 +155,9 @@ model LanguageVariation {
 }
 
 model Tag {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
   translations Translation[]
   stacks       Stack[]
 }
@@ -206,4 +210,27 @@ model TranslationInGameSession {
   translation Translation @relation(fields: [translationId], references: [id])
 
   @@id([gameSessionId, order])
+}
+
+model UserProfile {
+  userId Int @unique
+
+  xp Int @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model UserDailyStatistic {
+  userId Int
+  date   DateTime
+
+  xp     Int @default(0)
+  points Int @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([userId, date])
+}
+
+model UserSeasonStatistic {
 }
