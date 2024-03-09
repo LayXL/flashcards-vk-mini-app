@@ -1,18 +1,10 @@
-import { Icon24AddCircle, Icon24BookmarkOutline } from "@vkontakte/icons"
-import {
-    Avatar,
-    Div,
-    PanelSpinner,
-    Spacing,
-    SubnavigationBar,
-    SubnavigationButton,
-} from "@vkontakte/vkui"
+import { Icon24Add, Icon24LikeOutline, Icon24UserOutline } from "@vkontakte/icons"
+import { Div, PanelSpinner, Spacing, SubnavigationBar, SubnavigationButton } from "@vkontakte/vkui"
 import { useState } from "react"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
-import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
@@ -20,8 +12,6 @@ import { StackView } from "./stack-view"
 
 export const UserStacks = () => {
     const [filter, setFilter] = useState<RouterInput["stacks"]["getUserStacks"]["filter"]>("all")
-
-    const { data: userInfo } = trpc.getUser.useQuery()
 
     const { data, isLoading } = trpc.stacks.getUserStacks.useQuery({
         filter,
@@ -33,7 +23,7 @@ export const UserStacks = () => {
         <>
             <SubnavigationBar>
                 <SubnavigationButton
-                    before={<Icon24AddCircle />}
+                    before={<Icon24Add />}
                     children={"Создать"}
                     onClick={() => {
                         vibrateOnClick()
@@ -42,8 +32,8 @@ export const UserStacks = () => {
                 />
                 <SubnavigationButton
                     selected={filter === "saved"}
-                    before={<Icon24BookmarkOutline />}
-                    children={"Сохранённые"}
+                    before={<Icon24LikeOutline />}
+                    children={"Понравившиеся"}
                     onClick={() => {
                         vibrateOnClick()
                         setFilter(filter === "saved" ? "all" : "saved")
@@ -51,9 +41,7 @@ export const UserStacks = () => {
                 />
                 <SubnavigationButton
                     selected={filter === "created"}
-                    before={
-                        <Avatar size={24} src={getSuitableAvatarUrl(userInfo?.avatarUrls, 32)} />
-                    }
+                    before={<Icon24UserOutline />}
                     children={"Созданные мной"}
                     onClick={() => {
                         vibrateOnClick()
