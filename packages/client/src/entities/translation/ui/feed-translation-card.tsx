@@ -4,7 +4,7 @@ import { Avatar, Caption, Subhead } from "@vkontakte/vkui"
 type FeedTranslationCardProps = {
     foreign: string
     vernacular: string
-    authorName?: string
+    authorName?: string | null
     authorAvatarUrl?: string
     onAdd: () => void
     onClick: () => void
