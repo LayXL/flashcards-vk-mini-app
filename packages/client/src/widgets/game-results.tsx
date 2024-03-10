@@ -13,6 +13,7 @@ import { ReactNode } from "react"
 import { useBoolean } from "usehooks-ts"
 import { trpc } from "../shared/api"
 import { AnimatedNumber } from "../shared/ui/animated-number"
+import { AnswerCard } from "../entities/game/ui/answer-card"
 
 type GameResultsProps = {
     id: number
@@ -160,14 +161,7 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
 
                     <Div className="flex-col gap-2">
                         {data?.translations?.map((translation) => (
-                            <div
-                                className="flex flex-col p-3 bg-secondary rounded-xl shadow-card"
-                                key={translation.translationId}
-                            >
-                                <div>{translation.translation.foreign}</div>
-                                <div>{translation.translation.vernacular}</div>
-                                <div>{translation.status}</div>
-                            </div>
+                            <AnswerCard foreign={translation.translation.foreign} vernacular={translation.translation.vernacular} time={0} type={translation.status}/>
                         ))}
                     </Div>
                 </motion.div>
