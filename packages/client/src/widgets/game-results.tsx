@@ -11,9 +11,9 @@ import {
 import { motion, useAnimationControls } from "framer-motion"
 import { ReactNode } from "react"
 import { useBoolean } from "usehooks-ts"
+import { AnswerCard } from "../entities/game/ui/answer-card"
 import { trpc } from "../shared/api"
 import { AnimatedNumber } from "../shared/ui/animated-number"
-import { AnswerCard } from "../entities/game/ui/answer-card"
 
 type GameResultsProps = {
     id: number
@@ -160,9 +160,16 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                     </Div>
 
                     <Div className="flex-col gap-2">
-                        {data?.translations?.map((translation) => (
-                            <AnswerCard foreign={translation.translation.foreign} vernacular={translation.translation.vernacular} time={0} type={translation.status}/>
-                        ))}
+                        {data?.translations
+                            ?.filter(({ status }) => status !== "unanswered")
+                            .map(({ translation, status }) => (
+                                <AnswerCard
+                                    foreign={translation.foreign}
+                                    vernacular={translation.vernacular}
+                                    time={0}
+                                    type={status as "correct" | "incorrect"}
+                                />
+                            ))}
                     </Div>
                 </motion.div>
             </div>
