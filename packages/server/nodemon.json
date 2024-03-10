@@ -10,5 +10,5 @@
         "src"
     ],
     "exec": "ts-node src/server.ts",
-    "quiet": false
+    "quiet": true
 }
