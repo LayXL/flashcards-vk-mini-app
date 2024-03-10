@@ -4,16 +4,23 @@ import {
     Caption,
     Div,
     FixedLayout,
+    Header,
     ModalPageHeader,
     PanelHeaderBack,
     Title,
 } from "@vkontakte/vkui"
 import { motion, useAnimationControls } from "framer-motion"
-import { ReactNode } from "react"
+import { ReactNode, useState } from "react"
 import { useBoolean } from "usehooks-ts"
 import { AnswerCard } from "../entities/game/ui/answer-card"
+import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
+import { useModalState } from "../shared/hooks/useModalState"
 import { AnimatedNumber } from "../shared/ui/animated-number"
+import { TranslationAddToStack } from "./translation-add-to-stack"
+import { TranslationView } from "./translation-view"
 
 type GameResultsProps = {
     id: number
@@ -22,6 +29,11 @@ type GameResultsProps = {
 
 export const GameResults = ({ id, onClose }: GameResultsProps) => {
     const { data } = trpc.game.getGameResults.useQuery(id)
+
+    const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
+
+    const translationViewModal = useModalState()
+    const translationAddModal = useModalState()
 
     const roundedAccuracy = Math.round((data?.answerAccuracy ?? 0) * 100)
 
@@ -159,6 +171,8 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                         />
                     </Div>
 
+                    <Header children={"Ответы"} />
+
                     <Div className="flex-col gap-2">
                         {data?.translations
                             ?.filter(({ status }) => status !== "unanswered")
@@ -168,6 +182,16 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                     vernacular={translation.vernacular}
                                     time={0}
                                     type={status as "correct" | "incorrect"}
+                                    onClick={() => {
+                                        vibrateOnClick()
+                                        translationViewModal.open()
+                                        setSelectedTranslation(translation.id)
+                                    }}
+                                    onAdd={() => {
+                                        vibrateOnClick()
+                                        translationAddModal.open()
+                                        setSelectedTranslation(translation.id)
+                                    }}
                                 />
                             ))}
                     </Div>
@@ -186,6 +210,34 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                     />
                 </Div>
             </FixedLayout>
+
+            <ModalWrapper
+                isOpened={translationViewModal.isOpened}
+                onClose={translationViewModal.close}
+            >
+                <ModalBody fullscreen={true}>
+                    {selectedTranslation && (
+                        <TranslationView
+                            id={selectedTranslation}
+                            onClose={translationViewModal.close}
+                        />
+                    )}
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper
+                isOpened={translationAddModal.isOpened}
+                onClose={translationAddModal.close}
+            >
+                <ModalBody fullscreen={true}>
+                    {selectedTranslation && (
+                        <TranslationAddToStack
+                            translationId={selectedTranslation}
+                            onClose={translationAddModal.close}
+                        />
+                    )}
+                </ModalBody>
+            </ModalWrapper>
         </>
     )
 }
