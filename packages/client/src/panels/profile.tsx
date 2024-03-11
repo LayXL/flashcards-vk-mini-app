@@ -1,5 +1,4 @@
-import { Icon24Settings } from "@vkontakte/icons"
-import { PanelHeader, PanelHeaderButton, Tabs, TabsItem } from "@vkontakte/vkui"
+import { PanelHeader, Tabs, TabsItem } from "@vkontakte/vkui"
 import { useState } from "react"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { UserStacks } from "../widgets/user-stacks"
@@ -11,7 +10,7 @@ export const Profile = () => {
     return (
         <>
             <PanelHeader
-                before={<PanelHeaderButton onClick={() => {}} children={<Icon24Settings />} />}
+                // before={<PanelHeaderButton onClick={() => {}} children={<Icon24Settings />} />}
                 children={"Профиль"}
             />
 
