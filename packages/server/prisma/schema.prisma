@@ -183,6 +183,7 @@ model GameSession {
   id        Int               @id @default(autoincrement())
   userId    Int
   startedAt DateTime          @default(now())
+  endedAt   DateTime?
   status    GameSessionStatus @default(playing)
 
   gameDuration             Int?

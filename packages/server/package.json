@@ -5,7 +5,7 @@
     "license": "Apache-2.0",
     "scripts": {
         "build": "npx tsc",
-        "dev": "nodemon",
+        "dev": "nodemon --ext 'ts,json' --exec 'ts-node src/server.ts'",
         "test": "ts-node src/test.ts"
     },
     "devDependencies": {

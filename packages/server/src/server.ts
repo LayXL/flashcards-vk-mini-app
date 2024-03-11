@@ -19,3 +19,11 @@ app.use(
 app.listen(parseInt(process.env.SERVER_PORT) || 3000, () => {
     console.log(`Server started on ${process.env.SERVER_PORT || 3000} port`)
 })
+
+// process.once("SIGUSR2", function () {
+//     process.kill(process.pid, "SIGUSR2")
+// })
+
+// process.on("SIGINT", function () {
+//     process.kill(process.pid, "SIGINT")
+// })

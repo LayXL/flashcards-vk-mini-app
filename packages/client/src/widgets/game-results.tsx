@@ -4,15 +4,23 @@ import {
     Caption,
     Div,
     FixedLayout,
+    Header,
     ModalPageHeader,
     PanelHeaderBack,
     Title,
 } from "@vkontakte/vkui"
 import { motion, useAnimationControls } from "framer-motion"
-import { ReactNode } from "react"
+import { ReactNode, useState } from "react"
 import { useBoolean } from "usehooks-ts"
+import { AnswerCard } from "../entities/game/ui/answer-card"
+import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
+import { useModalState } from "../shared/hooks/useModalState"
 import { AnimatedNumber } from "../shared/ui/animated-number"
+import { TranslationAddToStack } from "./translation-add-to-stack"
+import { TranslationView } from "./translation-view"
 
 type GameResultsProps = {
     id: number
@@ -21,6 +29,11 @@ type GameResultsProps = {
 
 export const GameResults = ({ id, onClose }: GameResultsProps) => {
     const { data } = trpc.game.getGameResults.useQuery(id)
+
+    const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
+
+    const translationViewModal = useModalState()
+    const translationAddModal = useModalState()
 
     const roundedAccuracy = Math.round((data?.answerAccuracy ?? 0) * 100)
 
@@ -33,144 +46,158 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                 children={"Результат"}
             />
 
-            <div className="h-full relative">
-                <motion.div
-                    className="absolute inset-0 flex-col items-center justify-center gap-5"
-                    animate={controls}
-                    initial={"first"}
-                    variants={{
-                        first: {
-                            translateY: 0,
-                        },
-                        second: {
-                            translateY: "100%",
-                        },
-                    }}
-                >
+            <div className="h-full overflow-hidden">
+                <div className="h-full relative">
                     <motion.div
-                        initial={{
-                            scale: 10,
-                            opacity: 0,
-                        }}
-                        animate={{
-                            scale: 1,
-                            opacity: 1,
-                        }}
-                        transition={{
-                            duration: 0.6,
-                        }}
-                        className="aspect-square w-[200px] bg-secondary rounded-xl"
-                    ></motion.div>
-
-                    <Title level="1" weight="1">
-                        <motion.span>
-                            {"Стопка пройдена!".split("").map((char, i) => (
-                                <motion.span
-                                    initial={{ visibility: "hidden" }}
-                                    animate={{ visibility: "visible" }}
-                                    transition={{
-                                        delay: 0.6 + i * 0.02,
-                                    }}
-                                    key={i}
-                                >
-                                    {char}
-                                </motion.span>
-                            ))}
-                        </motion.span>
-                    </Title>
-
-                    <motion.div
-                        className="w-full flex gap-3 px-horizontal-regular py-vertical-regular box-border"
-                        initial="hidden"
-                        animate="show"
+                        className="absolute inset-0 flex-col items-center justify-center gap-5"
+                        animate={controls}
+                        initial={"first"}
                         variants={{
-                            hidden: {},
-                            show: {
-                                transition: {
-                                    staggerChildren: 0.3,
-                                    delayChildren: 0.6,
-                                },
+                            first: {
+                                translateY: 0,
+                            },
+                            second: {
+                                translateY: "100%",
                             },
                         }}
                     >
-                        <Stat
-                            caption={"Баллы"}
-                            value={100}
-                            icon={
-                                <Icon32CheckbitOutline
-                                    height={12}
-                                    width={12}
-                                    className="text-accent"
-                                />
-                            }
-                        />
-                        <Stat
-                            caption={"Время"}
-                            value={100}
-                            icon={<Icon12ClockOutline className="text-accent" />}
-                            unit="сек"
-                        />
-                        <Stat
-                            caption={"Отлично"}
-                            value={roundedAccuracy}
-                            icon={<Icon12CheckCircle className="text-dynamic-green" />}
-                            unit="%"
-                        />
+                        <motion.div
+                            initial={{
+                                scale: 10,
+                                opacity: 0,
+                            }}
+                            animate={{
+                                scale: 1,
+                                opacity: 1,
+                            }}
+                            transition={{
+                                duration: 0.6,
+                            }}
+                            className="aspect-square w-[200px] bg-secondary rounded-xl"
+                        ></motion.div>
+
+                        <Title level="1" weight="1">
+                            <motion.span>
+                                {"Стопка пройдена!".split("").map((char, i) => (
+                                    <motion.span
+                                        initial={{ visibility: "hidden" }}
+                                        animate={{ visibility: "visible" }}
+                                        transition={{
+                                            delay: 0.6 + i * 0.02,
+                                        }}
+                                        key={i}
+                                    >
+                                        {char}
+                                    </motion.span>
+                                ))}
+                            </motion.span>
+                        </Title>
+
+                        <motion.div
+                            className="w-full flex gap-3 px-horizontal-regular py-vertical-regular box-border"
+                            initial="hidden"
+                            animate="show"
+                            variants={{
+                                hidden: {},
+                                show: {
+                                    transition: {
+                                        staggerChildren: 0.3,
+                                        delayChildren: 0.6,
+                                    },
+                                },
+                            }}
+                        >
+                            <Stat
+                                caption={"Баллы"}
+                                value={data?.points}
+                                icon={
+                                    <Icon32CheckbitOutline
+                                        height={12}
+                                        width={12}
+                                        className="text-accent"
+                                    />
+                                }
+                            />
+                            <Stat
+                                caption={"Время"}
+                                value={data?.finalGameTime}
+                                icon={<Icon12ClockOutline className="text-accent" />}
+                                unit="сек"
+                            />
+                            <Stat
+                                caption={"Отлично"}
+                                value={roundedAccuracy}
+                                icon={<Icon12CheckCircle className="text-dynamic-green" />}
+                                unit="%"
+                            />
+                        </motion.div>
                     </motion.div>
-                </motion.div>
 
-                <motion.div
-                    className="absolute inset-0"
-                    animate={controls}
-                    initial={"first"}
-                    variants={{
-                        first: {
-                            translateY: "100%",
-                        },
-                        second: {
-                            translateY: 0,
-                        },
-                    }}
-                >
-                    <Div className="flex gap-3">
-                        <Stat
-                            caption={"Баллы"}
-                            value={100}
-                            icon={
-                                <Icon32CheckbitOutline
-                                    height={12}
-                                    width={12}
-                                    className="text-accent"
-                                />
-                            }
-                        />
-                        <Stat
-                            caption={"Время"}
-                            value={100}
-                            icon={<Icon12ClockOutline className="text-accent" />}
-                            unit="сек"
-                        />
-                        <Stat
-                            caption={"Отлично"}
-                            value={roundedAccuracy}
-                            icon={<Icon12CheckCircle className="text-dynamic-green" />}
-                            unit="%"
-                        />
-                    </Div>
+                    <motion.div
+                        className="absolute inset-0 flex-col"
+                        animate={controls}
+                        initial={"first"}
+                        variants={{
+                            first: {
+                                translateY: "100%",
+                            },
+                            second: {
+                                translateY: 0,
+                            },
+                        }}
+                    >
+                        <Div className="flex gap-3">
+                            <Stat
+                                caption={"Баллы"}
+                                value={data?.points}
+                                icon={
+                                    <Icon32CheckbitOutline
+                                        height={12}
+                                        width={12}
+                                        className="text-accent"
+                                    />
+                                }
+                            />
+                            <Stat
+                                caption={"Время"}
+                                value={data?.finalGameTime}
+                                icon={<Icon12ClockOutline className="text-accent" />}
+                                unit="сек"
+                            />
+                            <Stat
+                                caption={"Отлично"}
+                                value={roundedAccuracy}
+                                icon={<Icon12CheckCircle className="text-dynamic-green" />}
+                                unit="%"
+                            />
+                        </Div>
 
-                    <Div className="flex-col gap-2">
-                        {data?.translations?.map((translation) => (
-                            <div
-                                className="flex flex-col p-3 bg-secondary rounded-xl shadow-card"
-                                key={translation.translationId}
-                            >
-                                <div>{translation.translation.foreign}</div>
-                                <div>{translation.translation.vernacular}</div>
-                                <div>{translation.status}</div>
-                            </div>
-                        ))}
-                    </Div>
-                </motion.div>
+                        <Header children={"Ответы"} />
+
+                        <Div className="flex-col gap-2 flex-1 overflow-scroll pb-36">
+                            {data?.translations
+                                ?.filter(({ status }) => status !== "unanswered")
+                                .map(({ translation, status }) => (
+                                    <AnswerCard
+                                        foreign={translation.foreign}
+                                        vernacular={translation.vernacular}
+                                        time={0}
+                                        type={status as "correct" | "incorrect"}
+                                        onClick={() => {
+                                            vibrateOnClick()
+                                            translationViewModal.open()
+                                            setSelectedTranslation(translation.id)
+                                        }}
+                                        onAdd={() => {
+                                            vibrateOnClick()
+                                            translationAddModal.open()
+                                            setSelectedTranslation(translation.id)
+                                        }}
+                                    />
+                                ))}
+                        </Div>
+                    </motion.div>
+                </div>
             </div>
 
             <FixedLayout vertical="bottom" filled>
@@ -185,6 +212,34 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                     />
                 </Div>
             </FixedLayout>
+
+            <ModalWrapper
+                isOpened={translationViewModal.isOpened}
+                onClose={translationViewModal.close}
+            >
+                <ModalBody fullscreen={true}>
+                    {selectedTranslation && (
+                        <TranslationView
+                            id={selectedTranslation}
+                            onClose={translationViewModal.close}
+                        />
+                    )}
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper
+                isOpened={translationAddModal.isOpened}
+                onClose={translationAddModal.close}
+            >
+                <ModalBody fullscreen={true}>
+                    {selectedTranslation && (
+                        <TranslationAddToStack
+                            translationId={selectedTranslation}
+                            onClose={translationAddModal.close}
+                        />
+                    )}
+                </ModalBody>
+            </ModalWrapper>
         </>
     )
 }

@@ -99,7 +99,11 @@ export const stacks = router({
                 include: {
                     translations: {
                         include: {
-                            translation: true,
+                            translation: {
+                                include: {
+                                    author: true,
+                                },
+                            },
                         },
                     },
                 },
