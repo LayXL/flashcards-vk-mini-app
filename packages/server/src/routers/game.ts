@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server"
+import { differenceInSeconds } from "date-fns"
 import z from "zod"
 import { privateProcedure, router } from "../trpc"
 import { shuffle } from "../util/shuffle"
@@ -167,7 +168,9 @@ export const game = router({
                     code: "BAD_REQUEST",
                 })
 
-            const isCorrect = translationInGameSession.translation.foreign === input.answer
+            const isCorrect =
+                translationInGameSession.translation.foreign.replace(/\s/g, "").toLowerCase() ===
+                input.answer.replace(/\s/g, "").toLowerCase()
 
             const data = await ctx.prisma.translationInGameSession.update({
                 where: {
@@ -185,27 +188,32 @@ export const game = router({
                 },
             })
 
-            const unanwered = await ctx.prisma.translationInGameSession.count({
+            const unansweredCount = await ctx.prisma.translationInGameSession.count({
                 where: {
                     gameSessionId: translationInGameSession.gameSessionId,
-                    status: {
-                        not: "unanswered",
-                    },
+                    status: "unanswered",
                 },
             })
 
-            if (unanwered === 0) {
+            if (unansweredCount === 0) {
                 await ctx.prisma.gameSession.update({
                     where: {
                         id: translationInGameSession.gameSessionId,
                     },
                     data: {
                         status: "ended",
+                        endedAt: new Date(),
                     },
                 })
             }
 
-            return data
+            const gameSession = await ctx.prisma.gameSession.findFirst({
+                where: {
+                    id: translationInGameSession.gameSessionId,
+                },
+            })
+
+            return { ...data, gameSession }
         }),
     getCurrentGame: privateProcedure.query(async ({ ctx }) => {
         return await ctx.prisma.gameSession.findFirst({
@@ -248,6 +256,11 @@ export const game = router({
 
         const correct = data.translations.filter((x) => x.status === "correct")
 
-        return { ...data, answerAccuracy: correct.length / data.translations.length }
+        return {
+            ...data,
+            answerAccuracy: correct.length / data.translations.length,
+            points: correct.length ?? 0,
+            finalGameTime: differenceInSeconds(data.endedAt ?? 0, data.startedAt ?? 0) ?? 0,
+        }
     }),
 })
