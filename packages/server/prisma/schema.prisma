@@ -252,7 +252,7 @@ model UserRankedSeasonStatistic {
   @@id([userId, rankedSeasonId])
 }
 
-model WordleWord {
+model FiveLetterWord {
   word       String      @unique
   wordOfDays WordOfDay[]
 }
@@ -260,6 +260,6 @@ model WordleWord {
 model WordOfDay {
   date DateTime @unique
 
-  wordData WordleWord @relation(fields: [word], references: [word])
+  wordData FiveLetterWord @relation(fields: [word], references: [word])
   word     String
 }

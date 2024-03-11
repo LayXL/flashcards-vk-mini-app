@@ -15,8 +15,6 @@ export const game = router({
             })
         )
         .mutation(async ({ input, ctx }) => {
-            // TODO Добавить проверку на доступность к стопке
-
             const translations = (
                 await ctx.prisma.translationInStack.findMany({
                     where: {
@@ -37,7 +35,7 @@ export const game = router({
                                                 isVerified: true,
                                             },
                                             {
-                                                // TODO check public
+                                                isPrivate: false,
                                             },
                                         ],
                                     },
@@ -57,6 +55,7 @@ export const game = router({
                     .values()
             )
 
+            // TODO search only in public translations
             const queryResults = (await ctx.prisma.$queryRawUnsafe(`
                 select t1.id      as "id",
                        t2.foreign as "similar"
@@ -164,6 +163,7 @@ export const game = router({
                     gameSession: {
                         include: {
                             user: true,
+                            stacks: true,
                         },
                     },
                 },
@@ -225,7 +225,10 @@ export const game = router({
                     },
                 })
 
-                if (repeatedCount === 0) {
+                if (
+                    repeatedCount === 0 &&
+                    translationInGameSession.gameSession.stacks.every((stack) => stack.isVerified)
+                ) {
                     await addXp(translationInGameSession.gameSession.userId, 1)
                 }
 
