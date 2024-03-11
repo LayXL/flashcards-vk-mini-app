@@ -28,6 +28,7 @@ model User {
   gameSessions               GameSession[]
   userProfile                UserProfile?
   UserDailyStatistic         UserDailyStatistic[]
+  UserRankedSeasonStatistic  UserRankedSeasonStatistic[]
 }
 
 model Translation {
@@ -233,5 +234,32 @@ model UserDailyStatistic {
   @@id([userId, date])
 }
 
-model UserSeasonStatistic {
+model RankedSeason {
+  id       Int      @id @default(autoincrement())
+  startsAt DateTime
+  endsAt   DateTime
+
+  UserRankedSeasonStatistic UserRankedSeasonStatistic[]
+}
+
+model UserRankedSeasonStatistic {
+  userId         Int
+  rankedSeasonId Int
+
+  user         User         @relation(fields: [userId], references: [id])
+  rankedSeason RankedSeason @relation(fields: [rankedSeasonId], references: [id])
+
+  @@id([userId, rankedSeasonId])
+}
+
+model WordleWord {
+  word       String      @unique
+  wordOfDays WordOfDay[]
+}
+
+model WordOfDay {
+  date DateTime @unique
+
+  wordData WordleWord @relation(fields: [word], references: [word])
+  word     String
 }

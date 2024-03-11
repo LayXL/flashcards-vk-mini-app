@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server"
 import { differenceInSeconds } from "date-fns"
 import z from "zod"
 import { privateProcedure, router } from "../trpc"
+import { addXp } from "../util/addXp"
 import { shuffle } from "../util/shuffle"
 
 export const game = router({
@@ -160,6 +161,11 @@ export const game = router({
                 },
                 include: {
                     translation: true,
+                    gameSession: {
+                        include: {
+                            user: true,
+                        },
+                    },
                 },
             })
 
@@ -203,6 +209,38 @@ export const game = router({
                     data: {
                         status: "ended",
                         endedAt: new Date(),
+                    },
+                })
+            }
+
+            if (isCorrect) {
+                const repeatedCount = await ctx.prisma.userTranslationRepetition.count({
+                    where: {
+                        user: {
+                            vkId: ctx.vkId,
+                        },
+                        translation: {
+                            id: translationInGameSession.translationId,
+                        },
+                    },
+                })
+
+                if (repeatedCount === 0) {
+                    await addXp(translationInGameSession.gameSession.userId, 1)
+                }
+
+                await ctx.prisma.userTranslationRepetition.create({
+                    data: {
+                        user: {
+                            connect: {
+                                vkId: ctx.vkId,
+                            },
+                        },
+                        translation: {
+                            connect: {
+                                id: translationInGameSession.translationId,
+                            },
+                        },
                     },
                 })
             }
