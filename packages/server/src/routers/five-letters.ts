@@ -163,6 +163,9 @@ export const fiveLetters = router({
                         vkId: ctx.vkId,
                     },
                 },
+                include: {
+                    user: true,
+                },
             })
 
             if (data.progress.length >= 6) {
@@ -199,9 +202,9 @@ export const fiveLetters = router({
 
             const { progress } = await ctx.prisma.fiveLetterWordOfDayUserProgress.update({
                 where: {
-                    date: today,
-                    user: {
-                        vkId: ctx.vkId,
+                    userId_date: {
+                        date: today,
+                        userId: data.user.id,
                     },
                 },
                 data: {
