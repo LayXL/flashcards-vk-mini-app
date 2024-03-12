@@ -105,6 +105,12 @@ const toFiveLetterResult = (word: string, attempts: string[]) => {
 
 export const fiveLetters = router({
     getTodayAttempts: privateProcedure.query(async ({ ctx }) => {
+        const user = await prisma.user.findFirst({
+            where: {
+                vkId: ctx.vkId,
+            },
+        })
+
         const today = DateTime.now().toUTC().startOf("day").toJSDate()
 
         const wordOfDay = await ctx.prisma.fiveLetterWordOfDay.upsert({
@@ -120,9 +126,9 @@ export const fiveLetters = router({
 
         const { progress } = await ctx.prisma.fiveLetterWordOfDayUserProgress.upsert({
             where: {
-                date: wordOfDay.date,
-                user: {
-                    vkId: ctx.vkId,
+                userId_date: {
+                    userId: user.id,
+                    date: today,
                 },
             },
             update: {},
