@@ -113,6 +113,9 @@ model Stack {
   inheritsStackId Int?
   isPrivate       Boolean @default(false)
 
+  pattern String?
+  palette Int?
+
   translations   TranslationInStack[]
   reactions      ReactionOnStack[]
   tags           Tag[]

@@ -8,6 +8,7 @@ import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
+import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useIsScrollable } from "../shared/hooks/useIsScrollable"
@@ -32,6 +33,8 @@ export const New = () => {
             refetchOnWindowFocus: false,
         },
     )
+
+    const encodeStackBackground = useEncodeStackBackground()
 
     const infiniteData = useInfiniteList(data)
 
@@ -99,6 +102,7 @@ export const New = () => {
                                     translationsCount={x.stackData.translationsCount}
                                     onClick={onClickStack(x.stackData.id)}
                                     isVerified={x.stackData.isVerified}
+                                    encodedBackground={encodeStackBackground(x.stackData)}
                                 />
                             </div>
                         ) : x.type === "translation" ? (

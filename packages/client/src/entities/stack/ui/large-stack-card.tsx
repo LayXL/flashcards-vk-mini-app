@@ -1,6 +1,7 @@
 import { Icon12VerifiedAlt, Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
 import { Caption, Subhead } from "@vkontakte/vkui"
-import { useBoolean } from "usehooks-ts"
+import { decodeStackBackground } from "../../../shared/helpers/stackBackground"
+import { StackBackground } from "./stack-background"
 
 type LargeStackCardProps = {
     title: string
@@ -9,11 +10,13 @@ type LargeStackCardProps = {
     onClick?: () => void
     onPlay?: () => void
     imageUrl?: string
+    encodedBackground?: string
 }
 
 export const LargeStackCard = ({
     title,
     translationsCount,
+    encodedBackground,
     onClick,
     onPlay,
     isVerified,
@@ -21,7 +24,7 @@ export const LargeStackCard = ({
 }: LargeStackCardProps) => {
     const mask = "linear-gradient(180deg, #fff 60%, rgba(255, 255, 255, 0) 80%)"
 
-    const { value: isImageFailed, setTrue: setImageFailed } = useBoolean(!imageUrl)
+    const decodedBackground = decodeStackBackground(encodedBackground) ?? null
 
     return (
         <div
@@ -33,36 +36,26 @@ export const LargeStackCard = ({
                     <div className="relative w-full h-full rounded-t-[10px] overflow-hidden">
                         <div
                             style={{
-                                background: `url('${imageUrl}') no-repeat top center/cover`,
+                                background: decodedBackground?.primaryColor ?? "#fff",
                             }}
                             className="absolute object-cover w-full h-full"
                         />
-                        {/* <div className="backdrop-blur-[16px] absolute inset-0" /> */}
                     </div>
                 </div>
                 <div className="h-[8px] px-3">
                     <div className="relative w-full h-full rounded-t-[10px] overflow-hidden">
                         <div
                             style={{
-                                background: [
-                                    "linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3))",
-                                    !isImageFailed &&
-                                        `url('${imageUrl}') no-repeat top center/cover`,
-                                ]
-                                    .filter(Boolean)
-                                    .join(","),
+                                background: decodedBackground?.secondaryColor ?? "#fff",
                             }}
                             className="absolute object-cover w-full h-full"
                         />
-                        {/* <div className="backdrop-blur-[16px] absolute inset-0" /> */}
                     </div>
                 </div>
             </div>
             <div className="flex-1 bg-vk-secondary rounded-xl relative overflow-hidden">
                 <div className="absolute inset-0 overflow-hidden">
-                    {!isImageFailed && (
-                        <img src={imageUrl} className="w-full h-full object-cover" />
-                    )}
+                    <StackBackground encodedBackground={encodedBackground} imageUrl={imageUrl} />
                     <div className="backdrop-blur-[32px] absolute inset-0" />
                     <div
                         className="absolute inset-0"
@@ -71,17 +64,14 @@ export const LargeStackCard = ({
                             maskImage: mask,
                         }}
                     >
-                        {!isImageFailed && (
-                            <img
-                                src={imageUrl}
-                                className="w-full h-full object-cover"
-                                onError={setImageFailed}
-                            />
-                        )}
+                        <StackBackground
+                            encodedBackground={encodedBackground}
+                            imageUrl={imageUrl}
+                        />
                     </div>
                 </div>
                 <div className="absolute inset-0 flex-col justify-between">
-                    <div></div>
+                    <div>{/* TODO author */}</div>
                     <div className="flex-col p-3 gap-2">
                         <div className="flex-row gap-1 items-center">
                             <Subhead weight="1" children={title} />

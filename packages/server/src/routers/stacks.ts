@@ -2,13 +2,98 @@ import { TRPCError } from "@trpc/server"
 import z from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
 
+const palettes = [
+    { id: 1, primary: "#0037EC", secondary: "#0077FF" },
+    { id: 2, primary: "#0037EC", secondary: "#17D686" },
+    { id: 3, primary: "#0037EC", secondary: "#FF3A72" },
+    { id: 4, primary: "#0037EC", secondary: "#AD4DEE" },
+    { id: 5, primary: "#0077FF", secondary: "#17D686" },
+    { id: 6, primary: "#0077FF", secondary: "#FF3A72" },
+    { id: 7, primary: "#0077FF", secondary: "#AD4DEE" },
+    { id: 8, primary: "#0077FF", secondary: "#811BC7" },
+    { id: 9, primary: "#17D686", secondary: "#FF3A72" },
+    { id: 10, primary: "#17D686", secondary: "#AD4DEE" },
+    { id: 11, primary: "#17D686", secondary: "#811BC7" },
+    { id: 12, primary: "#FF3A72", secondary: "#AD4DEE" },
+    { id: 13, primary: "#FF3A72", secondary: "#811BC7" },
+    { id: 14, primary: "#AD4DEE", secondary: "#811BC7" },
+] as const
+
+const patterns = [
+    {
+        name: "alternation",
+    },
+    {
+        name: "arch",
+    },
+    {
+        name: "boom",
+    },
+    {
+        name: "branches",
+    },
+    {
+        name: "circle",
+    },
+    {
+        name: "circles",
+    },
+    {
+        name: "handwriting",
+    },
+    {
+        name: "leaf",
+    },
+    {
+        name: "lines",
+    },
+    {
+        name: "squares",
+    },
+    {
+        name: "triangles",
+    },
+    {
+        name: "wavy",
+    },
+] as const
+
 export const stacks = router({
+    customization: router({
+        getPatterns: privateProcedure.query(async () => {
+            return patterns
+        }),
+        getPalettes: privateProcedure.query(async () => {
+            return palettes
+        }),
+    }),
     create: privateProcedure
         .input(
             z.object({
                 name: z.string().min(3).max(96).trim(),
                 description: z.string().min(3).max(256).trim().optional(),
                 isPrivate: z.boolean().default(false),
+                pattern: z
+                    .enum([
+                        "alternation",
+                        "arch",
+                        "boom",
+                        "branches",
+                        "circle",
+                        "circles",
+                        "handwriting",
+                        "leaf",
+                        "lines",
+                        "squares",
+                        "triangles",
+                        "wavy",
+                    ])
+                    .optional(),
+                palette: z
+                    .number()
+                    .min(0)
+                    .max(palettes.length - 1)
+                    .optional(),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -22,6 +107,8 @@ export const stacks = router({
                     name: input.name,
                     description: input.description,
                     isPrivate: input.isPrivate,
+                    pattern: input.pattern,
+                    palette: input.palette,
                 },
             })
         }),
