@@ -28,7 +28,7 @@ export const useEncodeStackBackground = () => {
     }
 
     return (stackData: { palette: number; pattern: string }) => {
-        if (!stackData.palette || !stackData.pattern) return `solid:#0037EC:#0077FF`
+        if (!stackData || !stackData.palette || !stackData.pattern) return `solid:#0037EC:#0077FF`
 
         const foundPalette = palettes.find((p) => p.id === stackData.palette)
 

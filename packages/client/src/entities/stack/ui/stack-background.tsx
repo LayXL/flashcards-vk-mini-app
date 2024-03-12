@@ -66,8 +66,6 @@ export const StackBackground = ({
     if (encodedBackground) {
         const stackBackground = decodeStackBackground(encodedBackground)
 
-        console.log(stackBackground)
-
         const Template = templates[stackBackground?.pattern as Pattern]
 
         return (

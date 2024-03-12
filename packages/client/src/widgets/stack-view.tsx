@@ -29,7 +29,7 @@ import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
-import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
+import { decodeStackBackground, useEncodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import { useModalState } from "../shared/hooks/useModalState"
 import { gameSettingsAtom } from "../shared/store"
@@ -51,8 +51,6 @@ export const StackView = ({ id }: StackViewProps) => {
     const modal = useModal()
     const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
 
-    console.log(data)
-
     const setGameSettings = useSetRecoilState(gameSettingsAtom)
 
     const showMore = useModalState()
@@ -71,6 +69,10 @@ export const StackView = ({ id }: StackViewProps) => {
 
     const encodeStackBackground = useEncodeStackBackground()
 
+    const encodedBackground = encodeStackBackground(data)
+
+    const decodedBackground = decodeStackBackground(encodedBackground)
+
     return (
         <>
             <ModalPageHeader
@@ -80,7 +82,12 @@ export const StackView = ({ id }: StackViewProps) => {
             />
 
             <div className="flex flex-col relative ">
-                <div className="absolute bg-blue-300 w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 opacity-50 -top-[260px] rounded-full blur-3xl"></div>
+                <div
+                    style={{
+                        backgroundColor: decodedBackground?.primaryColor ?? "#fff",
+                    }}
+                    className="absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 opacity-50 -top-[260px] rounded-full blur-3xl"
+                ></div>
                 <div className="flex flex-row items-center justify-center gap-6 py-3 z-20">
                     <div
                         className="rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"
@@ -91,7 +98,7 @@ export const StackView = ({ id }: StackViewProps) => {
                     <div className="w-[200px] aspect-square bg-vk-default rounded-xl overflow-hidden">
                         {data && (
                             <StackBackground
-                                encodedBackground={encodeStackBackground(data)}
+                                encodedBackground={encodedBackground}
                                 // imageUrl={data?.imageUrl}
                             />
                         )}
