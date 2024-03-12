@@ -268,9 +268,11 @@ model FiveLetterWordOfDay {
 
 model FiveLetterWordOfDayUserProgress {
   userId Int
-  date   DateTime @unique
+  date   DateTime
 
   progress String[]
 
   user User @relation(fields: [userId], references: [id])
+
+  @@id([userId, date])
 }

@@ -16,7 +16,7 @@ const limitToFiveLetters = (x: string) => {
 
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
     const utils = trpc.useUtils()
-    const { data } = trpc.fiveLetters.getTodayAttempts.useQuery()
+    const { data, isSuccess } = trpc.fiveLetters.getTodayAttempts.useQuery()
 
     const { mutate: answer, isPending } = trpc.fiveLetters.answer.useMutation({
         onSuccess: (data) => {
@@ -109,8 +109,8 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                     ))}
                 </div>
 
-                <Div className="flex-col gap-1 flex-1 py-8">
-                    {data?.status !== "playing" && (
+                {data?.status !== "playing" && isSuccess && (
+                    <Div className="flex-col gap-1 flex-1 py-8">
                         <>
                             <div className="font-semibold text-2xl text-center">
                                 {data?.status === "lost" && "Вы не угадали слово"}
@@ -129,8 +129,8 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                                     .replace(/\s/g, " ")}
                             </div>
                         </>
-                    )}
-                </Div>
+                    </Div>
+                )}
             </div>
 
             {data?.status === "playing" && (
