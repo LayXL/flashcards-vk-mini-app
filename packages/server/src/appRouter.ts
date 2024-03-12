@@ -1,4 +1,5 @@
 import { feed } from "./routers/feed"
+import { fiveLetters } from "./routers/five-letters"
 import { game } from "./routers/game"
 import { getUser } from "./routers/getUser"
 import { languages } from "./routers/languages"
@@ -18,6 +19,7 @@ export const appRouter = router({
     updateInfo,
     getUser,
     feed,
+    fiveLetters,
 })
 
 export type AppRouter = typeof appRouter

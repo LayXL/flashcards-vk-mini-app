@@ -10,38 +10,11 @@ export const modalsHistory = atom<string[]>({
     default: [],
 })
 
-export const newTranslation = atom<{
-    translationId?: number
-    isEditing?: boolean
-    languageId?: number
-    languageVariationId?: number | null
-    example?: string | null
-    vernacular: string
-    foreign: string
-    foreignDescription: string
-    tags: string[]
-    transcriptions: {
-        id: number
-        languageVariationId?: number | null
-        transcription: string | null
-    }[]
+export const gameSettingsAtom = atom<{
+    stacks: number[]
 }>({
-    key: "newTranslation",
+    key: "gameSettings",
     default: {
-        isEditing: false,
-        languageId: 1, // todo fix
-        languageVariationId: null,
-        vernacular: "",
-        foreign: "",
-        example: "",
-        foreignDescription: "",
-        tags: [],
-        transcriptions: [
-            {
-                id: 0,
-                transcription: null,
-                languageVariationId: null,
-            },
-        ],
+        stacks: [],
     },
 })

@@ -8,6 +8,7 @@ import {
     Icon28ReportOutline,
     Icon28ShareOutline,
 } from "@vkontakte/icons"
+import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 import {
     ActionSheet,
     ActionSheetItem,
@@ -20,6 +21,7 @@ import {
     Subhead,
 } from "@vkontakte/vkui"
 import { useState } from "react"
+import { useSetRecoilState } from "recoil"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -28,6 +30,7 @@ import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import { useModalState } from "../shared/hooks/useModalState"
+import { gameSettingsAtom } from "../shared/store"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationView } from "./translation-view"
@@ -41,9 +44,12 @@ export const StackView = ({ id }: StackViewProps) => {
     const translationViewModal = useModalState()
     const addTranslationToStackModal = useModalState()
     const createTranslationModal = useModalState()
+    const routeNavigator = useRouteNavigator()
 
     const modal = useModal()
     const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
+
+    const setGameSettings = useSetRecoilState(gameSettingsAtom)
 
     const showMore = useModalState()
 
@@ -98,9 +104,21 @@ export const StackView = ({ id }: StackViewProps) => {
                 )}
                 <Div>
                     <ButtonGroup stretched>
-                        <Button mode="primary" stretched size="l">
-                            Играть
-                        </Button>
+                        <Button
+                            mode="primary"
+                            stretched
+                            size="l"
+                            children="Играть"
+                            onClick={() => {
+                                // todo close all
+                                modal?.onClose()
+                                routeNavigator.push("/play")
+                                setGameSettings((prev) => ({
+                                    ...prev,
+                                    stacks: [id],
+                                }))
+                            }}
+                        />
                         <Button mode="secondary" stretched size="l" before={<Icon24Add />}>
                             Дублировать
                         </Button>

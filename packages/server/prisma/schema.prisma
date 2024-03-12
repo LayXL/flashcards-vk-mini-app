@@ -9,26 +9,27 @@ datasource db {
 }
 
 model User {
-  id                         Int                         @id @default(autoincrement())
-  vkId                       String                      @unique
-  vkData                     Json?
-  firstName                  String?
-  lastName                   String?
-  avatarUrls                 Json?
-  createdAt                  DateTime                    @default(now()) @db.Timestamptz(3)
-  translations               Translation[]
-  stacks                     Stack[]
-  stacksTranslations         TranslationInStack[]
-  userTranslationRepetitions UserTranslationRepetition[]
-  selectedLanguageId         Int?
-  selectedLanguage           Language?                   @relation(fields: [selectedLanguageId], references: [id])
-  reactionsOnTranslations    ReactionOnTranslation[]
-  reactoinsOnStacks          ReactionOnStack[]
-  comments                   Comment[]
-  gameSessions               GameSession[]
-  userProfile                UserProfile?
-  UserDailyStatistic         UserDailyStatistic[]
-  UserRankedSeasonStatistic  UserRankedSeasonStatistic[]
+  id                              Int                               @id @default(autoincrement())
+  vkId                            String                            @unique
+  vkData                          Json?
+  firstName                       String?
+  lastName                        String?
+  avatarUrls                      Json?
+  createdAt                       DateTime                          @default(now()) @db.Timestamptz(3)
+  translations                    Translation[]
+  stacks                          Stack[]
+  stacksTranslations              TranslationInStack[]
+  userTranslationRepetitions      UserTranslationRepetition[]
+  selectedLanguageId              Int?
+  selectedLanguage                Language?                         @relation(fields: [selectedLanguageId], references: [id])
+  reactionsOnTranslations         ReactionOnTranslation[]
+  reactoinsOnStacks               ReactionOnStack[]
+  comments                        Comment[]
+  gameSessions                    GameSession[]
+  userProfile                     UserProfile?
+  UserDailyStatistic              UserDailyStatistic[]
+  UserRankedSeasonStatistic       UserRankedSeasonStatistic[]
+  FiveLetterWordOfDayUserProgress FiveLetterWordOfDayUserProgress[]
 }
 
 model Translation {
@@ -253,13 +254,23 @@ model UserRankedSeasonStatistic {
 }
 
 model FiveLetterWord {
-  word       String      @unique
-  wordOfDays WordOfDay[]
+  word                 String                @unique
+  wordOfDays           FiveLetterWordOfDay[]
+  canBeUsedAsWordOfDay Boolean               @default(false)
 }
 
-model WordOfDay {
+model FiveLetterWordOfDay {
   date DateTime @unique
 
   wordData FiveLetterWord @relation(fields: [word], references: [word])
   word     String
+}
+
+model FiveLetterWordOfDayUserProgress {
+  userId Int
+  date   DateTime @unique
+
+  progress String[]
+
+  user User @relation(fields: [userId], references: [id])
 }
