@@ -1,10 +1,11 @@
-import { Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
+import { Icon12VerifiedAlt, Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
 import { Caption, Subhead } from "@vkontakte/vkui"
 import { useBoolean } from "usehooks-ts"
 
 type LargeStackCardProps = {
     title: string
     translationsCount: number
+    isVerified?: boolean
     onClick?: () => void
     onPlay?: () => void
     imageUrl?: string
@@ -15,6 +16,7 @@ export const LargeStackCard = ({
     translationsCount,
     onClick,
     onPlay,
+    isVerified,
     imageUrl,
 }: LargeStackCardProps) => {
     const mask = "linear-gradient(180deg, #fff 60%, rgba(255, 255, 255, 0) 80%)"
@@ -81,8 +83,9 @@ export const LargeStackCard = ({
                 <div className="absolute inset-0 flex-col justify-between">
                     <div></div>
                     <div className="flex-col p-3 gap-2">
-                        <div>
+                        <div className="flex-row gap-1 items-center">
                             <Subhead weight="1" children={title} />
+                            {isVerified && <Icon12VerifiedAlt />}
                         </div>
                         <div className="flex-row justify-between items-center">
                             <div className="flex-row gap-1">

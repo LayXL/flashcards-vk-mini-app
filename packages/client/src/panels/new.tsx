@@ -98,6 +98,7 @@ export const New = () => {
                                     title={x.stackData.name}
                                     translationsCount={x.stackData.translationsCount}
                                     onClick={onClickStack(x.stackData.id)}
+                                    isVerified={x.stackData.isVerified}
                                 />
                             </div>
                         ) : x.type === "translation" ? (

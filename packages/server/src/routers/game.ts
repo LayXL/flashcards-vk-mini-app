@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server"
 import { differenceInSeconds } from "date-fns"
 import z from "zod"
 import { privateProcedure, router } from "../trpc"
+import { addXp } from "../util/addXp"
 import { shuffle } from "../util/shuffle"
 
 export const game = router({
@@ -14,8 +15,6 @@ export const game = router({
             })
         )
         .mutation(async ({ input, ctx }) => {
-            // TODO Добавить проверку на доступность к стопке
-
             const translations = (
                 await ctx.prisma.translationInStack.findMany({
                     where: {
@@ -36,7 +35,7 @@ export const game = router({
                                                 isVerified: true,
                                             },
                                             {
-                                                // TODO check public
+                                                isPrivate: false,
                                             },
                                         ],
                                     },
@@ -56,6 +55,7 @@ export const game = router({
                     .values()
             )
 
+            // TODO search only in public translations
             const queryResults = (await ctx.prisma.$queryRawUnsafe(`
                 select t1.id      as "id",
                        t2.foreign as "similar"
@@ -160,6 +160,12 @@ export const game = router({
                 },
                 include: {
                     translation: true,
+                    gameSession: {
+                        include: {
+                            user: true,
+                            stacks: true,
+                        },
+                    },
                 },
             })
 
@@ -203,6 +209,41 @@ export const game = router({
                     data: {
                         status: "ended",
                         endedAt: new Date(),
+                    },
+                })
+            }
+
+            if (isCorrect) {
+                const repeatedCount = await ctx.prisma.userTranslationRepetition.count({
+                    where: {
+                        user: {
+                            vkId: ctx.vkId,
+                        },
+                        translation: {
+                            id: translationInGameSession.translationId,
+                        },
+                    },
+                })
+
+                if (
+                    repeatedCount === 0 &&
+                    translationInGameSession.gameSession.stacks.every((stack) => stack.isVerified)
+                ) {
+                    await addXp(translationInGameSession.gameSession.userId, 1)
+                }
+
+                await ctx.prisma.userTranslationRepetition.create({
+                    data: {
+                        user: {
+                            connect: {
+                                vkId: ctx.vkId,
+                            },
+                        },
+                        translation: {
+                            connect: {
+                                id: translationInGameSession.translationId,
+                            },
+                        },
                     },
                 })
             }

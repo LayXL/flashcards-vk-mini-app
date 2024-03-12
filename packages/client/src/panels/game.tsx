@@ -14,11 +14,13 @@ import {
     SimpleCell,
 } from "@vkontakte/vkui"
 import { useCallback, useState } from "react"
+import { useRecoilState } from "recoil"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
+import { gameSettingsAtom } from "../shared/store"
 import { GameResults } from "../widgets/game-results"
 import { InGame } from "../widgets/in-game"
 import { StackSelect } from "../widgets/stack-select"
@@ -58,7 +60,9 @@ export const Game = () => {
     const gameStackSelectModal = useModalState()
 
     // TODO refactor
-    const [selectedStack, setSelectedStack] = useState<number | null>(null)
+
+    const [gameSettings, setGameSettings] = useRecoilState(gameSettingsAtom)
+
     const [gameDuration, setGameDuration] = useState(60)
     const [correctAnswerAddDuration, setCorrectAnswerAddDuration] = useState(1)
 
@@ -76,14 +80,14 @@ export const Game = () => {
     const { data: recentlyGames } = trpc.game.getRecentlyGames.useQuery()
 
     const startGame = useCallback(() => {
-        if (!selectedStack) return
+        if (!gameSettings.stacks) return
 
         start({
-            stackIds: [selectedStack],
+            stackIds: gameSettings.stacks,
             gameDuration,
             correctAnswerAddDuration,
         })
-    }, [correctAnswerAddDuration, gameDuration, selectedStack, start])
+    }, [correctAnswerAddDuration, gameDuration, gameSettings.stacks, start])
 
     const stopGame = useCallback(() => {
         gameModal.close()
@@ -151,7 +155,7 @@ export const Game = () => {
                             children={"Стопка"}
                             onClick={gameStackSelectModal.open}
                             expandable="always"
-                            indicator={selectedStack?.toString()}
+                            indicator={gameSettings.stacks.join(", ").toString()}
                         />
                     </Group>
 
@@ -195,10 +199,14 @@ export const Game = () => {
                 >
                     <ModalBody fullscreen={true}>
                         <StackSelect
+                            canCreateNewStack={false}
                             onClose={gameStackSelectModal.close}
                             onSelect={(id) => {
                                 gameStackSelectModal.close()
-                                setSelectedStack(id)
+                                setGameSettings((prev) => ({
+                                    ...prev,
+                                    stacks: [id],
+                                }))
                             }}
                         />
                     </ModalBody>

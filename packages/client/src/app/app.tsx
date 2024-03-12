@@ -3,11 +3,14 @@ import { httpBatchLink } from "@trpc/client"
 import bridge from "@vkontakte/vk-bridge"
 import { RouterProvider } from "@vkontakte/vk-mini-apps-router"
 import { AdaptivityProvider, AppRoot, ConfigProvider } from "@vkontakte/vkui"
+import { Settings } from "luxon"
 import { useEffect, useState } from "react"
 import { createGlobalStyle } from "styled-components"
 import { trpc } from "../shared/api"
 import "./index.css"
 import { Router, router } from "./router"
+
+Settings.defaultLocale = "ru"
 
 export const App = () => {
     const [queryClient] = useState(

@@ -9,23 +9,27 @@ datasource db {
 }
 
 model User {
-  id                         Int                         @id @default(autoincrement())
-  vkId                       String                      @unique
-  vkData                     Json?
-  firstName                  String?
-  lastName                   String?
-  avatarUrls                 Json?
-  createdAt                  DateTime                    @default(now()) @db.Timestamptz(3)
-  translations               Translation[]
-  stacks                     Stack[]
-  stacksTranslations         TranslationInStack[]
-  userTranslationRepetitions UserTranslationRepetition[]
-  selectedLanguageId         Int?
-  selectedLanguage           Language?                   @relation(fields: [selectedLanguageId], references: [id])
-  reactionsOnTranslations    ReactionOnTranslation[]
-  reactoinsOnStacks          ReactionOnStack[]
-  comments                   Comment[]
-  GameSession                GameSession[]
+  id                              Int                               @id @default(autoincrement())
+  vkId                            String                            @unique
+  vkData                          Json?
+  firstName                       String?
+  lastName                        String?
+  avatarUrls                      Json?
+  createdAt                       DateTime                          @default(now()) @db.Timestamptz(3)
+  translations                    Translation[]
+  stacks                          Stack[]
+  stacksTranslations              TranslationInStack[]
+  userTranslationRepetitions      UserTranslationRepetition[]
+  selectedLanguageId              Int?
+  selectedLanguage                Language?                         @relation(fields: [selectedLanguageId], references: [id])
+  reactionsOnTranslations         ReactionOnTranslation[]
+  reactoinsOnStacks               ReactionOnStack[]
+  comments                        Comment[]
+  gameSessions                    GameSession[]
+  userProfile                     UserProfile?
+  UserDailyStatistic              UserDailyStatistic[]
+  UserRankedSeasonStatistic       UserRankedSeasonStatistic[]
+  FiveLetterWordOfDayUserProgress FiveLetterWordOfDayUserProgress[]
 }
 
 model Translation {
@@ -132,9 +136,10 @@ model TranslationInStack {
 }
 
 model Language {
-  id           Int                 @id @default(autoincrement())
-  name         String
-  iconUrl      String
+  id      Int    @id @default(autoincrement())
+  name    String
+  iconUrl String
+
   variations   LanguageVariation[]
   users        User[]
   translations Translation[]
@@ -152,8 +157,9 @@ model LanguageVariation {
 }
 
 model Tag {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
   translations Translation[]
   stacks       Stack[]
 }
@@ -207,4 +213,64 @@ model TranslationInGameSession {
   translation Translation @relation(fields: [translationId], references: [id])
 
   @@id([gameSessionId, order])
+}
+
+model UserProfile {
+  userId Int @unique
+
+  xp Int @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model UserDailyStatistic {
+  userId Int
+  date   DateTime
+
+  xp     Int @default(0)
+  points Int @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([userId, date])
+}
+
+model RankedSeason {
+  id       Int      @id @default(autoincrement())
+  startsAt DateTime
+  endsAt   DateTime
+
+  UserRankedSeasonStatistic UserRankedSeasonStatistic[]
+}
+
+model UserRankedSeasonStatistic {
+  userId         Int
+  rankedSeasonId Int
+
+  user         User         @relation(fields: [userId], references: [id])
+  rankedSeason RankedSeason @relation(fields: [rankedSeasonId], references: [id])
+
+  @@id([userId, rankedSeasonId])
+}
+
+model FiveLetterWord {
+  word                 String                @unique
+  wordOfDays           FiveLetterWordOfDay[]
+  canBeUsedAsWordOfDay Boolean               @default(false)
+}
+
+model FiveLetterWordOfDay {
+  date DateTime @unique
+
+  wordData FiveLetterWord @relation(fields: [word], references: [word])
+  word     String
+}
+
+model FiveLetterWordOfDayUserProgress {
+  userId Int
+  date   DateTime @unique
+
+  progress String[]
+
+  user User @relation(fields: [userId], references: [id])
 }

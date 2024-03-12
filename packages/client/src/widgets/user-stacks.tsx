@@ -67,6 +67,7 @@ export const UserStacks = () => {
                         id={stack.id}
                         name={stack.name}
                         translationsCount={stack.translationsCount}
+                        isVerified={stack.isVerified}
                     />
                 ))}
             />
@@ -80,9 +81,15 @@ type StackCardWithModalProps = {
     id: number
     name: string
     translationsCount: number
+    isVerified?: boolean
 }
 
-const StackCardWithModal = ({ id, name, translationsCount }: StackCardWithModalProps) => {
+const StackCardWithModal = ({
+    id,
+    name,
+    translationsCount,
+    isVerified,
+}: StackCardWithModalProps) => {
     const { isOpened, open, close } = useModalState()
 
     return (
@@ -94,6 +101,7 @@ const StackCardWithModal = ({ id, name, translationsCount }: StackCardWithModalP
                     vibrateOnClick()
                     open()
                 }}
+                isVerified={isVerified}
                 // todo
                 imageUrl=""
             />

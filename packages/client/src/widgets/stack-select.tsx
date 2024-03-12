@@ -49,6 +49,7 @@ export const StackSelect = ({ onClose, onSelect, canCreateNewStack, filter }: St
                         // TODO image and verified
                         onClick={() => onSelect(stack.id)}
                         translationsCount={stack.translationsCount}
+                        isVerified={stack.isVerified}
                     />
                 ))}
             </Div>
