@@ -6,6 +6,7 @@ import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
+import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 
 type StackSelectProps = {
     onSelect: (id: number) => void
@@ -18,6 +19,8 @@ export const StackSelect = ({ onClose, onSelect, canCreateNewStack, filter }: St
     const { data } = trpc.stacks.getUserStacks.useQuery({ filter })
 
     const createNewStack = useModalState()
+
+    const encodeStackBackground = useEncodeStackBackground()
 
     return (
         <>
@@ -50,6 +53,7 @@ export const StackSelect = ({ onClose, onSelect, canCreateNewStack, filter }: St
                         onClick={() => onSelect(stack.id)}
                         translationsCount={stack.translationsCount}
                         isVerified={stack.isVerified}
+                        encodedBackground={encodeStackBackground(stack)}
                     />
                 ))}
             </Div>

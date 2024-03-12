@@ -22,12 +22,14 @@ import {
 } from "@vkontakte/vkui"
 import { useState } from "react"
 import { useSetRecoilState } from "recoil"
+import { StackBackground } from "../entities/stack/ui/stack-background"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
+import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import { useModalState } from "../shared/hooks/useModalState"
 import { gameSettingsAtom } from "../shared/store"
@@ -49,6 +51,8 @@ export const StackView = ({ id }: StackViewProps) => {
     const modal = useModal()
     const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
 
+    console.log(data)
+
     const setGameSettings = useSetRecoilState(gameSettingsAtom)
 
     const showMore = useModalState()
@@ -64,6 +68,8 @@ export const StackView = ({ id }: StackViewProps) => {
     const { mutate: removeReaction } = trpc.stacks.removeReaction.useMutation({
         onSuccess: () => refetch(),
     })
+
+    const encodeStackBackground = useEncodeStackBackground()
 
     return (
         <>
@@ -82,7 +88,14 @@ export const StackView = ({ id }: StackViewProps) => {
                     >
                         <Icon24MoreHorizontal />
                     </div>
-                    <div className="w-[200px] aspect-square bg-vk-default rounded-xl"></div>
+                    <div className="w-[200px] aspect-square bg-vk-default rounded-xl overflow-hidden">
+                        {data && (
+                            <StackBackground
+                                encodedBackground={encodeStackBackground(data)}
+                                // imageUrl={data?.imageUrl}
+                            />
+                        )}
+                    </div>
                     <div
                         className="rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"
                         onClick={() => {

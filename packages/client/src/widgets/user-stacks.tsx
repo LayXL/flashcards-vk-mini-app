@@ -5,6 +5,7 @@ import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
+import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
@@ -16,6 +17,8 @@ export const UserStacks = () => {
     const { data, isLoading } = trpc.stacks.getUserStacks.useQuery({
         filter,
     })
+
+    const encodeStackBackground = useEncodeStackBackground()
 
     const createStackModal = useModalState()
 
@@ -68,6 +71,7 @@ export const UserStacks = () => {
                         name={stack.name}
                         translationsCount={stack.translationsCount}
                         isVerified={stack.isVerified}
+                        encodedBackground={encodeStackBackground(stack)}
                     />
                 ))}
             />
@@ -82,6 +86,7 @@ type StackCardWithModalProps = {
     name: string
     translationsCount: number
     isVerified?: boolean
+    encodedBackground?: string
 }
 
 const StackCardWithModal = ({
@@ -89,6 +94,7 @@ const StackCardWithModal = ({
     name,
     translationsCount,
     isVerified,
+    encodedBackground,
 }: StackCardWithModalProps) => {
     const { isOpened, open, close } = useModalState()
 
@@ -104,6 +110,7 @@ const StackCardWithModal = ({
                 isVerified={isVerified}
                 // todo
                 imageUrl=""
+                encodedBackground={encodedBackground}
             />
 
             <ModalWrapper isOpened={isOpened} onClose={close}>

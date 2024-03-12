@@ -43,7 +43,7 @@ export const StackCreateModal = () => {
         createStack({
             name: data.name,
             description: data.description?.length >= 3 ? data.description : undefined,
-            pattern: data.pattern as Pattern,
+            pattern: data.pattern,
             palette: data.palette,
         })
     }
@@ -59,7 +59,7 @@ export const StackCreateModal = () => {
 
                 <Controller
                     control={control}
-                    name={"background"}
+                    name={"pattern"}
                     render={({ field }) => (
                         <CardScroll>
                             <div className="flex-row gap-2">
@@ -73,7 +73,7 @@ export const StackCreateModal = () => {
                                             field.onChange(background.name)
                                         }}
                                     >
-                                        {watch("background") == background.name && (
+                                        {watch("pattern") == background.name && (
                                             <Icon32CheckCircle
                                                 className="absolute right-0.5 top-0.5"
                                                 fill={"white"}

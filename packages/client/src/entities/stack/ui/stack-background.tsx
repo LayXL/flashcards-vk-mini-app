@@ -45,9 +45,9 @@ export type Pattern =
     | "wavy"
 
 type StackBackgroundProps = {
-    pattern?: Pattern | string
-    primaryColor?: string
-    secondaryColor?: string
+    pattern?: string | null
+    primaryColor?: string | null
+    secondaryColor?: string | null
     encodedBackground?: string
     imageUrl?: string
 }

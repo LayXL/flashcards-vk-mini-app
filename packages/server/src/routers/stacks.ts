@@ -75,6 +75,7 @@ export const stacks = router({
                 isPrivate: z.boolean().default(false),
                 pattern: z
                     .enum([
+                        "solid",
                         "alternation",
                         "arch",
                         "boom",
@@ -89,11 +90,7 @@ export const stacks = router({
                         "wavy",
                     ])
                     .optional(),
-                palette: z
-                    .number()
-                    .min(0)
-                    .max(palettes.length - 1)
-                    .optional(),
+                palette: z.number().min(1).max(palettes.length).optional(),
             })
         )
         .mutation(async ({ ctx, input }) => {
