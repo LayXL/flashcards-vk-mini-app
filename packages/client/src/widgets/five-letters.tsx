@@ -120,10 +120,9 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                                 Игра обновится через{" "}
                                 {DateTime.now()
                                     .toUTC(0)
-                                    .startOf("day")
+                                    .endOf("day")
                                     .diffNow()
                                     .rescale()
-                                    .negate()
                                     .set({ millisecond: 0, second: 0 })
                                     .rescale()
                                     .toHuman()

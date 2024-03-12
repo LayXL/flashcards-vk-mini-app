@@ -6,6 +6,7 @@
     "scripts": {
         "build": "npx tsc",
         "dev": "nodemon --ext 'ts,json' --exec 'ts-node src/server.ts'",
+        "bun": "bun --watch src/server.ts",
         "test": "ts-node src/test.ts"
     },
     "devDependencies": {
