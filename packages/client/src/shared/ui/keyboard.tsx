@@ -55,7 +55,7 @@ export const Keyboard = ({
     misplacedLetters,
 }: KeyboardProps) => {
     return (
-        <div className="flex-col items-center gap-2 py-2 px-1 bg-vk-secondary rounded-t-xl pb-[calc(env(safe-area-inset-bottom), 8px)]">
+        <div className="flex-col items-center gap-2 py-2 px-1 bg-vk-secondary rounded-t-xl pb-[calc(env(safe-area-inset-bottom) + 8px)]">
             {keys.map((row, i) => (
                 <div key={i} className="flex flex-row gap-1.5 w-full justify-center">
                     {i === 2 && (
