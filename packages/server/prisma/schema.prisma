@@ -112,6 +112,7 @@ model Stack {
   isVerified      Boolean @default(false)
   inheritsStackId Int?
   isPrivate       Boolean @default(false)
+  isDeleted       Boolean @default(false)
 
   pattern String?
   palette Int?

@@ -58,6 +58,21 @@ const patterns = [
     },
 ] as const
 
+const zodPattern = z.enum([
+    "alternation",
+    "arch",
+    "boom",
+    "branches",
+    "circle",
+    "circles",
+    "handwriting",
+    "leaf",
+    "lines",
+    "squares",
+    "triangles",
+    "wavy",
+])
+
 export const stacks = router({
     customization: router({
         getPatterns: privateProcedure.query(async () => {
@@ -73,23 +88,7 @@ export const stacks = router({
                 name: z.string().min(3).max(96).trim(),
                 description: z.string().min(3).max(256).trim().optional(),
                 isPrivate: z.boolean().default(false),
-                pattern: z
-                    .enum([
-                        "solid",
-                        "alternation",
-                        "arch",
-                        "boom",
-                        "branches",
-                        "circle",
-                        "circles",
-                        "handwriting",
-                        "leaf",
-                        "lines",
-                        "squares",
-                        "triangles",
-                        "wavy",
-                    ])
-                    .optional(),
+                pattern: zodPattern.optional(),
                 palette: z.number().min(1).max(palettes.length).optional(),
             })
         )
@@ -109,6 +108,54 @@ export const stacks = router({
                 },
             })
         }),
+    edit: privateProcedure
+        .input(
+            z.object({
+                id: z.number(),
+                name: z.string().min(3).max(96).trim().optional(),
+                description: z.string().min(3).max(256).trim().optional(),
+                isPrivate: z.boolean().optional(),
+                pattern: zodPattern.optional(),
+                palette: z.number().min(1).max(palettes.length).optional(),
+            })
+        )
+        .mutation(async ({ ctx, input }) => {
+            return await ctx.prisma.stack.update({
+                where: {
+                    id: input.id,
+                    author: {
+                        vkId: ctx.vkId,
+                    },
+                    isDeleted: false,
+                },
+                data: {
+                    name: input.name,
+                    description: input.description,
+                    isPrivate: input.isPrivate,
+                    pattern: input.pattern,
+                    palette: input.palette,
+                },
+            })
+        }),
+    delete: privateProcedure
+        .input(
+            z.object({
+                id: z.number(),
+            })
+        )
+        .mutation(async ({ ctx, input }) => {
+            return await ctx.prisma.stack.update({
+                where: {
+                    id: input.id,
+                    author: {
+                        vkId: ctx.vkId,
+                    },
+                },
+                data: {
+                    isDeleted: true,
+                },
+            })
+        }),
     getUserStacks: privateProcedure
         .input(
             z.object({
@@ -125,10 +172,12 @@ export const stacks = router({
                               author: {
                                   vkId: ctx.vkId,
                               },
+                              isDeleted: false,
                           }
                         : input.filter === "saved"
                         ? {
                               isPrivate: false,
+                              isDeleted: false,
                               reactions: {
                                   some: {
                                       user: {
@@ -138,6 +187,7 @@ export const stacks = router({
                               },
                           }
                         : {
+                              isDeleted: false,
                               author: {
                                   vkId: ctx.vkId,
                               },
@@ -179,6 +229,7 @@ export const stacks = router({
                     author: {
                         vkId: ctx.vkId.toString(),
                     },
+                    isDeleted: false,
                 },
                 include: {
                     translations: {
@@ -218,6 +269,7 @@ export const stacks = router({
             return await prisma.stack.update({
                 where: {
                     id: input.stackId,
+                    isDeleted: false,
                     author: {
                         vkId: ctx.vkId.toString(),
                     },
@@ -259,6 +311,7 @@ export const stacks = router({
             return await prisma.stack.update({
                 where: {
                     id: input.stackId,
+                    isDeleted: false,
                     author: {
                         vkId: ctx.vkId.toString(),
                     },
@@ -284,6 +337,7 @@ export const stacks = router({
                 where: {
                     id: input.stackId,
                     isPrivate: false,
+                    isDeleted: false,
                 },
                 select: {
                     name: true,
@@ -318,6 +372,7 @@ export const stacks = router({
                         connect: {
                             id: input.stackId,
                             isPrivate: false,
+                            isDeleted: false,
                         },
                     },
                     user: {
@@ -335,6 +390,7 @@ export const stacks = router({
                 where: {
                     stack: {
                         id: input.stackId,
+                        isDeleted: false,
                     },
                     user: {
                         vkId: ctx.vkId,

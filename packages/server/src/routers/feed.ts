@@ -48,6 +48,7 @@ export const feed = router({
             const stacks = await ctx.prisma.stack.findMany({
                 where: {
                     isPrivate: false,
+                    isDeleted: false,
                     translations: {
                         some: {
                             translation: {
