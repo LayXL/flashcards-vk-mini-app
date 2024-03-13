@@ -128,6 +128,17 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                                     .toHuman()
                                     .replace(/\s/g, " ")}
                             </div>
+
+                            {data?.status === "lost" && data?.answer && (
+                                <div className="flex-row gap-1 mx-auto py-8">
+                                    {data.answer
+                                        ?.toUpperCase()
+                                        .split("")
+                                        .map((letter, i) => (
+                                            <LetterCell letter={letter} key={i} type={"correct"} />
+                                        ))}
+                                </div>
+                            )}
                         </>
                     </Div>
                 )}

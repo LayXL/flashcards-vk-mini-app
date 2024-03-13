@@ -90,16 +90,21 @@ const toFiveLetterResult = (word: string, attempts: string[]) => {
         )
     )
 
+    const status = (
+        results.some((result) => result.every(({ type }) => type === "correct"))
+            ? "resolved"
+            : results.length >= 6
+            ? "lost"
+            : "playing"
+    ) as "resolved" | "lost" | "playing"
+
     return {
         correctLetters: foundCorrectLetters,
         misplacedLetters,
         excludedLetters,
-        status: (results.some((result) => result.every(({ type }) => type === "correct"))
-            ? "resolved"
-            : results.length >= 6
-            ? "lost"
-            : "playing") as "resolved" | "lost" | "playing",
+        status,
         attempts: results,
+        answer: status !== "playing" ? word : undefined,
     }
 }
 
