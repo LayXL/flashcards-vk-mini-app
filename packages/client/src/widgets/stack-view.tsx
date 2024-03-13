@@ -33,6 +33,7 @@ import { decodeStackBackground, useEncodeStackBackground } from "../shared/helpe
 import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
 import { useModalState } from "../shared/hooks/useModalState"
 import { gameSettingsAtom } from "../shared/store"
+import { StackCreateModal } from "./stack-create"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationView } from "./translation-view"
@@ -42,11 +43,13 @@ type StackViewProps = {
 }
 
 export const StackView = ({ id }: StackViewProps) => {
+    const routeNavigator = useRouteNavigator()
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
+
     const translationViewModal = useModalState()
     const addTranslationToStackModal = useModalState()
     const createTranslationModal = useModalState()
-    const routeNavigator = useRouteNavigator()
+    const editStackModal = useModalState()
 
     const modal = useModal()
     const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
@@ -68,9 +71,7 @@ export const StackView = ({ id }: StackViewProps) => {
     })
 
     const encodeStackBackground = useEncodeStackBackground()
-
     const encodedBackground = encodeStackBackground(data)
-
     const decodedBackground = decodeStackBackground(encodedBackground)
 
     return (
@@ -221,11 +222,24 @@ export const StackView = ({ id }: StackViewProps) => {
                 </ModalBody>
             </ModalWrapper>
 
+            <ModalWrapper isOpened={editStackModal.isOpened} onClose={editStackModal.close}>
+                <ModalBody>
+                    <StackCreateModal
+                        id={id}
+                        name={data?.name}
+                        palette={data?.palette}
+                        pattern={data?.pattern}
+                        description={data?.description}
+                    />
+                </ModalBody>
+            </ModalWrapper>
+
             {showMore.isOpened && (
                 <ActionSheet onClose={showMore.close} className="z-30" toggleRef={undefined}>
                     <ActionSheetItem
                         before={<Icon28EditOutline />}
                         children={"Редактировать стопку"}
+                        onClick={editStackModal.open}
                     />
                     <ActionSheetItem before={<Icon28ShareOutline />} children={"Поделиться"} />
                     <ActionSheetItem

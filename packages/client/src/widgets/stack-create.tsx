@@ -23,11 +23,17 @@ type StackFormInputs = {
     palette: number
 }
 
-export const StackCreateModal = () => {
+type StackCreateModalProps = {
+    id?: number
+} & Partial<StackFormInputs>
+
+export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps) => {
     const modal = useModal()
     const utils = trpc.useUtils()
 
-    const { control, handleSubmit, watch } = useForm<StackFormInputs>({})
+    const { control, handleSubmit, watch } = useForm<StackFormInputs>({
+        defaultValues,
+    })
 
     const { mutate: createStack } = trpc.stacks.create.useMutation({
         onSuccess: () => {
@@ -36,24 +42,44 @@ export const StackCreateModal = () => {
         },
     })
 
+    const { mutate: editStack } = trpc.stacks.edit.useMutation({
+        onSuccess: () => {
+            modal?.onClose()
+            utils.stacks.getUserStacks.refetch({})
+
+            id && utils.stacks.getSingle.refetch({ id })
+        },
+    })
+
     const { data: patterns } = trpc.stacks.customization.getPatterns.useQuery()
     const { data: palettes } = trpc.stacks.customization.getPalettes.useQuery()
 
     const onSubmit: SubmitHandler<StackFormInputs> = (data) => {
-        createStack({
-            name: data.name,
-            description: data.description?.length >= 3 ? data.description : undefined,
-            pattern: data.pattern,
-            palette: data.palette,
-        })
+        if (id) {
+            editStack({
+                id,
+                name: data.name,
+                description: data.description?.length >= 3 ? data.description : null,
+                pattern: data.pattern as Pattern,
+                palette: data.palette,
+            })
+        } else {
+            createStack({
+                name: data.name,
+                description: data.description?.length >= 3 ? data.description : undefined,
+                pattern: data.pattern as Pattern,
+                palette: data.palette,
+            })
+        }
     }
 
     return (
         <>
             <ModalPageHeader
                 before={<PanelHeaderClose onClick={() => modal?.onClose()} />}
-                children={"Создать стопку"}
+                children={id ? "Редактировать стопку" : "Создать стопку"}
             />
+
             <Group>
                 <Header children={"Внешний вид"} mode="secondary" />
 

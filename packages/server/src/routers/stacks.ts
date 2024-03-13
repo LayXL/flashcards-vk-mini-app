@@ -59,6 +59,7 @@ const patterns = [
 ] as const
 
 const zodPattern = z.enum([
+    "solid",
     "alternation",
     "arch",
     "boom",
@@ -113,7 +114,7 @@ export const stacks = router({
             z.object({
                 id: z.number(),
                 name: z.string().min(3).max(96).trim().optional(),
-                description: z.string().min(3).max(256).trim().optional(),
+                description: z.string().min(3).max(256).trim().optional().nullable(),
                 isPrivate: z.boolean().optional(),
                 pattern: zodPattern.optional(),
                 palette: z.number().min(1).max(palettes.length).optional(),
