@@ -7,7 +7,7 @@ import {
     Group,
     Header,
     Input,
-    PanelHeader,
+    ModalPageHeader,
     PanelHeaderClose,
 } from "@vkontakte/vkui"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
@@ -50,7 +50,7 @@ export const StackCreateModal = () => {
 
     return (
         <>
-            <PanelHeader
+            <ModalPageHeader
                 before={<PanelHeaderClose onClick={() => modal?.onClose()} />}
                 children={"Создать стопку"}
             />
