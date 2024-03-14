@@ -1,4 +1,4 @@
-import { Icon24Play, Icon28Cards2 } from "@vkontakte/icons"
+import { Icon24Play, Icon28Cards2Outline } from "@vkontakte/icons"
 import {
     Button,
     ButtonGroup,
@@ -13,8 +13,9 @@ import {
     Select,
     SimpleCell,
 } from "@vkontakte/vkui"
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 import { useRecoilState } from "recoil"
+import { ModifierCard } from "../entities/game/ui/modifier-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
@@ -43,6 +44,11 @@ const RecentGameCard = ({ id }: { id: number }) => {
     )
 }
 
+const attempts = Array.from({ length: 5 }).map((_, i) => ({
+    label: i.toString(),
+    value: i.toString(),
+}))
+
 const gameDurations = Array.from({ length: 60 / 5 }).map((_, i) => ({
     label: `${(i + 1) * 5} сек`,
     value: ((i + 1) * 5).toString(),
@@ -59,12 +65,7 @@ export const Game = () => {
     const gameSettingsModal = useModalState()
     const gameStackSelectModal = useModalState()
 
-    // TODO refactor
-
     const [gameSettings, setGameSettings] = useRecoilState(gameSettingsAtom)
-
-    const [gameDuration, setGameDuration] = useState(60)
-    const [correctAnswerAddDuration, setCorrectAnswerAddDuration] = useState(1)
 
     const {
         mutate: start,
@@ -84,10 +85,26 @@ export const Game = () => {
 
         start({
             stackIds: gameSettings.stacks,
-            gameDuration,
-            correctAnswerAddDuration,
+            attemptsCount: gameSettings.attemptCount ?? undefined,
+            gameDuration: gameSettings.gameDuration ?? undefined,
+            correctAnswerAddDuration: gameSettings.correctAnswerAddDuration ?? undefined,
+            repeatCards: gameSettings.selectedModifiers.includes("repeat"),
         })
-    }, [correctAnswerAddDuration, gameDuration, gameSettings.stacks, start])
+    }, [gameSettings, start])
+
+    const onClickModifier = useCallback(
+        (modifier: "time" | "attempts" | "repeat") => {
+            return () => {
+                setGameSettings((prev) => ({
+                    ...prev,
+                    selectedModifiers: prev.selectedModifiers.includes(modifier)
+                        ? prev.selectedModifiers.filter((m) => m !== modifier)
+                        : ([...prev.selectedModifiers, modifier] as const),
+                }))
+            }
+        },
+        [setGameSettings],
+    )
 
     const stopGame = useCallback(() => {
         gameModal.close()
@@ -104,9 +121,14 @@ export const Game = () => {
             <PanelHeader children={"Играть"} />
 
             <Placeholder
-                icon={<Icon28Cards2 width={56} height={56} className="text-accent" />}
-                header="Закрепляй знания"
-                children="Узнавай новые слова и запоминай старые с помощью игры, где нужно на время выбирать правильный перевод"
+                icon={<Icon28Cards2Outline width={56} height={56} className="text-accent" />}
+                header={"Закрепляй знания"}
+                children={
+                    <span className="text-balance">
+                        Узнавай новые слова и&nbsp;запоминай старые с&nbsp;помощью игры,
+                        где&nbsp;нужно на&nbsp;время выбирать правильный перевод
+                    </span>
+                }
                 action={
                     <ButtonGroup mode="vertical" align="center">
                         <Button
@@ -114,12 +136,6 @@ export const Game = () => {
                             before={<Icon24Play />}
                             size={"l"}
                             children={"Начать игру"}
-                            onClick={startGame}
-                        />
-                        <Button
-                            size="m"
-                            mode="tertiary"
-                            children="Настроить"
                             onClick={gameSettingsModal.open}
                         />
                     </ButtonGroup>
@@ -143,7 +159,7 @@ export const Game = () => {
             </ModalWrapper>
 
             <ModalWrapper isOpened={gameSettingsModal.isOpened} onClose={gameSettingsModal.close}>
-                <ModalBody>
+                <ModalBody fullscreen>
                     <ModalPageHeader
                         before={<PanelHeaderBack onClick={gameSettingsModal.close} />}
                         children="Настройки"
@@ -160,37 +176,86 @@ export const Game = () => {
                     </Group>
 
                     <Group>
-                        <Header mode="secondary" children="Геймплей" />
-                        <Cell
-                            children={"Длительность игры"}
-                            after={
-                                <div className="w-[128px]">
-                                    <Select
-                                        value={gameDuration.toString()}
-                                        options={gameDurations}
-                                        onChange={({ currentTarget: { value } }) => {
-                                            setGameDuration(parseInt(value))
-                                        }}
-                                    />
-                                </div>
-                            }
-                        />
-                        <Cell
-                            children={"Правильный ответ добавляет"}
-                            after={
-                                <div className="w-[128px]">
-                                    <Select
-                                        value={correctAnswerAddDuration.toString()}
-                                        options={correctAnswerAddDurations}
-                                        onChange={({ currentTarget: { value } }) => {
-                                            setCorrectAnswerAddDuration(parseInt(value))
-                                        }}
-                                    />
-                                </div>
-                            }
-                        />
+                        <Header mode="secondary" children="Модификаторы" />
+
+                        <Div className="flex gap-3">
+                            <ModifierCard name={"Время"} onClick={onClickModifier("time")} />
+                            <ModifierCard name={"Попытки"} onClick={onClickModifier("attempts")} />
+                            <ModifierCard name={"Повторение"} onClick={onClickModifier("repeat")} />
+                        </Div>
                     </Group>
-                    <div className="h-56" />
+
+                    <Group>
+                        <Header mode="secondary" children="Настройки" />
+                        {gameSettings.selectedModifiers.includes("time") && (
+                            <>
+                                <Cell
+                                    children={"Длительность игры"}
+                                    after={
+                                        <div className="w-[128px]">
+                                            <Select
+                                                value={
+                                                    gameSettings.gameDuration?.toString() ?? "60"
+                                                }
+                                                options={gameDurations}
+                                                onChange={({ currentTarget: { value } }) => {
+                                                    setGameSettings((prev) => ({
+                                                        ...prev,
+                                                        gameDuration: parseInt(value),
+                                                    }))
+                                                }}
+                                            />
+                                        </div>
+                                    }
+                                />
+                                <Cell
+                                    children={"Правильный ответ добавит"}
+                                    after={
+                                        <div className="w-[128px]">
+                                            <Select
+                                                value={
+                                                    gameSettings.correctAnswerAddDuration?.toString() ??
+                                                    "1"
+                                                }
+                                                options={correctAnswerAddDurations}
+                                                onChange={({ currentTarget: { value } }) => {
+                                                    setGameSettings((prev) => ({
+                                                        ...prev,
+                                                        correctAnswerAddDuration: parseInt(value),
+                                                    }))
+                                                }}
+                                            />
+                                        </div>
+                                    }
+                                />
+                            </>
+                        )}
+                        {gameSettings.selectedModifiers.includes("attempts") && (
+                            <Cell
+                                children={"Количество попыток"}
+                                after={
+                                    <div className="w-[128px]">
+                                        <Select
+                                            value={gameSettings.attemptCount?.toString() ?? "3"}
+                                            options={attempts}
+                                            onChange={({ currentTarget: { value } }) => {
+                                                setGameSettings((prev) => ({
+                                                    ...prev,
+                                                    gameDuration: parseInt(value),
+                                                }))
+                                            }}
+                                        />
+                                    </div>
+                                }
+                            />
+                        )}
+                    </Group>
+
+                    <Div className="box-border fixed w-screen bottom-0 bg-vk-content">
+                        <Button children={"Играть"} stretched={true} onClick={startGame} size="l" />
+
+                        <div className="h-[env(safe-area-inset-bottom)]" />
+                    </Div>
                 </ModalBody>
 
                 <ModalWrapper

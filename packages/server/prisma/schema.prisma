@@ -194,6 +194,9 @@ model GameSession {
 
   gameDuration             Int?
   correctAnswerAddDuration Int?
+  wrongAnswerSubDuration   Int?
+  attemptsCount            Int?
+  repeatCards              Boolean?
 
   stacks       Stack[]
   user         User                       @relation(fields: [userId], references: [id])

@@ -12,9 +12,17 @@ export const modalsHistory = atom<string[]>({
 
 export const gameSettingsAtom = atom<{
     stacks: number[]
+    selectedModifiers: ("time" | "attempts" | "repeat")[]
+    gameDuration: number | null
+    correctAnswerAddDuration: number | null
+    attemptCount: number | null
 }>({
     key: "gameSettings",
     default: {
         stacks: [],
+        selectedModifiers: ["time"],
+        gameDuration: null,
+        correctAnswerAddDuration: null,
+        attemptCount: null,
     },
 })
