@@ -87,6 +87,13 @@ export const game = router({
                 ]),
             }))
 
+            if (cards.length === 0) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "No translations for showing found",
+                })
+            }
+
             await ctx.prisma.gameSession.updateMany({
                 where: {
                     user: {
