@@ -85,9 +85,15 @@ export const Game = () => {
 
         start({
             stackIds: gameSettings.stacks,
-            attemptsCount: gameSettings.attemptCount ?? undefined,
-            gameDuration: gameSettings.gameDuration ?? undefined,
-            correctAnswerAddDuration: gameSettings.correctAnswerAddDuration ?? undefined,
+            attemptsCount: gameSettings.selectedModifiers.includes("attempts")
+                ? gameSettings.attemptCount
+                : undefined,
+            gameDuration: gameSettings.selectedModifiers.includes("time")
+                ? gameSettings.gameDuration
+                : undefined,
+            correctAnswerAddDuration: gameSettings.selectedModifiers.includes("time")
+                ? gameSettings.correctAnswerAddDuration
+                : undefined,
             repeatCards: gameSettings.selectedModifiers.includes("repeat"),
         })
     }, [gameSettings, start])
