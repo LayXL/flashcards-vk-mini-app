@@ -185,25 +185,81 @@ export const Game = () => {
                         <Header mode="secondary" children="Модификаторы" />
 
                         <Div className="flex gap-3">
-                            <ModifierCard name={"Время"} onClick={onClickModifier("time")} />
-                            <ModifierCard name={"Попытки"} onClick={onClickModifier("attempts")} />
-                            <ModifierCard name={"Повторение"} onClick={onClickModifier("repeat")} />
+                            <ModifierCard
+                                name={"Время"}
+                                onClick={onClickModifier("time")}
+                                isSelected={gameSettings.selectedModifiers.includes("time")}
+                            />
+                            <ModifierCard
+                                name={"Попытки"}
+                                onClick={onClickModifier("attempts")}
+                                isSelected={gameSettings.selectedModifiers.includes("attempts")}
+                            />
+                            <ModifierCard
+                                name={"Повторение"}
+                                onClick={onClickModifier("repeat")}
+                                isSelected={gameSettings.selectedModifiers.includes("repeat")}
+                            />
                         </Div>
                     </Group>
 
-                    <Group>
-                        <Header mode="secondary" children="Настройки" />
-                        {gameSettings.selectedModifiers.includes("time") && (
-                            <>
+                    {(gameSettings.selectedModifiers.includes("time") ||
+                        gameSettings.selectedModifiers.includes("attempts")) && (
+                        <Group>
+                            <Header mode="secondary" children="Настройки" />
+                            {gameSettings.selectedModifiers.includes("time") && (
+                                <>
+                                    <Cell
+                                        children={"Длительность игры"}
+                                        after={
+                                            <div className="w-[128px]">
+                                                <Select
+                                                    value={
+                                                        gameSettings.gameDuration?.toString() ??
+                                                        "60"
+                                                    }
+                                                    options={gameDurations}
+                                                    onChange={({ currentTarget: { value } }) => {
+                                                        setGameSettings((prev) => ({
+                                                            ...prev,
+                                                            gameDuration: parseInt(value),
+                                                        }))
+                                                    }}
+                                                />
+                                            </div>
+                                        }
+                                    />
+                                    <Cell
+                                        children={"Правильный ответ добавит"}
+                                        after={
+                                            <div className="w-[128px]">
+                                                <Select
+                                                    value={
+                                                        gameSettings.correctAnswerAddDuration?.toString() ??
+                                                        "1"
+                                                    }
+                                                    options={correctAnswerAddDurations}
+                                                    onChange={({ currentTarget: { value } }) => {
+                                                        setGameSettings((prev) => ({
+                                                            ...prev,
+                                                            correctAnswerAddDuration:
+                                                                parseInt(value),
+                                                        }))
+                                                    }}
+                                                />
+                                            </div>
+                                        }
+                                    />
+                                </>
+                            )}
+                            {gameSettings.selectedModifiers.includes("attempts") && (
                                 <Cell
-                                    children={"Длительность игры"}
+                                    children={"Количество попыток"}
                                     after={
                                         <div className="w-[128px]">
                                             <Select
-                                                value={
-                                                    gameSettings.gameDuration?.toString() ?? "60"
-                                                }
-                                                options={gameDurations}
+                                                value={gameSettings.attemptCount?.toString() ?? "3"}
+                                                options={attempts}
                                                 onChange={({ currentTarget: { value } }) => {
                                                     setGameSettings((prev) => ({
                                                         ...prev,
@@ -214,48 +270,9 @@ export const Game = () => {
                                         </div>
                                     }
                                 />
-                                <Cell
-                                    children={"Правильный ответ добавит"}
-                                    after={
-                                        <div className="w-[128px]">
-                                            <Select
-                                                value={
-                                                    gameSettings.correctAnswerAddDuration?.toString() ??
-                                                    "1"
-                                                }
-                                                options={correctAnswerAddDurations}
-                                                onChange={({ currentTarget: { value } }) => {
-                                                    setGameSettings((prev) => ({
-                                                        ...prev,
-                                                        correctAnswerAddDuration: parseInt(value),
-                                                    }))
-                                                }}
-                                            />
-                                        </div>
-                                    }
-                                />
-                            </>
-                        )}
-                        {gameSettings.selectedModifiers.includes("attempts") && (
-                            <Cell
-                                children={"Количество попыток"}
-                                after={
-                                    <div className="w-[128px]">
-                                        <Select
-                                            value={gameSettings.attemptCount?.toString() ?? "3"}
-                                            options={attempts}
-                                            onChange={({ currentTarget: { value } }) => {
-                                                setGameSettings((prev) => ({
-                                                    ...prev,
-                                                    gameDuration: parseInt(value),
-                                                }))
-                                            }}
-                                        />
-                                    </div>
-                                }
-                            />
-                        )}
-                    </Group>
+                            )}
+                        </Group>
+                    )}
 
                     <Div className="box-border fixed w-screen bottom-0 bg-vk-content">
                         <Button children={"Играть"} stretched={true} onClick={startGame} size="l" />

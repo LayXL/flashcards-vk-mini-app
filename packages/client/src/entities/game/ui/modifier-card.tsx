@@ -1,15 +1,21 @@
+import { cn } from "../../../shared/helpers/cn"
+
 // TODO isSelected property
 // TODO icon property
 type ModifierCardProps = {
     name: string
     onClick?: () => void
+    isSelected?: boolean
 }
 
-export const ModifierCard = ({ name, onClick }: ModifierCardProps) => {
+export const ModifierCard = ({ name, onClick, isSelected }: ModifierCardProps) => {
     return (
         <div
             onClick={onClick}
-            className="flex-1 p-3 bg-secondary rounded-xl cursor-pointer flex justify-center items-center"
+            className={cn(
+                "flex-1 p-3 bg-secondary rounded-xl cursor-pointer flex justify-center items-center",
+                isSelected && "bg-vk-accent",
+            )}
         >
             <span>{name}</span>
         </div>
