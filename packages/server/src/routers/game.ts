@@ -275,7 +275,7 @@ export const game = router({
                     },
                 })
 
-                if (incorrectCount === 0) {
+                if (incorrectCount === 0 && unansweredCount === 0) {
                     await ctx.prisma.gameSession.update({
                         where: {
                             id: translationInGameSession.gameSessionId,
