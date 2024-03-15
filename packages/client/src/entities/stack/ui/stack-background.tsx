@@ -60,7 +60,7 @@ export const StackBackground = ({
     imageUrl,
 }: StackBackgroundProps) => {
     if (imageUrl) {
-        return <img src={imageUrl} className="w-full h-full object-cover" />
+        return <img src={imageUrl} className={"w-full h-full object-cover"} />
     }
 
     if (encodedBackground) {
@@ -73,7 +73,7 @@ export const StackBackground = ({
                 width={"none"}
                 height={"none"}
                 preserveAspectRatio={"xMidYMid slice"}
-                className="w-full h-full"
+                className={"w-full h-full"}
                 style={{
                     "--bg": stackBackground?.primaryColor,
                     "--bg-secondary": stackBackground?.secondaryColor,
@@ -93,7 +93,7 @@ export const StackBackground = ({
             width={"none"}
             height={"none"}
             preserveAspectRatio={"xMidYMid slice"}
-            className="w-full h-full"
+            className={"w-full h-full"}
             style={{
                 "--bg": primaryColor,
                 "--bg-secondary": secondaryColor,

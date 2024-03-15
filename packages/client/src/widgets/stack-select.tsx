@@ -4,9 +4,9 @@ import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
+import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
-import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 
 type StackSelectProps = {
     onSelect: (id: number) => void
@@ -26,7 +26,7 @@ export const StackSelect = ({ onClose, onSelect, canCreateNewStack, filter }: St
         <>
             <ModalPageHeader
                 before={<PanelHeaderBack onClick={onClose} />}
-                children="Выберите стопку"
+                children={"Выберите стопку"}
             />
 
             {canCreateNewStack && (
@@ -43,7 +43,7 @@ export const StackSelect = ({ onClose, onSelect, canCreateNewStack, filter }: St
 
             {/* TODO infinite scroll */}
 
-            <Div className="gap-3 grid grid-cols-cards">
+            <Div className={"gap-3 grid grid-cols-cards"}>
                 {data?.items.map((stack) => (
                     // TODO redesign
                     <LargeStackCard

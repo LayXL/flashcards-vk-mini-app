@@ -81,14 +81,14 @@ export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps
             />
 
             <Group>
-                <Header children={"Внешний вид"} mode="secondary" />
+                <Header children={"Внешний вид"} mode={"secondary"} />
 
                 <Controller
                     control={control}
                     name={"pattern"}
                     render={({ field }) => (
                         <CardScroll>
-                            <div className="flex-row gap-2">
+                            <div className={"flex-row gap-2"}>
                                 {patterns?.map((background) => (
                                     <div
                                         className={cn(
@@ -101,7 +101,7 @@ export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps
                                     >
                                         {watch("pattern") == background.name && (
                                             <Icon32CheckCircle
-                                                className="absolute right-0.5 top-0.5"
+                                                className={"absolute right-0.5 top-0.5"}
                                                 fill={"white"}
                                             />
                                         )}
@@ -128,7 +128,7 @@ export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps
                     name={"palette"}
                     render={({ field }) => (
                         <CardScroll>
-                            <div className="flex-row gap-2">
+                            <div className={"flex-row gap-2"}>
                                 {palettes?.map((color) => (
                                     <div
                                         className={cn(
@@ -145,7 +145,7 @@ export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps
                                         }}
                                     >
                                         <div
-                                            className="w-full h-1/2"
+                                            className={"w-full h-1/2"}
                                             style={{
                                                 backgroundColor: color.secondary,
                                             }}

@@ -55,13 +55,17 @@ export const Keyboard = ({
     misplacedLetters,
 }: KeyboardProps) => {
     return (
-        <div className="flex-col items-center gap-2 pt-2 px-1 bg-vk-secondary rounded-t-xl pb-[calc(env(safe-area-inset-bottom)_+_8px)]">
+        <div
+            className={
+                "flex-col items-center gap-2 pt-2 px-1 bg-vk-secondary rounded-t-xl pb-[calc(env(safe-area-inset-bottom)_+_8px)]"
+            }
+        >
             {keys.map((row, i) => (
-                <div key={i} className="flex flex-row gap-1.5 w-full justify-center">
+                <div key={i} className={"flex flex-row gap-1.5 w-full justify-center"}>
                     {i === 2 && (
                         <Key
                             letter={"⏎"}
-                            className="w-auto flex-1 aspect-[unset] px-1 max-w-12"
+                            className={"w-auto flex-1 aspect-[unset] px-1 max-w-12"}
                             onClick={onEnter}
                         />
                     )}
@@ -86,7 +90,7 @@ export const Keyboard = ({
                     {i === 2 && (
                         <Key
                             letter={"⌫"}
-                            className="w-auto flex-1 aspect-[unset] px-1 max-w-12"
+                            className={"w-auto flex-1 aspect-[unset] px-1 max-w-12"}
                             onClick={onBackspace}
                         />
                     )}

@@ -42,11 +42,11 @@ export const SearchStackCard = ({ name }: SearchStackCardProps) => {
                 }}
             />
             <Card>
-                <Subhead children={"Front Office"} weight="1" />
+                <Subhead children={"Front Office"} weight={"1"} />
                 <Secondary>
                     <CardsCount>
                         <Icon16Cards2 />
-                        <Caption level="2" weight="3" children={"120"} />
+                        <Caption level={"2"} weight={"3"} children={"120"} />
                     </CardsCount>
 
                     <Icon28AddSquareOutline color={vkTheme.colorAccentBlue.normal.value} />

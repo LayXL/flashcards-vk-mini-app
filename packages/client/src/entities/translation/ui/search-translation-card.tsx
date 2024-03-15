@@ -51,7 +51,7 @@ export const SearchTranslationCard = ({
 
                     <TextWrapper>
                         <Subhead children={foreign} weight={"2"} />
-                        <Caption children={vernacular} weight="3" level="2" />
+                        <Caption children={vernacular} weight={"3"} level={"2"} />
                     </TextWrapper>
                 </Wrapper>
             </Tappable>

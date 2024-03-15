@@ -10,8 +10,24 @@ export const game = router({
         .input(
             z.object({
                 stackIds: z.number().array(),
-                gameDuration: z.number().min(10).max(240).optional(),
-                correctAnswerAddDuration: z.number().min(0).max(10).optional().default(1),
+                gameDuration: z.number().min(10).max(240).nullable().optional().default(null),
+                correctAnswerAddDuration: z
+                    .number()
+                    .min(0)
+                    .max(10)
+                    .optional()
+                    .nullable()
+                    .default(null),
+                // TODO
+                wrongAnswerSubDuration: z
+                    .number()
+                    .min(0)
+                    .max(10)
+                    .optional()
+                    .nullable()
+                    .default(null),
+                attemptsCount: z.number().min(1).max(5).optional().nullable().default(null),
+                repeatCards: z.boolean().optional().default(false),
             })
         )
         .mutation(async ({ input, ctx }) => {
@@ -125,6 +141,9 @@ export const game = router({
                     },
                     gameDuration: input.gameDuration,
                     correctAnswerAddDuration: input.correctAnswerAddDuration,
+                    wrongAnswerSubDuration: input.wrongAnswerSubDuration,
+                    attemptsCount: input.attemptsCount,
+                    repeatCards: input.repeatCards,
                 },
             })
 
@@ -163,6 +182,7 @@ export const game = router({
                         status: "playing",
                     },
                     order: input.order,
+                    // todo if with repeating cards
                     status: "unanswered",
                 },
                 include: {
@@ -207,6 +227,27 @@ export const game = router({
                     status: "unanswered",
                 },
             })
+
+            if (translationInGameSession.gameSession.attemptsCount) {
+                const incorrectCount = await ctx.prisma.translationInGameSession.count({
+                    where: {
+                        gameSessionId: translationInGameSession.gameSessionId,
+                        status: "incorrect",
+                    },
+                })
+
+                if (incorrectCount >= translationInGameSession.gameSession.attemptsCount) {
+                    await ctx.prisma.gameSession.update({
+                        where: {
+                            id: translationInGameSession.gameSessionId,
+                        },
+                        data: {
+                            status: "ended",
+                            endedAt: new Date(),
+                        },
+                    })
+                }
+            }
 
             if (unansweredCount === 0) {
                 await ctx.prisma.gameSession.update({
