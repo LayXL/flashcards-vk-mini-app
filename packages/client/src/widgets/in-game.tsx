@@ -21,6 +21,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     const currentCardData = useMemo(() => cards[currentCardIndex], [cards, currentCardIndex])
 
     const correctAnswers = useCounter(0)
+    const attempts = useCounter(data.gameSession.attemptsCount ?? 0)
 
     // todo refactor to timer component
     const [duration, setDuration] = useState((data.gameSession.gameDuration ?? 0) * 10)
@@ -51,6 +52,10 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                     startCountdown()
                 }
             } else {
+                if (data.gameSession.attemptsCount) {
+                    attempts.decrement()
+                }
+
                 if (data.gameSession.repeatCards) {
                     setCards((prev) => [...prev, cardData])
                     return
@@ -64,11 +69,15 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     })
 
     const withTimer = data.gameSession.gameDuration && data.gameSession.gameDuration > 0
+    const withAttempts = data.gameSession.attemptsCount && data.gameSession.attemptsCount > 0
 
     useEffect(() => {
-        if (!withTimer || count !== 0) return
-        onEndGame()
-    }, [count, data.gameSession.gameDuration, withTimer, onEndGame])
+        if (withTimer && count === 0) {
+            onEndGame()
+        } else if (withAttempts && attempts.count === 0) {
+            onEndGame()
+        }
+    }, [count, data.gameSession.gameDuration, withTimer, onEndGame, withAttempts, attempts.count])
 
     useEffect(() => {
         if (!withTimer) return
