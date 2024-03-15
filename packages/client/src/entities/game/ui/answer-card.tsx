@@ -21,20 +21,20 @@ export const AnswerCard = ({
 }: AnswerCardProps) => {
     return (
         <div
-            className="flex flex-col bg-secondary p-3 rounded-xl gap-3 cursor-pointer shadow-card"
+            className={"flex flex-col bg-secondary p-3 rounded-xl gap-3 cursor-pointer shadow-card"}
             onClick={onClick}
         >
-            <div className="flex flex-row justify-between items-center">
-                <div className="flex flex-row gap-1.5 items-center">
-                    <Headline children={foreign} weight="2" />
+            <div className={"flex flex-row justify-between items-center"}>
+                <div className={"flex flex-row gap-1.5 items-center"}>
+                    <Headline children={foreign} weight={"2"} />
                     <CorrectAnswerBadge type={status} />
                 </div>
-                <Subhead className="text-secondary">{time} сек</Subhead>
+                <Subhead className={"text-secondary"}>{time} сек</Subhead>
             </div>
-            <div className="flex flex-row justify-between items-center text-secondary">
+            <div className={"flex flex-row justify-between items-center text-secondary"}>
                 <Subhead children={vernacular} />
                 <div
-                    className="text-accent cursor-pointer"
+                    className={"text-accent cursor-pointer"}
                     onClick={(e) => {
                         e.stopPropagation()
                         onAdd()

@@ -41,14 +41,14 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
 
             {data?.status === "playing" && (
                 <input
-                    className="h-0 absolute opacity-0 -z-0"
+                    className={"h-0 absolute opacity-0 -z-0"}
                     ref={inputRef}
                     value={value}
                     onChange={({ currentTarget: { value } }) => {
                         setValue(limitToFiveLetters(value.toUpperCase()))
                         setIsValueWithError(false)
                     }}
-                    enterKeyHint="send"
+                    enterKeyHint={"send"}
                     onKeyDown={(e) => {
                         if (isPending) return
                         if (e.key !== "Enter") return
@@ -59,14 +59,14 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
             )}
 
             <div
-                className="h-full flex-col"
+                className={"h-full flex-col"}
                 onClick={() => {
                     if (isDesktop) inputRef.current?.focus()
                 }}
             >
-                <div className="flex-col gap-1 items-center py-4">
+                <div className={"flex-col gap-1 items-center py-4"}>
                     {Array.from({ length: 6 }).map((_, i) => (
-                        <div className="flex-row gap-1" key={i}>
+                        <div className={"flex-row gap-1"} key={i}>
                             {currentAttempt === i ? (
                                 <>
                                     <LetterCell
@@ -110,13 +110,13 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 </div>
 
                 {data?.status !== "playing" && isSuccess && (
-                    <Div className="flex-col gap-1 flex-1 py-8">
+                    <Div className={"flex-col gap-1 flex-1 py-8"}>
                         <>
-                            <div className="font-semibold text-2xl text-center">
+                            <div className={"font-semibold text-2xl text-center"}>
                                 {data?.status === "lost" && "Вы не угадали слово"}
                                 {data?.status === "resolved" && "Вы угадали слово"}
                             </div>
-                            <div className="text-center">
+                            <div className={"text-center"}>
                                 Игра обновится через{" "}
                                 {DateTime.now()
                                     .toUTC(0)
@@ -130,7 +130,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                             </div>
 
                             {data?.status === "lost" && data?.answer && (
-                                <div className="flex-row gap-1 mx-auto py-8">
+                                <div className={"flex-row gap-1 mx-auto py-8"}>
                                     {data.answer
                                         ?.toUpperCase()
                                         .split("")
@@ -145,7 +145,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
             </div>
 
             {data?.status === "playing" && (
-                <div className="fixed w-screen bottom-0">
+                <div className={"fixed w-screen bottom-0"}>
                     <Keyboard
                         correctLetters={data?.correctLetters ?? []}
                         excludedLetters={data?.excludedLetters ?? []}

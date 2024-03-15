@@ -31,7 +31,7 @@ const RecentGameCard = ({ id }: { id: number }) => {
 
     return (
         <>
-            <div onClick={open} className="p-3 bg-secondary rounded-xl cursor-pointer">
+            <div onClick={open} className={"p-3 bg-secondary rounded-xl cursor-pointer"}>
                 {id}
             </div>
 
@@ -127,16 +127,16 @@ export const Game = () => {
             <PanelHeader children={"Играть"} />
 
             <Placeholder
-                icon={<Icon28Cards2Outline width={56} height={56} className="text-accent" />}
+                icon={<Icon28Cards2Outline width={56} height={56} className={"text-accent"} />}
                 header={"Закрепляй знания"}
                 children={
-                    <span className="text-balance">
+                    <span className={"text-balance"}>
                         Узнавай новые слова и&nbsp;запоминай старые с&nbsp;помощью игры,
                         где&nbsp;нужно на&nbsp;время выбирать правильный перевод
                     </span>
                 }
                 action={
-                    <ButtonGroup mode="vertical" align="center">
+                    <ButtonGroup mode={"vertical"} align={"center"}>
                         <Button
                             loading={isPending}
                             before={<Icon24Play />}
@@ -150,7 +150,7 @@ export const Game = () => {
 
             <Header>Недавние игры</Header>
 
-            <Div className="flex-col gap-2">
+            <Div className={"flex-col gap-2"}>
                 {recentlyGames?.map((game) => (
                     <RecentGameCard key={game.id} id={game.id} />
                 ))}
@@ -168,23 +168,23 @@ export const Game = () => {
                 <ModalBody fullscreen>
                     <ModalPageHeader
                         before={<PanelHeaderBack onClick={gameSettingsModal.close} />}
-                        children="Настройки"
+                        children={"Настройки"}
                     />
 
                     <Group>
-                        <Header mode="secondary" children="Выбрать стопку" />
+                        <Header mode={"secondary"} children={"Выбрать стопку"} />
                         <SimpleCell
                             children={"Стопка"}
                             onClick={gameStackSelectModal.open}
-                            expandable="always"
+                            expandable={"always"}
                             indicator={gameSettings.stacks.join(", ").toString()}
                         />
                     </Group>
 
                     <Group>
-                        <Header mode="secondary" children="Модификаторы" />
+                        <Header mode={"secondary"} children={"Модификаторы"} />
 
-                        <Div className="flex gap-3">
+                        <Div className={"flex gap-3"}>
                             <ModifierCard
                                 name={"Время"}
                                 onClick={onClickModifier("time")}
@@ -206,13 +206,13 @@ export const Game = () => {
                     {(gameSettings.selectedModifiers.includes("time") ||
                         gameSettings.selectedModifiers.includes("attempts")) && (
                         <Group>
-                            <Header mode="secondary" children="Настройки" />
+                            <Header mode={"secondary"} children={"Настройки"} />
                             {gameSettings.selectedModifiers.includes("time") && (
                                 <>
                                     <Cell
                                         children={"Длительность игры"}
                                         after={
-                                            <div className="w-[128px]">
+                                            <div className={"w-[128px]"}>
                                                 <Select
                                                     value={
                                                         gameSettings.gameDuration?.toString() ??
@@ -232,7 +232,7 @@ export const Game = () => {
                                     <Cell
                                         children={"Правильный ответ добавит"}
                                         after={
-                                            <div className="w-[128px]">
+                                            <div className={"w-[128px]"}>
                                                 <Select
                                                     value={
                                                         gameSettings.correctAnswerAddDuration?.toString() ??
@@ -256,7 +256,7 @@ export const Game = () => {
                                 <Cell
                                     children={"Количество попыток"}
                                     after={
-                                        <div className="w-[128px]">
+                                        <div className={"w-[128px]"}>
                                             <Select
                                                 value={gameSettings.attemptCount?.toString() ?? "3"}
                                                 options={attempts}
@@ -274,10 +274,15 @@ export const Game = () => {
                         </Group>
                     )}
 
-                    <Div className="box-border fixed w-screen bottom-0 bg-vk-content">
-                        <Button children={"Играть"} stretched={true} onClick={startGame} size="l" />
+                    <Div className={"box-border fixed w-screen bottom-0 bg-vk-content"}>
+                        <Button
+                            children={"Играть"}
+                            stretched={true}
+                            onClick={startGame}
+                            size={"l"}
+                        />
 
-                        <div className="h-[env(safe-area-inset-bottom)]" />
+                        <div className={"h-[env(safe-area-inset-bottom)]"} />
                     </Div>
                 </ModalBody>
 

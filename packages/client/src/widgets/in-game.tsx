@@ -64,52 +64,64 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     }, [startCountdown])
 
     return (
-        <div className="flex-col min-h-screen">
+        <div className={"flex-col min-h-screen"}>
             <ModalPageHeader before={<PanelHeaderBack onClick={onStopGame} />} children={"Игра"} />
 
-            <Div className="flex-row justify-between items-center flex-1">
-                <div className="w-[60px] h-[80px] flex items-center justify-center shadow-card bg-vk-secondary rounded-xl">
-                    <Title level="2" weight="2">
+            <Div className={"flex-row justify-between items-center flex-1"}>
+                <div
+                    className={
+                        "w-[60px] h-[80px] flex items-center justify-center shadow-card bg-vk-secondary rounded-xl"
+                    }
+                >
+                    <Title level={"2"} weight={"2"}>
                         {currentCardIndex + 1}/{data.cards.length}
                     </Title>
                 </div>
 
-                <div className="relative w-[160px] h-[160px]">
+                <div className={"relative w-[160px] h-[160px]"}>
                     <svg
                         className={cn(
                             "absolute inset-0 rounded-full -rotate-90 text-accent transition-colors",
                             count <= 50 && "text-dynamic-red",
                         )}
-                        width="160"
-                        height="160"
-                        viewBox="0 0 160 160"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                        width={"160"}
+                        height={"160"}
+                        viewBox={"0 0 160 160"}
+                        fill={"none"}
+                        xmlns={"http://www.w3.org/2000/svg"}
                     >
                         <circle
-                            cx="80"
-                            cy="80"
-                            r="80"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="16"
-                            strokeDasharray="502,6548245744"
+                            cx={"80"}
+                            cy={"80"}
+                            r={"80"}
+                            fill={"none"}
+                            stroke={"currentColor"}
+                            strokeWidth={"16"}
+                            strokeDasharray={"502,6548245744"}
                             strokeDashoffset={strokeOffset}
                         ></circle>
                     </svg>
-                    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 bg-vk-secondary size-[144px] rounded-full flex-col gap-2.5 items-center justify-center">
-                        <span className="text-[40px] leading-none font-semibold">
+                    <div
+                        className={
+                            "absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 bg-vk-secondary size-[144px] rounded-full flex-col gap-2.5 items-center justify-center"
+                        }
+                    >
+                        <span className={"text-[40px] leading-none font-semibold"}>
                             {Math.floor(count / 10)}
                         </span>
-                        <span className="text-[20px] leading-none font-semibold">сек</span>
+                        <span className={"text-[20px] leading-none font-semibold"}>сек</span>
                     </div>
                 </div>
 
-                <div className="w-[60px] h-[80px] flex-row gap-[3px] items-center justify-center shadow-card bg-vk-secondary rounded-xl">
-                    <Title level="2" weight="2">
+                <div
+                    className={
+                        "w-[60px] h-[80px] flex-row gap-[3px] items-center justify-center shadow-card bg-vk-secondary rounded-xl"
+                    }
+                >
+                    <Title level={"2"} weight={"2"}>
                         {correctAnswers.count}
                     </Title>
-                    <Icon32CheckbitOutline width={18} height={18} className="text-accent" />
+                    <Icon32CheckbitOutline width={18} height={18} className={"text-accent"} />
                 </div>
             </Div>
 

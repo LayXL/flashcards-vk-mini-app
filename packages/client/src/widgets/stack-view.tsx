@@ -77,26 +77,32 @@ export const StackView = ({ id }: StackViewProps) => {
     return (
         <>
             <ModalPageHeader
-                className="z-20"
+                className={"z-20"}
                 before={<PanelHeaderBack onClick={() => modal?.onClose()} />}
                 children={data?.name}
             />
 
-            <div className="flex flex-col relative ">
+            <div className={"flex flex-col relative "}>
                 <div
                     style={{
                         backgroundColor: decodedBackground?.primaryColor ?? "#fff",
                     }}
-                    className="absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 opacity-50 -top-[260px] rounded-full blur-3xl"
+                    className={
+                        "absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 opacity-50 -top-[260px] rounded-full blur-3xl"
+                    }
                 ></div>
-                <div className="flex flex-row items-center justify-center gap-6 py-3 z-20">
+                <div className={"flex flex-row items-center justify-center gap-6 py-3 z-20"}>
                     <div
-                        className="rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"
+                        className={"rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"}
                         onClick={showMore.open}
                     >
                         <Icon24MoreHorizontal />
                     </div>
-                    <div className="w-[200px] aspect-square bg-vk-default rounded-xl overflow-hidden">
+                    <div
+                        className={
+                            "w-[200px] aspect-square bg-vk-default rounded-xl overflow-hidden"
+                        }
+                    >
                         {data && (
                             <StackBackground
                                 encodedBackground={encodedBackground}
@@ -105,7 +111,7 @@ export const StackView = ({ id }: StackViewProps) => {
                         )}
                     </div>
                     <div
-                        className="rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"
+                        className={"rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"}
                         onClick={() => {
                             vibrateOnClick()
                             data?.isLiked
@@ -118,7 +124,7 @@ export const StackView = ({ id }: StackViewProps) => {
                 </div>
                 {data?.description && (
                     <Div>
-                        <Subhead className="text-center text-secondary ">
+                        <Subhead className={"text-center text-secondary "}>
                             {data?.description}
                         </Subhead>
                     </Div>
@@ -126,10 +132,10 @@ export const StackView = ({ id }: StackViewProps) => {
                 <Div>
                     <ButtonGroup stretched>
                         <Button
-                            mode="primary"
+                            mode={"primary"}
                             stretched
-                            size="l"
-                            children="Играть"
+                            size={"l"}
+                            children={"Играть"}
                             onClick={() => {
                                 // todo close all
                                 modal?.onClose()
@@ -140,17 +146,17 @@ export const StackView = ({ id }: StackViewProps) => {
                                 }))
                             }}
                         />
-                        <Button mode="secondary" stretched size="l" before={<Icon24Add />}>
+                        <Button mode={"secondary"} stretched size={"l"} before={<Icon24Add />}>
                             Дублировать
                         </Button>
                     </ButtonGroup>
                 </Div>
                 <Header
-                    mode="primary"
+                    mode={"primary"}
                     indicator={data?.translations?.length}
                     aside={
                         <div
-                            className="text-accent cursor-pointer"
+                            className={"text-accent cursor-pointer"}
                             onClick={createTranslationModal.open}
                         >
                             <Icon24Add />
@@ -159,7 +165,7 @@ export const StackView = ({ id }: StackViewProps) => {
                 >
                     Переводы
                 </Header>
-                <Div className="grid grid-cols-cards gap-3">
+                <Div className={"grid grid-cols-cards gap-3"}>
                     {data?.translations?.map(({ translation }) => (
                         <FeedTranslationCard
                             key={translation.id}
@@ -235,7 +241,7 @@ export const StackView = ({ id }: StackViewProps) => {
             </ModalWrapper>
 
             {showMore.isOpened && (
-                <ActionSheet onClose={showMore.close} className="z-30" toggleRef={undefined}>
+                <ActionSheet onClose={showMore.close} className={"z-30"} toggleRef={undefined}>
                     <ActionSheetItem
                         before={<Icon28EditOutline />}
                         children={"Редактировать стопку"}
@@ -244,12 +250,12 @@ export const StackView = ({ id }: StackViewProps) => {
                     <ActionSheetItem before={<Icon28ShareOutline />} children={"Поделиться"} />
                     <ActionSheetItem
                         before={<Icon28ReportOutline />}
-                        mode="destructive"
+                        mode={"destructive"}
                         children={"Пожаловаться"}
                     />
                     <ActionSheetItem
                         before={<Icon28DeleteOutline />}
-                        mode="destructive"
+                        mode={"destructive"}
                         children={"Удалить стопку"}
                     />
                 </ActionSheet>
