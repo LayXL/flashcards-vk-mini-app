@@ -24,7 +24,7 @@ export const GameCard = ({ title, choices, onSelect }: GameCardProps) => {
             <div className={"p-3 bg-vk-secondary rounded-2xl"}>
                 <div
                     className={
-                        "aspect-[4/3] max-h-[50vh] w-full flex-col gap-3 items-center justify-center"
+                        "aspect-[4/3] max-h-[50vh] w-full flex-col gap-3 items-center justify-center text-center"
                     }
                 >
                     <Title children={title} />

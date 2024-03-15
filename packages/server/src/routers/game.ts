@@ -182,8 +182,16 @@ export const game = router({
                         status: "playing",
                     },
                     order: input.order,
-                    // todo if with repeating cards
-                    status: "unanswered",
+                    OR: [
+                        {
+                            status: "unanswered",
+                        },
+                        {
+                            gameSession: {
+                                repeatCards: true,
+                            },
+                        },
+                    ],
                 },
                 include: {
                     translation: true,
@@ -249,7 +257,7 @@ export const game = router({
                 }
             }
 
-            if (unansweredCount === 0) {
+            if (unansweredCount === 0 && !translationInGameSession.gameSession.repeatCards) {
                 await ctx.prisma.gameSession.update({
                     where: {
                         id: translationInGameSession.gameSessionId,
@@ -259,6 +267,25 @@ export const game = router({
                         endedAt: new Date(),
                     },
                 })
+            } else {
+                const incorrectCount = await ctx.prisma.translationInGameSession.count({
+                    where: {
+                        gameSessionId: translationInGameSession.gameSessionId,
+                        status: "incorrect",
+                    },
+                })
+
+                if (incorrectCount === 0) {
+                    await ctx.prisma.gameSession.update({
+                        where: {
+                            id: translationInGameSession.gameSessionId,
+                        },
+                        data: {
+                            status: "ended",
+                            endedAt: new Date(),
+                        },
+                    })
+                }
             }
 
             if (isCorrect) {
