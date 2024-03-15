@@ -22,8 +22,6 @@ export const LargeStackCard = ({
     isVerified,
     imageUrl,
 }: LargeStackCardProps) => {
-    const mask = "linear-gradient(180deg, #fff 60%, rgba(255, 255, 255, 0) 80%)"
-
     const decodedBackground = decodeStackBackground(encodedBackground) ?? null
 
     return (
@@ -33,42 +31,25 @@ export const LargeStackCard = ({
         >
             <div className="w-full">
                 <div className="h-[6px] px-6">
-                    <div className="relative w-full h-full rounded-t-[10px] overflow-hidden">
-                        <div
-                            style={{
-                                background: decodedBackground?.primaryColor ?? "#fff",
-                            }}
-                            className="absolute object-cover w-full h-full"
-                        />
-                    </div>
+                    <div
+                        className="relative w-full h-full rounded-t-[10px] overflow-hidden"
+                        style={{
+                            background: decodedBackground?.primaryColor ?? "#fff",
+                        }}
+                    />
                 </div>
                 <div className="h-[8px] px-3">
-                    <div className="relative w-full h-full rounded-t-[10px] overflow-hidden">
-                        <div
-                            style={{
-                                background: decodedBackground?.secondaryColor ?? "#fff",
-                            }}
-                            className="absolute object-cover w-full h-full"
-                        />
-                    </div>
+                    <div
+                        className="relative w-full h-full rounded-t-[10px] overflow-hidden"
+                        style={{
+                            background: decodedBackground?.secondaryColor ?? "#fff",
+                        }}
+                    />
                 </div>
             </div>
             <div className="flex-1 bg-vk-secondary rounded-xl relative overflow-hidden">
                 <div className="absolute inset-0 overflow-hidden">
                     <StackBackground encodedBackground={encodedBackground} imageUrl={imageUrl} />
-                    <div className="backdrop-blur-[32px] absolute inset-0" />
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            WebkitMaskImage: mask,
-                            maskImage: mask,
-                        }}
-                    >
-                        <StackBackground
-                            encodedBackground={encodedBackground}
-                            imageUrl={imageUrl}
-                        />
-                    </div>
                 </div>
                 <div className="absolute inset-0 flex-col justify-between">
                     <div>{/* TODO author */}</div>
