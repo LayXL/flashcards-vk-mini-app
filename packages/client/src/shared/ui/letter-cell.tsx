@@ -17,7 +17,7 @@ export const LetterCell = ({ letter, type = "default" }: LetterCellProps) => {
                 type === "error" && "bg-red-500",
             )}
         >
-            <span className="text-3xl font-medium" children={letter} />
+            <span className={"text-3xl font-medium"} children={letter} />
         </div>
     )
 }

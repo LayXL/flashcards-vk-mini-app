@@ -50,8 +50,8 @@ export const DetailedTranslationCard = ({
                     <Title style={{ flex: 1 }} children={foreign} />
 
                     <Popover
-                        trigger="click"
-                        placement="bottom"
+                        trigger={"click"}
+                        placement={"bottom"}
                         content={({ onClose }) => (
                             <div
                                 style={{
@@ -90,7 +90,7 @@ export const DetailedTranslationCard = ({
                     />
                 </Header>
 
-                <Title level="3" weight="1" children={vernacular} />
+                <Title level={"3"} weight={"1"} children={vernacular} />
             </Translation>
 
             {(transcriptions?.length ?? 0) > 0 && (
@@ -98,7 +98,7 @@ export const DetailedTranslationCard = ({
                     {transcriptions?.map((transcription, i) => (
                         <Transcription key={i}>
                             {transcription.icon && <FlagIcon flag={transcription.icon} />}
-                            <Caption level="2" children={transcription.transcription} />
+                            <Caption level={"2"} children={transcription.transcription} />
                         </Transcription>
                     ))}
                 </Transcriptions>
@@ -108,7 +108,7 @@ export const DetailedTranslationCard = ({
                     {tags &&
                         tags?.map((tag, i) => (
                             <Tag key={i}>
-                                <Caption level="2" children={"#" + tag} />
+                                <Caption level={"2"} children={"#" + tag} />
                             </Tag>
                         ))}
                 </Tags>
@@ -117,15 +117,15 @@ export const DetailedTranslationCard = ({
         <Secondary>
             {example && (
                 <ExampleWrapper>
-                    <Text weight="2" children="Пример" />
-                    <Text weight="3" children={example} />
+                    <Text weight={"2"} children={"Пример"} />
+                    <Text weight={"3"} children={example} />
                 </ExampleWrapper>
             )}
             <Actions>
                 <Button
-                    size="l"
+                    size={"l"}
                     before={<Icon24Add />}
-                    children="Добавить"
+                    children={"Добавить"}
                     onClick={onAddInStack}
                 />
                 <Tappable
