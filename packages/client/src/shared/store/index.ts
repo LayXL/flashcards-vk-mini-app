@@ -21,8 +21,8 @@ export const gameSettingsAtom = atom<{
     default: {
         stacks: [],
         selectedModifiers: ["time"],
-        gameDuration: null,
-        correctAnswerAddDuration: null,
-        attemptCount: null,
+        gameDuration: 60,
+        correctAnswerAddDuration: 1,
+        attemptCount: 3,
     },
 })

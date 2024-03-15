@@ -83,6 +83,8 @@ export const Game = () => {
     const startGame = useCallback(() => {
         if (!gameSettings.stacks) return
 
+        console.log(gameSettings.attemptCount)
+
         start({
             stackIds: gameSettings.stacks,
             attemptsCount: gameSettings.selectedModifiers.includes("attempts")
