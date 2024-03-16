@@ -50,9 +50,10 @@ type TranslationFormInputs = {
 type TranslationAddProps = {
     defaultValues?: TranslationFormInputs
     onClose?: () => void
+    onAdd?: (id: number) => void
 }
 
-export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) => {
+export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAddProps) => {
     const additionalInfoModal = useModalState()
     const selectStackModal = useModalState()
 
@@ -84,13 +85,13 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
 
     const { mutate: addTranslation, isPending: isAddingTranslation } =
         trpc.translations.add.useMutation({
-            onSuccess: () => {
-                onClose && onClose()
-                utils.translations.getUserTranslations.refetch()
+            onSuccess: ({ id }) => {
+                onAdd && onAdd(id)
 
-                if (defaultValues?.id) {
-                    utils.translations.getSingle.refetch({ id: defaultValues.id })
-                }
+                selectStackModal.close()
+                additionalInfoModal.close()
+
+                utils.translations.getUserTranslations.refetch()
             },
         })
 

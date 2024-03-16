@@ -205,6 +205,7 @@ export const translations = router({
                     })
                     .array()
                     .optional(),
+                isPrivate: z.boolean().optional(),
             })
         )
         .mutation(async ({ input, ctx }) => {
@@ -218,6 +219,7 @@ export const translations = router({
                 example,
                 foreignDescription,
                 transcriptions,
+                isPrivate,
             } = input
 
             const res = await prisma.translation.update({
@@ -258,6 +260,7 @@ export const translations = router({
                         },
                     },
                     updatedAt: new Date(),
+                    isPrivate: isPrivate ?? undefined,
                 },
                 include: {
                     transcriptions: true,

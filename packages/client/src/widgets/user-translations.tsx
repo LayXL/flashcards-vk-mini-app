@@ -1,5 +1,18 @@
-import { Icon24Add, Icon24LikeOutline, Icon24UserOutline } from "@vkontakte/icons"
-import { Div, PanelSpinner, Spacing, SubnavigationBar, SubnavigationButton } from "@vkontakte/vkui"
+import {
+    Icon24Add,
+    Icon24CheckCircleOn,
+    Icon24LikeOutline,
+    Icon24UserOutline,
+} from "@vkontakte/icons"
+import {
+    Div,
+    Link,
+    PanelSpinner,
+    Snackbar,
+    Spacing,
+    SubnavigationBar,
+    SubnavigationButton,
+} from "@vkontakte/vkui"
 import { ComponentProps, useState } from "react"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -17,7 +30,11 @@ export const UserTranslations = () => {
 
     const { data: userTranslations, isLoading } = trpc.translations.getUserTranslations.useQuery()
 
+    const [addedId, setAddedId] = useState<number | null>(null)
+
     const addTranslationModal = useModalState()
+    const addedTranslationSnackbar = useModalState()
+    const viewAddedTranslationModal = useModalState()
 
     return (
         <>
@@ -52,7 +69,7 @@ export const UserTranslations = () => {
 
             {isLoading && <PanelSpinner />}
 
-            <Div className="grid gap-3 grid-cols-cards">
+            <Div className={"grid gap-3 grid-cols-cards"}>
                 {userTranslations?.map((translation) => (
                     <TranslationCardWithModal
                         key={translation.id}
@@ -70,7 +87,42 @@ export const UserTranslations = () => {
                 onClose={addTranslationModal.close}
             >
                 <ModalBody>
-                    <TranslationAdd onClose={addTranslationModal.close} />
+                    <TranslationAdd
+                        onClose={addTranslationModal.close}
+                        onAdd={(id) => {
+                            addTranslationModal.close()
+                            addedTranslationSnackbar.open()
+                            setAddedId(id)
+                        }}
+                    />
+                </ModalBody>
+            </ModalWrapper>
+
+            {addedTranslationSnackbar.isOpened && (
+                <Snackbar
+                    before={<Icon24CheckCircleOn />}
+                    after={
+                        <Link
+                            onClick={() => {
+                                viewAddedTranslationModal.open()
+                                addedTranslationSnackbar.close()
+                            }}
+                            children={"Посмотреть"}
+                        />
+                    }
+                    onClose={addedTranslationSnackbar.close}
+                    children={"Перевод добавлен"}
+                />
+            )}
+
+            <ModalWrapper
+                isOpened={viewAddedTranslationModal.isOpened}
+                onClose={viewAddedTranslationModal.close}
+            >
+                <ModalBody>
+                    {addedId && (
+                        <TranslationView id={addedId} onClose={viewAddedTranslationModal.close} />
+                    )}
                 </ModalBody>
             </ModalWrapper>
         </>
