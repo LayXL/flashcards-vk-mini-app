@@ -10,6 +10,10 @@ export const prisma = new PrismaClient().$extends({
                 needs: { avatarUrls: true },
                 compute: (data) => data.avatarUrls as Record<string | number, string>,
             },
+            fullName: {
+                needs: { firstName: true, lastName: true },
+                compute: (data) => `${data.firstName} ${data.lastName}`,
+            },
         },
     },
 })

@@ -36,6 +36,17 @@ export default {
                     modal: vkTheme.colorBackgroundModal.normal.value,
                 },
             },
+            borderColor: {
+                vk: {
+                    default: vkTheme.colorBackground.normal.value,
+                    contrast: vkTheme.colorBackgroundContrast.normal.value,
+                    secondary: vkTheme.colorBackgroundSecondary.normal.value,
+                    accent: vkTheme.colorBackgroundAccent.normal.value,
+                    accentThemed: vkTheme.colorBackgroundAccentThemed.normal.value,
+                    content: vkTheme.colorBackgroundContent.normal.value,
+                    modal: vkTheme.colorBackgroundModal.normal.value,
+                },
+            },
             textColor: {
                 primary: vkTheme.colorTextPrimary.normal.value,
                 secondary: vkTheme.colorTextSecondary.normal.value,
@@ -53,6 +64,11 @@ export default {
             },
             gridTemplateColumns: {
                 cards: "repeat(auto-fill, minmax(160px, 1fr))",
+            },
+            transitionProperty: {
+                height: "height",
+                width: "width",
+                size: "height, width",
             },
         },
     },
