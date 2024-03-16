@@ -267,10 +267,21 @@ export const stacks = router({
             const data = await prisma.stack.findFirst({
                 where: {
                     id: input.id,
-                    author: {
-                        vkId: ctx.vkId.toString(),
-                    },
+
                     isDeleted: false,
+                    OR: [
+                        {
+                            author: {
+                                vkId: ctx.vkId.toString(),
+                            },
+                        },
+                        {
+                            isPrivate: false,
+                        },
+                        {
+                            isVerified: true,
+                        },
+                    ],
                 },
                 include: {
                     translations: {
