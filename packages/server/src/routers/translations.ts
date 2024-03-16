@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
+import { addTranslationToStack } from "./stacks"
 
 export const translations = router({
     getUserTranslations: privateProcedure.query(async ({ ctx }) => {
@@ -110,6 +111,7 @@ export const translations = router({
                         transcription: z.string().min(1).max(100),
                     })
                     .array(),
+                stackId: z.number().optional(),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -123,9 +125,10 @@ export const translations = router({
                 example,
                 foreignDescription,
                 isPrivate,
+                stackId,
             } = input
 
-            return await prisma.translation.create({
+            const data = await prisma.translation.create({
                 data: {
                     author: {
                         connect: {
@@ -176,6 +179,12 @@ export const translations = router({
                     transcriptions: true,
                 },
             })
+
+            if (stackId) {
+                await addTranslationToStack(stackId, data.id, ctx.user.id)
+            }
+
+            return data
         }),
     edit: privateProcedure
         .input(
@@ -413,6 +422,7 @@ export const translations = router({
             z.object({
                 vernacular: z.string().min(1).max(128).trim(),
                 foreign: z.string().min(1).max(128).trim(),
+                id: z.number().optional(),
             })
         )
         .query(async ({ input }) => {
@@ -420,13 +430,12 @@ export const translations = router({
                 select id
                 from "Translation"
                 where "isPrivate" = false
+                and "id" <> ${input.id}
                 and (
                     lower("foreign")=lower(${input.foreign})
                     or lower("vernacular")=lower(${input.vernacular})
                 )
             `) as { id: number }[]
-
-            console.log(result)
 
             return await prisma.translation.findMany({
                 where: {

@@ -1,4 +1,5 @@
-import { Icon28AddOutline, Icon28Delete } from "@vkontakte/icons"
+import { FloatingPortal } from "@floating-ui/react"
+import { Icon28AddOutline } from "@vkontakte/icons"
 import {
     Banner,
     Button,
@@ -14,6 +15,8 @@ import {
     PanelHeaderClose,
     Select,
     SimpleCell,
+    Spacing,
+    Switch,
     Textarea,
 } from "@vkontakte/vkui"
 import { useState } from "react"
@@ -24,6 +27,7 @@ import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
+import { StackSelect } from "./stack-select"
 
 type TranslationFormInputs = {
     id?: number
@@ -39,6 +43,8 @@ type TranslationFormInputs = {
         languageVariationId?: number | null
         transcription: string | null
     }[]
+    isPrivate?: boolean
+    saveToStackId?: number
 }
 
 type TranslationAddProps = {
@@ -48,13 +54,9 @@ type TranslationAddProps = {
 
 export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) => {
     const additionalInfoModal = useModalState()
+    const selectStackModal = useModalState()
 
     const utils = trpc.useUtils()
-
-    // TODO remove hard-code
-    const { data: languageVariations } = trpc.languages.getLanguageVariations.useQuery({
-        languageId: 1,
-    })
 
     const { control, handleSubmit, watch } = useForm<TranslationFormInputs>({
         defaultValues,
@@ -62,6 +64,19 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
     const { fields, append, remove } = useFieldArray({
         control,
         name: "transcriptions",
+    })
+
+    const { data: stackData } = trpc.stacks.getSingle.useQuery(
+        {
+            id: watch("saveToStackId") ?? 0,
+        },
+        {
+            enabled: !!watch("saveToStackId"),
+        },
+    )
+
+    const { data: languageVariations } = trpc.languages.getLanguageVariations.useQuery({
+        languageId: 1,
     })
 
     const [vernacular] = useDebounceValue(watch("vernacular"), 600)
@@ -83,6 +98,10 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
         trpc.translations.edit.useMutation({
             onSuccess: () => {
                 onClose && onClose()
+
+                selectStackModal.close()
+                additionalInfoModal.close()
+
                 utils.translations.getUserTranslations.refetch()
 
                 if (defaultValues?.id) {
@@ -95,6 +114,7 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
         {
             foreign,
             vernacular,
+            id: watch("id"),
         },
         {
             enabled: foreign?.length > 0 && vernacular?.length > 0,
@@ -127,6 +147,7 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                             languageVariationId: transcription.languageVariationId ?? undefined,
                         })) ?? [],
                 tags: data.tags ?? [],
+                isPrivate: data.isPrivate,
             })
         } else {
             addTranslation({
@@ -145,6 +166,8 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                             languageVariationId: transcription.languageVariationId ?? undefined,
                         })) ?? [],
                 tags: data.tags ?? [],
+                isPrivate: data.isPrivate,
+                stackId: data.saveToStackId ?? undefined,
             })
         }
     }
@@ -162,13 +185,11 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                         header={"Похожий перевод уже есть в Лёрнинг"}
                         subheader={"Используйте уже существующий перевод"}
                         actions={
-                            <>
-                                <TranslationCard
-                                    id={duplications[0].id}
-                                    vernacular={duplications[0].vernacular}
-                                    foreign={duplications[0].foreign}
-                                />
-                            </>
+                            <TranslationCard
+                                id={duplications[0].id}
+                                vernacular={duplications[0].vernacular}
+                                foreign={duplications[0].foreign}
+                            />
                         }
                     />
                 </Div>
@@ -210,9 +231,7 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                         </FormItem>
                     )}
                 />
-            </Group>
 
-            <Group>
                 <Controller
                     control={control}
                     name={"languageVariationId"}
@@ -220,44 +239,106 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                         required: false,
                     }}
                     render={({ field }) => (
-                        <FormItem top={"Диалект"}>
+                        <FormItem top={"Разновидность языка"}>
                             <Select
                                 placeholder={"Не обязательно"}
                                 options={[
-                                    {
-                                        label: "Не выбрано",
-                                        value: -1,
-                                    },
                                     ...(languageVariations?.map((variation) => ({
                                         label: variation.name,
                                         value: variation.id,
                                     })) ?? []),
                                 ]}
                                 value={field.value?.toString()}
-                                onChange={({ currentTarget: { value } }) =>
-                                    field.onChange(parseInt(value))
-                                }
+                                onChange={({ currentTarget: { value } }) => {
+                                    field.onChange(value.length > 0 ? parseInt(value) : undefined)
+                                }}
+                                allowClearButton={true}
                             />
                         </FormItem>
                     )}
                 />
 
-                <SimpleCell
-                    expandable={"always"}
-                    children={"Дополнительно"}
-                    onClick={additionalInfoModal.open}
+                <Controller
+                    control={control}
+                    name={"isPrivate"}
+                    rules={{
+                        required: false,
+                    }}
+                    render={({ field }) => (
+                        <FormItem>
+                            <SimpleCell
+                                children={"Скрыть перевод"}
+                                subtitle={"Видеть cможете только вы"}
+                                expandable={"auto"}
+                                Component={"label"}
+                                after={
+                                    <Switch
+                                        checked={!!field.value}
+                                        onChange={() => field.onChange(!field.value ?? false)}
+                                    />
+                                }
+                            />
+                        </FormItem>
+                    )}
                 />
+            </Group>
+
+            <Group>
+                {defaultValues && (
+                    <SimpleCell
+                        expandable={"always"}
+                        children={"Дополнительно"}
+                        onClick={additionalInfoModal.open}
+                    />
+                )}
+
+                {!defaultValues && (
+                    <>
+                        <Header children={"Сохранить"} mode={"secondary"} />
+                        <SimpleCell
+                            expandable={"always"}
+                            children={"Стопка"}
+                            onClick={selectStackModal.open}
+                            indicator={stackData?.name}
+                        />
+                    </>
+                )}
 
                 <Div>
                     <Button
                         loading={isLoading}
                         stretched={true}
                         size={"l"}
-                        children={defaultValues ? "Изменить" : "Добавить"}
-                        onClick={handleSubmit(onSubmit)}
+                        children={defaultValues ? "Изменить" : "Продолжить"}
+                        onClick={defaultValues ? handleSubmit(onSubmit) : additionalInfoModal.open}
                     />
                 </Div>
             </Group>
+
+            <ModalWrapper isOpened={selectStackModal.isOpened} onClose={selectStackModal.close}>
+                <ModalBody fullscreen>
+                    <Controller
+                        control={control}
+                        name={"saveToStackId"}
+                        render={({ field }) => (
+                            <StackSelect
+                                onClose={selectStackModal.close}
+                                canCreateNewStack={true}
+                                filter={"created"}
+                                clearable={field.value !== undefined}
+                                onClear={() => {
+                                    field.onChange(undefined)
+                                    selectStackModal.close()
+                                }}
+                                onSelect={(id) => {
+                                    field.onChange(id)
+                                    selectStackModal.close()
+                                }}
+                            />
+                        )}
+                    />
+                </ModalBody>
+            </ModalWrapper>
 
             <ModalWrapper
                 isOpened={additionalInfoModal.isOpened}
@@ -272,10 +353,10 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                     <Group>
                         <Controller
                             control={control}
-                            name={"example"}
+                            name={"foreignDescription"}
                             render={({ field, fieldState }) => (
                                 <FormItem
-                                    top={"Пример использования"}
+                                    top={"Описание на языке перевода"}
                                     status={fieldState.error ? "error" : "default"}
                                 >
                                     <Textarea value={field.value} onChange={field.onChange} />
@@ -285,10 +366,10 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
 
                         <Controller
                             control={control}
-                            name={"foreignDescription"}
+                            name={"example"}
                             render={({ field, fieldState }) => (
                                 <FormItem
-                                    top={"Описание на языке перевода"}
+                                    top={"Пример использования"}
                                     status={fieldState.error ? "error" : "default"}
                                 >
                                     <Textarea value={field.value} onChange={field.onChange} />
@@ -339,7 +420,7 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                                 control={control}
                                 name={`transcriptions.${i}.languageVariationId`}
                                 render={({ field }) => (
-                                    <FormItem top={"Диалект"}>
+                                    <FormItem top={"Разновидность языка"}>
                                         <Select
                                             placeholder={"Не обязательно"}
                                             options={[
@@ -353,8 +434,11 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                                                 },
                                             ]}
                                             value={field.value as unknown as string}
+                                            allowClearButton={true}
                                             onChange={({ currentTarget: { value } }) =>
-                                                field.onChange(parseInt(value))
+                                                field.onChange(
+                                                    value.length > 0 ? parseInt(value) : null,
+                                                )
                                             }
                                         />
                                     </FormItem>
@@ -365,20 +449,19 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                                 control={control}
                                 name={`transcriptions.${i}.transcription`}
                                 render={({ field }) => (
-                                    <FormItem top={"Транскрипция"}>
+                                    <FormItem
+                                        top={"Транскрипция"}
+                                        removable={true}
+                                        onRemove={() => {
+                                            remove(i)
+                                        }}
+                                    >
                                         <Input
                                             value={field.value ?? ""}
                                             onChange={field.onChange}
                                         />
                                     </FormItem>
                                 )}
-                            />
-
-                            <CellButton
-                                mode={"danger"}
-                                before={<Icon28Delete />}
-                                children={"Удалить транскрипцию"}
-                                onClick={() => remove(i)}
                             />
                         </Group>
                     ))}
@@ -389,14 +472,25 @@ export const TranslationAdd = ({ defaultValues, onClose }: TranslationAddProps) 
                         onClick={() => append({ transcription: null })}
                     />
 
-                    <Div>
-                        <Button
-                            stretched={true}
-                            size={"l"}
-                            children={"Готово"}
-                            onClick={additionalInfoModal.close}
-                        />
-                    </Div>
+                    <Spacing size={128} />
+
+                    <FloatingPortal>
+                        <div
+                            className={
+                                "fixed bg-vk-content pb-[calc(env(safe-area-inset-bottom)_+_8px)] w-full bottom-0"
+                            }
+                        >
+                            <Div>
+                                <Button
+                                    loading={isLoading}
+                                    stretched={true}
+                                    size={"l"}
+                                    children={"Готово"}
+                                    onClick={handleSubmit(onSubmit)}
+                                />
+                            </Div>
+                        </div>
+                    </FloatingPortal>
                 </ModalBody>
             </ModalWrapper>
         </>

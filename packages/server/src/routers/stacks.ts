@@ -74,6 +74,46 @@ const zodPattern = z.enum([
     "wavy",
 ])
 
+export const addTranslationToStack = async (
+    stackId: number,
+    translationId: number,
+    userId: number
+) => {
+    return await prisma.stack.update({
+        where: {
+            id: stackId,
+            isDeleted: false,
+            author: {
+                id: userId,
+            },
+        },
+        data: {
+            translations: {
+                connectOrCreate: {
+                    where: {
+                        translationId_stackId: {
+                            translationId: translationId,
+                            stackId: stackId,
+                        },
+                    },
+                    create: {
+                        translation: {
+                            connect: {
+                                id: translationId,
+                            },
+                        },
+                        addedByUser: {
+                            connect: {
+                                id: userId,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    })
+}
+
 export const stacks = router({
     customization: router({
         getPatterns: privateProcedure.query(async () => {
@@ -267,39 +307,7 @@ export const stacks = router({
             })
         )
         .mutation(async ({ ctx, input }) => {
-            return await prisma.stack.update({
-                where: {
-                    id: input.stackId,
-                    isDeleted: false,
-                    author: {
-                        vkId: ctx.vkId.toString(),
-                    },
-                },
-                data: {
-                    translations: {
-                        connectOrCreate: {
-                            where: {
-                                translationId_stackId: {
-                                    translationId: input.translationId,
-                                    stackId: input.stackId,
-                                },
-                            },
-                            create: {
-                                translation: {
-                                    connect: {
-                                        id: input.translationId,
-                                    },
-                                },
-                                addedByUser: {
-                                    connect: {
-                                        vkId: ctx.vkId.toString(),
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            })
+            return addTranslationToStack(input.stackId, input.translationId, ctx.userId)
         }),
     removeTranslation: privateProcedure
         .input(

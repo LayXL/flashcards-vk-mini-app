@@ -1,5 +1,5 @@
 import { Icon24Add } from "@vkontakte/icons"
-import { Button, Div, ModalPageHeader, PanelHeaderBack } from "@vkontakte/vkui"
+import { Button, ButtonGroup, Div, Group, ModalPageHeader, PanelHeaderBack } from "@vkontakte/vkui"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
@@ -10,12 +10,21 @@ import { StackCreateModal } from "./stack-create"
 
 type StackSelectProps = {
     onSelect: (id: number) => void
+    onClear?: () => void
     onClose: () => void
     canCreateNewStack: boolean
     filter?: RouterInput["stacks"]["getUserStacks"]["filter"]
+    clearable?: boolean
 }
 
-export const StackSelect = ({ onClose, onSelect, canCreateNewStack, filter }: StackSelectProps) => {
+export const StackSelect = ({
+    onClose,
+    onSelect,
+    canCreateNewStack,
+    filter,
+    clearable,
+    onClear,
+}: StackSelectProps) => {
     const { data } = trpc.stacks.getUserStacks.useQuery({ filter })
 
     const createNewStack = useModalState()
@@ -29,34 +38,45 @@ export const StackSelect = ({ onClose, onSelect, canCreateNewStack, filter }: St
                 children={"Выберите стопку"}
             />
 
-            {canCreateNewStack && (
-                <Div>
-                    <Button
-                        stretched={true}
-                        size={"l"}
-                        before={<Icon24Add />}
-                        children={"Создать новую"}
-                        onClick={createNewStack.open}
-                    />
-                </Div>
+            {(clearable || canCreateNewStack) && (
+                <Group>
+                    <Div>
+                        <ButtonGroup stretched={true}>
+                            {clearable && (
+                                <Button size={"l"} children={"Убрать выбор"} onClick={onClear} />
+                            )}
+                            {canCreateNewStack && (
+                                <Button
+                                    stretched={true}
+                                    size={"l"}
+                                    before={<Icon24Add />}
+                                    children={"Создать новую"}
+                                    onClick={createNewStack.open}
+                                />
+                            )}
+                        </ButtonGroup>
+                    </Div>
+                </Group>
             )}
 
             {/* TODO infinite scroll */}
 
-            <Div className={"gap-3 grid grid-cols-cards"}>
-                {data?.items.map((stack) => (
-                    // TODO redesign
-                    <LargeStackCard
-                        key={stack.id}
-                        title={stack.name}
-                        // TODO image and verified
-                        onClick={() => onSelect(stack.id)}
-                        translationsCount={stack.translationsCount}
-                        isVerified={stack.isVerified}
-                        encodedBackground={encodeStackBackground(stack)}
-                    />
-                ))}
-            </Div>
+            <Group>
+                <Div className={"gap-3 grid grid-cols-cards"}>
+                    {data?.items.map((stack) => (
+                        // TODO redesign
+                        <LargeStackCard
+                            key={stack.id}
+                            title={stack.name}
+                            // TODO image and verified
+                            onClick={() => onSelect(stack.id)}
+                            translationsCount={stack.translationsCount}
+                            isVerified={stack.isVerified}
+                            encodedBackground={encodeStackBackground(stack)}
+                        />
+                    ))}
+                </Div>
+            </Group>
 
             {canCreateNewStack && (
                 <ModalWrapper isOpened={createNewStack.isOpened} onClose={createNewStack.close}>
