@@ -11,6 +11,7 @@ export default defineConfig({
         sentryVitePlugin({
             org: "vlay",
             project: "flashcards-react",
+            telemetry: false,
         }),
     ],
     server: {
