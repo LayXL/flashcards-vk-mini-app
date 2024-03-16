@@ -210,7 +210,11 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                             top={"На родном языке"}
                             status={fieldState.error ? "error" : "default"}
                         >
-                            <Input value={field.value} onChange={field.onChange} />
+                            <Input
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder={"Профессия"}
+                            />
                         </FormItem>
                     )}
                 />
@@ -228,7 +232,11 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                             top={"На языке перевода"}
                             status={fieldState.error ? "error" : "default"}
                         >
-                            <Input value={field.value} onChange={field.onChange} />
+                            <Input
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder={"Profession"}
+                            />
                         </FormItem>
                     )}
                 />
@@ -240,7 +248,12 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                         required: false,
                     }}
                     render={({ field }) => (
-                        <FormItem top={"Разновидность языка"}>
+                        <FormItem
+                            top={"Разновидность языка"}
+                            bottom={
+                                "Укажите в том случае, если слово отличается по написанию в британском и американском английском"
+                            }
+                        >
                             <Select
                                 placeholder={"Не обязательно"}
                                 options={[
@@ -270,12 +283,11 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                             <SimpleCell
                                 children={"Скрыть перевод"}
                                 subtitle={"Видеть cможете только вы"}
-                                expandable={"auto"}
                                 Component={"label"}
                                 after={
                                     <Switch
                                         checked={!!field.value}
-                                        onChange={() => field.onChange(!field.value ?? false)}
+                                        onChange={() => field.onChange(!field.value)}
                                     />
                                 }
                             />
