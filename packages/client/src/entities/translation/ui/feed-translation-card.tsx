@@ -1,9 +1,5 @@
 import { FloatingPortal } from "@floating-ui/react"
-import {
-    Icon16MoreHorizontal,
-    Icon28AddSquareOutline,
-    Icon28RemoveCircleOutline,
-} from "@vkontakte/icons"
+import { Icon16MoreHorizontal, Icon28AddSquareOutline, Icon28Delete } from "@vkontakte/icons"
 import { ActionSheet, ActionSheetItem, Avatar, Caption, Subhead } from "@vkontakte/vkui"
 import { useModalState } from "../../../shared/hooks/useModalState"
 
@@ -79,7 +75,8 @@ export const FeedTranslationCard = ({
                                 onClick={() => {
                                     onRemoveFromStack()
                                 }}
-                                before={<Icon28RemoveCircleOutline />}
+                                mode={"destructive"}
+                                before={<Icon28Delete />}
                                 children={"Удалить из стопки"}
                             />
                         )}

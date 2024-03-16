@@ -43,8 +43,6 @@ type StackViewProps = {
 }
 
 export const StackView = ({ id }: StackViewProps) => {
-    const { data: user } = trpc.getUser.useQuery()
-
     const routeNavigator = useRouteNavigator()
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
 
@@ -126,7 +124,7 @@ export const StackView = ({ id }: StackViewProps) => {
                 </div>
                 {data?.description && (
                     <Div>
-                        <Subhead className={"text-center text-secondary "}>
+                        <Subhead className={"text-center text-secondary"}>
                             {data?.description}
                         </Subhead>
                     </Div>
@@ -148,21 +146,27 @@ export const StackView = ({ id }: StackViewProps) => {
                                 }))
                             }}
                         />
-                        <Button mode={"secondary"} stretched size={"l"} before={<Icon24Add />}>
-                            Дублировать
-                        </Button>
+                        <Button
+                            mode={"secondary"}
+                            stretched
+                            size={"l"}
+                            before={<Icon24Add />}
+                            children={"Дублировать"}
+                        />
                     </ButtonGroup>
                 </Div>
                 <Header
                     mode={"primary"}
                     indicator={data?.translations?.length}
                     aside={
-                        <div
-                            className={"text-accent cursor-pointer"}
-                            onClick={createTranslationModal.open}
-                        >
-                            <Icon24Add />
-                        </div>
+                        data?.isEditable && (
+                            <div
+                                className={"text-accent cursor-pointer"}
+                                onClick={createTranslationModal.open}
+                            >
+                                <Icon24Add />
+                            </div>
+                        )
                     }
                     children={"Переводы"}
                 />
@@ -189,13 +193,17 @@ export const StackView = ({ id }: StackViewProps) => {
                                 translationViewModal.open()
                             }}
                             isWithMore={true}
-                            onRemoveFromStack={() => {
-                                vibrateOnClick()
-                                deleteTranslationFromStack({
-                                    translationId: translation.id,
-                                    stackId: id,
-                                })
-                            }}
+                            onRemoveFromStack={
+                                data.isEditable
+                                    ? () => {
+                                          vibrateOnClick()
+                                          deleteTranslationFromStack({
+                                              translationId: translation.id,
+                                              stackId: id,
+                                          })
+                                      }
+                                    : undefined
+                            }
                         />
                     ))}
                 </Div>
@@ -270,11 +278,14 @@ export const StackView = ({ id }: StackViewProps) => {
                         mode={"destructive"}
                         children={"Пожаловаться"}
                     />
-                    <ActionSheetItem
-                        before={<Icon28DeleteOutline />}
-                        mode={"destructive"}
-                        children={"Удалить стопку"}
-                    />
+                    {data?.isEditable && (
+                        <ActionSheetItem
+                            before={<Icon28DeleteOutline />}
+                            mode={"destructive"}
+                            children={"Удалить стопку"}
+                            // TODO
+                        />
+                    )}
                 </ActionSheet>
             )}
         </>
