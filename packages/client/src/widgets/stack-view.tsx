@@ -43,6 +43,8 @@ type StackViewProps = {
 }
 
 export const StackView = ({ id }: StackViewProps) => {
+    const { data: user } = trpc.getUser.useQuery()
+
     const routeNavigator = useRouteNavigator()
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
 
@@ -255,11 +257,13 @@ export const StackView = ({ id }: StackViewProps) => {
 
             {showMore.isOpened && (
                 <ActionSheet onClose={showMore.close} className={"z-30"} toggleRef={undefined}>
-                    <ActionSheetItem
-                        before={<Icon28EditOutline />}
-                        children={"Редактировать стопку"}
-                        onClick={editStackModal.open}
-                    />
+                    {data?.isEditable && (
+                        <ActionSheetItem
+                            before={<Icon28EditOutline />}
+                            children={"Редактировать стопку"}
+                            onClick={editStackModal.open}
+                        />
+                    )}
                     <ActionSheetItem before={<Icon28ShareOutline />} children={"Поделиться"} />
                     <ActionSheetItem
                         before={<Icon28ReportOutline />}

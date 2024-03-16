@@ -297,6 +297,7 @@ export const stacks = router({
             return {
                 ...data,
                 isLiked,
+                isEditable: data?.authorId === ctx.userId,
             }
         }),
     addTranslation: privateProcedure
