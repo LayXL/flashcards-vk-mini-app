@@ -1,17 +1,14 @@
-import { appRouter } from "./appRouter"
-import { prisma, t } from "./trpc"
-
-const caller = t.createCallerFactory(appRouter)({
-    vkId: "1",
-    prisma: prisma,
-})
+// const caller = t.createCallerFactory(appRouter)({
+//     vkId: "1",
+//     prisma: prisma,
+// })
 
 const cb = () => {
-    return caller.game.start({
-        stackIds: [1],
-    })
+    // return caller.game.start({
+    //     stackIds: [1],
+    // })
 }
 
-cb().then((data) => {
-    console.log(data)
-})
+// cb().then((data) => {
+//     console.log(data)
+// })
