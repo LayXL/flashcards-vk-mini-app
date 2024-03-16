@@ -31,9 +31,9 @@ const Key = ({ letter, onClick, className, type = "default" }: KeyProps) => {
                 "hover:opacity-80",
                 "active:opacity-50",
                 type === "default" && "bg-vk-content",
-                type === "correct" && "bg-green-500",
-                type === "excluded" && "bg-gray-500",
-                type === "misplaced" && "bg-yellow-500",
+                type === "correct" && "bg-green-400 dark:bg-green-500",
+                type === "excluded" && "bg-gray-300 dark:bg-gray-500",
+                type === "misplaced" && "bg-yellow-400 dark:bg-yellow-500",
                 className,
             )}
             onClick={() => {
