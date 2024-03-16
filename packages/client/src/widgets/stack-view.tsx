@@ -162,9 +162,9 @@ export const StackView = ({ id }: StackViewProps) => {
                             <Icon24Add />
                         </div>
                     }
-                >
-                    Переводы
-                </Header>
+                    children={"Переводы"}
+                />
+
                 <Div className={"grid grid-cols-cards gap-3"}>
                     {data?.translations?.map(({ translation }) => (
                         <FeedTranslationCard
@@ -185,6 +185,14 @@ export const StackView = ({ id }: StackViewProps) => {
                                 vibrateOnClick()
                                 setSelectedTranslation(translation.id)
                                 translationViewModal.open()
+                            }}
+                            isWithMore={true}
+                            onRemoveFromStack={() => {
+                                vibrateOnClick()
+                                deleteTranslationFromStack({
+                                    translationId: translation.id,
+                                    stackId: id,
+                                })
                             }}
                         />
                     ))}
@@ -224,7 +232,12 @@ export const StackView = ({ id }: StackViewProps) => {
                 onClose={createTranslationModal.close}
             >
                 <ModalBody>
-                    <TranslationAdd onClose={createTranslationModal.close} />
+                    <TranslationAdd
+                        onClose={createTranslationModal.close}
+                        defaultValues={{
+                            saveToStackId: id,
+                        }}
+                    />
                 </ModalBody>
             </ModalWrapper>
 

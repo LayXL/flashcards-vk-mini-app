@@ -48,7 +48,7 @@ type TranslationFormInputs = {
 }
 
 type TranslationAddProps = {
-    defaultValues?: TranslationFormInputs
+    defaultValues?: Partial<TranslationFormInputs>
     onClose?: () => void
     onAdd?: (id: number) => void
 }
@@ -127,7 +127,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
     const [newTag, setNewTag] = useState("")
 
     const onSubmit: SubmitHandler<TranslationFormInputs> = (data) => {
-        if (defaultValues) {
+        if (defaultValues?.id) {
             if (!data.id) return
 
             editTranslation({
@@ -177,7 +177,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
         <>
             <ModalPageHeader
                 before={<PanelHeaderClose onClick={onClose} />}
-                children={defaultValues ? "Изменить перевод" : "Добавить перевод"}
+                children={defaultValues?.id ? "Изменить перевод" : "Добавить перевод"}
             />
 
             {duplications && (duplications?.length ?? 0) > 0 && (
@@ -285,7 +285,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
             </Group>
 
             <Group>
-                {defaultValues && (
+                {defaultValues?.id && (
                     <SimpleCell
                         expandable={"always"}
                         children={"Дополнительно"}
@@ -293,7 +293,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                     />
                 )}
 
-                {!defaultValues && (
+                {!defaultValues?.id && (
                     <>
                         <Header children={"Сохранить"} mode={"secondary"} />
                         <SimpleCell
@@ -310,8 +310,10 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                         loading={isLoading}
                         stretched={true}
                         size={"l"}
-                        children={defaultValues ? "Изменить" : "Продолжить"}
-                        onClick={defaultValues ? handleSubmit(onSubmit) : additionalInfoModal.open}
+                        children={defaultValues?.id ? "Изменить" : "Продолжить"}
+                        onClick={
+                            defaultValues?.id ? handleSubmit(onSubmit) : additionalInfoModal.open
+                        }
                     />
                 </Div>
             </Group>

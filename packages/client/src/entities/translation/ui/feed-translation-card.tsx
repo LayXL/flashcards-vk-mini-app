@@ -1,5 +1,11 @@
-import { Icon28AddSquareOutline } from "@vkontakte/icons"
-import { Avatar, Caption, Subhead } from "@vkontakte/vkui"
+import { FloatingPortal } from "@floating-ui/react"
+import {
+    Icon16MoreHorizontal,
+    Icon28AddSquareOutline,
+    Icon28RemoveCircleOutline,
+} from "@vkontakte/icons"
+import { ActionSheet, ActionSheetItem, Avatar, Caption, Subhead } from "@vkontakte/vkui"
+import { useModalState } from "../../../shared/hooks/useModalState"
 
 type FeedTranslationCardProps = {
     foreign: string
@@ -8,7 +14,8 @@ type FeedTranslationCardProps = {
     authorAvatarUrl?: string
     onAdd: () => void
     onClick: () => void
-    onShowMore?: () => void
+    onRemoveFromStack?: () => void
+    isWithMore?: boolean
 }
 
 export const FeedTranslationCard = ({
@@ -18,32 +25,67 @@ export const FeedTranslationCard = ({
     authorAvatarUrl,
     onAdd,
     onClick,
+    isWithMore,
+    onRemoveFromStack,
 }: FeedTranslationCardProps) => {
+    const showMoreModal = useModalState()
+
     return (
-        <div
-            className={"flex flex-col gap-2 bg-secondary p-3 pr-[9px] rounded-xl cursor-pointer"}
-            onClick={onClick}
-        >
-            <div className={"flex justify-between"}>
-                <Subhead className={"line-clamp-1"} weight={"1"} children={foreign} />
-            </div>
-            <div className={"flex"}>
-                <Caption children={vernacular} className={"text-subhead line-clamp-1"} />
-            </div>
-            <div className={"flex justify-between"}>
-                <div className={"flex gap-2 items-center"}>
-                    {authorAvatarUrl && <Avatar size={24} src={authorAvatarUrl} />}
-                    {authorName && (
-                        <Caption children={authorName} className={"text-subhead line-clamp-1"} />
+        <>
+            <div
+                className={
+                    "flex flex-col gap-2 bg-secondary p-3 pr-[9px] rounded-xl cursor-pointer"
+                }
+                onClick={onClick}
+            >
+                <div className={"flex justify-between"}>
+                    <Subhead className={"line-clamp-1"} weight={"1"} children={foreign} />
+                    {isWithMore && (
+                        <Icon16MoreHorizontal
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                showMoreModal.open()
+                            }}
+                        />
                     )}
                 </div>
-                <Icon28AddSquareOutline
-                    onClick={(e) => {
-                        e.stopPropagation()
-                        onAdd && onAdd()
-                    }}
-                />
+                <div className={"flex"}>
+                    <Caption children={vernacular} className={"text-subhead line-clamp-1"} />
+                </div>
+                <div className={"flex justify-between"}>
+                    <div className={"flex gap-2 items-center"}>
+                        {authorAvatarUrl && <Avatar size={24} src={authorAvatarUrl} />}
+                        {authorName && (
+                            <Caption
+                                children={authorName}
+                                className={"text-subhead line-clamp-1"}
+                            />
+                        )}
+                    </div>
+                    <Icon28AddSquareOutline
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            onAdd && onAdd()
+                        }}
+                    />
+                </div>
             </div>
-        </div>
+
+            {showMoreModal.isOpened && (
+                <FloatingPortal>
+                    <ActionSheet onClose={showMoreModal.close} toggleRef={undefined}>
+                        {onRemoveFromStack && (
+                            <ActionSheetItem
+                                onClick={() => {
+                                    onRemoveFromStack()
+                                }}
+                                before={<Icon28RemoveCircleOutline />}
+                                children={"Удалить из стопки"}
+                            />
+                        )}
+                    </ActionSheet>
+                </FloatingPortal>
+            )}
+        </>
     )
 }
