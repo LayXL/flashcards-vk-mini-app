@@ -429,16 +429,28 @@ export const translations = router({
             })
         )
         .query(async ({ input }) => {
-            const result = (await prisma.$queryRaw`
-                select id
-                from "Translation"
-                where "isPrivate" = false
-                and "id" <> ${input.id}
-                and (
-                    lower("foreign")=lower(${input.foreign})
-                    or lower("vernacular")=lower(${input.vernacular})
-                )
-            `) as { id: number }[]
+            const result = (
+                input.id
+                    ? await prisma.$queryRaw`
+                        select id
+                        from "Translation"
+                        where "isPrivate" = false
+                        and "id" <> ${input.id}
+                        and (
+                            lower("foreign")=lower(${input.foreign})
+                            or lower("vernacular")=lower(${input.vernacular})
+                        )
+                    `
+                    : await prisma.$queryRaw`
+                        select id
+                        from "Translation"
+                        where "isPrivate" = false
+                        and (
+                            lower("foreign")=lower(${input.foreign})
+                            or lower("vernacular")=lower(${input.vernacular})
+                        )
+                    `
+            ) as { id: number }[]
 
             return await prisma.translation.findMany({
                 where: {
