@@ -132,7 +132,7 @@ export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps
                                 {palettes?.map((color) => (
                                     <div
                                         className={cn(
-                                            "aspect-square h-[42px] rounded-full overflow-hidden rotate-[135deg] cursor-pointer",
+                                            "aspect-square h-[42px] rounded-full overflow-hidden rotate-[135deg] box-border cursor-pointer",
                                             "border-solid border-transparent",
                                             watch("palette") == color.id && "border-white",
                                         )}
