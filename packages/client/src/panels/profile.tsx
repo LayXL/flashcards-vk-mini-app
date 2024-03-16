@@ -25,9 +25,8 @@ export const Profile = () => {
                     avatarUrl={getSuitableAvatarUrl(data.avatarUrls, 64) ?? ""}
                     name={data.fullName ?? ""}
                     level={2}
-                    currentXp={10}
+                    currentXp={15}
                     nextLevelXp={20}
-                    currentLevelXp={0}
                 />
             )}
 

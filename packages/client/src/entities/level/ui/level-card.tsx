@@ -13,7 +13,6 @@ export const LevelCard = ({
     avatarUrl,
     name,
     level,
-    currentLevelXp = 0,
     nextLevelXp = 0,
     currentXp = 0,
 }: LevelCardProps) => {
@@ -50,7 +49,7 @@ export const LevelCard = ({
                         children={`${nextLevelXp - currentXp} XP до следующего уровня`}
                         className={"flex-1"}
                     />
-                    <Subhead children={`${currentLevelXp}/${nextLevelXp}`} />
+                    <Subhead children={`${currentXp}/${nextLevelXp}`} />
                 </div>
             </div>
         </Div>
