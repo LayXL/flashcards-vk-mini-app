@@ -18,7 +18,7 @@ import { FeedTranslationCard } from "../entities/translation/ui/feed-translation
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
-import { vibrateOnClick } from "../shared/helpers/vibrateOnClick"
+import { vibrateOnClick, vibrateOnSuccess } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
@@ -92,6 +92,7 @@ export const UserTranslations = () => {
                         onAdd={(id) => {
                             addTranslationModal.close()
                             addedTranslationSnackbar.open()
+                            vibrateOnSuccess()
                             setAddedId(id)
                         }}
                     />
