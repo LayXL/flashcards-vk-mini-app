@@ -57,7 +57,9 @@ export const SearchTranslationCard = ({
             </Tappable>
 
             <ModalWrapper isOpened={viewTranslation.isOpened} onClose={viewTranslation.close}>
-                <TranslationView id={id} onClose={viewTranslation.close} />
+                <ModalBody>
+                    <TranslationView id={id} onClose={viewTranslation.close} />
+                </ModalBody>
             </ModalWrapper>
 
             <ModalWrapper isOpened={addToStack.isOpened} onClose={addToStack.close}>

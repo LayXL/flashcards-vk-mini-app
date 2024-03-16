@@ -84,10 +84,10 @@ export const New = () => {
                 hasMore={hasNextPage}
                 next={fetchNextPage}
                 loader={<></>}
-                className="py-3 px-3"
+                className={"py-3 px-3"}
             >
                 <div
-                    className="grid gap-3"
+                    className={"grid gap-3"}
                     style={{
                         gridAutoRows: 100,
                         gridAutoFlow: "dense",
@@ -96,7 +96,7 @@ export const New = () => {
                 >
                     {infiniteData?.map((x, i) =>
                         x.type === "stack" ? (
-                            <div className="row-span-2" key={i}>
+                            <div className={"row-span-2"} key={i}>
                                 <LargeStackCard
                                     title={x.stackData.name}
                                     translationsCount={x.stackData.translationsCount}
@@ -106,7 +106,7 @@ export const New = () => {
                                 />
                             </div>
                         ) : x.type === "translation" ? (
-                            <div className="row-span-1" key={i}>
+                            <div className={"row-span-1"} key={i}>
                                 <FeedTranslationCard
                                     foreign={x.translationData.foreign}
                                     vernacular={x.translationData.vernacular}
@@ -127,7 +127,7 @@ export const New = () => {
                         ),
                     )}
                 </div>
-                {isLoading && <Spinner className="py-12" />}
+                {isLoading && <Spinner className={"py-12"} />}
             </InfiniteScroll>
 
             <Spacing size={256} />
@@ -156,12 +156,14 @@ export const New = () => {
                 isOpened={translationViewModal.isOpened}
                 onClose={translationViewModal.close}
             >
-                {selectedTranslation && (
-                    <TranslationView
-                        id={selectedTranslation}
-                        onClose={translationViewModal.close}
-                    />
-                )}
+                <ModalBody>
+                    {selectedTranslation && (
+                        <TranslationView
+                            id={selectedTranslation}
+                            onClose={translationViewModal.close}
+                        />
+                    )}
+                </ModalBody>
             </ModalWrapper>
 
             <TabBar />
