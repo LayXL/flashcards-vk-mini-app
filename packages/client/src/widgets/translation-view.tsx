@@ -208,7 +208,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
             {addedTranslationToStack.isOpened && (
                 <Snackbar
                     onClose={addedTranslationToStack.close}
-                    before={<Icon28CheckCircleOutline fill="var(--vkui--color_icon_positive)" />}
+                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
                     // action={"Открыть"}
                     // onActionClick={viewStack.open}
                     children={"Перевод добавлен в стопку"}
