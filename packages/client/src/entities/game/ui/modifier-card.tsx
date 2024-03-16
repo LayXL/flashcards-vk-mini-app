@@ -1,23 +1,38 @@
-import { cn } from "../../../shared/helpers/cn"
-
 // TODO isSelected property
+
+import { Caption, Checkbox } from "@vkontakte/vkui"
+import { ReactNode } from "react"
+
 // TODO icon property
 type ModifierCardProps = {
     name: string
+    icon: ReactNode
     onClick?: () => void
     isSelected?: boolean
 }
 
-export const ModifierCard = ({ name, onClick, isSelected }: ModifierCardProps) => {
+export const ModifierCard = ({ name, icon, onClick, isSelected }: ModifierCardProps) => {
     return (
-        <div
-            onClick={onClick}
-            className={cn(
-                "flex-1 p-3 bg-secondary rounded-xl cursor-pointer flex justify-center items-center",
-                isSelected && "bg-vk-accent",
-            )}
+        <label
+            className={
+                "flex-1 bg-vk-secondary rounded-xl flex-col items-center gap-2 p-2.5 pb-0 cursor-pointer shadow-card"
+            }
         >
-            <span>{name}</span>
-        </div>
+            <Caption
+                children={name}
+                level={"3"}
+                caps={true}
+                weight={"1"}
+                className={"text-subhead"}
+            />
+            {icon}
+            <Checkbox
+                checked={isSelected}
+                onChange={(e) => {
+                    e.stopPropagation()
+                    onClick?.()
+                }}
+            />
+        </label>
     )
 }

@@ -15,6 +15,9 @@ import {
 } from "@vkontakte/vkui"
 import { useCallback } from "react"
 import { useRecoilState } from "recoil"
+import AtemptsModifierIcon from "../assets/modifier-icons/attempts.svg?react"
+import RepeatModifierIcon from "../assets/modifier-icons/repeat.svg?react"
+import TimeModifierIcon from "../assets/modifier-icons/time.svg?react"
 import { ModifierCard } from "../entities/game/ui/modifier-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
@@ -189,16 +192,19 @@ export const Game = () => {
                         <Div className={"flex gap-3"}>
                             <ModifierCard
                                 name={"Время"}
+                                icon={<TimeModifierIcon />}
                                 onClick={onClickModifier("time")}
                                 isSelected={gameSettings.selectedModifiers.includes("time")}
                             />
                             <ModifierCard
                                 name={"Попытки"}
+                                icon={<AtemptsModifierIcon />}
                                 onClick={onClickModifier("attempts")}
                                 isSelected={gameSettings.selectedModifiers.includes("attempts")}
                             />
                             <ModifierCard
                                 name={"Повторение"}
+                                icon={<RepeatModifierIcon />}
                                 onClick={onClickModifier("repeat")}
                                 isSelected={gameSettings.selectedModifiers.includes("repeat")}
                             />
