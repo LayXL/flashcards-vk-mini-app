@@ -39,6 +39,9 @@ const Body = styled(motion.div)<{ $fullscreen: boolean }>`
     overscroll-behavior: contain;
     background-color: var(--vkui--color_background_content);
     padding-bottom: env(safe-area-inset-bottom);
-    margin-top: env(safe-area-inset-top);
     height: ${(props) => props.$fullscreen && "100vh"};
+    max-width: 480px;
+    margin: 0 auto;
+    margin-top: env(safe-area-inset-top);
+    width: 100%;
 `
