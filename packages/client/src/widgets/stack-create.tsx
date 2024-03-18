@@ -12,7 +12,6 @@ import {
 } from "@vkontakte/vkui"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { Pattern, StackBackground } from "../entities/stack/ui/stack-background"
-import { useModal } from "../features/modal/contexts/modal-context"
 import { trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
 
@@ -25,10 +24,16 @@ type StackFormInputs = {
 
 type StackCreateModalProps = {
     id?: number
+    onSuccess?: (id: number) => void
+    onClose?: () => void
 } & Partial<StackFormInputs>
 
-export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps) => {
-    const modal = useModal()
+export const StackCreateModal = ({
+    id,
+    onSuccess,
+    onClose,
+    ...defaultValues
+}: StackCreateModalProps) => {
     const utils = trpc.useUtils()
 
     const { control, handleSubmit, watch } = useForm<StackFormInputs>({
@@ -36,15 +41,16 @@ export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps
     })
 
     const { mutate: createStack } = trpc.stacks.create.useMutation({
-        onSuccess: () => {
-            modal?.onClose()
+        onSuccess: ({ id }) => {
+            onClose?.()
             utils.stacks.getUserStacks.refetch({})
+            onSuccess?.(id)
         },
     })
 
     const { mutate: editStack } = trpc.stacks.edit.useMutation({
         onSuccess: () => {
-            modal?.onClose()
+            onClose?.()
             utils.stacks.getUserStacks.refetch({})
 
             id && utils.stacks.getSingle.refetch({ id })
@@ -76,7 +82,7 @@ export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps
     return (
         <>
             <ModalPageHeader
-                before={<PanelHeaderClose onClick={() => modal?.onClose()} />}
+                before={<PanelHeaderClose onClick={onClose} />}
                 children={id ? "Редактировать стопку" : "Создать стопку"}
             />
 
@@ -198,7 +204,7 @@ export const StackCreateModal = ({ id, ...defaultValues }: StackCreateModalProps
                 <Button
                     stretched={true}
                     size={"l"}
-                    children={"Добавить"}
+                    children={id ? "Сохранить" : "Создать"}
                     onClick={handleSubmit(onSubmit)}
                 />
             </Div>

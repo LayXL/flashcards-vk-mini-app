@@ -1,5 +1,18 @@
-import { Icon24Add, Icon24LikeOutline, Icon24UserOutline } from "@vkontakte/icons"
-import { Div, PanelSpinner, Spacing, SubnavigationBar, SubnavigationButton } from "@vkontakte/vkui"
+import {
+    Icon24Add,
+    Icon24CheckCircleOn,
+    Icon24LikeOutline,
+    Icon24UserOutline,
+} from "@vkontakte/icons"
+import {
+    Div,
+    Link,
+    PanelSpinner,
+    Snackbar,
+    Spacing,
+    SubnavigationBar,
+    SubnavigationButton,
+} from "@vkontakte/vkui"
 import { useState } from "react"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -21,6 +34,10 @@ export const UserStacks = () => {
     const encodeStackBackground = useEncodeStackBackground()
 
     const createStackModal = useModalState()
+    const stackCreatedSnackbar = useModalState()
+    const stackCreatedModal = useModalState()
+
+    const [createdStackId, setCreatedStackId] = useState<number>()
 
     return (
         <>
@@ -55,15 +72,49 @@ export const UserStacks = () => {
 
             <ModalWrapper isOpened={createStackModal.isOpened} onClose={createStackModal.close}>
                 <ModalBody>
-                    <StackCreateModal />
+                    <StackCreateModal
+                        onClose={createStackModal.close}
+                        onSuccess={(id) => {
+                            stackCreatedSnackbar.open()
+                            setCreatedStackId(id)
+                        }}
+                    />
                 </ModalBody>
             </ModalWrapper>
+
+            {stackCreatedSnackbar.isOpened && (
+                <Snackbar
+                    onClose={stackCreatedSnackbar.close}
+                    before={<Icon24CheckCircleOn />}
+                    children={"Стопка успешно создана"}
+                    after={
+                        <Link
+                            children={"Перейти"}
+                            onClick={() => {
+                                stackCreatedSnackbar.close()
+                                stackCreatedModal.open()
+                            }}
+                        />
+                    }
+                />
+            )}
+
+            {createdStackId && (
+                <ModalWrapper
+                    isOpened={stackCreatedModal.isOpened}
+                    onClose={stackCreatedModal.close}
+                >
+                    <ModalBody>
+                        <StackView id={createdStackId} />
+                    </ModalBody>
+                </ModalWrapper>
+            )}
 
             {isLoading && <PanelSpinner />}
 
             {/* todo infinite scroll */}
             <Div
-                className="grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"
+                className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"}
                 children={data?.items.map((stack) => (
                     <StackCardWithModal
                         key={stack.id}
@@ -109,7 +160,7 @@ const StackCardWithModal = ({
                 }}
                 isVerified={isVerified}
                 // todo
-                imageUrl=""
+                imageUrl={""}
                 encodedBackground={encodedBackground}
             />
 
