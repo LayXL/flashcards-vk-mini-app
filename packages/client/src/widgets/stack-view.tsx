@@ -70,6 +70,7 @@ export const StackView = ({ id }: StackViewProps) => {
         onSuccess: () => refetch(),
     })
 
+    // todo, господи, что я тут написал? удалить и заново
     const encodeStackBackground = useEncodeStackBackground()
     const encodedBackground = encodeStackBackground(data)
     const decodedBackground = decodeStackBackground(encodedBackground)

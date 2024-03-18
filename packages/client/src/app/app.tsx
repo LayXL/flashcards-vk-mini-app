@@ -1,19 +1,21 @@
 import * as Sentry from "@sentry/react"
 
-Sentry.init({
-    dsn: "https://f007870f647f45b8217ada6019b3937c@o4506860200984576.ingest.us.sentry.io/4506919321534464",
-    integrations: [
-        Sentry.browserTracingIntegration(),
-        Sentry.replayIntegration({
-            maskAllText: false,
-            blockAllMedia: false,
-        }),
-    ],
-    tracesSampleRate: 1.0,
-    tracePropagationTargets: ["localhost"],
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
-})
+if (import.meta.env.PROD) {
+    Sentry.init({
+        dsn: "https://f007870f647f45b8217ada6019b3937c@o4506860200984576.ingest.us.sentry.io/4506919321534464",
+        integrations: [
+            Sentry.browserTracingIntegration(),
+            Sentry.replayIntegration({
+                maskAllText: false,
+                blockAllMedia: false,
+            }),
+        ],
+        tracesSampleRate: 1.0,
+        tracePropagationTargets: ["localhost"],
+        replaysSessionSampleRate: 0.1,
+        replaysOnErrorSampleRate: 1.0,
+    })
+}
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { httpBatchLink } from "@trpc/client"
