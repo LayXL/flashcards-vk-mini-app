@@ -6,8 +6,6 @@ import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
 import { FiveLetters } from "../widgets/five-letters"
-import { RankedUserCard } from "../entities/ranked/ui/ranked-user-card"
-import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 
 export const Home = () => {
     trpc.updateInfo.useQuery(undefined, {
@@ -15,7 +13,7 @@ export const Home = () => {
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
     })
-    const {data} = trpc.getUser.useQuery()
+
     const fiveLettersModal = useModalState()
 
     return (
@@ -26,15 +24,15 @@ export const Home = () => {
 
             <Div>
                 <div
-                    className="p-3 h-[144px] bg-vk-secondary rounded-xl cursor-pointer shadow-card"
+                    className={
+                        "p-3 h-[144px] bg-vk-secondary rounded-xl cursor-pointer shadow-card"
+                    }
                     onClick={() => fiveLettersModal.open()}
                 >
-                    <p className="font-semibold text-2xl">Пять букв</p>
+                    <p className={"font-semibold text-2xl"}>Пять букв</p>
                 </div>
             </Div>
-            <RankedUserCard name={data?.fullName} points={5} place={2} avatar={getSuitableAvatarUrl(data?.avatarUrls, 48)}/>
-            <RankedUserCard/>
-            <RankedUserCard/>
+
             <ModalWrapper isOpened={fiveLettersModal.isOpened} onClose={fiveLettersModal.close}>
                 <ModalBody fullscreen>
                     <FiveLetters onClose={fiveLettersModal.close} />
