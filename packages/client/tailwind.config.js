@@ -70,6 +70,12 @@ export default {
                 width: "width",
                 size: "height, width",
             },
+            animation: {
+                "bg-appearing": "background-appearing 0.3s ease forwards",
+                "bg-disappearing": "background-disappearing 0.3s ease",
+                "content-appearing": "content-appearing 0.3s ease forwards",
+                "content-disappearing": "content-disappearing 0.3s ease",
+            },
         },
     },
     plugins: [],

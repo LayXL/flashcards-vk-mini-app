@@ -1,0 +1,39 @@
+@keyframes background-appearing {
+    from {
+        background-color: #00000000;
+    }
+
+    to {
+        background-color: #00000040;
+    }
+}
+
+@keyframes background-disappearing {
+    from {
+        background-color: #00000040;
+    }
+
+    to {
+        background-color: #00000000;
+    }
+}
+
+@keyframes content-appearing {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes content-disappearing {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}

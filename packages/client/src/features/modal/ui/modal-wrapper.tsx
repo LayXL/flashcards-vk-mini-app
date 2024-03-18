@@ -1,8 +1,8 @@
 import { FloatingPortal } from "@floating-ui/react"
-import { AnimatePresence, motion } from "framer-motion"
-import { ReactNode } from "react"
-import styled from "styled-components"
+import { ReactNode, useEffect, useRef, useState } from "react"
+import { cn } from "../../../shared/helpers/cn"
 import { ModalContext } from "../contexts/modal-context"
+import "./modal-keyframes.css"
 
 type ModalWrapperProps = {
     isOpened: boolean
@@ -11,36 +11,46 @@ type ModalWrapperProps = {
 }
 
 export const ModalWrapper = ({ isOpened, children, onClose }: ModalWrapperProps) => {
+    const [isShowing, setIsShowing] = useState(isOpened)
+
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+    useEffect(() => {
+        if (isOpened) {
+            setIsShowing(true)
+
+            if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        } else {
+            timeoutRef.current = setTimeout(() => setIsShowing(false), 300)
+        }
+    }, [isOpened])
+
+    useEffect(
+        () => () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        },
+        [],
+    )
+
     return (
         <ModalContext.Provider value={{ onClose }}>
-            <AnimatePresence
-                children={
-                    isOpened && (
-                        <FloatingPortal>
-                            <Wrapper
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    onClose()
-                                }}
-                                children={children}
-                                initial={{ backgroundColor: "#00000000" }}
-                                animate={{ backgroundColor: "#00000040" }}
-                                exit={{ backgroundColor: "#00000000" }}
-                            />
-                        </FloatingPortal>
-                    )
-                }
-            />
+            <FloatingPortal>
+                {isShowing && (
+                    <div
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            onClose()
+                        }}
+                        children={children}
+                        className={cn(
+                            "fixed inset-0 h-screen flex-col justify-end",
+                            isOpened && "animate-bg-appearing [&>div]:animate-content-appearing",
+                            !isOpened &&
+                                "animate-bg-disappearing [&>div]:animate-content-disappearing",
+                        )}
+                    />
+                )}
+            </FloatingPortal>
         </ModalContext.Provider>
     )
 }
-
-const Wrapper = styled(motion.div)`
-    position: fixed;
-    inset: 0;
-    height: var(--tg-viewport-height);
-    background-color: #00000040;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-`
