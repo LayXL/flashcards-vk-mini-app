@@ -1,8 +1,8 @@
 import {
     Icon24Add,
-    Icon24CheckCircleOn,
     Icon24LikeOutline,
     Icon24UserOutline,
+    Icon28CheckCircleOutline,
 } from "@vkontakte/icons"
 import {
     Div,
@@ -101,7 +101,7 @@ export const UserTranslations = () => {
 
             {addedTranslationSnackbar.isOpened && (
                 <Snackbar
-                    before={<Icon24CheckCircleOn />}
+                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
                     after={
                         <Link
                             onClick={() => {

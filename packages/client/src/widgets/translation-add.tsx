@@ -86,7 +86,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
     const { mutate: addTranslation, isPending: isAddingTranslation } =
         trpc.translations.add.useMutation({
             onSuccess: ({ id }) => {
-                onAdd && onAdd(id)
+                onAdd?.(id)
 
                 selectStackModal.close()
                 additionalInfoModal.close()
@@ -98,7 +98,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
     const { mutate: editTranslation, isPending: isEditingTranslation } =
         trpc.translations.edit.useMutation({
             onSuccess: () => {
-                onClose && onClose()
+                onClose?.()
 
                 selectStackModal.close()
                 additionalInfoModal.close()

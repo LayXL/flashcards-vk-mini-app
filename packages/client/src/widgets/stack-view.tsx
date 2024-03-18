@@ -3,6 +3,8 @@ import {
     Icon24Like,
     Icon24LikeOutline,
     Icon24MoreHorizontal,
+    Icon28AddOutline,
+    Icon28CheckCircleOutline,
     Icon28DeleteOutline,
     Icon28EditOutline,
     Icon28ReportOutline,
@@ -18,6 +20,7 @@ import {
     Header,
     ModalPageHeader,
     PanelHeaderBack,
+    Snackbar,
     Subhead,
 } from "@vkontakte/vkui"
 import { useState } from "react"
@@ -48,6 +51,9 @@ export const StackView = ({ id }: StackViewProps) => {
 
     const translationViewModal = useModalState()
     const addTranslationToStackModal = useModalState()
+    const addTranslationToOtherStackModal = useModalState()
+    const addTranslationToStackActionSheet = useModalState()
+    const translationAddedToStackSnackbar = useModalState()
     const createTranslationModal = useModalState()
     const editStackModal = useModalState()
 
@@ -163,7 +169,7 @@ export const StackView = ({ id }: StackViewProps) => {
                         data?.isEditable && (
                             <div
                                 className={"text-accent cursor-pointer"}
-                                onClick={createTranslationModal.open}
+                                onClick={addTranslationToStackActionSheet.open}
                             >
                                 <Icon24Add />
                             </div>
@@ -186,7 +192,8 @@ export const StackView = ({ id }: StackViewProps) => {
                             onAdd={() => {
                                 vibrateOnClick()
                                 setSelectedTranslation(translation.id)
-                                addTranslationToStackModal.open()
+                                addTranslationToOtherStackModal.open()
+                                refetch()
                             }}
                             onClick={() => {
                                 vibrateOnClick()
@@ -229,10 +236,20 @@ export const StackView = ({ id }: StackViewProps) => {
                 onClose={addTranslationToStackModal.close}
             >
                 <ModalBody>
+                    {/* TODO доделать */}
+                    <div>В разрабокте</div>
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper
+                isOpened={addTranslationToOtherStackModal.isOpened}
+                onClose={addTranslationToOtherStackModal.close}
+            >
+                <ModalBody>
                     {selectedTranslation && (
                         <TranslationAddToStack
                             translationId={selectedTranslation}
-                            onClose={addTranslationToStackModal.close}
+                            onClose={addTranslationToOtherStackModal.close}
                         />
                     )}
                 </ModalBody>
@@ -245,6 +262,10 @@ export const StackView = ({ id }: StackViewProps) => {
                 <ModalBody>
                     <TranslationAdd
                         onClose={createTranslationModal.close}
+                        onAdd={() => {
+                            createTranslationModal.close()
+                            translationAddedToStackSnackbar.open()
+                        }}
                         defaultValues={{
                             saveToStackId: id,
                         }}
@@ -288,6 +309,29 @@ export const StackView = ({ id }: StackViewProps) => {
                         />
                     )}
                 </ActionSheet>
+            )}
+
+            {addTranslationToStackActionSheet.isOpened && (
+                <ActionSheet onClose={addTranslationToStackActionSheet.close} toggleRef={undefined}>
+                    <ActionSheetItem
+                        before={<Icon28AddOutline />}
+                        children={"Добавить существующий перевод"}
+                        onClick={addTranslationToStackModal.open}
+                    />
+                    <ActionSheetItem
+                        before={<Icon28AddOutline />}
+                        children={"Создать новый перевод"}
+                        onClick={createTranslationModal.open}
+                    />
+                </ActionSheet>
+            )}
+
+            {translationAddedToStackSnackbar.isOpened && (
+                <Snackbar
+                    onClose={translationAddedToStackSnackbar.close}
+                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
+                    children={"Перевод добавлен в стопку"}
+                />
             )}
         </>
     )

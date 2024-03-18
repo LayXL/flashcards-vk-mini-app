@@ -1,8 +1,8 @@
 import {
     Icon24Add,
-    Icon24CheckCircleOn,
     Icon24LikeOutline,
     Icon24UserOutline,
+    Icon28CheckCircleOutline,
 } from "@vkontakte/icons"
 import {
     Div,
@@ -85,7 +85,7 @@ export const UserStacks = () => {
             {stackCreatedSnackbar.isOpened && (
                 <Snackbar
                     onClose={stackCreatedSnackbar.close}
-                    before={<Icon24CheckCircleOn />}
+                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
                     children={"Стопка успешно создана"}
                     after={
                         <Link
