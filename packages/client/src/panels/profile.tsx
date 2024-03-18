@@ -14,19 +14,15 @@ export const Profile = () => {
 
     return (
         <>
-            <PanelHeader
-                // before={<PanelHeaderButton onClick={() => {}} children={<Icon24Settings />} />}
-                children={"Профиль"}
-            />
+            <PanelHeader children={"Профиль"} />
 
             {data && (
-                // TODO connect with api
                 <LevelCard
                     avatarUrl={getSuitableAvatarUrl(data.avatarUrls, 64) ?? ""}
                     name={data.fullName ?? ""}
-                    level={2}
-                    currentXp={15}
-                    nextLevelXp={20}
+                    level={data.progress.currentLevel}
+                    currentXp={data.progress.currentXp}
+                    nextLevelXp={data.progress.nextLevelXp}
                 />
             )}
 

@@ -17,7 +17,7 @@ export const LevelCard = ({
     currentXp = 0,
 }: LevelCardProps) => {
     return (
-        <Div className={"flex gap-3 items-center"}>
+        <Div className={"flex gap-3 items-center select-none"}>
             <div className={"flex-col items-center"}>
                 <div
                     className={"rounded-full w-16 aspect-square bg-vk-secondary"}
