@@ -118,7 +118,7 @@ export const Router = () => {
                     completeOnboarding()
                 })
         }
-    }, [completeOnboarding, onboardingCompleted])
+    }, [completeOnboarding, isSuccess, onboardingCompleted])
 
     return (
         <SplitLayout modal={modals}>
