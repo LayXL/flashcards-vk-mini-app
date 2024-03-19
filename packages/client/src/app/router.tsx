@@ -1,14 +1,18 @@
+import { useQuery } from "@tanstack/react-query"
+import bridge from "@vkontakte/vk-bridge"
 import {
     createHashRouter,
     useActiveVkuiLocation,
     useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
 import { Epic, ModalRoot, Panel, Root, SplitCol, SplitLayout, View } from "@vkontakte/vkui"
+import { useEffect } from "react"
 import { Game } from "../panels/game"
 import { Home } from "../panels/home"
 import { New } from "../panels/new"
 import { Profile } from "../panels/profile"
 import { Stacks } from "../panels/stacks"
+import { getStorageValue } from "../shared/helpers/getStorageValue"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const router = createHashRouter([
@@ -55,11 +59,52 @@ export const Router = () => {
         </ModalRoot>
     )
 
+    const { data: onboardingCompleted } = useQuery({
+        queryKey: ["vkStorage", "onboardingCompleted"],
+        queryFn: () => getStorageValue("onboardingCompleted"),
+    })
+
+    useEffect(() => {
+        if (!onboardingCompleted) {
+            bridge.send("VKWebAppShowSlidesSheet", {
+                slides: [
+                    {
+                        title: "Пополняйте словарный запас",
+                        subtitle:
+                            "Изучайте новые профессиональные слова и фразы каждый день с помощью игры.",
+                        media: {
+                            type: "image",
+                            url: "https://flashcards-vk.layxl.dev/onboarding/1.webp",
+                        },
+                    },
+                    {
+                        title: "Соревнуйтесь с друзьями",
+                        subtitle:
+                            "Соревнуйтесь за место в рейтинге по знанию слов в специльном режиме.",
+                        media: {
+                            type: "image",
+                            url: "https://flashcards-vk.layxl.dev/onboarding/2.webp",
+                        },
+                    },
+                    {
+                        title: "Создавайте свои переводы",
+                        subtitle:
+                            "Станьте творцом своего лингвистического мира, добавляя собственные варианты переводов и стопки",
+                        media: {
+                            type: "image",
+                            url: "https://flashcards-vk.layxl.dev/onboarding/3.webp",
+                        },
+                    },
+                ],
+            })
+        }
+    }, [onboardingCompleted])
+
     return (
         <SplitLayout modal={modals}>
             <SplitCol>
-                <Epic activeStory="root">
-                    <Root nav="root" activeView={view!}>
+                <Epic activeStory={"root"}>
+                    <Root nav={"root"} activeView={view!}>
                         <View nav={"main"} activePanel={panel!}>
                             <Panel nav={"home"} children={<Home />} />
                         </View>
