@@ -59,7 +59,11 @@ export const Router = () => {
         </ModalRoot>
     )
 
-    const { data: onboardingCompleted, refetch } = useQuery({
+    const {
+        data: onboardingCompleted,
+        refetch,
+        isSuccess,
+    } = useQuery({
         queryKey: ["vkStorage", "onboardingCompleted"],
         queryFn: () => getStorageValue("onboardingCompleted"),
     })
@@ -77,7 +81,7 @@ export const Router = () => {
     })
 
     useEffect(() => {
-        if (!onboardingCompleted) {
+        if (isSuccess && !onboardingCompleted) {
             bridge
                 .send("VKWebAppShowSlidesSheet", {
                     slides: [
