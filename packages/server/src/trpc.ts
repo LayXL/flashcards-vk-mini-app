@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client"
 import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server"
 import * as trpcExpress from "@trpc/server/adapters/express"
-import { palettes } from "./routers/stacks"
 import { isValidSign } from "./util/isValidSign"
+import { palettes } from "./util/palettes"
 
 export const prisma = new PrismaClient().$extends({
     result: {
@@ -20,8 +20,9 @@ export const prisma = new PrismaClient().$extends({
             encodedBackground: {
                 needs: { pattern: true, palette: true },
                 compute: ({ pattern, palette }) => {
-                    const { primary, secondary } = palettes.find((p) => p.id === palette)
-                    return `${pattern}:${primary}:${secondary}`
+                    const data = palettes.find((p) => p.id === palette)
+
+                    return `${pattern}:${data?.primary}:${data?.secondary}`
                 },
             },
         },
