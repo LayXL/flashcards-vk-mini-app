@@ -97,7 +97,7 @@ export const Router = () => {
                         {
                             title: "Соревнуйтесь с друзьями",
                             subtitle:
-                                "Соревнуйтесь за место в рейтинге по знанию слов в специльном режиме.",
+                                "Соревнуйтесь за место в рейтинге по знанию слов в специальном режиме.",
                             media: {
                                 type: "image",
                                 url: "https://flashcards-vk.layxl.dev/onboarding/2.webp",
