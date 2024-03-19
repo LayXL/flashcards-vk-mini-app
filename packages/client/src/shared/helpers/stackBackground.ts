@@ -10,8 +10,13 @@ export const encodeStackBackground = (
 export const decodeStackBackground = (value?: string) => {
     if (!value) return null
 
-    const [pattern, primaryColor, secondaryColor] = value?.split(":")
-    return { pattern, primaryColor, secondaryColor }
+    const [pattern, primaryColor, secondaryColor] = value.split(":")
+
+    return {
+        pattern,
+        primaryColor: primaryColor === "undefined" ? null : primaryColor,
+        secondaryColor: secondaryColor === "undefined" ? null : secondaryColor,
+    }
 }
 
 export const useEncodeStackBackground = () => {

@@ -68,6 +68,15 @@ export const StackBackground = ({
 
         const Template = templates[stackBackground?.pattern as Pattern]
 
+        if (!Template) {
+            return (
+                <div
+                    className={"w-full h-full bg-[var(--bg)]"}
+                    style={{ "--bg": stackBackground?.primaryColor ?? "#0037EC" }}
+                />
+            )
+        }
+
         return (
             <Template
                 width={"none"}
