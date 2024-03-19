@@ -39,6 +39,7 @@ export const getUser = privateProcedure.query(async ({ ctx }) => {
             },
         })),
         progress: getUserProgress(userProfile?.xp || 0),
+        dailyStreak,
         stats: {
             todayTranslationsExplored,
             totalTranslationsExplored,
