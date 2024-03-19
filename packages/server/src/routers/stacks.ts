@@ -90,8 +90,8 @@ export const stacks = router({
                     name: input.name,
                     description: input.description,
                     isPrivate: input.isPrivate,
-                    pattern: input.pattern,
-                    palette: input.palette,
+                    pattern: input.pattern ?? "solid",
+                    palette: input.palette ?? 1,
                 },
             })
         }),
