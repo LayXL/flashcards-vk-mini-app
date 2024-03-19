@@ -2,6 +2,7 @@ import { CardScroll } from "@vkontakte/vkui"
 import { DateTime } from "luxon"
 import { useEffect } from "react"
 import { DayInDailyStreak } from "../entities/daily-streak/ui/day-in-daily-streak"
+import { trpc } from "../shared/api"
 
 export const DailyStreak = () => {
     useEffect(() => {
@@ -14,15 +15,21 @@ export const DailyStreak = () => {
             })
     })
 
+    const { data } = trpc.stats.getActiveDays.useQuery()
+
     const days = Array.from({ length: 30 }).map((_, i) =>
         DateTime.now().startOf("day").minus({ days: i }).toJSDate(),
     )
 
     return (
         <CardScroll id={"dailyStreak"}>
-            <div className={"flex-row-reverse gap-1"}>
+            <div className={"flex-row-reverse gap-2"}>
                 {days.map((date) => (
-                    <DayInDailyStreak key={date.getTime()} date={date} />
+                    <DayInDailyStreak
+                        key={date.getTime()}
+                        date={date}
+                        completed={data?.some((d) => d === date.toISOString().split("T")[0])}
+                    />
                 ))}
             </div>
         </CardScroll>

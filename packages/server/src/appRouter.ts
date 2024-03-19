@@ -5,6 +5,7 @@ import { getUser } from "./routers/getUser"
 import { languages } from "./routers/languages"
 import { search } from "./routers/search"
 import { stacks } from "./routers/stacks"
+import { stats } from "./routers/stats"
 import { translations } from "./routers/translations"
 import { updateInfo } from "./routers/updateInfo"
 import { privateProcedure, router } from "./trpc"
@@ -20,6 +21,7 @@ export const appRouter = router({
     getUser,
     feed,
     fiveLetters,
+    stats,
 })
 
 export type AppRouter = typeof appRouter
