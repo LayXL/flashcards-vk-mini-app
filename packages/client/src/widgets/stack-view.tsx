@@ -32,7 +32,7 @@ import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
-import { decodeStackBackground, useEncodeStackBackground } from "../shared/helpers/stackBackground"
+import { decodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { gameSettingsAtom } from "../shared/store"
@@ -76,10 +76,7 @@ export const StackView = ({ id }: StackViewProps) => {
         onSuccess: () => refetch(),
     })
 
-    // todo, господи, что я тут написал? удалить и заново
-    const encodeStackBackground = useEncodeStackBackground()
-    const encodedBackground = encodeStackBackground(data)
-    const decodedBackground = decodeStackBackground(encodedBackground)
+    const decodedBackground = decodeStackBackground(data?.encodedBackground)
 
     return (
         <>
@@ -89,7 +86,7 @@ export const StackView = ({ id }: StackViewProps) => {
                 children={data?.name}
             />
 
-            <div className={"flex flex-col relative "}>
+            <div className={"flex flex-col relative"}>
                 <div
                     style={{
                         backgroundColor: decodedBackground?.primaryColor ?? "#fff",
@@ -112,7 +109,7 @@ export const StackView = ({ id }: StackViewProps) => {
                     >
                         {data && (
                             <StackBackground
-                                encodedBackground={encodedBackground}
+                                encodedBackground={data.encodedBackground}
                                 // imageUrl={data?.imageUrl}
                             />
                         )}
