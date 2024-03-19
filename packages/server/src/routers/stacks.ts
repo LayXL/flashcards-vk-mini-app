@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server"
 import z from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
 
-const palettes = [
+export const palettes = [
     { id: 1, primary: "#0037EC", secondary: "#0077FF" },
     { id: 2, primary: "#0037EC", secondary: "#17D686" },
     { id: 3, primary: "#0037EC", secondary: "#FF3A72" },
@@ -19,7 +19,7 @@ const palettes = [
     { id: 14, primary: "#AD4DEE", secondary: "#811BC7" },
 ] as const
 
-const patterns = [
+export const patterns = [
     {
         name: "alternation",
     },
