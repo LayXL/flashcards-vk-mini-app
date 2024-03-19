@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import bridge from "@vkontakte/vk-bridge"
 import {
     createHashRouter,
@@ -59,46 +59,62 @@ export const Router = () => {
         </ModalRoot>
     )
 
-    const { data: onboardingCompleted } = useQuery({
+    const { data: onboardingCompleted, refetch } = useQuery({
         queryKey: ["vkStorage", "onboardingCompleted"],
         queryFn: () => getStorageValue("onboardingCompleted"),
     })
 
+    const { mutate: completeOnboarding } = useMutation({
+        mutationKey: ["vkStorage", "completeOnboarding"],
+        mutationFn: () =>
+            bridge.send("VKWebAppStorageSet", {
+                key: "onboardingCompleted",
+                value: "true",
+            }),
+        onSuccess: () => {
+            refetch()
+        },
+    })
+
     useEffect(() => {
         if (!onboardingCompleted) {
-            bridge.send("VKWebAppShowSlidesSheet", {
-                slides: [
-                    {
-                        title: "Пополняйте словарный запас",
-                        subtitle:
-                            "Изучайте новые профессиональные слова и фразы каждый день с помощью игры.",
-                        media: {
-                            type: "image",
-                            url: "https://flashcards-vk.layxl.dev/onboarding/1.webp",
+            bridge
+                .send("VKWebAppShowSlidesSheet", {
+                    slides: [
+                        {
+                            title: "Пополняйте словарный запас",
+                            subtitle:
+                                "Изучайте новые профессиональные слова и фразы каждый день с помощью игры.",
+                            media: {
+                                type: "image",
+                                url: "https://flashcards-vk.layxl.dev/onboarding/1.webp",
+                            },
                         },
-                    },
-                    {
-                        title: "Соревнуйтесь с друзьями",
-                        subtitle:
-                            "Соревнуйтесь за место в рейтинге по знанию слов в специльном режиме.",
-                        media: {
-                            type: "image",
-                            url: "https://flashcards-vk.layxl.dev/onboarding/2.webp",
+                        {
+                            title: "Соревнуйтесь с друзьями",
+                            subtitle:
+                                "Соревнуйтесь за место в рейтинге по знанию слов в специльном режиме.",
+                            media: {
+                                type: "image",
+                                url: "https://flashcards-vk.layxl.dev/onboarding/2.webp",
+                            },
                         },
-                    },
-                    {
-                        title: "Создавайте свои переводы",
-                        subtitle:
-                            "Станьте творцом своего лингвистического мира, добавляя собственные варианты переводов и стопки",
-                        media: {
-                            type: "image",
-                            url: "https://flashcards-vk.layxl.dev/onboarding/3.webp",
+                        {
+                            title: "Создавайте свои переводы",
+                            subtitle:
+                                "Станьте творцом своего лингвистического мира, добавляя собственные варианты переводов и стопки.",
+                            media: {
+                                type: "image",
+                                url: "https://flashcards-vk.layxl.dev/onboarding/3.webp",
+                            },
                         },
-                    },
-                ],
-            })
+                    ],
+                })
+                .then(() => {
+                    completeOnboarding()
+                })
         }
-    }, [onboardingCompleted])
+    }, [completeOnboarding, onboardingCompleted])
 
     return (
         <SplitLayout modal={modals}>
