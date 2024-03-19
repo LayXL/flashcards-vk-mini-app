@@ -10,6 +10,7 @@ export const modalsHistory = atom<string[]>({
     default: [],
 })
 
+// TODO: remove
 export const gameSettingsAtom = atom<{
     stacks: number[]
     selectedModifiers: ("time" | "attempts" | "repeat")[]

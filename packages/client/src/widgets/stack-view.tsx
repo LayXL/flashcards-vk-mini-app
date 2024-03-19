@@ -10,7 +10,6 @@ import {
     Icon28ReportOutline,
     Icon28ShareOutline,
 } from "@vkontakte/icons"
-import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 import {
     ActionSheet,
     ActionSheetItem,
@@ -24,7 +23,6 @@ import {
     Subhead,
 } from "@vkontakte/vkui"
 import { useState } from "react"
-import { useSetRecoilState } from "recoil"
 import { StackBackground } from "../entities/stack/ui/stack-background"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { useModal } from "../features/modal/contexts/modal-context"
@@ -35,7 +33,7 @@ import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { decodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
-import { gameSettingsAtom } from "../shared/store"
+import { PlayGame } from "./play-game"
 import { StackCreateModal } from "./stack-create"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
@@ -46,7 +44,6 @@ type StackViewProps = {
 }
 
 export const StackView = ({ id }: StackViewProps) => {
-    const routeNavigator = useRouteNavigator()
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
 
     const translationViewModal = useModalState()
@@ -56,11 +53,10 @@ export const StackView = ({ id }: StackViewProps) => {
     const translationAddedToStackSnackbar = useModalState()
     const createTranslationModal = useModalState()
     const editStackModal = useModalState()
+    const playGameModal = useModalState()
 
     const modal = useModal()
     const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
-
-    const setGameSettings = useSetRecoilState(gameSettingsAtom)
 
     const showMore = useModalState()
 
@@ -140,15 +136,7 @@ export const StackView = ({ id }: StackViewProps) => {
                             stretched
                             size={"l"}
                             children={"Играть"}
-                            onClick={() => {
-                                // todo close all
-                                modal?.onClose()
-                                routeNavigator.push("/play")
-                                setGameSettings((prev) => ({
-                                    ...prev,
-                                    stacks: [id],
-                                }))
-                            }}
+                            onClick={playGameModal.open}
                         />
                         <Button
                             mode={"secondary"}
@@ -279,6 +267,12 @@ export const StackView = ({ id }: StackViewProps) => {
                         pattern={data?.pattern}
                         description={data?.description}
                     />
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
+                <ModalBody fullscreen={true}>
+                    <PlayGame onClose={playGameModal.close} stackId={id} />
                 </ModalBody>
             </ModalWrapper>
 

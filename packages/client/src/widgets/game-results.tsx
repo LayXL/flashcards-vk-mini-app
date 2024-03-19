@@ -11,7 +11,7 @@ import {
 } from "@vkontakte/vkui"
 import { motion, useAnimationControls } from "framer-motion"
 import { ReactNode, useState } from "react"
-import { useBoolean } from "usehooks-ts"
+import { useBoolean, useStep } from "usehooks-ts"
 import { AnswerCard } from "../entities/game/ui/answer-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
@@ -38,6 +38,7 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
     const roundedAccuracy = Math.round((data?.answerAccuracy ?? 0) * 100)
 
     const controls = useAnimationControls()
+    const [currentStep, { goToNextStep }] = useStep(2)
 
     return (
         <>
@@ -46,10 +47,10 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                 children={"Результат"}
             />
 
-            <div className="h-full overflow-hidden">
-                <div className="h-full relative">
+            <div className={"h-full overflow-hidden"}>
+                <div className={"h-full relative"}>
                     <motion.div
-                        className="absolute inset-0 flex-col items-center justify-center gap-5"
+                        className={"absolute inset-0 flex-col items-center justify-center gap-5"}
                         animate={controls}
                         initial={"first"}
                         variants={{
@@ -73,10 +74,10 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                             transition={{
                                 duration: 0.6,
                             }}
-                            className="aspect-square w-[200px] bg-secondary rounded-xl"
+                            className={"aspect-square w-[200px] bg-secondary rounded-xl"}
                         ></motion.div>
 
-                        <Title level="1" weight="1">
+                        <Title level={"1"} weight={"1"}>
                             <motion.span>
                                 {"Стопка пройдена!".split("").map((char, i) => (
                                     <motion.span
@@ -94,9 +95,11 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                         </Title>
 
                         <motion.div
-                            className="w-full flex gap-3 px-horizontal-regular py-vertical-regular box-border"
-                            initial="hidden"
-                            animate="show"
+                            className={
+                                "w-full flex gap-3 px-horizontal-regular py-vertical-regular box-border"
+                            }
+                            initial={"hidden"}
+                            animate={"show"}
                             variants={{
                                 hidden: {},
                                 show: {
@@ -114,27 +117,27 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                     <Icon32CheckbitOutline
                                         height={12}
                                         width={12}
-                                        className="text-accent"
+                                        className={"text-accent"}
                                     />
                                 }
                             />
                             <Stat
                                 caption={"Время"}
                                 value={data?.finalGameTime}
-                                icon={<Icon12ClockOutline className="text-accent" />}
-                                unit="сек"
+                                icon={<Icon12ClockOutline className={"text-accent"} />}
+                                unit={"сек"}
                             />
                             <Stat
                                 caption={"Отлично"}
                                 value={roundedAccuracy}
-                                icon={<Icon12CheckCircle className="text-dynamic-green" />}
-                                unit="%"
+                                icon={<Icon12CheckCircle className={"text-dynamic-green"} />}
+                                unit={"%"}
                             />
                         </motion.div>
                     </motion.div>
 
                     <motion.div
-                        className="absolute inset-0 flex-col"
+                        className={"absolute inset-0 flex-col"}
                         animate={controls}
                         initial={"first"}
                         variants={{
@@ -146,7 +149,7 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                             },
                         }}
                     >
-                        <Div className="flex gap-3">
+                        <Div className={"flex gap-3"}>
                             <Stat
                                 caption={"Баллы"}
                                 value={data?.points}
@@ -154,27 +157,27 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                     <Icon32CheckbitOutline
                                         height={12}
                                         width={12}
-                                        className="text-accent"
+                                        className={"text-accent"}
                                     />
                                 }
                             />
                             <Stat
                                 caption={"Время"}
                                 value={data?.finalGameTime}
-                                icon={<Icon12ClockOutline className="text-accent" />}
-                                unit="сек"
+                                icon={<Icon12ClockOutline className={"text-accent"} />}
+                                unit={"сек"}
                             />
                             <Stat
                                 caption={"Отлично"}
                                 value={roundedAccuracy}
-                                icon={<Icon12CheckCircle className="text-dynamic-green" />}
-                                unit="%"
+                                icon={<Icon12CheckCircle className={"text-dynamic-green"} />}
+                                unit={"%"}
                             />
                         </Div>
 
                         <Header children={"Ответы"} />
 
-                        <Div className="flex-col gap-2 flex-1 overflow-scroll pb-36">
+                        <Div className={"flex-col gap-2 flex-1 overflow-scroll pb-36"}>
                             {data?.translations
                                 ?.filter(({ status }) => status !== "unanswered")
                                 .map(({ translation, status }) => (
@@ -200,14 +203,19 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                 </div>
             </div>
 
-            <FixedLayout vertical="bottom" filled>
+            <FixedLayout vertical={"bottom"} filled>
                 <Div>
                     <Button
-                        children="Продолжить"
+                        children={"Продолжить"}
                         stretched={true}
                         size={"l"}
                         onClick={() => {
-                            controls.start("second")
+                            if (currentStep === 1) {
+                                controls.start("second")
+                                goToNextStep()
+                            } else {
+                                onClose()
+                            }
                         }}
                     />
                 </Div>
@@ -256,7 +264,7 @@ const Stat = ({ icon, caption, value = 0, unit }: StatProps) => {
 
     return (
         <motion.div
-            className="flex-1"
+            className={"flex-1"}
             onAnimationComplete={setTrue}
             variants={{
                 hidden: { opacity: 0 },
@@ -265,12 +273,12 @@ const Stat = ({ icon, caption, value = 0, unit }: StatProps) => {
                 },
             }}
         >
-            <div className="bg-secondary p-3 shadow-card rounded-xl flex-col gap-1">
-                <div className="gap-1 flex items-center">
+            <div className={"bg-secondary p-3 shadow-card rounded-xl flex-col gap-1"}>
+                <div className={"gap-1 flex items-center"}>
                     {icon}
-                    <Caption className="text-subhead" caps={true} children={caption} />
+                    <Caption className={"text-subhead"} caps={true} children={caption} />
                 </div>
-                <Title level="2" weight="1">
+                <Title level={"2"} weight={"1"}>
                     {isAnimationCompleted ? (
                         <AnimatedNumber from={0} to={value} duration={1000} />
                     ) : (
