@@ -1,5 +1,8 @@
 export const patterns = [
     {
+        name: "solid",
+    },
+    {
         name: "alternation",
     },
     {
