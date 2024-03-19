@@ -182,6 +182,7 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                 ?.filter(({ status }) => status !== "unanswered")
                                 .map(({ translation, status }) => (
                                     <AnswerCard
+                                        key={translation.id}
                                         foreign={translation.foreign}
                                         vernacular={translation.vernacular}
                                         time={0}

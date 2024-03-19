@@ -79,8 +79,8 @@ export const StackBackground = ({
 
         return (
             <Template
-                width={"none"}
-                height={"none"}
+                width={undefined}
+                height={undefined}
                 preserveAspectRatio={"xMidYMid slice"}
                 className={"w-full h-full"}
                 style={{
@@ -99,8 +99,8 @@ export const StackBackground = ({
 
     return (
         <Template
-            width={"none"}
-            height={"none"}
+            width={undefined}
+            height={undefined}
             preserveAspectRatio={"xMidYMid slice"}
             className={"w-full h-full"}
             style={{
