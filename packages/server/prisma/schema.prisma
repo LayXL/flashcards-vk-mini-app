@@ -33,28 +33,29 @@ model User {
 }
 
 model Translation {
-  id                         Int                         @id @default(autoincrement())
-  authorId                   Int
-  vernacular                 String
-  foreign                    String
-  example                    String?
+  id                  Int      @id @default(autoincrement())
+  authorId            Int
+  vernacular          String
+  foreign             String
+  example             String?
+  languageId          Int
+  languageVariationId Int?
+  foreignDescription  String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
+  isPrivate           Boolean  @default(false)
+  forRanked           Boolean  @default(false)
+
   stacks                     TranslationInStack[]
   userTranslationRepetitions UserTranslationRepetition[]
-  languageId                 Int
-  languageVariationId        Int?
-  foreignDescription         String?
-  createdAt                  DateTime                    @default(now())
-  updatedAt                  DateTime                    @default(now())
-  isPrivate                  Boolean                     @default(false)
-
-  tags                     Tag[]
-  author                   User                       @relation(fields: [authorId], references: [id])
-  language                 Language                   @relation(fields: [languageId], references: [id])
-  languageVariation        LanguageVariation?         @relation(fields: [languageVariationId], references: [id])
-  transcriptions           Transcription[]
-  reactions                ReactionOnTranslation[]
-  comments                 Comment[]
-  TranslationInGameSession TranslationInGameSession[]
+  tags                       Tag[]
+  author                     User                        @relation(fields: [authorId], references: [id])
+  language                   Language                    @relation(fields: [languageId], references: [id])
+  languageVariation          LanguageVariation?          @relation(fields: [languageVariationId], references: [id])
+  transcriptions             Transcription[]
+  reactions                  ReactionOnTranslation[]
+  comments                   Comment[]
+  TranslationInGameSession   TranslationInGameSession[]
 }
 
 model Comment {
