@@ -40,6 +40,8 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
     const controls = useAnimationControls()
     const [currentStep, { goToNextStep }] = useStep(2)
 
+    if (!data) return null
+
     return (
         <>
             <ModalPageHeader
@@ -110,29 +112,58 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                 },
                             }}
                         >
-                            <Stat
-                                caption={"Баллы"}
-                                value={data?.points}
-                                icon={
-                                    <Icon32CheckbitOutline
-                                        height={12}
-                                        width={12}
-                                        className={"text-accent"}
+                            {data?.type === "default" && (
+                                <>
+                                    <Stat
+                                        caption={"Верные ответы"}
+                                        value={data.points}
+                                        icon={
+                                            <Icon32CheckbitOutline
+                                                height={12}
+                                                width={12}
+                                                className={"text-accent"}
+                                            />
+                                        }
                                     />
-                                }
-                            />
-                            <Stat
-                                caption={"Время"}
-                                value={data?.finalGameTime}
-                                icon={<Icon12ClockOutline className={"text-accent"} />}
-                                unit={"сек"}
-                            />
-                            <Stat
-                                caption={"Отлично"}
-                                value={roundedAccuracy}
-                                icon={<Icon12CheckCircle className={"text-dynamic-green"} />}
-                                unit={"%"}
-                            />
+                                    <Stat
+                                        caption={"Время"}
+                                        value={data?.finalGameTime}
+                                        icon={<Icon12ClockOutline className={"text-accent"} />}
+                                        unit={"cek"}
+                                    />
+                                    <Stat
+                                        caption={"Отлично"}
+                                        value={roundedAccuracy}
+                                        icon={
+                                            <Icon12CheckCircle className={"text-dynamic-green"} />
+                                        }
+                                        unit={"%"}
+                                    />
+                                </>
+                            )}
+                            {data?.type === "ranked" && (
+                                <>
+                                    <Stat
+                                        caption={"Баллы"}
+                                        value={data.points}
+                                        icon={
+                                            <Icon32CheckbitOutline
+                                                height={12}
+                                                width={12}
+                                                className={"text-accent"}
+                                            />
+                                        }
+                                    />
+                                    <Stat
+                                        caption={"Отлично"}
+                                        value={roundedAccuracy}
+                                        icon={
+                                            <Icon12CheckCircle className={"text-dynamic-green"} />
+                                        }
+                                        unit={"%"}
+                                    />
+                                </>
+                            )}
                         </motion.div>
                     </motion.div>
 

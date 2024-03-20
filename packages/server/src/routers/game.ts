@@ -6,6 +6,17 @@ import { prisma, privateProcedure, router } from "../trpc"
 import { addXp } from "../util/addXp"
 import { shuffle } from "../util/shuffle"
 
+const cancelAllGames = async (userId: number) => {
+    await prisma.gameSession.updateMany({
+        where: {
+            userId,
+        },
+        data: {
+            status: "cancelled",
+        },
+    })
+}
+
 const incrementUserGamesPlayedToday = async (userId: number) => {
     await prisma.userDailyStatistic.upsert({
         where: {
@@ -30,74 +41,87 @@ const incrementUserGamesPlayedToday = async (userId: number) => {
 export const game = router({
     start: privateProcedure
         .input(
-            z.object({
-                stackIds: z.number().array(),
-                gameDuration: z.number().min(10).max(240).nullable().optional().default(null),
-                correctAnswerAddDuration: z
-                    .number()
-                    .min(0)
-                    .max(10)
-                    .optional()
-                    .nullable()
-                    .default(null),
-                // TODO
-                wrongAnswerSubDuration: z
-                    .number()
-                    .min(0)
-                    .max(10)
-                    .optional()
-                    .nullable()
-                    .default(null),
-                attemptsCount: z.number().min(1).max(5).optional().nullable().default(null),
-                repeatCards: z.boolean().optional().default(false),
-            })
+            z.discriminatedUnion("type", [
+                z.object({
+                    type: z.literal("default"),
+                    stackIds: z.number().array(),
+                    gameDuration: z.number().min(10).max(240).nullable().optional().default(null),
+                    correctAnswerAddDuration: z
+                        .number()
+                        .min(0)
+                        .max(10)
+                        .optional()
+                        .nullable()
+                        .default(null),
+                    // TODO
+                    wrongAnswerSubDuration: z
+                        .number()
+                        .min(0)
+                        .max(10)
+                        .optional()
+                        .nullable()
+                        .default(null),
+                    attemptsCount: z.number().min(1).max(5).optional().nullable().default(null),
+                    repeatCards: z.boolean().optional().default(false),
+                }),
+                z.object({
+                    type: z.literal("ranked"),
+                }),
+            ])
         )
         .mutation(async ({ input, ctx }) => {
-            const translations = (
-                await ctx.prisma.translationInStack.findMany({
-                    where: {
-                        OR: input.stackIds.map((id) => ({
-                            stack: {
-                                AND: [
-                                    {
-                                        id,
-                                    },
-                                    {
-                                        OR: [
-                                            {
-                                                author: {
-                                                    vkId: ctx.vkId,
+            if (input.type === "default") {
+                const translations = (
+                    await ctx.prisma.translationInStack.findMany({
+                        where: {
+                            OR: input.stackIds.map((id) => ({
+                                stack: {
+                                    AND: [
+                                        {
+                                            id,
+                                        },
+                                        {
+                                            OR: [
+                                                {
+                                                    author: {
+                                                        vkId: ctx.vkId,
+                                                    },
                                                 },
-                                            },
-                                            {
-                                                isVerified: true,
-                                            },
-                                            {
-                                                isPrivate: false,
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                        })),
-                    },
-                    include: {
-                        translation: true,
-                    },
-                })
-            ).map(({ translation }) => translation)
+                                                {
+                                                    isVerified: true,
+                                                },
+                                                {
+                                                    isPrivate: false,
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            })),
+                        },
+                        include: {
+                            translation: true,
+                        },
+                    })
+                ).map(({ translation }) => translation)
 
-            const uniqueTranslations: typeof translations = Array.from(
-                translations
-                    .reduce((map, translation) => map.set(translation.id, translation), new Map())
-                    .values()
-            )
+                const uniqueTranslations: typeof translations = shuffle(
+                    Array.from(
+                        translations
+                            .reduce(
+                                (map, translation) => map.set(translation.id, translation),
+                                new Map()
+                            )
+                            .values()
+                    )
+                )
 
-            // TODO search only in public translations
-            const queryResults = (await ctx.prisma.$queryRawUnsafe(`
-                select t1.id      as "id",
-                       t2.foreign as "similar"
-                from public."Translation" t1
+                const queryResults = await ctx.prisma.$queryRawUnsafe<
+                    { id: number; similar: string }[]
+                >(`
+                    select t1.id      as "id",
+                           t2.foreign as "similar"
+                    from public."Translation" t1
                     cross join lateral (
                         select t2.id,
                                t2.foreign,
@@ -105,6 +129,8 @@ export const game = router({
                         from public."Translation" t2
                         where t1.id <> t2.id
                           and t1.foreign <> t2.foreign
+                          and t1.vernacular <> t2.vernacular
+                          and t2."isPrivate" = false
                           and t1.id = any('{${uniqueTranslations
                               .map(({ id }) => id)
                               .join(",")}}'::int[])
@@ -113,77 +139,144 @@ export const game = router({
                         order by "similarity" desc
                         limit 1
                     ) t2;
-            `)) as { id: number; similar: string }[]
+                `)
 
-            const cards = uniqueTranslations.map((translation, i) => ({
-                id: translation.id,
-                order: i,
-                title: translation.vernacular,
-                choices: shuffle([
-                    translation.foreign,
-                    queryResults.find(({ id }) => id === translation.id).similar,
-                ]),
-            }))
+                const cards = uniqueTranslations.map((translation, i) => ({
+                    id: translation.id,
+                    order: i,
+                    title: translation.vernacular,
+                    choices: shuffle([
+                        translation.foreign,
+                        queryResults.find(({ id }) => id === translation.id).similar,
+                    ]),
+                }))
 
-            if (cards.length === 0) {
-                throw new TRPCError({
-                    code: "BAD_REQUEST",
-                    message: "No translations for showing found",
-                })
-            }
+                if (cards.length === 0) {
+                    throw new TRPCError({
+                        code: "BAD_REQUEST",
+                        message: "No translations for showing found",
+                    })
+                }
 
-            await ctx.prisma.gameSession.updateMany({
-                where: {
-                    user: {
-                        vkId: ctx.vkId,
-                    },
-                },
-                data: {
-                    status: "cancelled",
-                },
-            })
+                await cancelAllGames(ctx.userId)
 
-            const gameSession = await ctx.prisma.gameSession.create({
-                data: {
-                    user: {
-                        connect: {
-                            vkId: ctx.vkId,
+                const gameSession = await ctx.prisma.gameSession.create({
+                    data: {
+                        user: {
+                            connect: {
+                                vkId: ctx.vkId,
+                            },
                         },
+                        translations: {
+                            create: cards.map(({ id, order }) => ({
+                                translationId: id,
+                                order,
+                            })),
+                        },
+                        stacks: {
+                            connect: input.stackIds.map((id) => ({
+                                id,
+                            })),
+                        },
+                        gameDuration: input.gameDuration,
+                        correctAnswerAddDuration: input.correctAnswerAddDuration,
+                        wrongAnswerSubDuration: input.wrongAnswerSubDuration,
+                        attemptsCount: input.attemptsCount,
+                        repeatCards: input.repeatCards,
                     },
-                    translations: {
-                        create: cards.map(({ id, order }) => ({
-                            translationId: id,
-                            order,
-                        })),
-                    },
-                    stacks: {
-                        connect: input.stackIds.map((id) => ({
-                            id,
-                        })),
-                    },
-                    gameDuration: input.gameDuration,
-                    correctAnswerAddDuration: input.correctAnswerAddDuration,
-                    wrongAnswerSubDuration: input.wrongAnswerSubDuration,
-                    attemptsCount: input.attemptsCount,
-                    repeatCards: input.repeatCards,
-                },
-            })
+                })
 
-            return {
-                gameSession,
-                cards: cards.map(({ title, choices, order }) => ({ title, choices, order })),
+                return {
+                    gameSession,
+                    cards: cards.map(({ title, choices, order }) => ({ title, choices, order })),
+                }
+            } else {
+                const queryResylts = await ctx.prisma.$queryRaw<
+                    { id: number; similar: string }[]
+                >`with t1 as(select t1.id, t1.vernacular, t1."foreign" from "Translation" t1 where t1."forRanked" = true order by random() limit 50) select t1.id, t2."foreign" as "similar" from t1 cross join lateral ( select t2.id, t2.foreign, max(similarity(t1.foreign, t2.foreign)) as "similarity" from public."Translation" t2 where t1.id <> t2.id and t1.foreign <> t2.foreign and t1.vernacular <> t2.vernacular and t2."isPrivate" = false and t2."forRanked" = true group by t2.id, t2.foreign order by "similarity" desc limit 1) t2;`
+
+                let cards = (
+                    await ctx.prisma.translation.findMany({
+                        where: {
+                            OR: queryResylts.map(({ id }) => ({ id })),
+                        },
+                    })
+                ).map(({ id, foreign, vernacular }, i) => ({
+                    id,
+                    order: i,
+                    title: vernacular,
+                    choices: shuffle([foreign, queryResylts.find(({ id: x }) => id === x).similar]),
+                }))
+
+                if (cards.length === 0) {
+                    throw new TRPCError({
+                        code: "BAD_REQUEST",
+                        message: "No translations for showing found",
+                    })
+                }
+
+                await cancelAllGames(ctx.userId)
+
+                const gameSession = await ctx.prisma.gameSession.create({
+                    data: {
+                        type: "ranked",
+                        userId: ctx.userId,
+                        translations: {
+                            create: cards.map(({ id, order }) => ({
+                                translationId: id,
+                                order,
+                            })),
+                        },
+                        gameDuration: 60,
+                        correctAnswerAddDuration: 2,
+                    },
+                })
+
+                return {
+                    gameSession,
+                    cards: cards.map(({ title, choices, order }) => ({ title, choices, order })),
+                }
             }
         }),
     cancel: privateProcedure.mutation(async ({ ctx }) => {
         return await ctx.prisma.gameSession.updateMany({
             where: {
-                user: {
-                    vkId: ctx.vkId,
-                },
+                userId: ctx.userId,
                 status: "playing",
             },
             data: {
                 status: "cancelled",
+            },
+        })
+    }),
+    end: privateProcedure.mutation(async ({ ctx }) => {
+        await ctx.prisma.userDailyStatistic.upsert({
+            where: {
+                userId_date: {
+                    userId: ctx.userId,
+                    date: startOfDay(new Date()),
+                },
+            },
+            create: {
+                userId: ctx.userId,
+                date: startOfDay(new Date()),
+                rankedGamesPlayed: 1,
+            },
+            update: {
+                rankedGamesPlayed: {
+                    increment: 1,
+                },
+            },
+        })
+
+        return await ctx.prisma.gameSession.updateMany({
+            where: {
+                userId: ctx.userId,
+                status: "playing",
+            },
+            data: {
+                status: "ended",
+                endedAt: new Date(),
             },
         })
     }),
@@ -316,7 +409,7 @@ export const game = router({
                 }
             }
 
-            if (isCorrect) {
+            if (isCorrect && translationInGameSession.gameSession.type === "default") {
                 const repeatedCount = await ctx.prisma.userTranslationRepetition.count({
                     where: {
                         user: {
@@ -330,6 +423,7 @@ export const game = router({
 
                 if (
                     repeatedCount === 0 &&
+                    translationInGameSession.gameSession.stacks.length > 0 &&
                     translationInGameSession.gameSession.stacks.every((stack) => stack.isVerified)
                 ) {
                     await addXp(translationInGameSession.gameSession.userId, 1)

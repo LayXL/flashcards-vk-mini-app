@@ -186,6 +186,11 @@ enum GameSessionStatus {
   ended
 }
 
+enum GameSessionType {
+  default
+  ranked
+}
+
 model GameSession {
   id        Int               @id @default(autoincrement())
   userId    Int
@@ -193,6 +198,7 @@ model GameSession {
   endedAt   DateTime?
   status    GameSessionStatus @default(playing)
 
+  type                     GameSessionType @default(default)
   gameDuration             Int?
   correctAnswerAddDuration Int?
   wrongAnswerSubDuration   Int?
@@ -238,6 +244,7 @@ model UserDailyStatistic {
   xp                    Int     @default(0)
   points                Int     @default(0)
   gamesPlayed           Int     @default(0)
+  rankedGamesPlayed     Int     @default(0)
   fiveLetterWordGuessed Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id])

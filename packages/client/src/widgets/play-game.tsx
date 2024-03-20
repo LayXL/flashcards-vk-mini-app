@@ -75,6 +75,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
         if (!gameSettings.stacks) return
 
         start({
+            type: "default",
             stackIds: gameSettings.stacks,
             attemptsCount: gameSettings.selectedModifiers.includes("attempts")
                 ? gameSettings.attemptCount
