@@ -21,6 +21,8 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
         },
     })
 
+    const { mutate: end } = trpc.game.end.useMutation()
+
     const startGame = useCallback(() => {
         start({ type: "ranked" })
     }, [start])
@@ -30,9 +32,10 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
     }, [gameModal])
 
     const endGame = useCallback(() => {
+        end()
         gameModal.close()
         gameResultsModal.open()
-    }, [gameModal, gameResultsModal])
+    }, [end, gameModal, gameResultsModal])
 
     return (
         <>

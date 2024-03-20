@@ -27,7 +27,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     const [duration, setDuration] = useState((data.gameSession.gameDuration ?? 0) * 10)
     const [count, { startCountdown }] = useCountdown({
         countStart: duration,
-        intervalMs: 100,
+        intervalMs: 5,
     })
     const strokeOffset = useTransform(
         count,
@@ -72,12 +72,20 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     const withAttempts = data.gameSession.attemptsCount && data.gameSession.attemptsCount > 0
 
     useEffect(() => {
+        console.log(true)
+
         if (withTimer && count === 0) {
-            onEndGame()
-        } else if (withAttempts && attempts.count === 0) {
+            console.log(true)
+
             onEndGame()
         }
-    }, [count, data.gameSession.gameDuration, withTimer, onEndGame, withAttempts, attempts.count])
+    }, [count, onEndGame, withTimer])
+
+    useEffect(() => {
+        if (withAttempts && attempts.count === 0) {
+            onEndGame()
+        }
+    }, [attempts.count, onEndGame, withAttempts])
 
     useEffect(() => {
         if (!withTimer) return

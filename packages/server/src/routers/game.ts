@@ -191,6 +191,19 @@ export const game = router({
                     cards: cards.map(({ title, choices, order }) => ({ title, choices, order })),
                 }
             } else {
+                if (
+                    (
+                        await ctx.prisma.userDailyStatistic.findFirst({
+                            where: { userId: ctx.userId, date: startOfDay(new Date()) },
+                        })
+                    ).rankedGamesPlayed >= 3
+                ) {
+                    throw new TRPCError({
+                        code: "BAD_REQUEST",
+                        message: "You have already played 3 ranked games today",
+                    })
+                }
+
                 const queryResylts = await ctx.prisma.$queryRaw<
                     { id: number; similar: string }[]
                 >`with t1 as(select t1.id, t1.vernacular, t1."foreign" from "Translation" t1 where t1."forRanked" = true order by random() limit 50) select t1.id, t2."foreign" as "similar" from t1 cross join lateral ( select t2.id, t2.foreign, max(similarity(t1.foreign, t2.foreign)) as "similarity" from public."Translation" t2 where t1.id <> t2.id and t1.foreign <> t2.foreign and t1.vernacular <> t2.vernacular and t2."isPrivate" = false and t2."forRanked" = true group by t2.id, t2.foreign order by "similarity" desc limit 1) t2;`
@@ -232,6 +245,25 @@ export const game = router({
                     },
                 })
 
+                await ctx.prisma.userDailyStatistic.upsert({
+                    where: {
+                        userId_date: {
+                            userId: ctx.userId,
+                            date: startOfDay(new Date()),
+                        },
+                    },
+                    create: {
+                        userId: ctx.userId,
+                        date: startOfDay(new Date()),
+                        rankedGamesPlayed: 1,
+                    },
+                    update: {
+                        rankedGamesPlayed: {
+                            increment: 1,
+                        },
+                    },
+                })
+
                 return {
                     gameSession,
                     cards: cards.map(({ title, choices, order }) => ({ title, choices, order })),
@@ -250,25 +282,6 @@ export const game = router({
         })
     }),
     end: privateProcedure.mutation(async ({ ctx }) => {
-        await ctx.prisma.userDailyStatistic.upsert({
-            where: {
-                userId_date: {
-                    userId: ctx.userId,
-                    date: startOfDay(new Date()),
-                },
-            },
-            create: {
-                userId: ctx.userId,
-                date: startOfDay(new Date()),
-                rankedGamesPlayed: 1,
-            },
-            update: {
-                rankedGamesPlayed: {
-                    increment: 1,
-                },
-            },
-        })
-
         return await ctx.prisma.gameSession.updateMany({
             where: {
                 userId: ctx.userId,
@@ -500,5 +513,12 @@ export const game = router({
             points: correct.length ?? 0,
             finalGameTime: differenceInSeconds(data.endedAt ?? 0, data.startedAt ?? 0) ?? 0,
         }
+    }),
+    getRatingAttemptsLeftToday: privateProcedure.query(async ({ ctx }) => {
+        const { rankedGamesPlayed } = await ctx.prisma.userDailyStatistic.findFirst({
+            where: { userId: ctx.userId, date: startOfDay(new Date()) },
+        })
+
+        return 3 - rankedGamesPlayed
     }),
 })

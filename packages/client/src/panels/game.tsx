@@ -2,6 +2,7 @@ import {
     Icon24Play,
     Icon28Cards2Outline,
     Icon28CupOutline,
+    Icon28Like,
     Icon28LikeFillRed,
 } from "@vkontakte/icons"
 import {
@@ -51,6 +52,10 @@ export const Game = () => {
     const playGameModal = useModalState()
 
     const [type, setType] = useState<"default" | "ranked">("default")
+
+    const { data: ratingAttemptsLeft } = trpc.game.getRatingAttemptsLeftToday.useQuery(undefined, {
+        enabled: type === "ranked",
+    })
 
     return (
         <>
@@ -117,9 +122,14 @@ export const Game = () => {
                         <Div className={"flex justify-between"}>
                             <Title children={"Попытки на сегодня"} level={"3"} weight={"2"} />
                             <div className={"flex gap-1.5 text-dynamic-red"}>
-                                <Icon28LikeFillRed />
-                                <Icon28LikeFillRed />
-                                <Icon28LikeFillRed />
+                                {Array.from({ length: ratingAttemptsLeft ?? 0 }).map((_, i) => (
+                                    <Icon28LikeFillRed key={i} />
+                                ))}
+                                {Array.from({ length: 3 - (ratingAttemptsLeft ?? 0) }).map(
+                                    (_, i) => (
+                                        <Icon28Like key={i} className={"text-secondary"} />
+                                    ),
+                                )}
                             </div>
                         </Div>
                         <Placeholder
