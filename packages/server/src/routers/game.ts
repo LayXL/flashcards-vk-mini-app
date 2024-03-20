@@ -1,9 +1,31 @@
 import { TRPCError } from "@trpc/server"
 import { differenceInSeconds } from "date-fns"
+import { startOfDay } from "date-fns/fp"
 import z from "zod"
-import { privateProcedure, router } from "../trpc"
+import { prisma, privateProcedure, router } from "../trpc"
 import { addXp } from "../util/addXp"
 import { shuffle } from "../util/shuffle"
+
+const incrementUserGamesPlayedToday = async (userId: number) => {
+    await prisma.userDailyStatistic.upsert({
+        where: {
+            userId_date: {
+                userId,
+                date: startOfDay(new Date()),
+            },
+        },
+        create: {
+            userId,
+            date: startOfDay(new Date()),
+            gamesPlayed: 1,
+        },
+        update: {
+            gamesPlayed: {
+                increment: 1,
+            },
+        },
+    })
+}
 
 export const game = router({
     start: privateProcedure
@@ -254,6 +276,8 @@ export const game = router({
                             endedAt: new Date(),
                         },
                     })
+
+                    await incrementUserGamesPlayedToday(translationInGameSession.gameSession.userId)
                 }
             }
 
@@ -267,6 +291,8 @@ export const game = router({
                         endedAt: new Date(),
                     },
                 })
+
+                await incrementUserGamesPlayedToday(translationInGameSession.gameSession.userId)
             } else {
                 const incorrectCount = await ctx.prisma.translationInGameSession.count({
                     where: {
@@ -285,6 +311,8 @@ export const game = router({
                             endedAt: new Date(),
                         },
                     })
+
+                    await incrementUserGamesPlayedToday(translationInGameSession.gameSession.userId)
                 }
             }
 

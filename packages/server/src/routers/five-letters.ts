@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server"
+import { startOfDay } from "date-fns/fp"
 import { DateTime } from "luxon"
 import z from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
@@ -219,6 +220,27 @@ export const fiveLetters = router({
                 },
             })
 
-            return toFiveLetterResult(wordToday, progress)
+            const result = toFiveLetterResult(wordToday, progress)
+
+            if (result.status !== "playing") {
+                await prisma.userDailyStatistic.upsert({
+                    where: {
+                        userId_date: {
+                            userId: ctx.userId,
+                            date: startOfDay(new Date()),
+                        },
+                    },
+                    create: {
+                        userId: ctx.userId,
+                        date: startOfDay(new Date()),
+                        fiveLetterWordGuessed: true,
+                    },
+                    update: {
+                        fiveLetterWordGuessed: true,
+                    },
+                })
+            }
+
+            return result
         }),
 })

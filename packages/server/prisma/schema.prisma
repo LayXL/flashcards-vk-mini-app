@@ -234,8 +234,10 @@ model UserDailyStatistic {
   userId Int
   date   DateTime
 
-  xp     Int @default(0)
-  points Int @default(0)
+  xp                    Int     @default(0)
+  points                Int     @default(0)
+  gamesPlayed           Int     @default(0)
+  fiveLetterWordGuessed Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id])
 
