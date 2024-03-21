@@ -14,7 +14,7 @@ export const DayInDailyStreak = ({ date, completed }: DayInDailyStreakProps) => 
     return (
         <div
             className={cn(
-                "flex-col bg-vk-secondary py-3 w-12 rounded-xl items-center select-none",
+                "flex-col bg-vk-secondary py-3 w-12 rounded-xl items-center select-none transition-colors",
                 completed && "bg-vk-accent text-white"
             )}
         >

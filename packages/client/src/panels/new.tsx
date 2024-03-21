@@ -7,8 +7,8 @@ import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
-import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useIsScrollable } from "../shared/hooks/useIsScrollable"
@@ -18,6 +18,8 @@ import { TranslationAddToStack } from "../widgets/translation-add-to-stack"
 import { TranslationView } from "../widgets/translation-view"
 
 export const New = () => {
+    // const gridRef = useRef<HTMLDivElement>(null)
+
     const [selectedStack, setSelectedStack] = useState<number | null>(null)
     const stackViewModal = useModalState()
 
@@ -31,10 +33,8 @@ export const New = () => {
             getNextPageParam: ({ cursor }) => cursor,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-        },
+        }
     )
-
-    const encodeStackBackground = useEncodeStackBackground()
 
     const infiniteData = useInfiniteList(data)
 
@@ -46,7 +46,7 @@ export const New = () => {
             setSelectedStack(id)
             stackViewModal.open()
         },
-        [stackViewModal],
+        [stackViewModal]
     )
 
     const onClickTranslation = useCallback(
@@ -55,7 +55,7 @@ export const New = () => {
             setSelectedTranslation(id)
             translationViewModal.open()
         },
-        [translationViewModal],
+        [translationViewModal]
     )
 
     const onClickAddTranslation = useCallback(
@@ -64,7 +64,7 @@ export const New = () => {
             setSelectedTranslation(id)
             translationAddModal.open()
         },
-        [translationAddModal],
+        [translationAddModal]
     )
 
     useEffect(() => {
@@ -74,6 +74,22 @@ export const New = () => {
             fetchNextPage()
         }
     }, [fetchNextPage, hasNextPage, isLoading, isScrollable, infiniteData])
+
+    // const { width } = useWindowSize()
+
+    // const [columnsCount, setColumnsCount] = useState(2)
+
+    // useEffect(() => {
+    //     if (!gridRef.current) return
+
+    //     const gridStyle = window.getComputedStyle(gridRef.current)
+
+    //     const gridColumnsCount = gridStyle
+    //         .getPropertyValue("grid-template-columns")
+    //         .split(" ").length
+
+    //     setColumnsCount(gridColumnsCount)
+    // }, [width])
 
     return (
         <>
@@ -88,12 +104,28 @@ export const New = () => {
             >
                 <div
                     className={"grid gap-3"}
+                    // ref={gridRef}
                     style={{
                         gridAutoRows: 100,
                         gridAutoFlow: "dense",
                         gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
                     }}
                 >
+                    {isLoading &&
+                        Array.from({ length: 30 }).map((_, i) => (
+                            <div className={"row-span-2 animate-pulse"}>
+                                <div
+                                    style={{
+                                        "--delay": i * 25 + "ms",
+                                    }}
+                                    className={cn(
+                                        "w-full h-full bg-vk-secondary rounded-xl",
+                                        "animate-[slide-in_600ms_var(--delay)_ease_forwards]",
+                                        "translate-y-full"
+                                    )}
+                                />
+                            </div>
+                        ))}
                     {infiniteData?.map((x, i) =>
                         x.type === "stack" ? (
                             <div className={"row-span-2"} key={i}>
@@ -102,7 +134,7 @@ export const New = () => {
                                     translationsCount={x.stackData.translationsCount}
                                     onClick={onClickStack(x.stackData.id)}
                                     isVerified={x.stackData.isVerified}
-                                    encodedBackground={encodeStackBackground(x.stackData)}
+                                    encodedBackground={x.stackData.encodedBackground}
                                 />
                             </div>
                         ) : x.type === "translation" ? (
@@ -114,7 +146,7 @@ export const New = () => {
                                     authorAvatarUrl={
                                         getSuitableAvatarUrl(
                                             x.translationData.author.avatarUrls,
-                                            32,
+                                            32
                                         ) ?? ""
                                     }
                                     onClick={onClickTranslation(x.translationData.id)}
@@ -124,7 +156,7 @@ export const New = () => {
                             </div>
                         ) : (
                             <></>
-                        ),
+                        )
                     )}
                 </div>
                 {isLoading && <Spinner className={"py-12"} />}

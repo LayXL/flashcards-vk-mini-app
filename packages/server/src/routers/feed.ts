@@ -17,7 +17,9 @@ export const feed = router({
                         z.object({
                             type: z.literal("stack"),
                             stackData: z.intersection(
-                                z.custom<Prisma.StackGetPayload<{}>>(),
+                                z.custom<
+                                    Prisma.StackGetPayload<{}> & { encodedBackground: string }
+                                >(),
                                 z.object({
                                     translationsCount: z.number(),
                                 })

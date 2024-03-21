@@ -10,16 +10,18 @@ import { UserTranslations } from "../widgets/user-translations"
 export const Profile = () => {
     const [tab, setTab] = useState("stacks")
 
-    const { data } = trpc.getUser.useQuery()
+    const { data, isLoading } = trpc.getUser.useQuery()
 
     return (
         <>
             <PanelHeader children={"Профиль"} />
 
+            {isLoading && <LevelCard />}
+
             {data && (
                 <LevelCard
-                    avatarUrl={getSuitableAvatarUrl(data.avatarUrls, 64) ?? ""}
-                    name={data.fullName ?? ""}
+                    avatarUrl={getSuitableAvatarUrl(data.avatarUrls, 64)}
+                    name={data.fullName}
                     level={data.progress.currentLevel}
                     currentXp={data.progress.currentXp}
                     nextLevelXp={data.progress.nextLevelXp}

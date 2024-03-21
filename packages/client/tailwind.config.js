@@ -8,6 +8,9 @@ export default {
     },
     theme: {
         extend: {
+            height: {
+                lh: "1lh",
+            },
             padding: {
                 "vertical-regular": "var(--vkui--size_base_padding_vertical--regular)",
                 "horizontal-regular": "var(--vkui--size_base_padding_horizontal--regular)",
@@ -70,11 +73,22 @@ export default {
                 width: "width",
                 size: "height, width",
             },
+            keyframes: {
+                "fade-in": {
+                    from: { opacity: 0 },
+                    to: { opacity: 1 },
+                },
+                "slide-in": {
+                    from: { transform: "translateY(100%)" },
+                    to: { transform: "translateY(0)" },
+                },
+            },
             animation: {
                 "bg-appearing": "background-appearing 0.3s ease forwards",
                 "bg-disappearing": "background-disappearing 0.3s ease",
                 "content-appearing": "content-appearing 0.3s ease forwards",
                 "content-disappearing": "content-disappearing 0.3s ease",
+                "fade-in": "fade-in 0.15s ease",
             },
         },
     },
