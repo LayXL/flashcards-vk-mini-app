@@ -35,6 +35,11 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
 
     const timer = useMemo(() => DateTime.fromJSDate(endsAt).diffNow().as("seconds"), [endsAt])
 
+    const memoizedTimer = useMemo(
+        () => <Timer max={60} value={timer} onEnd={() => onEndGame()} />,
+        [onEndGame, timer]
+    )
+
     const { mutate: answer } = trpc.game.answer.useMutation({
         onMutate: () => {
             setCurrentCardIndex((prev) => prev + 1)
@@ -96,7 +101,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                         </div>
                     </div>
 
-                    <Timer max={60} value={timer} onEnd={() => onEndGame()} />
+                    {memoizedTimer}
 
                     <div className={"flex-1"}></div>
                 </Div>
