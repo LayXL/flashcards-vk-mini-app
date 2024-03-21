@@ -1,6 +1,7 @@
 import { PanelHeader, Spacing, Spinner } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
+import { useTimeout } from "usehooks-ts"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -19,6 +20,7 @@ import { TranslationView } from "../widgets/translation-view"
 
 export const New = () => {
     // const gridRef = useRef<HTMLDivElement>(null)
+    const [isAnimationCompleted, setIsAnimationCompleted] = useState(false)
 
     const [selectedStack, setSelectedStack] = useState<number | null>(null)
     const stackViewModal = useModalState()
@@ -69,6 +71,13 @@ export const New = () => {
     )
 
     useEffect(() => {
+        setIsAnimationCompleted(isSuccess)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useTimeout(() => setIsAnimationCompleted(true), 600)
+
+    useEffect(() => {
         if (isLoading || isFetching) return
 
         if (!isScrollable && hasNextPage) {
@@ -112,9 +121,9 @@ export const New = () => {
                         gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
                     }}
                 >
-                    {!isSuccess &&
+                    {(!isSuccess || !isAnimationCompleted) &&
                         Array.from({ length: 30 }).map((_, i) => (
-                            <div className={"row-span-2 animate-pulse"}>
+                            <div className={"row-span-2 animate-pulse"} key={i}>
                                 <div
                                     style={{
                                         "--delay": i * 25 + "ms",
@@ -127,38 +136,39 @@ export const New = () => {
                                 />
                             </div>
                         ))}
-                    {infiniteData?.map((x, i) =>
-                        x.type === "stack" ? (
-                            <div className={"row-span-2"} key={i}>
-                                <LargeStackCard
-                                    title={x.stackData.name}
-                                    translationsCount={x.stackData.translationsCount}
-                                    onClick={onClickStack(x.stackData.id)}
-                                    isVerified={x.stackData.isVerified}
-                                    encodedBackground={x.stackData.encodedBackground}
-                                />
-                            </div>
-                        ) : x.type === "translation" ? (
-                            <div className={"row-span-1"} key={i}>
-                                <FeedTranslationCard
-                                    foreign={x.translationData.foreign}
-                                    vernacular={x.translationData.vernacular}
-                                    authorName={x.translationData.author.firstName ?? ""}
-                                    authorAvatarUrl={
-                                        getSuitableAvatarUrl(
-                                            x.translationData.author.avatarUrls,
-                                            32
-                                        ) ?? ""
-                                    }
-                                    onClick={onClickTranslation(x.translationData.id)}
-                                    onAdd={onClickAddTranslation(x.translationData.id)}
-                                    onShowMore={() => {}}
-                                />
-                            </div>
-                        ) : (
-                            <></>
-                        )
-                    )}
+                    {isAnimationCompleted &&
+                        infiniteData?.map((x, i) =>
+                            x.type === "stack" ? (
+                                <div className={"row-span-2"} key={i}>
+                                    <LargeStackCard
+                                        title={x.stackData.name}
+                                        translationsCount={x.stackData.translationsCount}
+                                        onClick={onClickStack(x.stackData.id)}
+                                        isVerified={x.stackData.isVerified}
+                                        encodedBackground={x.stackData.encodedBackground}
+                                    />
+                                </div>
+                            ) : x.type === "translation" ? (
+                                <div className={"row-span-1"} key={i}>
+                                    <FeedTranslationCard
+                                        foreign={x.translationData.foreign}
+                                        vernacular={x.translationData.vernacular}
+                                        authorName={x.translationData.author.firstName ?? ""}
+                                        authorAvatarUrl={
+                                            getSuitableAvatarUrl(
+                                                x.translationData.author.avatarUrls,
+                                                32
+                                            ) ?? ""
+                                        }
+                                        onClick={onClickTranslation(x.translationData.id)}
+                                        onAdd={onClickAddTranslation(x.translationData.id)}
+                                        onShowMore={() => {}}
+                                    />
+                                </div>
+                            ) : (
+                                <></>
+                            )
+                        )}
                 </div>
                 {isLoading && <Spinner className={"py-12"} />}
             </InfiniteScroll>
