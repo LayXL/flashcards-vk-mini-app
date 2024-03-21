@@ -27,14 +27,15 @@ export const New = () => {
     const translationViewModal = useModalState()
     const translationAddModal = useModalState()
 
-    const { data, fetchNextPage, hasNextPage, isLoading } = trpc.feed.get.useInfiniteQuery(
-        {},
-        {
-            getNextPageParam: ({ cursor }) => cursor,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-        }
-    )
+    const { data, fetchNextPage, hasNextPage, isSuccess, isLoading, isFetching } =
+        trpc.feed.get.useInfiniteQuery(
+            {},
+            {
+                getNextPageParam: ({ cursor }) => cursor,
+                refetchOnMount: false,
+                refetchOnWindowFocus: false,
+            }
+        )
 
     const infiniteData = useInfiniteList(data)
 
@@ -68,12 +69,12 @@ export const New = () => {
     )
 
     useEffect(() => {
-        if (isLoading) return
+        if (isLoading || isFetching) return
 
         if (!isScrollable && hasNextPage) {
             fetchNextPage()
         }
-    }, [fetchNextPage, hasNextPage, isLoading, isScrollable, infiniteData])
+    }, [fetchNextPage, hasNextPage, isLoading, isFetching, isScrollable, infiniteData])
 
     // const { width } = useWindowSize()
 
@@ -111,7 +112,7 @@ export const New = () => {
                         gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
                     }}
                 >
-                    {isLoading &&
+                    {!isSuccess &&
                         Array.from({ length: 30 }).map((_, i) => (
                             <div className={"row-span-2 animate-pulse"}>
                                 <div

@@ -88,7 +88,7 @@ export default {
                 "bg-disappearing": "background-disappearing 0.3s ease",
                 "content-appearing": "content-appearing 0.3s ease forwards",
                 "content-disappearing": "content-disappearing 0.3s ease",
-                "fade-in": "fade-in 0.15s ease",
+                "fade-in": "fade-in 0.3s ease",
             },
         },
     },
