@@ -44,7 +44,7 @@ export const rating = router({
                 place: parseInt(
                     (
                         await ctx.prisma
-                            .$queryRaw`with t as (select row_number() over (order by "points") as row_index, "userId" from "UserRankedSeasonStatistic" where "rankedSeasonId"=${season.id}) select "row_index" from t where "userId"=${ctx.userId}`
+                            .$queryRaw`with t as (select row_number() over (order by "points" desc) as row_index, "userId" from "UserRankedSeasonStatistic" where "rankedSeasonId"=${season.id}) select "row_index" from t where "userId"=${ctx.userId}`
                     )[0].row_index
                 ),
             },
