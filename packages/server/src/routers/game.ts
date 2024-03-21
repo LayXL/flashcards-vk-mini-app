@@ -210,7 +210,7 @@ export const game = router({
                     { id: number; similar: string }[]
                 >`with t1 as(select t1.id, t1.vernacular, t1."foreign" from "Translation" t1 where t1."forRanked" = true order by random() limit 50) select t1.id, t2."foreign" as "similar" from t1 cross join lateral ( select t2.id, t2.foreign, max(similarity(t1.foreign, t2.foreign)) as "similarity" from public."Translation" t2 where t1.id <> t2.id and t1.foreign <> t2.foreign and t1.vernacular <> t2.vernacular and t2."isPrivate" = false and t2."forRanked" = true group by t2.id, t2.foreign order by "similarity" desc limit 1) t2;`
 
-                let cards = (
+                let cards = shuffle(
                     await ctx.prisma.translation.findMany({
                         where: {
                             OR: queryResylts.map(({ id }) => ({ id })),
