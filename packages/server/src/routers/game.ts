@@ -4,6 +4,7 @@ import { startOfDay } from "date-fns/fp"
 import z from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
 import { addXp } from "../util/addXp"
+import { getCurrentSeason } from "../util/getCurrentSeason"
 import { shuffle } from "../util/shuffle"
 
 const cancelAllGames = async (userId: number) => {
@@ -38,6 +39,7 @@ const incrementUserGamesPlayedToday = async (userId: number) => {
     })
 }
 
+// TODO: refactor game procedures
 export const game = router({
     start: privateProcedure
         .input(
@@ -192,11 +194,11 @@ export const game = router({
                 }
             } else {
                 if (
-                    (
+                    ((
                         await ctx.prisma.userDailyStatistic.findFirst({
                             where: { userId: ctx.userId, date: startOfDay(new Date()) },
                         })
-                    ).rankedGamesPlayed >= 3
+                    )?.rankedGamesPlayed ?? 0) >= 3
                 ) {
                     throw new TRPCError({
                         code: "BAD_REQUEST",
@@ -282,6 +284,70 @@ export const game = router({
         })
     }),
     end: privateProcedure.mutation(async ({ ctx }) => {
+        const gameSession = await ctx.prisma.gameSession.findFirst({
+            where: {
+                userId: ctx.userId,
+                status: "playing",
+            },
+        })
+
+        if (gameSession?.type === "ranked") {
+            const currentSeason = await getCurrentSeason()
+
+            const correctAnswersCount = await ctx.prisma.translationInGameSession.count({
+                where: {
+                    gameSession: {
+                        userId: ctx.userId,
+                        type: "ranked",
+                        status: "playing",
+                    },
+                    status: "correct",
+                },
+            })
+
+            await ctx.prisma.userRankedSeasonStatistic.upsert({
+                where: {
+                    userId_rankedSeasonId: {
+                        userId: ctx.userId,
+                        rankedSeasonId: currentSeason.id,
+                    },
+                },
+                update: {
+                    points: {
+                        increment: correctAnswersCount,
+                    },
+                },
+                create: {
+                    userId: ctx.userId,
+                    rankedSeasonId: currentSeason.id,
+                    points: correctAnswersCount,
+                },
+            })
+
+            await ctx.prisma.userDailyStatistic.upsert({
+                where: {
+                    userId_date: {
+                        userId: ctx.userId,
+                        date: startOfDay(new Date()),
+                    },
+                },
+                update: {
+                    points: {
+                        increment: correctAnswersCount,
+                    },
+                },
+                create: {
+                    userId: ctx.userId,
+                    date: startOfDay(new Date()),
+                    points: correctAnswersCount,
+                },
+            })
+        }
+
+        if (gameSession) {
+            await incrementUserGamesPlayedToday(ctx.userId)
+        }
+
         return await ctx.prisma.gameSession.updateMany({
             where: {
                 userId: ctx.userId,
@@ -458,6 +524,55 @@ export const game = router({
                 })
             }
 
+            if (translationInGameSession.gameSession.type === "ranked" && unansweredCount === 0) {
+                const currentSeason = await getCurrentSeason()
+
+                const correctCount = await ctx.prisma.translationInGameSession.count({
+                    where: {
+                        gameSessionId: translationInGameSession.gameSessionId,
+                        status: "correct",
+                    },
+                })
+
+                await ctx.prisma.userRankedSeasonStatistic.upsert({
+                    where: {
+                        userId_rankedSeasonId: {
+                            userId: ctx.userId,
+                            rankedSeasonId: currentSeason.id,
+                        },
+                    },
+                    update: {
+                        points: {
+                            increment: correctCount,
+                        },
+                    },
+                    create: {
+                        userId: ctx.userId,
+                        rankedSeasonId: currentSeason.id,
+                        points: correctCount,
+                    },
+                })
+
+                await ctx.prisma.userDailyStatistic.upsert({
+                    where: {
+                        userId_date: {
+                            userId: ctx.userId,
+                            date: startOfDay(new Date()),
+                        },
+                    },
+                    update: {
+                        points: {
+                            increment: correctCount,
+                        },
+                    },
+                    create: {
+                        userId: ctx.userId,
+                        date: startOfDay(new Date()),
+                        points: correctCount,
+                    },
+                })
+            }
+
             const gameSession = await ctx.prisma.gameSession.findFirst({
                 where: {
                     id: translationInGameSession.gameSessionId,
@@ -515,10 +630,10 @@ export const game = router({
         }
     }),
     getRatingAttemptsLeftToday: privateProcedure.query(async ({ ctx }) => {
-        const { rankedGamesPlayed } = await ctx.prisma.userDailyStatistic.findFirst({
+        const statistics = await ctx.prisma.userDailyStatistic.findFirst({
             where: { userId: ctx.userId, date: startOfDay(new Date()) },
         })
 
-        return 3 - rankedGamesPlayed
+        return 3 - (statistics?.rankedGamesPlayed ?? 0)
     }),
 })

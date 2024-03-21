@@ -118,7 +118,6 @@ export const Game = () => {
             {type === "ranked" && (
                 <>
                     <Group>
-                        {/* TODO попытки */}
                         <Div className={"flex justify-between"}>
                             <Title children={"Попытки на сегодня"} level={"3"} weight={"2"} />
                             <div className={"flex gap-1.5 text-dynamic-red"}>
@@ -161,9 +160,7 @@ export const Game = () => {
                     </Group>
                 </>
             )}
-
             <TabBar />
-
             <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
                 <ModalBody fullscreen={true}>
                     {type === "default" && <PlayGame onClose={playGameModal.close} />}

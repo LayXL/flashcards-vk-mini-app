@@ -40,7 +40,7 @@
     "recoil": "^0.7.7",
     "styled-components": "^6.1.8",
     "tailwind-merge": "^2.2.1",
-    "usehooks-ts": "^2.14.0",
+    "usehooks-ts": "3.0.1",
     "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {

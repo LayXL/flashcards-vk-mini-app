@@ -3,6 +3,7 @@ import { fiveLetters } from "./routers/five-letters"
 import { game } from "./routers/game"
 import { getUser } from "./routers/getUser"
 import { languages } from "./routers/languages"
+import { rating } from "./routers/rating"
 import { search } from "./routers/search"
 import { stacks } from "./routers/stacks"
 import { stats } from "./routers/stats"
@@ -22,6 +23,7 @@ export const appRouter = router({
     feed,
     fiveLetters,
     stats,
+    rating,
 })
 
 export type AppRouter = typeof appRouter

@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import { useScrollLock } from "usehooks-ts"
 import { cn } from "../../../shared/helpers/cn"
 
 type ModalBodyProps = {
@@ -7,6 +8,8 @@ type ModalBodyProps = {
 }
 
 export const ModalBody = ({ children, fullscreen = false }: ModalBodyProps) => {
+    useScrollLock()
+
     return (
         <div
             onClick={(e) => {

@@ -267,6 +267,8 @@ model UserRankedSeasonStatistic {
   user         User         @relation(fields: [userId], references: [id])
   rankedSeason RankedSeason @relation(fields: [rankedSeasonId], references: [id])
 
+  points Int @default(0)
+
   @@id([userId, rankedSeasonId])
 }
 
