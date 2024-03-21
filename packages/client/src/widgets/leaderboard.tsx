@@ -9,6 +9,7 @@ type LeaderboardProps = {
 
 export const Leaderboard = ({ onClose }: LeaderboardProps) => {
     const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery()
+    const { data: currentUser } = trpc.getUser.useQuery()
 
     return (
         <>
@@ -24,6 +25,7 @@ export const Leaderboard = ({ onClose }: LeaderboardProps) => {
                     name={user.fullName}
                     points={points}
                     place={i + 1}
+                    isCurrentUser={user.id === currentUser?.id}
                 />
             ))}
         </>

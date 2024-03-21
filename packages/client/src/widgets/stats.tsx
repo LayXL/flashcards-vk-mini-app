@@ -1,5 +1,6 @@
 import { Icon24ChevronRight } from "@vkontakte/icons"
 import { Avatar, Caption, Subhead, Text, Title } from "@vkontakte/vkui"
+import { DateTime } from "luxon"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
@@ -25,12 +26,22 @@ export const Stats = () => {
                 >
                     <div className={"flex-col"}>
                         <Text children={"Рейтинг в сезоне"} weight={"2"} />
-                        <Caption
-                            children={"осталось 7 дней"}
-                            weight={"3"}
-                            level={"2"}
-                            className={"text-subhead"}
-                        />
+                        {currentSeason?.season?.endsAt && (
+                            <Caption
+                                children={`осталось ${DateTime.fromISO(
+                                    currentSeason?.season?.endsAt
+                                )
+                                    .diffNow()
+                                    .rescale()
+                                    .shiftTo("days")
+                                    .toHuman({
+                                        maximumFractionDigits: 0,
+                                    })}`}
+                                weight={"3"}
+                                level={"2"}
+                                className={"text-subhead"}
+                            />
+                        )}
                     </div>
 
                     <div className={"flex-col text-accent"}>

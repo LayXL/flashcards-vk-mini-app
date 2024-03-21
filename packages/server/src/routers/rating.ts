@@ -75,6 +75,7 @@ export const rating = router({
                     },
                 },
             },
+            take: 100,
         })
     }),
 })
