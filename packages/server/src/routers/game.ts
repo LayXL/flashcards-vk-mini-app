@@ -488,7 +488,7 @@ export const game = router({
                 }
             }
 
-            if (isCorrect && translationInGameSession.gameSession.type === "default") {
+            if (isCorrect) {
                 const repeatedCount = await ctx.prisma.userTranslationRepetition.count({
                     where: {
                         user: {
