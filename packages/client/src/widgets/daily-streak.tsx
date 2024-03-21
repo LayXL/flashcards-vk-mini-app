@@ -18,7 +18,7 @@ export const DailyStreak = () => {
     const { data } = trpc.stats.getActiveDays.useQuery()
 
     const days = Array.from({ length: 30 }).map((_, i) =>
-        DateTime.now().startOf("day").minus({ days: i }).toJSDate(),
+        DateTime.now().toUTC().minus({ days: i }).toISODate()
     )
 
     return (
@@ -26,9 +26,9 @@ export const DailyStreak = () => {
             <div className={"flex-row-reverse gap-2"}>
                 {days.map((date) => (
                     <DayInDailyStreak
-                        key={date.getTime()}
+                        key={date}
                         date={date}
-                        completed={data?.some((d) => d === date.toISOString().split("T")[0])}
+                        completed={data?.some((d) => d === date)}
                     />
                 ))}
             </div>

@@ -1,3 +1,4 @@
+import { DateTime } from "luxon"
 import { privateProcedure, router } from "../trpc"
 
 export const stats = router({
@@ -35,7 +36,9 @@ export const stats = router({
                     date: true,
                 },
             })
-        ).map(({ date }) => date.toISOString().split("T")[0])
+        ).map(({ date }) => {
+            return DateTime.fromJSDate(date).toLocal().toISODate()
+        })
 
         return daysWithPoints
     }),

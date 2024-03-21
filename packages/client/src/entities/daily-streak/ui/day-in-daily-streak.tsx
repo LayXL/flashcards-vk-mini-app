@@ -3,20 +3,19 @@ import { DateTime } from "luxon"
 import { cn } from "../../../shared/helpers/cn"
 
 type DayInDailyStreakProps = {
-    date: Date
+    date: string
     completed?: boolean
 }
 
 export const DayInDailyStreak = ({ date, completed }: DayInDailyStreakProps) => {
-    const day = date.getDate()
-
-    const weekday = DateTime.fromJSDate(date).toFormat("ccc")
+    const weekday = DateTime.fromISO(date).toFormat("ccc")
+    const day = DateTime.fromISO(date).toFormat("dd")
 
     return (
         <div
             className={cn(
-                "flex-col bg-vk-secondary p-3 rounded-xl items-center select-none",
-                completed && "bg-vk-accent text-white",
+                "flex-col bg-vk-secondary py-3 w-12 rounded-xl items-center select-none",
+                completed && "bg-vk-accent text-white"
             )}
         >
             <Title level={"2"} weight={"2"} children={day} />
