@@ -14,7 +14,7 @@ type InGameProps = {
 
 export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     const [cards, setCards] = useState<{ order: number; title: string; choices: string[] }[]>(
-        data.cards,
+        data.cards
     )
 
     const [currentCardIndex, setCurrentCardIndex] = useState(0)
@@ -30,7 +30,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     const [endsAt, setEndsAt] = useState<Date>(
         DateTime.now()
             .plus({ seconds: data.gameSession.gameDuration ?? 0 })
-            .toJSDate(),
+            .toJSDate()
     )
 
     const timer = useMemo(() => DateTime.fromJSDate(endsAt).diffNow().as("seconds"), [endsAt])
@@ -47,13 +47,17 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
             if (status === "correct") {
                 correctAnswers.increment()
 
-                if (withTimer) {
+                if (
+                    withTimer &&
+                    data.gameSession.correctAnswerAddDuration &&
+                    data.gameSession.type !== "ranked"
+                ) {
                     setEndsAt((prev) =>
                         DateTime.fromJSDate(prev)
                             .plus({
                                 seconds: (data.gameSession.correctAnswerAddDuration ?? 0) + 0.5,
                             })
-                            .toJSDate(),
+                            .toJSDate()
                     )
                 }
             } else {
