@@ -31,7 +31,7 @@ const Key = ({ letter, onClick, className, type = "default" }: KeyProps) => {
                 "min-[370px]:w-[32px]",
                 "min-[480px]:w-[36px]",
                 "select-none",
-                "animate-fade-in",
+                "animate-fade-in transition-colors",
                 type === "default" && "bg-vk-content",
                 type === "correct" && "bg-green-400 dark:bg-green-500",
                 type === "excluded" && "bg-gray-300 dark:bg-gray-500",
@@ -40,7 +40,7 @@ const Key = ({ letter, onClick, className, type = "default" }: KeyProps) => {
             )}
             onClick={() => {
                 bridge.send("VKWebAppTapticSelectionChanged", {})
-                onClick()
+                onClick?.()
             }}
         >
             <span children={letter} />
