@@ -1,8 +1,6 @@
-import { ReactNode, useEffect } from "react"
-import { useRecoilState } from "recoil"
+import { ReactNode } from "react"
 import { useScrollLock } from "usehooks-ts"
 import { cn } from "../../../shared/helpers/cn"
-import { modalsCountAtom } from "../../../shared/store"
 
 type ModalBodyProps = {
     children: ReactNode
@@ -10,22 +8,7 @@ type ModalBodyProps = {
 }
 
 export const ModalBody = ({ children, fullscreen = false }: ModalBodyProps) => {
-    const { lock, unlock } = useScrollLock()
-
-    const [, setModalsCount] = useRecoilState(modalsCountAtom)
-
-    useEffect(() => {
-        setModalsCount((prev) => prev + 1)
-        lock()
-
-        return () => {
-            setModalsCount((prev) => {
-                if (prev - 1 === 0) unlock()
-
-                return prev - 1
-            })
-        }
-    }, [])
+    useScrollLock()
 
     return (
         <div
