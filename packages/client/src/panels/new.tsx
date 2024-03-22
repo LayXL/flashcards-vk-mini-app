@@ -19,8 +19,6 @@ import { TranslationAddToStack } from "../widgets/translation-add-to-stack"
 import { TranslationView } from "../widgets/translation-view"
 
 export const New = () => {
-    // const gridRef = useRef<HTMLDivElement>(null)
-
     const [selectedStack, setSelectedStack] = useState<number | null>(null)
     const stackViewModal = useModalState()
 
@@ -80,22 +78,6 @@ export const New = () => {
             fetchNextPage()
         }
     }, [fetchNextPage, hasNextPage, isLoading, isFetching, isScrollable, infiniteData])
-
-    // const { width } = useWindowSize()
-
-    // const [columnsCount, setColumnsCount] = useState(2)
-
-    // useEffect(() => {
-    //     if (!gridRef.current) return
-
-    //     const gridStyle = window.getComputedStyle(gridRef.current)
-
-    //     const gridColumnsCount = gridStyle
-    //         .getPropertyValue("grid-template-columns")
-    //         .split(" ").length
-
-    //     setColumnsCount(gridColumnsCount)
-    // }, [width])
 
     return (
         <>
@@ -158,7 +140,6 @@ export const New = () => {
                                         }
                                         onClick={onClickTranslation(x.translationData.id)}
                                         onAdd={onClickAddTranslation(x.translationData.id)}
-                                        onShowMore={() => {}}
                                     />
                                 </div>
                             ) : (
