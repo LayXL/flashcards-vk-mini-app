@@ -82,7 +82,7 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                 "aspect-square w-[200px] bg-secondary rounded-xl overflow-hidden"
                             }
                         >
-                            {data?.stacks && (
+                            {data?.stacks && data.stacks.length > 0 && (
                                 <StackBackground
                                     encodedBackground={data?.stacks[0].encodedBackground}
                                 />
