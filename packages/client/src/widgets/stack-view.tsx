@@ -172,7 +172,7 @@ export const StackView = ({ id }: StackViewProps) => {
                             authorName={translation.author.firstName}
                             authorAvatarUrl={getSuitableAvatarUrl(
                                 translation.author.avatarUrls,
-                                32,
+                                32
                             )}
                             onAdd={() => {
                                 vibrateOnClick()
@@ -248,6 +248,7 @@ export const StackView = ({ id }: StackViewProps) => {
                     <TranslationAdd
                         onClose={createTranslationModal.close}
                         onAdd={() => {
+                            refetch()
                             createTranslationModal.close()
                             translationAddedToStackSnackbar.open()
                         }}
@@ -262,6 +263,7 @@ export const StackView = ({ id }: StackViewProps) => {
                 <ModalBody>
                     <StackCreateModal
                         id={id}
+                        onClose={editStackModal.close}
                         name={data?.name}
                         palette={data?.palette}
                         pattern={data?.pattern}

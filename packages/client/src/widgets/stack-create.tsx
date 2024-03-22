@@ -98,7 +98,7 @@ export const StackCreateModal = ({
                                 {patterns?.map((background) => (
                                     <div
                                         className={cn(
-                                            "relative aspect-[4/5] h-[140px] bg-vk-secondary rounded-xl overflow-hidden cursor-pointer",
+                                            "relative aspect-[4/5] h-[140px] bg-vk-secondary rounded-xl overflow-hidden cursor-pointer"
                                         )}
                                         key={background.name}
                                         onClick={() => {
@@ -140,7 +140,7 @@ export const StackCreateModal = ({
                                         className={cn(
                                             "aspect-square h-[42px] rounded-full overflow-hidden rotate-[135deg] box-border cursor-pointer",
                                             "border-solid border-transparent",
-                                            watch("palette") == color.id && "border-white",
+                                            watch("palette") == color.id && "border-white"
                                         )}
                                         key={color.id}
                                         style={{
@@ -204,7 +204,7 @@ export const StackCreateModal = ({
                 <Button
                     stretched={true}
                     size={"l"}
-                    children={id ? "Сохранить" : "Создать"}
+                    children={id ? "Изменить" : "Создать"}
                     onClick={handleSubmit(onSubmit)}
                 />
             </Div>
