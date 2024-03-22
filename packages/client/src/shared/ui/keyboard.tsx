@@ -1,5 +1,6 @@
 import bridge from "@vkontakte/vk-bridge"
 import { ClassValue } from "clsx"
+import { motion } from "framer-motion"
 import { cn } from "../helpers/cn"
 
 type KeyboardProps = {
@@ -22,19 +23,20 @@ type KeyProps = {
 
 const Key = ({ letter, onClick, className, type = "default" }: KeyProps) => {
     return (
-        <div
+        <motion.div
+            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.1 }}
             className={cn(
                 "w-[28px] aspect-[3/5] rounded-xl cursor-pointer flex items-center justify-center",
                 "min-[370px]:w-[32px]",
                 "min-[480px]:w-[36px]",
                 "select-none",
-                "hover:opacity-80",
-                "active:opacity-50",
+                "animate-fade-in",
                 type === "default" && "bg-vk-content",
                 type === "correct" && "bg-green-400 dark:bg-green-500",
                 type === "excluded" && "bg-gray-300 dark:bg-gray-500",
                 type === "misplaced" && "bg-yellow-400 dark:bg-yellow-500",
-                className,
+                className
             )}
             onClick={() => {
                 bridge.send("VKWebAppTapticSelectionChanged", {})
@@ -42,7 +44,7 @@ const Key = ({ letter, onClick, className, type = "default" }: KeyProps) => {
             }}
         >
             <span children={letter} />
-        </div>
+        </motion.div>
     )
 }
 
@@ -79,10 +81,10 @@ export const Keyboard = ({
                                 correctLetters?.includes(letter)
                                     ? "correct"
                                     : misplacedLetters?.includes(letter)
-                                      ? "misplaced"
-                                      : excludedLetters?.includes(letter)
-                                        ? "excluded"
-                                        : "default"
+                                    ? "misplaced"
+                                    : excludedLetters?.includes(letter)
+                                    ? "excluded"
+                                    : "default"
                             }
                         />
                     ))}
