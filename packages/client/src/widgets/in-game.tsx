@@ -1,9 +1,11 @@
-import { Div, ModalPageHeader, PanelHeaderBack, Title } from "@vkontakte/vkui"
+import { Button, Div, ModalPageHeader, PanelHeaderBack, Title } from "@vkontakte/vkui"
+import { AnimatePresence, motion } from "framer-motion"
 import { DateTime } from "luxon"
 import { useMemo, useState } from "react"
-import { useCounter } from "usehooks-ts"
-import { GameCard } from "../entities/game/ui/game-card"
+import { useBoolean, useCounter } from "usehooks-ts"
 import { RouterOutput, trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
+import { vibrateOnError, vibrateOnSuccess } from "../shared/helpers/vibrate"
 import { Timer } from "../shared/ui/timer"
 
 type InGameProps = {
@@ -19,6 +21,10 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
 
     const [currentCardIndex, setCurrentCardIndex] = useState(0)
     const currentCardData = useMemo(() => cards[currentCardIndex], [cards, currentCardIndex])
+    const nextCardData = useMemo(
+        () => cards[currentCardIndex + 1] ?? null,
+        [cards, currentCardIndex]
+    )
 
     const correctAnswers = useCounter(0)
     const attempts = useCounter(data.gameSession.attemptsCount ?? 0)
@@ -42,8 +48,6 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
 
     const { mutate: answer } = trpc.game.answer.useMutation({
         onMutate: () => {
-            setCurrentCardIndex((prev) => prev + 1)
-
             return {
                 cardData: currentCardData,
             }
@@ -51,6 +55,8 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
         onSuccess: ({ status }, _, { cardData }) => {
             if (status === "correct") {
                 correctAnswers.increment()
+
+                vibrateOnSuccess()
 
                 if (
                     withTimer &&
@@ -66,6 +72,8 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                     )
                 }
             } else {
+                vibrateOnError()
+
                 if (withAttempts) {
                     attempts.decrement()
                     if (attempts.count - 1 === 0) return onEndGame()
@@ -83,12 +91,14 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
         },
     })
 
+    const cardsLeft = cards.length - currentCardIndex - 1
+
     return (
-        <div className={"flex-col min-h-screen"}>
+        <div className={"flex-col h-full"}>
             <ModalPageHeader before={<PanelHeaderBack onClick={onStopGame} />} children={"Игра"} />
 
             {withTimer && (
-                <Div className={"flex-row justify-between items-center flex-1"}>
+                <Div className={"flex-row justify-between items-center flex-1 select-none"}>
                     <div className={"flex-1"}>
                         <div
                             className={
@@ -108,24 +118,156 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
             )}
 
             {!withTimer && (
-                <Div className={"flex-1"}>
-                    {data.gameSession.repeatCards ? correctAnswers.count : currentCardIndex + 1}/
-                    {data.cards.length}
+                <Div className={"flex-1 select-none"}>
+                    <div className={"flex justify-center"}>
+                        <div
+                            className={
+                                "min-w-10 p-3 bg-vk-secondary rounded-xl flex justify-center"
+                            }
+                        >
+                            <span>
+                                {data.gameSession.repeatCards
+                                    ? correctAnswers.count
+                                    : currentCardIndex + 1}
+                                /{data.cards.length}
+                            </span>
+                        </div>
+                    </div>
                 </Div>
             )}
 
             <Div>
-                <GameCard
-                    title={currentCardData?.title ?? ""}
-                    choices={currentCardData?.choices ?? []}
-                    onSelect={(choice) => {
-                        answer({
-                            order: currentCardData?.order ?? 0,
-                            answer: currentCardData?.choices[choice] ?? "",
-                        })
-                    }}
-                />
+                <div className={"flex-col box-border"}>
+                    <div className={"h-[20px] overflow-hidden relative"}>
+                        <div
+                            className={cn(
+                                "absolute left-[24px] right-[24px]",
+                                "rounded-2xl aspect-square bg-vk-secondary dark:brightness-[120%]",
+                                cardsLeft <= 1 && "invisible"
+                            )}
+                        />
+                        <div
+                            className={cn(
+                                "absolute left-[12px] right-[12px] top-[8px]",
+                                "rounded-2xl aspect-square bg-vk-secondary dark:brightness-[110%]",
+                                cardsLeft === 0 && "invisible"
+                            )}
+                        />
+                    </div>
+                    <div className={"relative select-none overflow-visible"}>
+                        <div className={"z-10 overflow-visible"}>
+                            {currentCardData && (
+                                <Card
+                                    title={currentCardData.title}
+                                    choices={currentCardData.choices}
+                                    onClick={() => {
+                                        answer({
+                                            order: currentCardData.order ?? 0,
+                                            answer: currentCardData.choices[0] ?? "",
+                                        })
+                                    }}
+                                    onNext={() => {
+                                        setCurrentCardIndex((prev) => prev + 1)
+                                        if (currentCardIndex + 1 === cards.length) onEndGame()
+                                    }}
+                                    key={currentCardData.order}
+                                />
+                            )}
+                        </div>
+
+                        {nextCardData && (
+                            <div
+                                className={
+                                    "absolute inset-0 pointer-events-none -z-10 overflow-visible"
+                                }
+                                style={{ filter: "brightness(1.1)" }}
+                            >
+                                <Card
+                                    isNextCard={true}
+                                    title={nextCardData?.title}
+                                    choices={nextCardData?.choices}
+                                    key={nextCardData?.order}
+                                    onClick={undefined}
+                                    onNext={undefined}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
             </Div>
         </div>
+    )
+}
+
+const Card = ({
+    title,
+    choices,
+    onClick,
+    onNext,
+    isNextCard = false,
+}: {
+    isNextCard?: boolean
+    title: string
+    choices: string[]
+    onClick?: () => void
+    onNext?: () => void
+}) => {
+    const { value: isShown, setFalse: hide } = useBoolean(true)
+
+    return (
+        <AnimatePresence>
+            {isShown && (
+                <motion.div
+                    initial={{
+                        filter: "brightness(1.1)",
+                        translateY: -10,
+                        marginLeft: 12,
+                        marginRight: 12,
+                    }}
+                    animate={
+                        isNextCard
+                            ? {}
+                            : {
+                                  filter: "brightness(1)",
+                                  translateY: 0,
+                                  marginLeft: 0,
+                                  marginRight: 0,
+                              }
+                    }
+                    exit={{ translateY: "100%", opacity: 0 }}
+                    transition={{
+                        duration: 0.15,
+                        bounce: 0,
+                    }}
+                    onAnimationComplete={(definition) => {
+                        if (definition?.opacity !== undefined) onNext?.()
+                    }}
+                    className={"p-3 bg-vk-secondary rounded-2xl"}
+                >
+                    <div
+                        className={
+                            "w-full h-60 flex-col gap-3 items-center justify-center text-center"
+                        }
+                    >
+                        <Title children={title} />
+                    </div>
+
+                    <div className={"flex-col gap-3"}>
+                        {choices.map((choice, i) => (
+                            <Button
+                                key={i}
+                                stretched={true}
+                                size={"l"}
+                                children={choice}
+                                onClick={() => {
+                                    hide()
+                                    onClick?.()
+                                }}
+                            />
+                        ))}
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     )
 }
