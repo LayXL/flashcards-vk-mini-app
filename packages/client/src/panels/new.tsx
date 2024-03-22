@@ -1,4 +1,4 @@
-import { PanelHeader, Spacing, Spinner } from "@vkontakte/vkui"
+import { PanelHeader, Spacing } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { useTimeout } from "usehooks-ts"
@@ -14,6 +14,7 @@ import { vibrateOnClick } from "../shared/helpers/vibrate"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useIsScrollable } from "../shared/hooks/useIsScrollable"
 import { useModalState } from "../shared/hooks/useModalState"
+import { PlayGame } from "../widgets/play-game"
 import { StackView } from "../widgets/stack-view"
 import { TranslationAddToStack } from "../widgets/translation-add-to-stack"
 import { TranslationView } from "../widgets/translation-view"
@@ -21,6 +22,7 @@ import { TranslationView } from "../widgets/translation-view"
 export const New = () => {
     const [selectedStack, setSelectedStack] = useState<number | null>(null)
     const stackViewModal = useModalState()
+    const playModal = useModalState()
 
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
     const translationViewModal = useModalState()
@@ -49,6 +51,15 @@ export const New = () => {
             stackViewModal.open()
         },
         [stackViewModal]
+    )
+
+    const onPlayStack = useCallback(
+        (id: number) => () => {
+            vibrateOnClick()
+            setSelectedStack(id)
+            playModal.open()
+        },
+        [playModal]
     )
 
     const onClickTranslation = useCallback(
@@ -87,7 +98,12 @@ export const New = () => {
                 dataLength={infiniteData?.length ?? 0}
                 hasMore={hasNextPage}
                 next={fetchNextPage}
-                loader={<></>}
+                loader={Array.from({ length: 30 }).map((_, i) => (
+                    <div
+                        className={"row-span-2 animate-pulse bg-vk-secondary rounded-xl"}
+                        key={i}
+                    />
+                ))}
                 className={"py-3 px-3"}
             >
                 <div
@@ -121,9 +137,10 @@ export const New = () => {
                                     <LargeStackCard
                                         title={x.stackData.name}
                                         translationsCount={x.stackData.translationsCount}
-                                        onClick={onClickStack(x.stackData.id)}
                                         isVerified={x.stackData.isVerified}
                                         encodedBackground={x.stackData.encodedBackground}
+                                        onClick={onClickStack(x.stackData.id)}
+                                        onPlay={onPlayStack(x.stackData.id)}
                                     />
                                 </div>
                             ) : x.type === "translation" ? (
@@ -147,7 +164,6 @@ export const New = () => {
                             )
                         )}
                 </div>
-                {isLoading && <Spinner className={"py-12"} />}
             </InfiniteScroll>
 
             <Spacing size={256} />
@@ -155,6 +171,14 @@ export const New = () => {
             <ModalWrapper isOpened={stackViewModal.isOpened} onClose={stackViewModal.close}>
                 <ModalBody fullscreen={true}>
                     {selectedStack && <StackView id={selectedStack} />}
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper isOpened={playModal.isOpened} onClose={playModal.close}>
+                <ModalBody fullscreen={true}>
+                    {selectedStack && (
+                        <PlayGame stackId={selectedStack} onClose={playModal.close} />
+                    )}
                 </ModalBody>
             </ModalWrapper>
 
