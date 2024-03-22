@@ -63,7 +63,7 @@ export const game = router({
                         .optional()
                         .nullable()
                         .default(null),
-                    attemptsCount: z.number().min(1).max(5).optional().nullable().default(null),
+                    attemptsCount: z.number().min(0).max(5).optional().nullable().default(null),
                     repeatCards: z.boolean().optional().default(false),
                 }),
                 z.object({
@@ -617,14 +617,16 @@ export const game = router({
                         translation: true,
                     },
                 },
+                stacks: true,
             },
         })
 
         const correct = data.translations.filter((x) => x.status === "correct")
+        const total = data.translations.filter((x) => x.status !== "unanswered")
 
         return {
             ...data,
-            answerAccuracy: correct.length / data.translations.length,
+            answerAccuracy: correct.length / total.length,
             points: correct.length ?? 0,
             finalGameTime: differenceInSeconds(data.endedAt ?? 0, data.startedAt ?? 0) ?? 0,
         }

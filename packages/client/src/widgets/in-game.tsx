@@ -30,7 +30,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     const attempts = useCounter(data.gameSession.attemptsCount ?? 0)
 
     const withTimer = data.gameSession.gameDuration && data.gameSession.gameDuration > 0
-    const withAttempts = data.gameSession.attemptsCount && data.gameSession.attemptsCount > 0
+    const withAttempts = (data.gameSession.attemptsCount ?? -1) >= 0
     const withRepeat = !!data.gameSession.repeatCards
 
     const [endsAt, setEndsAt] = useState<Date>(
@@ -76,7 +76,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
 
                 if (withAttempts) {
                     attempts.decrement()
-                    if (attempts.count - 1 === 0) return onEndGame()
+                    if (attempts.count - 1 <= 0) return onEndGame()
                 }
 
                 if (withRepeat) {

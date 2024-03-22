@@ -13,6 +13,7 @@ import { motion, useAnimationControls } from "framer-motion"
 import { ReactNode, useState } from "react"
 import { useBoolean, useStep } from "usehooks-ts"
 import { AnswerCard } from "../entities/game/ui/answer-card"
+import { StackBackground } from "../entities/stack/ui/stack-background"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
@@ -75,9 +76,18 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                             }}
                             transition={{
                                 duration: 0.6,
+                                type: "spring",
                             }}
-                            className={"aspect-square w-[200px] bg-secondary rounded-xl"}
-                        ></motion.div>
+                            className={
+                                "aspect-square w-[200px] bg-secondary rounded-xl overflow-hidden"
+                            }
+                        >
+                            {data?.stacks && (
+                                <StackBackground
+                                    encodedBackground={data?.stacks[0].encodedBackground}
+                                />
+                            )}
+                        </motion.div>
 
                         <Title level={"1"} weight={"1"}>
                             <motion.span>
@@ -115,7 +125,7 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                             {data?.type === "default" && (
                                 <>
                                     <Stat
-                                        caption={"Верные ответы"}
+                                        caption={"Верно"}
                                         value={data.points}
                                         icon={
                                             <Icon32CheckbitOutline
@@ -129,10 +139,10 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                         caption={"Время"}
                                         value={data?.finalGameTime}
                                         icon={<Icon12ClockOutline className={"text-accent"} />}
-                                        unit={"cek"}
+                                        unit={"сек"}
                                     />
                                     <Stat
-                                        caption={"Отлично"}
+                                        caption={"Результат"}
                                         value={roundedAccuracy}
                                         icon={
                                             <Icon12CheckCircle className={"text-dynamic-green"} />

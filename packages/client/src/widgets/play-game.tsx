@@ -22,8 +22,8 @@ import { GameResults } from "./game-results"
 import { InGame } from "./in-game"
 import { StackSelect } from "./stack-select"
 
-const attempts = Array.from({ length: 5 }).map((_, i) => ({
-    label: i.toString(),
+const attempts = Array.from({ length: 6 }).map((_, i) => ({
+    label: i === 0 ? "Ни шанса на ошибку ☠️" : i.toString(),
     value: i.toString(),
 }))
 
@@ -101,7 +101,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                 }))
             }
         },
-        [setGameSettings],
+        [setGameSettings]
     )
 
     const stopGame = useCallback(() => {
@@ -158,11 +158,12 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
 
             {(gameSettings.selectedModifiers.includes("time") ||
                 gameSettings.selectedModifiers.includes("attempts")) && (
-                <Group>
+                <Group className={"animate-fade-in"}>
                     <Header mode={"secondary"} children={"Настройки"} />
                     {gameSettings.selectedModifiers.includes("time") && (
                         <>
                             <Cell
+                                className={"animate-fade-in"}
                                 children={"Длительность игры"}
                                 after={
                                     <div className={"w-[128px]"}>
@@ -180,6 +181,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                                 }
                             />
                             <Cell
+                                className={"animate-fade-in"}
                                 children={"Правильный ответ добавит"}
                                 after={
                                     <div className={"w-[128px]"}>
@@ -204,6 +206,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
 
                     {gameSettings.selectedModifiers.includes("attempts") && (
                         <Cell
+                            className={"animate-fade-in"}
                             children={"Количество попыток"}
                             after={
                                 <div className={"w-[128px]"}>
@@ -213,7 +216,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                                         onChange={({ currentTarget: { value } }) => {
                                             setGameSettings((prev) => ({
                                                 ...prev,
-                                                gameDuration: parseInt(value),
+                                                attemptCount: parseInt(value),
                                             }))
                                         }}
                                     />
