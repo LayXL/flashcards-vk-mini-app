@@ -160,10 +160,10 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                                 <Card
                                     title={currentCardData.title}
                                     choices={currentCardData.choices}
-                                    onClick={() => {
+                                    onClick={(i) => {
                                         answer({
                                             order: currentCardData.order ?? 0,
-                                            answer: currentCardData.choices[0] ?? "",
+                                            answer: currentCardData.choices[i] ?? "",
                                         })
                                     }}
                                     onNext={() => {
@@ -209,7 +209,7 @@ const Card = ({
     isNextCard?: boolean
     title: string
     choices: string[]
-    onClick?: () => void
+    onClick?: (x: number) => void
     onNext?: () => void
 }) => {
     const { value: isShown, setFalse: hide } = useBoolean(true)
@@ -261,7 +261,7 @@ const Card = ({
                                 children={choice}
                                 onClick={() => {
                                     hide()
-                                    onClick?.()
+                                    onClick?.(i)
                                 }}
                             />
                         ))}
