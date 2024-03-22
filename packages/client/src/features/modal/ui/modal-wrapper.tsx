@@ -29,13 +29,13 @@ export const ModalWrapper = ({ isOpened, children, onClose }: ModalWrapperProps)
         () => () => {
             if (timeoutRef.current) clearTimeout(timeoutRef.current)
         },
-        [],
+        []
     )
 
     return (
-        <ModalContext.Provider value={{ onClose }}>
-            <FloatingPortal>
-                {isShowing && (
+        isShowing && (
+            <ModalContext.Provider value={{ onClose }}>
+                <FloatingPortal>
                     <div
                         onClick={(e) => {
                             e.stopPropagation()
@@ -46,11 +46,11 @@ export const ModalWrapper = ({ isOpened, children, onClose }: ModalWrapperProps)
                             "fixed inset-0 h-screen flex-col justify-end",
                             isOpened && "animate-bg-appearing [&>div]:animate-content-appearing",
                             !isOpened &&
-                                "animate-bg-disappearing [&>div]:animate-content-disappearing",
+                                "animate-bg-disappearing [&>div]:animate-content-disappearing"
                         )}
                     />
-                )}
-            </FloatingPortal>
-        </ModalContext.Provider>
+                </FloatingPortal>
+            </ModalContext.Provider>
+        )
     )
 }
