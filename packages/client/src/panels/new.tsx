@@ -20,7 +20,6 @@ import { TranslationView } from "../widgets/translation-view"
 
 export const New = () => {
     // const gridRef = useRef<HTMLDivElement>(null)
-    const [isAnimationCompleted, setIsAnimationCompleted] = useState(false)
 
     const [selectedStack, setSelectedStack] = useState<number | null>(null)
     const stackViewModal = useModalState()
@@ -38,6 +37,8 @@ export const New = () => {
                 refetchOnWindowFocus: false,
             }
         )
+
+    const [isAnimationCompleted, setIsAnimationCompleted] = useState(isSuccess)
 
     const infiniteData = useInfiniteList(data)
 
@@ -69,11 +70,6 @@ export const New = () => {
         },
         [translationAddModal]
     )
-
-    useEffect(() => {
-        setIsAnimationCompleted(isSuccess)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     useTimeout(() => setIsAnimationCompleted(true), 600)
 
