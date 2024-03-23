@@ -1,5 +1,6 @@
 import { Icon12VerifiedAlt, Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
 import { Caption, Subhead } from "@vkontakte/vkui"
+import { cn } from "../../../shared/helpers/cn"
 import { decodeStackBackground } from "../../../shared/helpers/stackBackground"
 import { StackBackground } from "./stack-background"
 
@@ -56,9 +57,24 @@ export const LargeStackCard = ({
                 <div className={"absolute inset-0 flex-col justify-between"}>
                     <div>{/* TODO author */}</div>
                     <div className={"flex-col p-3 gap-2"}>
-                        <div className={"flex-row gap-1 items-center"}>
-                            <Subhead weight={"1"} children={title} />
-                            {isVerified && <Icon12VerifiedAlt />}
+                        <div
+                            className={cn(
+                                "inline items-center",
+                                "drop-shadow-[0_0_12px_var(--shadow-color)]"
+                            )}
+                            style={{
+                                "--shadow-color": decodedBackground?.primaryColor ?? "#fff",
+                            }}
+                        >
+                            <Subhead
+                                weight={"1"}
+                                children={title}
+                                className={cn(
+                                    "inline border",
+                                    "[text-shadow:_1px_1px_4px_var(--shadow-color),-1px_1px_4px_var(--shadow-color),1px_-1px_4px_var(--shadow-color),-1px_-1px_4px_var(--shadow-color)]"
+                                )}
+                            />
+                            {isVerified && <Icon12VerifiedAlt className={"inline-block ml-1"} />}
                         </div>
                         <div className={"flex-row justify-between items-center"}>
                             <div className={"flex-row gap-1"}>
