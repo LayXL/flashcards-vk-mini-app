@@ -32,10 +32,12 @@ import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { decodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
+import { Skeleton } from "../shared/ui/skeleton"
 import { PlayGame } from "./play-game"
 import { StackCreateModal } from "./stack-create"
 import { TranslationAdd } from "./translation-add"
@@ -59,7 +61,7 @@ export const StackView = ({ id }: StackViewProps) => {
     const playGameModal = useModalState()
 
     const modal = useModal()
-    const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
+    const { data, refetch, isSuccess } = trpc.stacks.getSingle.useQuery({ id }, { enabled: false })
 
     const showMore = useModalState()
 
@@ -85,7 +87,7 @@ export const StackView = ({ id }: StackViewProps) => {
             <ModalPageHeader
                 className={"z-20"}
                 before={<PanelHeaderBack onClick={() => modal?.onClose()} />}
-                children={data?.name}
+                children={data?.name || <Skeleton className={"w-20"} />}
             />
 
             <div className={"flex flex-col relative"}>
@@ -105,11 +107,12 @@ export const StackView = ({ id }: StackViewProps) => {
                         <Icon24MoreHorizontal />
                     </div>
                     <div
-                        className={
-                            "w-[200px] aspect-square bg-vk-default rounded-xl overflow-hidden"
-                        }
+                        className={cn(
+                            "w-[200px] aspect-square bg-vk-default rounded-xl overflow-hidden",
+                            !data && "animate-pulse bg-vk-accent"
+                        )}
                     >
-                        {data && (
+                        {data?.encodedBackground && (
                             <StackBackground
                                 encodedBackground={data.encodedBackground}
                                 // imageUrl={data?.imageUrl}
@@ -175,17 +178,21 @@ export const StackView = ({ id }: StackViewProps) => {
                     <Div className={"py-0"}>
                         <div className={"bg-vk-secondary rounded-xl p-3 flex-col gap-2"}>
                             <Headline>
-                                {exploringStackProgress > 0 ? (
-                                    <>
-                                        Стопка изучена на <b>{exploringStackProgress}%</b>
-                                    </>
+                                {data ? (
+                                    exploringStackProgress > 0 ? (
+                                        <>
+                                            Стопка изучена на <b>{exploringStackProgress}%</b>
+                                        </>
+                                    ) : (
+                                        <>
+                                            Стопка еще не изучена.{" "}
+                                            {data?.isVerified
+                                                ? "За неё начисляется опыт"
+                                                : "За неё не начисляется опыт"}
+                                        </>
+                                    )
                                 ) : (
-                                    <>
-                                        Стопка еще не изучена.{" "}
-                                        {data?.isVerified
-                                            ? "За неё начисляется опыт"
-                                            : "За неё не начисляется опыт"}
-                                    </>
+                                    <Skeleton className={"w-40 bg-white dark:bg-black/20"} />
                                 )}
                             </Headline>
                             {exploringStackProgress > 0 && (
@@ -195,6 +202,15 @@ export const StackView = ({ id }: StackViewProps) => {
                     </Div>
 
                     <Div className={"grid grid-cols-cards gap-3"}>
+                        {!data &&
+                            Array.from({ length: 30 }).map((_, i) => (
+                                <div
+                                    key={i}
+                                    className={
+                                        "animate-pulse bg-vk-secondary rounded-xl h-[100px] w-full"
+                                    }
+                                />
+                            ))}
                         {data?.translations?.map(({ translation }) => (
                             <FeedTranslationCard
                                 key={translation.id}
