@@ -1,36 +1,43 @@
+import { DateTime } from "luxon"
 import { useEffect, useState } from "react"
 import { useInterval } from "usehooks-ts"
 import { vkTheme } from "../helpers/vkTheme"
 
 type TimerProps = {
-    value: number
+    endsAt: Date
     max: number
     onEnd?: () => void
 }
 
-export const Timer = ({ value, max, onEnd }: TimerProps) => {
-    const [displayValue, setDisplayValue] = useState(value)
+export const Timer = ({ endsAt, max, onEnd }: TimerProps) => {
+    const [displayValue, setDisplayValue] = useState(
+        DateTime.fromJSDate(endsAt).diffNow().as("seconds")
+    )
 
     const delay = 10
     const progress = Math.min(1, displayValue / max)
 
     useInterval(
         () => {
-            setDisplayValue(displayValue - delay / 1000)
-            if (displayValue - delay / 1000 <= 0) onEnd?.()
+            const x = DateTime.fromJSDate(endsAt).diffNow().as("seconds")
+
+            setDisplayValue(x)
+            if (x <= 0) onEnd?.()
         },
-        displayValue > 0 ? delay : null,
+        displayValue > 0 ? delay : null
     )
 
     useEffect(() => {
-        setDisplayValue(value)
-    }, [value])
+        setDisplayValue(DateTime.fromJSDate(endsAt).diffNow().as("seconds"))
+    }, [endsAt])
 
     return (
         <div
             className={"p-2 rounded-full w-[154px] aspect-square flex select-none"}
             style={{
-                background: `conic-gradient(var(${vkTheme.colorBackgroundAccent.normal.name}) ${progress * 100}%, var(${vkTheme.colorBackgroundContent.normal.name}) 0%)`,
+                background: `conic-gradient(var(${vkTheme.colorBackgroundAccent.normal.name}) ${
+                    progress * 100
+                }%, var(${vkTheme.colorBackgroundContent.normal.name}) 0%)`,
             }}
         >
             <div

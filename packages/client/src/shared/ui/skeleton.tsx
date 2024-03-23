@@ -8,7 +8,10 @@ type SkeletonProps = {
 export const Skeleton = ({ className }: SkeletonProps) => {
     return (
         <span
-            className={cn("inline-block animate-pulse h-lh rounded-xl bg-vk-default", className)}
+            className={cn(
+                "inline-block animate-pulse h-lh leading-none rounded-xl bg-vk-default",
+                className
+            )}
         />
     )
 }

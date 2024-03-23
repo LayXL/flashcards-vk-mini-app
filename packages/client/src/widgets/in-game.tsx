@@ -39,11 +39,9 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
             .toJSDate()
     )
 
-    const timer = useMemo(() => DateTime.fromJSDate(endsAt).diffNow().as("seconds"), [endsAt])
-
     const memoizedTimer = useMemo(
-        () => <Timer max={60} value={timer} onEnd={() => onEndGame()} />,
-        [onEndGame, timer]
+        () => <Timer max={60} endsAt={endsAt} onEnd={() => onEndGame()} />,
+        [onEndGame, endsAt]
     )
 
     const { mutate: answer } = trpc.game.answer.useMutation({
@@ -240,6 +238,7 @@ const Card = ({
                         bounce: 0,
                     }}
                     onAnimationComplete={(definition) => {
+                        // @ts-expect-error opacity exists
                         if (definition?.opacity !== undefined) onNext?.()
                     }}
                     className={"p-3 bg-vk-secondary rounded-2xl"}

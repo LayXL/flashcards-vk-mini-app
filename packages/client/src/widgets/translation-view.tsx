@@ -21,6 +21,7 @@ import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { plural } from "../shared/helpers/plural"
 import { useModalState } from "../shared/hooks/useModalState"
+import { Skeleton } from "../shared/ui/skeleton"
 import { StackView } from "./stack-view"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
@@ -73,13 +74,13 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     before={
                         <Avatar size={36} src={getSuitableAvatarUrl(data?.author.avatarUrls, 32)} />
                     }
+                    children={data?.author.firstName || <Skeleton className={"w-10"} />}
                     // TODO finalize
                     status={plural(data?.authorTranslationsCount ?? 0, [
                         "перевод",
                         "перевода",
                         "переводов",
                     ])}
-                    children={data?.author.firstName}
                 />
             </ModalPageHeader>
 

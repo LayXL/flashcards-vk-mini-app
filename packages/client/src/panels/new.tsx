@@ -200,7 +200,7 @@ export const New = () => {
                 isOpened={translationViewModal.isOpened}
                 onClose={translationViewModal.close}
             >
-                <ModalBody>
+                <ModalBody fullscreen>
                     {selectedTranslation && (
                         <TranslationView
                             id={selectedTranslation}
