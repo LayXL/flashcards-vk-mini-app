@@ -210,16 +210,13 @@ export const stacks = router({
             })
         )
         .query(async ({ ctx, input }) => {
-            const data = await prisma.stack.findFirst({
+            const data = await ctx.prisma.stack.findFirst({
                 where: {
                     id: input.id,
-
                     isDeleted: false,
                     OR: [
                         {
-                            author: {
-                                vkId: ctx.vkId.toString(),
-                            },
+                            authorId: ctx.userId,
                         },
                         {
                             isPrivate: false,
@@ -242,19 +239,34 @@ export const stacks = router({
                 },
             })
 
-            const isLiked = await prisma.reactionOnStack.count({
+            const isLiked = await ctx.prisma.reactionOnStack.count({
                 where: {
                     stackId: input.id,
-                    user: {
-                        vkId: ctx.vkId,
-                    },
+                    userId: ctx.userId,
                 },
             })
+
+            const stackTranslationsRepetitions = await ctx.prisma.userTranslationRepetition.groupBy(
+                {
+                    where: {
+                        userId: ctx.userId,
+                        translation: {
+                            stacks: {
+                                some: {
+                                    stackId: input.id,
+                                },
+                            },
+                        },
+                    },
+                    by: ["translationId"],
+                }
+            )
 
             return {
                 ...data,
                 isLiked,
                 isEditable: data?.authorId === ctx.userId,
+                exploredTranslationsCount: stackTranslationsRepetitions.length,
             }
         }),
     addTranslation: privateProcedure

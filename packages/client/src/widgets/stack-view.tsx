@@ -16,9 +16,12 @@ import {
     Button,
     ButtonGroup,
     Div,
+    Group,
     Header,
+    Headline,
     ModalPageHeader,
     PanelHeaderBack,
+    Progress,
     Snackbar,
     Subhead,
 } from "@vkontakte/vkui"
@@ -73,6 +76,9 @@ export const StackView = ({ id }: StackViewProps) => {
     })
 
     const decodedBackground = decodeStackBackground(data?.encodedBackground)
+
+    const exploringStackProgress =
+        ((data?.exploredTranslationsCount ?? 0) / (data?.translations?.length ?? 0)) * 100
 
     return (
         <>
@@ -129,77 +135,103 @@ export const StackView = ({ id }: StackViewProps) => {
                         </Subhead>
                     </Div>
                 )}
-                <Div>
-                    <ButtonGroup stretched>
-                        <Button
-                            mode={"primary"}
-                            stretched
-                            size={"l"}
-                            children={"Играть"}
-                            onClick={playGameModal.open}
-                        />
-                        <Button
-                            mode={"secondary"}
-                            stretched
-                            size={"l"}
-                            before={<Icon24Add />}
-                            children={"Дублировать"}
-                        />
-                    </ButtonGroup>
-                </Div>
-                <Header
-                    mode={"primary"}
-                    indicator={data?.translations?.length}
-                    aside={
-                        data?.isEditable && (
-                            <div
-                                className={"text-accent cursor-pointer"}
-                                onClick={addTranslationToStackActionSheet.open}
-                            >
-                                <Icon24Add />
-                            </div>
-                        )
-                    }
-                    children={"Переводы"}
-                />
+                <Group>
+                    <Div>
+                        <ButtonGroup stretched>
+                            <Button
+                                mode={"primary"}
+                                stretched
+                                size={"l"}
+                                children={"Играть"}
+                                onClick={playGameModal.open}
+                            />
+                            <Button
+                                mode={"secondary"}
+                                stretched
+                                size={"l"}
+                                before={<Icon24Add />}
+                                children={"Дублировать"}
+                            />
+                        </ButtonGroup>
+                    </Div>
+                </Group>
+                <Group>
+                    <Header
+                        mode={"primary"}
+                        indicator={data?.translations?.length}
+                        aside={
+                            data?.isEditable && (
+                                <div
+                                    className={"text-accent cursor-pointer"}
+                                    onClick={addTranslationToStackActionSheet.open}
+                                >
+                                    <Icon24Add />
+                                </div>
+                            )
+                        }
+                        children={"Переводы"}
+                    />
 
-                <Div className={"grid grid-cols-cards gap-3"}>
-                    {data?.translations?.map(({ translation }) => (
-                        <FeedTranslationCard
-                            key={translation.id}
-                            foreign={translation.foreign}
-                            vernacular={translation.vernacular}
-                            authorName={translation.author.firstName}
-                            authorAvatarUrl={getSuitableAvatarUrl(
-                                translation.author.avatarUrls,
-                                32
+                    <Div className={"py-0"}>
+                        <div className={"bg-vk-secondary rounded-xl p-3 flex-col gap-2"}>
+                            <Headline>
+                                {exploringStackProgress > 0 ? (
+                                    <>
+                                        Стопка изучена на <b>{exploringStackProgress}%</b>
+                                    </>
+                                ) : (
+                                    <>
+                                        Стопка еще не изучена.{" "}
+                                        {data?.isVerified
+                                            ? "За неё начисляется опыт"
+                                            : "За неё не начисляется опыт"}
+                                    </>
+                                )}
+                            </Headline>
+                            {exploringStackProgress > 0 && (
+                                <Progress value={exploringStackProgress} />
                             )}
-                            onAdd={() => {
-                                vibrateOnClick()
-                                setSelectedTranslation(translation.id)
-                                addTranslationToOtherStackModal.open()
-                                refetch()
-                            }}
-                            onClick={() => {
-                                vibrateOnClick()
-                                setSelectedTranslation(translation.id)
-                                translationViewModal.open()
-                            }}
-                            isWithMore={true}
-                            onRemoveFromStack={
-                                data.isEditable
-                                    ? () => {
-                                          vibrateOnClick()
-                                          deleteTranslationFromStack({
-                                              translationId: translation.id,
-                                              stackId: id,
-                                          })
-                                      }
-                                    : undefined
-                            }
-                        />
-                    ))}
-                </Div>
+                        </div>
+                    </Div>
+
+                    <Div className={"grid grid-cols-cards gap-3"}>
+                        {data?.translations?.map(({ translation }) => (
+                            <FeedTranslationCard
+                                key={translation.id}
+                                foreign={translation.foreign}
+                                vernacular={translation.vernacular}
+                                authorName={translation.author.firstName}
+                                authorAvatarUrl={getSuitableAvatarUrl(
+                                    translation.author.avatarUrls,
+                                    32
+                                )}
+                                onAdd={() => {
+                                    vibrateOnClick()
+                                    setSelectedTranslation(translation.id)
+                                    addTranslationToOtherStackModal.open()
+                                    refetch()
+                                }}
+                                onClick={() => {
+                                    vibrateOnClick()
+                                    setSelectedTranslation(translation.id)
+                                    translationViewModal.open()
+                                }}
+                                isWithMore={true}
+                                onRemoveFromStack={
+                                    data.isEditable
+                                        ? () => {
+                                              vibrateOnClick()
+                                              deleteTranslationFromStack({
+                                                  translationId: translation.id,
+                                                  stackId: id,
+                                              })
+                                          }
+                                        : undefined
+                                }
+                            />
+                        ))}
+                    </Div>
+                </Group>
             </div>
 
             <ModalWrapper
