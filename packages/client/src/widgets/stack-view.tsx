@@ -61,7 +61,7 @@ export const StackView = ({ id }: StackViewProps) => {
     const playGameModal = useModalState()
 
     const modal = useModal()
-    const { data, refetch, isSuccess } = trpc.stacks.getSingle.useQuery({ id }, { enabled: false })
+    const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
 
     const showMore = useModalState()
 
