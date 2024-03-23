@@ -32,25 +32,24 @@ export const ModalWrapper = ({ isOpened, children, onClose }: ModalWrapperProps)
         []
     )
 
+    if (!isShowing) return null
+
     return (
-        isShowing && (
-            <ModalContext.Provider value={{ onClose }}>
-                <FloatingPortal>
-                    <div
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            onClose()
-                        }}
-                        children={children}
-                        className={cn(
-                            "fixed inset-0 h-screen flex-col justify-end",
-                            isOpened && "animate-bg-appearing [&>div]:animate-content-appearing",
-                            !isOpened &&
-                                "animate-bg-disappearing [&>div]:animate-content-disappearing"
-                        )}
-                    />
-                </FloatingPortal>
-            </ModalContext.Provider>
-        )
+        <ModalContext.Provider value={{ onClose }}>
+            <FloatingPortal>
+                <div
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        onClose()
+                    }}
+                    children={children}
+                    className={cn(
+                        "fixed inset-0 h-screen flex-col justify-end",
+                        isOpened && "animate-bg-appearing [&>div]:animate-content-appearing",
+                        !isOpened && "animate-bg-disappearing [&>div]:animate-content-disappearing"
+                    )}
+                />
+            </FloatingPortal>
+        </ModalContext.Provider>
     )
 }
