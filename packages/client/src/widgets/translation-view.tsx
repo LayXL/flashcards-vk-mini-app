@@ -71,11 +71,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
             <ModalPageHeader before={<PanelHeaderBack onClick={onClose} />}>
                 <PanelHeaderContent
                     before={
-                        <Avatar
-                            size={36}
-                            // TODO fix
-                            src={getSuitableAvatarUrl(data?.author.avatarUrls, 32)}
-                        />
+                        <Avatar size={36} src={getSuitableAvatarUrl(data?.author.avatarUrls, 32)} />
                     }
                     // TODO finalize
                     status={plural(data?.authorTranslationsCount ?? 0, [

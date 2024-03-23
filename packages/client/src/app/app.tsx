@@ -36,7 +36,7 @@ export const App = () => {
         () =>
             new QueryClient({
                 defaultOptions: {},
-            }),
+            })
     )
 
     const [trpcClient] = useState(() =>
@@ -49,7 +49,7 @@ export const App = () => {
                     },
                 }),
             ],
-        }),
+        })
     )
 
     useEffect(() => {
