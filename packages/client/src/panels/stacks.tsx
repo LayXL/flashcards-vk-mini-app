@@ -8,6 +8,7 @@ import {
     ModalPageHeader,
     PanelHeader,
     PanelHeaderBack,
+    Spacing,
     Subhead,
 } from "@vkontakte/vkui"
 import { useState } from "react"
@@ -92,6 +93,8 @@ export const Stacks = () => {
                     </div>
                 </Div>
             )}
+
+            <Spacing size={256} />
 
             <ModalWrapper isOpened={stackViewModal.isOpened} onClose={stackViewModal.close}>
                 <ModalBody fullscreen>
