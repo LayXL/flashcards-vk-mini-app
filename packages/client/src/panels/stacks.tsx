@@ -58,7 +58,7 @@ export const Stacks = () => {
                         }
                     />
                     <CardScroll>
-                        <div className={"flex gap-3 [&>*]:w-[176px]"}>
+                        <div className={"flex gap-3"}>
                             {category.stacks.map((stack) => (
                                 <LargeStackCard
                                     key={stack.id}
@@ -88,7 +88,7 @@ export const Stacks = () => {
                         {/* TODO: add links */}
                         <Subhead>
                             Вы можете найти стопки от других пользователей или же создать
-                            собственную
+                            собственные
                         </Subhead>
                     </div>
                 </Div>
