@@ -125,6 +125,13 @@ model Stack {
   inheritStack   Stack?               @relation("inherit", fields: [inheritsStackId], references: [id])
   inheritedStack Stack[]              @relation("inherit")
   gameSessions   GameSession[]
+  categories     Category[]
+}
+
+model Category {
+  id     Int     @id @default(autoincrement())
+  name   String
+  stacks Stack[]
 }
 
 model TranslationInStack {

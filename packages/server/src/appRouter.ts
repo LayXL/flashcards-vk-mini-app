@@ -1,3 +1,4 @@
+import { categories } from "./routers/categories"
 import { feed } from "./routers/feed"
 import { fiveLetters } from "./routers/five-letters"
 import { game } from "./routers/game"
@@ -24,6 +25,7 @@ export const appRouter = router({
     fiveLetters,
     stats,
     rating,
+    categories,
 })
 
 export type AppRouter = typeof appRouter

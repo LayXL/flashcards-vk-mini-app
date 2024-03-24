@@ -1,18 +1,140 @@
-import { Icon32Cards2Outline } from "@vkontakte/icons"
-import { PanelHeader, Placeholder } from "@vkontakte/vkui"
+import {
+    CardScroll,
+    Div,
+    Group,
+    Header,
+    Headline,
+    Link,
+    ModalPageHeader,
+    PanelHeader,
+    PanelHeaderBack,
+    Subhead,
+} from "@vkontakte/vkui"
+import { useState } from "react"
+import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
+import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
+import { trpc } from "../shared/api"
+import { useModalState } from "../shared/hooks/useModalState"
+import { PlayGame } from "../widgets/play-game"
+import { StackView } from "../widgets/stack-view"
 
 export const Stacks = () => {
+    const [selectedStackId, setSelectedStackId] = useState<number | null>(null)
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
+
+    const { data } = trpc.categories.getMany.useQuery()
+    const { data: selectedCategory } = trpc.categories.getSingle.useQuery(
+        {
+            id: selectedCategoryId ?? 0,
+        },
+        {
+            enabled: !!selectedCategoryId,
+        }
+    )
+
+    const stackViewModal = useModalState()
+    const stackPlayModal = useModalState()
+    const categoryViewModal = useModalState()
+
     return (
         <>
             <PanelHeader children={"Стопки"} />
 
-            <Placeholder
-                stretched={true}
-                icon={<Icon32Cards2Outline height={56} width={56} />}
-                header={"В разработке"}
-                children={"Раздел с официальными стопками сейчас разрабатывается"}
-            />
+            {data?.map((category) => (
+                <Group key={category.id}>
+                    <Header
+                        children={category.name}
+                        aside={
+                            <Link
+                                children={"Показать все"}
+                                onClick={() => {
+                                    setSelectedCategoryId(category.id)
+                                    categoryViewModal.open()
+                                }}
+                            />
+                        }
+                    />
+                    <CardScroll>
+                        <div className={"flex gap-3 [&>*]:w-[176px]"}>
+                            {category.stacks.map((stack) => (
+                                <LargeStackCard
+                                    key={stack.id}
+                                    title={stack.name}
+                                    translationsCount={stack.translationsCount}
+                                    isVerified={stack.isVerified}
+                                    encodedBackground={stack.encodedBackground}
+                                    onClick={() => {
+                                        setSelectedStackId(stack.id)
+                                        stackViewModal.open()
+                                    }}
+                                    onPlay={() => {
+                                        setSelectedStackId(stack.id)
+                                        stackPlayModal.open()
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </CardScroll>
+                </Group>
+            ))}
+
+            {data && (
+                <Div>
+                    <div className={"bg-vk-secondary rounded-xl p-3 flex-col gap-2"}>
+                        <Headline weight={"2"} children={"Не нашли подходящую стопку?"} />
+                        {/* TODO: add links */}
+                        <Subhead>
+                            Вы можете найти стопки от других пользователей или же создать
+                            собственную
+                        </Subhead>
+                    </div>
+                </Div>
+            )}
+
+            <ModalWrapper isOpened={stackViewModal.isOpened} onClose={stackViewModal.close}>
+                <ModalBody fullscreen>
+                    {selectedStackId && <StackView id={selectedStackId} />}
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper isOpened={stackPlayModal.isOpened} onClose={stackPlayModal.close}>
+                <ModalBody fullscreen>
+                    {selectedStackId && (
+                        <PlayGame stackId={selectedStackId} onClose={stackPlayModal.close} />
+                    )}
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper isOpened={categoryViewModal.isOpened} onClose={categoryViewModal.close}>
+                <ModalBody fullscreen>
+                    <ModalPageHeader
+                        before={<PanelHeaderBack onClick={categoryViewModal.close} />}
+                        children={selectedCategory?.name}
+                    />
+
+                    <Div className={"grid grid-cols-cards gap-3"}>
+                        {selectedCategory?.stacks.map((stack) => (
+                            <LargeStackCard
+                                key={stack.id}
+                                title={stack.name}
+                                translationsCount={stack.translationsCount}
+                                isVerified={stack.isVerified}
+                                encodedBackground={stack.encodedBackground}
+                                onClick={() => {
+                                    setSelectedStackId(stack.id)
+                                    stackViewModal.open()
+                                }}
+                                onPlay={() => {
+                                    setSelectedStackId(stack.id)
+                                    stackPlayModal.open()
+                                }}
+                            />
+                        ))}
+                    </Div>
+                </ModalBody>
+            </ModalWrapper>
 
             <TabBar />
         </>
