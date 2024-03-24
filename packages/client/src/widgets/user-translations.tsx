@@ -4,15 +4,7 @@ import {
     Icon24UserOutline,
     Icon28CheckCircleOutline,
 } from "@vkontakte/icons"
-import {
-    Div,
-    Link,
-    PanelSpinner,
-    Snackbar,
-    Spacing,
-    SubnavigationBar,
-    SubnavigationButton,
-} from "@vkontakte/vkui"
+import { Div, Link, Snackbar, SubnavigationBar, SubnavigationButton } from "@vkontakte/vkui"
 import { ComponentProps, useState } from "react"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -67,9 +59,14 @@ export const UserTranslations = () => {
                 />
             </SubnavigationBar>
 
-            {isLoading && <PanelSpinner />}
-
             <Div className={"grid gap-3 grid-cols-cards"}>
+                {isLoading &&
+                    Array.from({ length: 20 }).map((_, i) => (
+                        <div
+                            key={i}
+                            className={"w-full h-[100px] animate-pulse bg-vk-secondary rounded-xl"}
+                        />
+                    ))}
                 {userTranslations?.map((translation) => (
                     <TranslationCardWithModal
                         key={translation.id}
@@ -79,8 +76,6 @@ export const UserTranslations = () => {
                     />
                 ))}
             </Div>
-
-            <Spacing size={256} />
 
             <ModalWrapper
                 isOpened={addTranslationModal.isOpened}

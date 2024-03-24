@@ -4,21 +4,12 @@ import {
     Icon24UserOutline,
     Icon28CheckCircleOutline,
 } from "@vkontakte/icons"
-import {
-    Div,
-    Link,
-    PanelSpinner,
-    Snackbar,
-    Spacing,
-    SubnavigationBar,
-    SubnavigationButton,
-} from "@vkontakte/vkui"
+import { Div, Link, Snackbar, SubnavigationBar, SubnavigationButton } from "@vkontakte/vkui"
 import { useState } from "react"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
-import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
@@ -30,8 +21,6 @@ export const UserStacks = () => {
     const { data, isLoading } = trpc.stacks.getUserStacks.useQuery({
         filter,
     })
-
-    const encodeStackBackground = useEncodeStackBackground()
 
     const createStackModal = useModalState()
     const stackCreatedSnackbar = useModalState()
@@ -69,6 +58,28 @@ export const UserStacks = () => {
                     }}
                 />
             </SubnavigationBar>
+
+            {/* TODO: infinite scroll */}
+            <Div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"}>
+                {isLoading &&
+                    Array.from({ length: 20 }).map((_, i) => (
+                        <div
+                            key={i}
+                            className={"w-full h-full animate-pulse bg-vk-secondary rounded-xl"}
+                        />
+                    ))}
+
+                {data?.items.map((stack) => (
+                    <StackCardWithModal
+                        key={stack.id}
+                        id={stack.id}
+                        name={stack.name}
+                        translationsCount={stack.translationsCount}
+                        isVerified={stack.isVerified}
+                        encodedBackground={stack.encodedBackground}
+                    />
+                ))}
+            </Div>
 
             <ModalWrapper isOpened={createStackModal.isOpened} onClose={createStackModal.close}>
                 <ModalBody>
@@ -109,25 +120,6 @@ export const UserStacks = () => {
                     </ModalBody>
                 </ModalWrapper>
             )}
-
-            {isLoading && <PanelSpinner />}
-
-            {/* todo infinite scroll */}
-            <Div
-                className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"}
-                children={data?.items.map((stack) => (
-                    <StackCardWithModal
-                        key={stack.id}
-                        id={stack.id}
-                        name={stack.name}
-                        translationsCount={stack.translationsCount}
-                        isVerified={stack.isVerified}
-                        encodedBackground={encodeStackBackground(stack)}
-                    />
-                ))}
-            />
-
-            <Spacing size={256} />
         </>
     )
 }

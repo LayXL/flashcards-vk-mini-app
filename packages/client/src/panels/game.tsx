@@ -10,7 +10,6 @@ import {
     ButtonGroup,
     Div,
     Group,
-    Header,
     PanelHeader,
     Placeholder,
     Tabs,
@@ -104,14 +103,15 @@ export const Game = () => {
                             }
                         />
                     </Group>
-                    <Group>
+                    {/* TODO: изменить раздел */}
+                    {/* <Group>
                         <Header children={"Недавние игры"} />
                         <Div className={"flex-col gap-2"}>
                             {recentlyGames?.map((game) => (
                                 <RecentGameCard key={game.id} id={game.id} />
                             ))}
                         </Div>
-                    </Group>
+                    </Group> */}
                 </>
             )}
 
@@ -127,7 +127,7 @@ export const Game = () => {
                                 {Array.from({ length: 3 - (ratingAttemptsLeft ?? 0) }).map(
                                     (_, i) => (
                                         <Icon28Like key={i} className={"text-secondary"} />
-                                    ),
+                                    )
                                 )}
                             </div>
                         </Div>
