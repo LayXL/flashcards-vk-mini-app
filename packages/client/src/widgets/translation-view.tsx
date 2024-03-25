@@ -1,17 +1,17 @@
-import { Icon28CheckCircleOutline } from "@vkontakte/icons"
+import { Icon24Send, Icon28CheckCircleOutline } from "@vkontakte/icons"
 import {
     Avatar,
     Div,
     Group,
     Header,
+    Headline,
+    Input,
     Link,
     ModalPageHeader,
     PanelHeaderBack,
     PanelHeaderContent,
     SimpleCell,
     Snackbar,
-    WriteBar,
-    WriteBarIcon,
 } from "@vkontakte/vkui"
 import { useCallback, useState } from "react"
 import { DetailedTranslationCard } from "../entities/translation/ui/detailed-translation-card"
@@ -33,7 +33,7 @@ type TranslationViewModalProps = {
 }
 
 export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
-    const { data, refetch } = trpc.translations.getSingle.useQuery({ id })
+    const { data, refetch, isLoading } = trpc.translations.getSingle.useQuery({ id })
 
     const { mutate: react } = trpc.translations.addReaction.useMutation({
         onSuccess: () => refetch(),
@@ -83,76 +83,95 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     ])}
                 />
             </ModalPageHeader>
+            <Group>
+                <Div className={"pt-0"}>
+                    <DetailedTranslationCard
+                        id={data?.id}
+                        vernacular={data?.vernacular}
+                        foreign={data?.foreign}
+                        languageVariationIcon={data?.languageVariation?.iconUrl}
+                        transcriptions={data?.transcriptions.map((transcription) => ({
+                            transcription: transcription.transcription,
+                            icon: transcription.languageVariation?.iconUrl,
+                        }))}
+                        tags={data?.tags.map((tag) => tag.name)}
+                        example={data?.example}
+                        onReactClick={toggleReaction}
+                        isReacted={data?.isReacted}
+                        onAddInStack={addToStack.open}
+                        onEdit={editTranslation.open}
+                        onDelete={onDelete}
+                    />
+                </Div>
 
-            <Div>
-                <DetailedTranslationCard
-                    id={data?.id}
-                    vernacular={data?.vernacular}
-                    foreign={data?.foreign}
-                    languageVariationIcon={data?.languageVariation?.iconUrl}
-                    transcriptions={data?.transcriptions.map((transcription) => ({
-                        transcription: transcription.transcription,
-                        icon: transcription.languageVariation?.iconUrl,
-                    }))}
-                    tags={data?.tags.map((tag) => tag.name)}
-                    example={data?.example}
-                    onReactClick={toggleReaction}
-                    isReacted={data?.isReacted}
-                    onAddInStack={addToStack.open}
-                    onEdit={editTranslation.open}
-                    onDelete={onDelete}
-                />
-            </Div>
-
+                {data?.foreignDescription && (
+                    <Div className={"pb-0"}>
+                        <Headline children={data?.foreignDescription} />
+                    </Div>
+                )}
+            </Group>
             <Group>
                 <Header
-                    children={`${data?.commentsCount} комментариев`}
-                    aside={<Link children={"Показать все"} onClick={viewComments.open} />}
+                    children={
+                        isLoading
+                            ? "Комментарии"
+                            : (data?.commentsCount ?? 0) > 0
+                            ? plural(data?.commentsCount ?? 0, [
+                                  "комментарий",
+                                  "комментария",
+                                  "комментариев",
+                              ])
+                            : "Нет комментариев"
+                    }
+                    aside={
+                        data?.commentsCount ? (
+                            <Link children={"Показать все"} onClick={viewComments.open} />
+                        ) : null
+                    }
                 />
 
                 {data?.comments.map((comment) => (
                     <SimpleCell
                         key={comment.id}
-                        // TODO fix
                         before={
                             <Avatar
                                 size={32}
                                 src={getSuitableAvatarUrl(comment.user.avatarUrls, 32)}
                             />
                         }
-                        children={comment.user.firstName}
-                        subtitle={comment.text}
+                        subtitle={comment.user.firstName}
+                        children={comment.text}
                     />
                 ))}
 
-                <WriteBar
-                    style={{ borderRadius: 12, flex: 1 }}
-                    placeholder={"Комментарий"}
-                    value={commentText}
-                    onChange={({ currentTarget: { value } }) => setCommentText(value)}
-                    readOnly={isAddingComment}
-                    after={
-                        commentText.length > 0 && (
-                            <WriteBarIcon
-                                mode={"send"}
-                                onClick={() =>
-                                    addComment({
-                                        translationId: id,
-                                        text: commentText,
-                                    })
-                                }
-                            />
-                        )
-                    }
-                />
+                <Div>
+                    <Input
+                        value={commentText}
+                        onChange={({ currentTarget: { value } }) => setCommentText(value)}
+                        placeholder={"Оставьте комментарий"}
+                        readOnly={isAddingComment}
+                        after={
+                            commentText.length > 0 && (
+                                <Icon24Send
+                                    className={"text-accent cursor-pointer"}
+                                    onClick={() =>
+                                        addComment({
+                                            translationId: id,
+                                            text: commentText,
+                                        })
+                                    }
+                                />
+                            )
+                        }
+                    />
+                </Div>
             </Group>
-
-            <Group>
+            {/* TODO */}
+            {/* <Group>
                 <Header children={"Больше интересного"} />
 
                 <div style={{ height: 300 }} />
-            </Group>
-
+            </Group> */}
             <ModalWrapper isOpened={addToStack.isOpened} onClose={addToStack.close}>
                 <ModalBody fullscreen={true}>
                     <TranslationAddToStack
@@ -166,19 +185,16 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     />
                 </ModalBody>
             </ModalWrapper>
-
             <ModalWrapper isOpened={viewComments.isOpened} onClose={viewComments.close}>
                 <ModalBody>
                     <TranslationComments onClose={viewComments.close} translationId={id} />
                 </ModalBody>
             </ModalWrapper>
-
             <ModalWrapper isOpened={viewStack.isOpened} onClose={viewStack.close}>
                 <ModalBody fullscreen={true}>
                     {viewStackId && <StackView id={viewStackId} />}
                 </ModalBody>
             </ModalWrapper>
-
             <ModalWrapper isOpened={editTranslation.isOpened} onClose={editTranslation.close}>
                 <ModalBody>
                     {data && (
@@ -199,7 +215,6 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     )}
                 </ModalBody>
             </ModalWrapper>
-
             {addedTranslationToStack.isOpened && (
                 <Snackbar
                     onClose={addedTranslationToStack.close}

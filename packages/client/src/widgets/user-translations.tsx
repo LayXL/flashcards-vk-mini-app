@@ -115,7 +115,7 @@ export const UserTranslations = () => {
                 isOpened={viewAddedTranslationModal.isOpened}
                 onClose={viewAddedTranslationModal.close}
             >
-                <ModalBody>
+                <ModalBody fullscreen>
                     {addedId && (
                         <TranslationView id={addedId} onClose={viewAddedTranslationModal.close} />
                     )}
@@ -145,13 +145,13 @@ const TranslationCardWithModal = ({ id, ...props }: TranslationCardWithModalProp
             />
 
             <ModalWrapper isOpened={viewTranslation.isOpened} onClose={viewTranslation.close}>
-                <ModalBody>
+                <ModalBody fullscreen>
                     <TranslationView id={id} onClose={viewTranslation.close} />
                 </ModalBody>
             </ModalWrapper>
 
             <ModalWrapper isOpened={addToStackModal.isOpened} onClose={addToStackModal.close}>
-                <ModalBody>
+                <ModalBody fullscreen>
                     <TranslationAddToStack translationId={id} onClose={addToStackModal.close} />
                 </ModalBody>
             </ModalWrapper>

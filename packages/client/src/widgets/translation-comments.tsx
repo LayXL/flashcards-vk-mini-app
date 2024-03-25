@@ -42,6 +42,7 @@ export const TranslationComments = ({ translationId: id, onClose }: TranslationC
             <Group>
                 {data?.map((comment) => (
                     <SimpleCell
+                        key={comment.id}
                         // TODO fix
                         before={
                             <Avatar
