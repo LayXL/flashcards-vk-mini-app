@@ -1,5 +1,7 @@
+import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
+import { checkForInappropriateData } from "../util/checkForInappropriateData"
 import { addTranslationToStack } from "./stacks"
 
 export const translations = router({
@@ -127,6 +129,24 @@ export const translations = router({
                 isPrivate,
                 stackId,
             } = input
+
+            if (
+                checkForInappropriateData(
+                    [
+                        vernacular,
+                        foreign,
+                        tags,
+                        example,
+                        transcriptions.map(({ transcription }) => transcription),
+                        foreignDescription,
+                    ].join(" ")
+                )
+            ) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Inappropriate data",
+                })
+            }
 
             const data = await prisma.translation.create({
                 data: {
