@@ -242,6 +242,24 @@ export const translations = router({
                 isPrivate,
             } = input
 
+            if (
+                checkForInappropriateData(
+                    [
+                        vernacular,
+                        foreign,
+                        tags,
+                        example,
+                        transcriptions.map(({ transcription }) => transcription),
+                        foreignDescription,
+                    ].join(" ")
+                )
+            ) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Inappropriate data",
+                })
+            }
+
             const res = await prisma.translation.update({
                 where: {
                     id,
