@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server"
 import z from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
+import { checkForInappropriateData } from "../util/checkForInappropriateData"
 import { palettes } from "../util/palettes"
 import { patterns } from "../util/patterns"
 
@@ -80,6 +81,13 @@ export const stacks = router({
             })
         )
         .mutation(async ({ ctx, input }) => {
+            if (checkForInappropriateData([input.name, input.description].join(" "))) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Inappropriate data",
+                })
+            }
+
             return await prisma.stack.create({
                 data: {
                     author: {
@@ -107,6 +115,13 @@ export const stacks = router({
             })
         )
         .mutation(async ({ ctx, input }) => {
+            if (checkForInappropriateData([input.name, input.description].join(" "))) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Inappropriate data",
+                })
+            }
+
             return await ctx.prisma.stack.update({
                 where: {
                     id: input.id,
