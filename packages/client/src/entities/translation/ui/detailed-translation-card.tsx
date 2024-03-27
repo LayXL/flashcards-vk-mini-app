@@ -10,6 +10,7 @@ import { Button, Caption, CellButton, Popover, Tappable, Text, Title } from "@vk
 import styled from "styled-components"
 import { vkTheme } from "../../../shared/helpers/vkTheme"
 import { FlagIcon } from "../../flag/ui/flag-icon"
+import { cn } from '../../../shared/helpers/cn';
 
 type DetailedTranslationCardProps = {
     id?: number
@@ -128,12 +129,12 @@ export const DetailedTranslationCard = ({
                     children={"Добавить"}
                     onClick={onAddInStack}
                 />
-                <Tappable
-                    hoverMode={"opacity"}
-                    activeMode={"opacity"}
-                    onClick={onReactClick}
-                    children={isLiked ? <Icon28LikeFillRed /> : <Icon28LikeOutline />}
-                />
+                <Tappable hoverMode={"opacity"} activeMode={"opacity"} onClick={onReactClick}>
+                    <div className={cn("flex flex-row items-center bg-secondary p-2 rounded-[10px] gap-[6px] cursor-pointer text-secondary", isLiked && "bg-vk-accent text-white")}>
+                        {isLiked ? <Icon28LikeFillRed /> : <Icon28LikeOutline />}
+                        12
+                    </div>
+                </Tappable>
             </Actions>
         </Secondary>
     </Wrapper>
@@ -141,9 +142,7 @@ export const DetailedTranslationCard = ({
 
 const Wrapper = styled.div`
     border-radius: 16px;
-    box-shadow:
-        0px 2px 24px 0px rgba(0, 0, 0, 0.08),
-        0px 0px 2px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 `
 
@@ -221,3 +220,4 @@ const ExampleWrapper = styled.div`
     flex-direction: column;
     gap: 8px;
 `
+
