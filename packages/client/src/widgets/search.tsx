@@ -59,62 +59,68 @@ export const Search = ({ onClose }: SearchProps) => {
                     icon={<Icon32Cards2Outline width={56} height={56} />}
                     children={"Начните вводить запрос сверху, чтобы найти стопку или перевод"}
                 />
+            ) : data?.translations?.length === 0 && data?.stacks?.length === 0 && isSuccess ? (
+                <Placeholder
+                    icon={<Icon56SearchOutline />}
+                    children={"По вашему запросу ничего не найдено..."}
+                />
             ) : (
-                data?.translations?.length === 0 &&
-                data?.stacks?.length === 0 &&
-                isSuccess && (
-                    <Placeholder
-                        icon={<Icon56SearchOutline />}
-                        children={"По вашему запросу ничего не найдено..."}
-                    />
-                )
-            )}
+                <>
+                    {(data?.translations?.length ?? 0) > 0 && (
+                        <Group>
+                            <Header
+                                aside={
+                                    <Link
+                                        children={"Показать все"}
+                                        onClick={moreTranslationsModal.open}
+                                    />
+                                }
+                                children={"Переводы"}
+                            />
 
-            {(data?.translations?.length ?? 0) > 0 && (
-                <Group>
-                    <Header
-                        aside={
-                            <Link children={"Показать все"} onClick={moreTranslationsModal.open} />
-                        }
-                        children={"Переводы"}
-                    />
+                            <CardScroll>
+                                <Div className={"flex gap-3 overflow-visible px-0"}>
+                                    {data?.translations.map((translation) => (
+                                        <SearchTranslationCard
+                                            key={translation.id}
+                                            id={translation.id}
+                                            vernacular={translation.vernacular}
+                                            foreign={translation.foreign}
+                                            languageVariationsFlags={["ame", "bre"]}
+                                        />
+                                    ))}
+                                </Div>
+                            </CardScroll>
+                        </Group>
+                    )}
+                    {(data?.stacks?.length ?? 0) > 0 && (
+                        <Group>
+                            <Header
+                                aside={
+                                    <Link
+                                        children={"Показать все"}
+                                        onClick={moreStacksModal.open}
+                                    />
+                                }
+                                children={"Стопки"}
+                            />
 
-                    <CardScroll>
-                        <Div className={"flex gap-3 overflow-visible px-0"}>
-                            {data?.translations.map((translation) => (
-                                <SearchTranslationCard
-                                    key={translation.id}
-                                    id={translation.id}
-                                    vernacular={translation.vernacular}
-                                    foreign={translation.foreign}
-                                    languageVariationsFlags={["ame", "bre"]}
-                                />
-                            ))}
-                        </Div>
-                    </CardScroll>
-                </Group>
-            )}
-            {(data?.stacks?.length ?? 0) > 0 && (
-                <Group>
-                    <Header
-                        aside={<Link children={"Показать все"} onClick={moreStacksModal.open} />}
-                        children={"Стопки"}
-                    />
-
-                    <CardScroll>
-                        <div className={"flex gap-3 overflow-visible px-0"}>
-                            {data?.stacks.map((stack) => (
-                                <SearchStackCard
-                                    key={stack.id}
-                                    id={stack.id}
-                                    name={stack.name}
-                                    cardsCount={stack.translationsCount}
-                                    isLiked={stack.isLiked}
-                                />
-                            ))}
-                        </div>
-                    </CardScroll>
-                </Group>
+                            <CardScroll>
+                                <div className={"flex gap-3 overflow-visible px-0"}>
+                                    {data?.stacks.map((stack) => (
+                                        <SearchStackCard
+                                            key={stack.id}
+                                            id={stack.id}
+                                            name={stack.name}
+                                            cardsCount={stack.translationsCount}
+                                            isLiked={stack.isLiked}
+                                        />
+                                    ))}
+                                </div>
+                            </CardScroll>
+                        </Group>
+                    )}
+                </>
             )}
 
             <ModalWrapper
