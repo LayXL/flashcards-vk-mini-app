@@ -57,13 +57,13 @@ export const SearchTranslationCard = ({
             </Tappable>
 
             <ModalWrapper isOpened={viewTranslation.isOpened} onClose={viewTranslation.close}>
-                <ModalBody>
+                <ModalBody fullscreen>
                     <TranslationView id={id} onClose={viewTranslation.close} />
                 </ModalBody>
             </ModalWrapper>
 
             <ModalWrapper isOpened={addToStack.isOpened} onClose={addToStack.close}>
-                <ModalBody>
+                <ModalBody fullscreen>
                     <TranslationAddToStack translationId={id} onClose={addToStack.close} />
                 </ModalBody>
             </ModalWrapper>
@@ -77,9 +77,7 @@ const Wrapper = styled.div`
     padding: 12px 9px 12px 12px;
     display: flex;
     border-radius: 12px;
-    box-shadow:
-        0px 2px 24px 0px rgba(0, 0, 0, 0.08),
-        0px 0px 2px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08);
     flex-direction: column;
     gap: 12px;
     background-color: ${vkTheme.colorBackgroundModal.normal.value};

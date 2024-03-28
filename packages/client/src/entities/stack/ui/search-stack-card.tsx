@@ -1,62 +1,83 @@
-import { Icon16Cards2, Icon28AddSquareOutline } from "@vkontakte/icons"
+import { Icon16Cards2, Icon28AddSquareOutline, Icon28CheckSquareOutline } from "@vkontakte/icons"
 import { Caption, Subhead } from "@vkontakte/vkui"
+import { useState } from "react"
 import styled from "styled-components"
+import { ModalBody } from "../../../features/modal/ui/modal-body"
+import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
+import { trpc } from "../../../shared/api"
 import { vkTheme } from "../../../shared/helpers/vkTheme"
+import { useModalState } from "../../../shared/hooks/useModalState"
+import { StackView } from "../../../widgets/stack-view"
 
 type SearchStackCardProps = {
+    id: number
     name: string
     cardsCount: number
+    isLiked?: boolean
 }
 
-export const SearchStackCard = ({ name }: SearchStackCardProps) => {
-    return (
-        <Wrapper>
-            <div
-                style={{
-                    boxSizing: "border-box",
-                    zIndex: -1,
-                    position: "absolute",
-                    top: 0,
-                    left: "50%",
-                    transform: "translate(-50%)",
-                    width: "142px",
-                    height: "64px",
-                    background:
-                        "linear-gradient(0deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.35) 100%), #2688EB",
-                    borderRadius: "4px",
-                }}
-            />
-            <div
-                style={{
-                    boxSizing: "border-box",
-                    zIndex: -1,
-                    position: "absolute",
-                    top: 4,
-                    left: "50%",
-                    transform: "translate(-50%)",
-                    width: "148px",
-                    height: "64px",
-                    background:
-                        "linear-gradient(0deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.10) 100%), #3C96F0",
-                    borderRadius: "4px",
-                }}
-            />
-            <Card>
-                <Subhead children={"Front Office"} weight={"1"} />
-                <Secondary>
-                    <CardsCount>
-                        <Icon16Cards2 />
-                        <Caption level={"2"} weight={"3"} children={"120"} />
-                    </CardsCount>
+export const SearchStackCard = ({ name, cardsCount, id, isLiked }: SearchStackCardProps) => {
+    const viewStack = useModalState()
 
-                    <Icon28AddSquareOutline color={vkTheme.colorAccentBlue.normal.value} />
-                </Secondary>
-            </Card>
-        </Wrapper>
+    const [isLikedState, setIsLikedState] = useState(isLiked)
+
+    const { mutate: addReaction } = trpc.stacks.addReaction.useMutation({
+        onMutate: () => setIsLikedState(true),
+    })
+
+    const { mutate: removeReaction } = trpc.stacks.removeReaction.useMutation({
+        onMutate: () => setIsLikedState(false),
+    })
+
+    return (
+        <>
+            <Wrapper onClick={viewStack.open}>
+                <div>
+                    <div className={"bg-vk-secondary h-1 rounded-t-xl mx-3"} />
+                    <div className={"bg-vk-secondary h-1 rounded-t-xl mx-1.5"} />
+                </div>
+                <Card>
+                    <Subhead children={name} weight={"1"} />
+                    <Secondary>
+                        <CardsCount>
+                            <Icon16Cards2 />
+                            <Caption level={"2"} weight={"3"} children={cardsCount} />
+                        </CardsCount>
+
+                        {/* TODO */}
+                        <div
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                isLikedState
+                                    ? removeReaction({ stackId: id })
+                                    : addReaction({ stackId: id })
+                            }}
+                        >
+                            {!isLikedState ? (
+                                <Icon28AddSquareOutline
+                                    color={vkTheme.colorAccentBlue.normal.value}
+                                />
+                            ) : (
+                                <Icon28CheckSquareOutline
+                                    color={vkTheme.colorAccentBlue.normal.value}
+                                />
+                            )}
+                        </div>
+                    </Secondary>
+                </Card>
+            </Wrapper>
+
+            <ModalWrapper isOpened={viewStack.isOpened} onClose={viewStack.close}>
+                <ModalBody fullscreen>
+                    <StackView id={id} />
+                </ModalBody>
+            </ModalWrapper>
+        </>
     )
 }
 
 const Wrapper = styled.div`
+    cursor: pointer;
     position: relative;
     padding-top: 10px;
 `
@@ -70,9 +91,7 @@ const Card = styled.div`
     padding: 12px 9px 12px 12px;
     border-radius: 8px;
     width: 160px;
-    box-shadow:
-        0px 2px 24px 0px rgba(0, 0, 0, 0.08),
-        0px 0px 2px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08);
     background-color: ${vkTheme.colorBackgroundModal.normal.value};
 `
 

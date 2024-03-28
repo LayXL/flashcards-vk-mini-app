@@ -3,12 +3,14 @@ import { trpc } from "../shared/api"
 import { StackSelect } from "./stack-select"
 
 type TranslationAddToStackProps = {
+    title?: string
     translationId: number
     onClose: () => void
     onSuccess?: (id: number) => void
 }
 
 export const TranslationAddToStack = ({
+    title,
     translationId,
     onClose,
     onSuccess,
@@ -35,11 +37,12 @@ export const TranslationAddToStack = ({
                 translationId,
             })
         },
-        [addTranslationToStack, translationId],
+        [addTranslationToStack, translationId]
     )
 
     return (
         <StackSelect
+            title={title || "Добавить в стопку"}
             filter={"created"}
             canCreateNewStack={true}
             onClose={onClose}

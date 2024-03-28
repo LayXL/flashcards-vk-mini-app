@@ -9,6 +9,7 @@ import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
 
 type StackSelectProps = {
+    title?: string
     onSelect: (id: number) => void
     onClear?: () => void
     onClose: () => void
@@ -18,6 +19,7 @@ type StackSelectProps = {
 }
 
 export const StackSelect = ({
+    title,
     onClose,
     onSelect,
     canCreateNewStack,
@@ -35,7 +37,7 @@ export const StackSelect = ({
         <>
             <ModalPageHeader
                 before={<PanelHeaderBack onClick={onClose} />}
-                children={"Выберите стопку"}
+                children={title || "Выберите стопку"}
             />
 
             {(clearable || canCreateNewStack) && (
