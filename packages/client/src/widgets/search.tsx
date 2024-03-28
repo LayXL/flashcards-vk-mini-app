@@ -54,18 +54,20 @@ export const Search = ({ onClose }: SearchProps) => {
                 onChange={({ currentTarget: { value } }) => setSearchQuery(value)}
             />
 
-            {debouncedSearchQuery.length < 3 && (
+            {debouncedSearchQuery.length < 3 ? (
                 <Placeholder
                     icon={<Icon32Cards2Outline width={56} height={56} />}
                     children={"Начните вводить запрос сверху, чтобы найти стопку или перевод"}
                 />
-            )}
-
-            {data?.translations?.length === 0 && data?.stacks?.length === 0 && isSuccess && (
-                <Placeholder
-                    icon={<Icon56SearchOutline />}
-                    children={"По вашему запросу ничего не найдено..."}
-                />
+            ) : (
+                data?.translations?.length === 0 &&
+                data?.stacks?.length === 0 &&
+                isSuccess && (
+                    <Placeholder
+                        icon={<Icon56SearchOutline />}
+                        children={"По вашему запросу ничего не найдено..."}
+                    />
+                )
             )}
 
             {(data?.translations?.length ?? 0) > 0 && (
@@ -85,7 +87,7 @@ export const Search = ({ onClose }: SearchProps) => {
                                     id={translation.id}
                                     vernacular={translation.vernacular}
                                     foreign={translation.foreign}
-                                    languageVariationsFlags={["ame"]}
+                                    languageVariationsFlags={["ame", "bre"]}
                                 />
                             ))}
                         </Div>
