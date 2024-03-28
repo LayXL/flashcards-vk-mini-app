@@ -1,4 +1,13 @@
-import { Button, Caption, Div, Group, Header, Headline, PanelHeader } from "@vkontakte/vkui"
+import {
+    Button,
+    Caption,
+    Div,
+    Group,
+    Header,
+    Headline,
+    PanelHeader,
+    Spacing,
+} from "@vkontakte/vkui"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { SearchBar } from "../features/search/ui/search-bar"
@@ -59,6 +68,8 @@ export const Home = () => {
                     </div>
                 </Div>
             </Group>
+
+            <Spacing size={128} />
 
             <ModalWrapper isOpened={fiveLettersModal.isOpened} onClose={fiveLettersModal.close}>
                 <ModalBody fullscreen>
