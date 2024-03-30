@@ -12,6 +12,7 @@ import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterOutput, trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
 import { TranslationAdd } from "./translation-add"
+import { TranslationView } from "./translation-view"
 
 type Translation = RouterOutput["translations"]["getUserTranslations"][number]
 
@@ -25,6 +26,7 @@ export const TranslationsTable = () => {
         [data, selectedId]
     )
 
+    const viewModal = useModalState(false)
     const editModal = useModalState(false)
     const addModal = useModalState(false)
 
@@ -44,7 +46,8 @@ export const TranslationsTable = () => {
                 ),
                 cell: (info) => (
                     <IconButton
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.stopPropagation()
                             setSelectedId(info.row.original.id)
                             editModal.open()
                         }}
@@ -94,7 +97,14 @@ export const TranslationsTable = () => {
                 </thead>
                 <tbody className={"[&>*:nth-child(even)]:bg-vk-secondary"}>
                     {table.getRowModel().rows.map((row) => (
-                        <tr className={""} key={row.id}>
+                        <tr
+                            className={"cursor-pointer"}
+                            key={row.id}
+                            onClick={() => {
+                                setSelectedId(row.original.id)
+                                viewModal.open()
+                            }}
+                        >
                             {row.getVisibleCells().map((cell) => (
                                 <td className={"py-3 px-1.5"} key={cell.id}>
                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -106,7 +116,7 @@ export const TranslationsTable = () => {
             </table>
 
             <ModalWrapper isOpened={editModal.isOpened} onClose={editModal.close}>
-                <ModalBody>
+                <ModalBody fullscreen>
                     {editDefaultValues && (
                         <TranslationAdd
                             onAdd={() => {
@@ -133,7 +143,7 @@ export const TranslationsTable = () => {
             </ModalWrapper>
 
             <ModalWrapper isOpened={addModal.isOpened} onClose={addModal.close}>
-                <ModalBody>
+                <ModalBody fullscreen>
                     <TranslationAdd
                         onAdd={() => {
                             addModal.close()
@@ -141,6 +151,12 @@ export const TranslationsTable = () => {
                         }}
                         onClose={addModal.close}
                     />
+                </ModalBody>
+            </ModalWrapper>
+
+            <ModalWrapper isOpened={viewModal.isOpened} onClose={viewModal.close}>
+                <ModalBody fullscreen>
+                    {selectedId && <TranslationView id={selectedId} onClose={viewModal.close} />}
                 </ModalBody>
             </ModalWrapper>
         </>
