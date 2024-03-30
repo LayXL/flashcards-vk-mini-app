@@ -109,6 +109,11 @@ export const TranslationsTable = () => {
                 <ModalBody>
                     {editDefaultValues && (
                         <TranslationAdd
+                            onAdd={() => {
+                                editModal.close()
+                                refetch()
+                            }}
+                            onClose={editModal.close}
                             defaultValues={{
                                 id: editDefaultValues.id,
                                 languageVariationId:
