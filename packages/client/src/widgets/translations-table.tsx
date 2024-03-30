@@ -62,7 +62,7 @@ export const TranslationsTable = () => {
                 header: "На родном языке",
             }),
             columnHelper.accessor("foreignDescription", {
-                header: "Описание слова на языке перевода",
+                header: "Описание на языке перевода",
             }),
             columnHelper.accessor("transcriptions", {
                 header: "Транскрипция",
