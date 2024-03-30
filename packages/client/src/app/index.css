@@ -26,3 +26,22 @@ p {
     font-size: 1rem;
     line-height: 1.5rem;
 }
+
+table,
+table tr,
+tr td,
+table tbody,
+table thead,
+table tfoot,
+table tr th,
+table tfoot tr tf {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-image: none;
+    text-align: unset;
+    font-weight: unset;
+}

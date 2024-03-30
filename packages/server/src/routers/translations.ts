@@ -6,7 +6,7 @@ import { addTranslationToStack } from "./stacks"
 
 export const translations = router({
     getUserTranslations: privateProcedure.query(async ({ ctx }) => {
-        return await prisma.translation.findMany({
+        return await ctx.prisma.translation.findMany({
             where: {
                 author: {
                     vkId: ctx.vkId.toString(),
@@ -17,6 +17,9 @@ export const translations = router({
                 languageVariation: true,
                 tags: true,
                 transcriptions: true,
+            },
+            orderBy: {
+                createdAt: "desc",
             },
         })
     }),

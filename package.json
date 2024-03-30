@@ -1,25 +1,25 @@
 {
-    "name": "flashcards-vk-mini-app",
-    "private": true,
-    "version": "1.0.0",
-    "repository": "https://github.com/LayXL/flashcards-vk-mini-app.git",
-    "license": "MIT",
-    "scripts": {
-        "dev": "concurrently 'yarn:dev:client' 'yarn:dev:server'",
-        "dev:client": "cd packages/client && yarn dev",
-        "dev:server": "npx prisma migrate deploy && cd packages/server && yarn dev",
-        "build:client": "cd packages/client && yarn run build",
-        "migrate-dev": "cd packages/server && prisma migrate dev",
-        "lt": "node lt.js"
-    },
-    "workspaces": [
-        "packages/*"
-    ],
-    "dependencies": {
-        "concurrently": "^8.2.2",
-        "dotenv": "^16.4.4",
-        "localtunnel": "^2.0.2",
-        "styled-components": "^6.1.8",
-        "ts-node": "^10.9.2"
-    }
+  "name": "flashcards-vk-mini-app",
+  "private": true,
+  "version": "1.0.0",
+  "repository": "https://github.com/LayXL/flashcards-vk-mini-app.git",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently 'yarn:dev:client' 'yarn:dev:server'",
+    "dev:client": "cd packages/client && yarn dev",
+    "dev:server": "npx prisma migrate deploy && cd packages/server && yarn dev",
+    "build:client": "cd packages/client && yarn run build",
+    "migrate-dev": "cd packages/server && prisma migrate dev",
+    "lt": "node lt.js"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.4",
+    "localtunnel": "^2.0.2",
+    "styled-components": "^6.1.8",
+    "ts-node": "^10.9.2"
+  }
 }
