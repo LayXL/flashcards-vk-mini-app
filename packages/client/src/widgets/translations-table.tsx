@@ -56,7 +56,7 @@ export const TranslationsTable = () => {
                 ),
             }),
             columnHelper.accessor("foreign", {
-                header: "На иностранном языке",
+                header: "На языке перевода",
             }),
             columnHelper.accessor("vernacular", {
                 header: "На родном языке",
@@ -81,7 +81,7 @@ export const TranslationsTable = () => {
             <table>
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id} className={"bg-vk-modal rounded-xl"}>
+                        <tr key={headerGroup.id} className={"bg-vk-modal rounded-xl text-sm"}>
                             {headerGroup.headers.map((header) => (
                                 <th className={"py-3 px-1.5 font-semibold"} key={header.id}>
                                     {header.isPlaceholder
