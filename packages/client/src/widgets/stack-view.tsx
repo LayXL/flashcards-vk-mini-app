@@ -181,7 +181,8 @@ export const StackView = ({ id }: StackViewProps) => {
                                 {data ? (
                                     exploringStackProgress > 0 ? (
                                         <>
-                                            Стопка изучена на <b>{exploringStackProgress}%</b>
+                                            Стопка изучена на{" "}
+                                            <b>{Math.round(exploringStackProgress)}%</b>
                                         </>
                                     ) : (
                                         <>
