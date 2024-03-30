@@ -66,7 +66,12 @@ export const TranslationsTable = () => {
             }),
             columnHelper.accessor("transcriptions", {
                 header: "Транскрипция",
-                cell: (info) => info.getValue().map((t) => <p>{t.transcription}</p>),
+                cell: (info) =>
+                    info
+                        .getValue()
+                        .map((t: Translation["transcriptions"][number]) => (
+                            <p>{t.transcription}</p>
+                        )),
             }),
             columnHelper.accessor("example", {
                 header: "Пример использования",
