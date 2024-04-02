@@ -89,8 +89,6 @@ export const Router = () => {
 
     useEffect(() => {
         if (isSuccess && !onboardingCompleted) {
-            console.log(true)
-
             bridge
                 .send("VKWebAppShowSlidesSheet", {
                     slides: [
@@ -124,7 +122,7 @@ export const Router = () => {
                     ],
                 })
                 .then(() => {
-                    // completeOnboarding()
+                    completeOnboarding()
                 })
                 .catch((e) => console.log(e))
         }
