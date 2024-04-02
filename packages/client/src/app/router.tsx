@@ -12,6 +12,7 @@ import { Home } from "../panels/home"
 import { New } from "../panels/new"
 import { Profile } from "../panels/profile"
 import { Stacks } from "../panels/stacks"
+import { trpc } from "../shared/api"
 import { getStorageValue } from "../shared/helpers/getStorageValue"
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -50,6 +51,14 @@ export const router = createHashRouter([
 ])
 
 export const Router = () => {
+    const data = trpc.updateInfo.useQuery(undefined, {
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+    })
+
+    console.log(data.data)
+
     const { view, modal, panel } = useActiveVkuiLocation()
     const routeNavigator = useRouteNavigator()
 

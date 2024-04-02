@@ -57,7 +57,10 @@ export const Stats = () => {
                         <div className={"flex flex-1 gap-2 items-center"}>
                             <Avatar
                                 size={24}
-                                src={getSuitableAvatarUrl(userData?.avatarUrls, 24)}
+                                src={
+                                    userData?.avatarUrls &&
+                                    getSuitableAvatarUrl(userData?.avatarUrls, 24)
+                                }
                             />
                             <Caption
                                 children={plural(currentSeason?.user?.points ?? 0, [

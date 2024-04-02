@@ -12,19 +12,12 @@ import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { SearchBar } from "../features/search/ui/search-bar"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
-import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
 import { DailyStreak } from "../widgets/daily-streak"
 import { FiveLetters } from "../widgets/five-letters"
 import { Stats } from "../widgets/stats"
 
 export const Home = () => {
-    trpc.updateInfo.useQuery(undefined, {
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-    })
-
     const fiveLettersModal = useModalState()
 
     return (

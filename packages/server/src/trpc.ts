@@ -45,11 +45,19 @@ export const createContext = async ({ req, res }: trpcExpress.CreateExpressConte
 
     const vkId = getUserIdFromHeader()?.toString?.()
 
-    const user = await prisma.user.findFirst({
+    let user = await prisma.user.findFirst({
         where: {
             vkId,
         },
     })
+
+    if (!user) {
+        user = await prisma.user.create({
+            data: {
+                vkId,
+            },
+        })
+    }
 
     return {
         vkId,
