@@ -126,6 +126,7 @@ export const Router = () => {
                 .then(() => {
                     // completeOnboarding()
                 })
+                .catch((e) => console.log(e))
         }
     }, [completeOnboarding, isSuccess, onboardingCompleted])
 
