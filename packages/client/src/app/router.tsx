@@ -75,8 +75,6 @@ export const Router = () => {
         queryFn: async () => (await getStorageValue("onboardingCompleted")) === "true",
     })
 
-    console.log("onboardingCompleted", onboardingCompleted)
-
     const { mutate: completeOnboarding } = useMutation({
         mutationKey: ["vkStorage", "completeOnboarding"],
         mutationFn: () =>
@@ -90,6 +88,9 @@ export const Router = () => {
     })
 
     useEffect(() => {
+        console.log(isSuccess)
+        console.log(onboardingCompleted)
+
         if (isSuccess && !onboardingCompleted) {
             bridge
                 .send("VKWebAppShowSlidesSheet", {
