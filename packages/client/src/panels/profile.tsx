@@ -1,3 +1,4 @@
+import { Icon24HieroglyphCharacterOutline } from "@vkontakte/icons"
 import {
     Button,
     CardScroll,
@@ -51,6 +52,7 @@ export const Profile = () => {
                 {data?.canModifyOthersTranslations && (
                     <Div>
                         <Button
+                            before={<Icon24HieroglyphCharacterOutline />}
                             children={"Кнопка крутой лингвистки"}
                             stretched
                             size={"l"}
