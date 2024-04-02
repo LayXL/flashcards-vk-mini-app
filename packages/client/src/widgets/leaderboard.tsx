@@ -1,6 +1,6 @@
-import { Icon56UsersOutline } from "@vkontakte/icons"
-import { ModalPageHeader, PanelHeaderBack, Placeholder, Tabs, TabsItem } from "@vkontakte/vkui"
-import { useState } from "react"
+import bridge from "@vkontakte/vk-bridge"
+import { ModalPageHeader, PanelHeaderBack, Tabs, TabsItem } from "@vkontakte/vkui"
+import { useEffect, useState } from "react"
 import { RatingUserCard } from "../entities/rating/ui/rating-user-card"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
@@ -10,10 +10,37 @@ type LeaderboardProps = {
 }
 
 export const Leaderboard = ({ onClose }: LeaderboardProps) => {
-    const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery()
+    const [tab, setTab] = useState<"friends" | "global">("friends")
+    const [token, setToken] = useState<string | null>(null)
+
+    const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery(
+        tab === "global"
+            ? {
+                  type: "global",
+              }
+            : {
+                  type: "friends",
+                  token: token ?? "",
+              },
+        {
+            enabled: tab === "global" || !!token,
+        }
+    )
     const { data: currentUser } = trpc.getUser.useQuery()
 
-    const [tab, setTab] = useState<"friends" | "global">("global")
+    useEffect(() => {
+        if (tab !== "friends") return
+
+        bridge
+            .send("VKWebAppGetAuthToken", {
+                app_id: 51843841,
+                scope: "friends",
+            })
+            .then((data) => {
+                if (!data.access_token) return
+                setToken(data.access_token)
+            })
+    }, [tab])
 
     return (
         <>
@@ -35,26 +62,16 @@ export const Leaderboard = ({ onClose }: LeaderboardProps) => {
                 />
             </Tabs>
 
-            {tab === "global" &&
-                leaderboardData?.map(({ user, points }, i) => (
-                    <RatingUserCard
-                        key={i}
-                        avatar={getSuitableAvatarUrl(user.avatarUrls, 64)}
-                        name={user.fullName}
-                        points={points}
-                        place={i + 1}
-                        isCurrentUser={user.id === currentUser?.id}
-                    />
-                ))}
-
-            {tab === "friends" && (
-                <Placeholder
-                    stretched={true}
-                    icon={<Icon56UsersOutline />}
-                    header={"В разработке"}
-                    children={"Раздел с рейтингом друзей сейчас в разработке"}
+            {leaderboardData?.map(({ user, points }, i) => (
+                <RatingUserCard
+                    key={i}
+                    avatar={getSuitableAvatarUrl(user.avatarUrls, 64)}
+                    name={user.fullName}
+                    points={points}
+                    place={i + 1}
+                    isCurrentUser={user.id === currentUser?.id}
                 />
-            )}
+            ))}
         </>
     )
 }

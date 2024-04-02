@@ -1,4 +1,6 @@
+import z from "zod"
 import { privateProcedure, router } from "../trpc"
+import { vkApi } from "../vkApi"
 
 export const seasons = [
     [12, 1, 2],
@@ -50,32 +52,64 @@ export const rating = router({
             },
         }
     }),
-    getLeaderboard: privateProcedure.query(async ({ ctx }) => {
-        return await ctx.prisma.userRankedSeasonStatistic.findMany({
-            where: {
-                rankedSeason: {
-                    startsAt: {
-                        lte: new Date(),
+    getLeaderboard: privateProcedure
+        .input(
+            z.discriminatedUnion("type", [
+                z.object({
+                    type: z.literal("global"),
+                }),
+                z.object({
+                    type: z.literal("friends"),
+                    token: z.string(),
+                }),
+            ])
+        )
+        .query(async ({ ctx, input }) => {
+            return await ctx.prisma.userRankedSeasonStatistic.findMany({
+                where: {
+                    rankedSeason: {
+                        startsAt: {
+                            lte: new Date(),
+                        },
+                        endsAt: {
+                            gte: new Date(),
+                        },
                     },
-                    endsAt: {
-                        gte: new Date(),
+                    user:
+                        input.type === "friends"
+                            ? {
+                                  OR: [
+                                      {
+                                          vkId: {
+                                              in: (
+                                                  await vkApi.api.friends.get({
+                                                      access_token: input.token,
+                                                      user_id: parseInt(ctx.vkId),
+                                                  })
+                                              ).items.map((x) => x.toString()),
+                                          },
+                                      },
+                                      {
+                                          id: ctx.userId,
+                                      },
+                                  ],
+                              }
+                            : undefined,
+                },
+                orderBy: {
+                    points: "desc",
+                },
+                select: {
+                    points: true,
+                    user: {
+                        select: {
+                            fullName: true,
+                            avatarUrls: true,
+                            id: true,
+                        },
                     },
                 },
-            },
-            orderBy: {
-                points: "desc",
-            },
-            select: {
-                points: true,
-                user: {
-                    select: {
-                        fullName: true,
-                        avatarUrls: true,
-                        id: true,
-                    },
-                },
-            },
-            take: 100,
-        })
-    }),
+                take: 100,
+            })
+        }),
 })
