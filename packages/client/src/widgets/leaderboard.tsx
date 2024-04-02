@@ -11,21 +11,13 @@ type LeaderboardProps = {
 
 export const Leaderboard = ({ onClose }: LeaderboardProps) => {
     const [tab, setTab] = useState<"friends" | "global">("friends")
-    const [token, setToken] = useState<string | null>(null)
+    const [frinedsIds, setFriendsIds] = useState<number[] | null>(null)
 
-    const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery(
-        tab === "global"
-            ? {
-                  type: "global",
-              }
-            : {
-                  type: "friends",
-                  token: token ?? "",
-              },
-        {
-            enabled: tab === "global" || !!token,
-        }
-    )
+    // TODO придумать что выводить, если нет друзей, играющие в этот сезон
+
+    const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery({
+        users: tab === "global" ? undefined : frinedsIds ?? [],
+    })
     const { data: currentUser } = trpc.getUser.useQuery()
 
     useEffect(() => {
@@ -38,9 +30,22 @@ export const Leaderboard = ({ onClose }: LeaderboardProps) => {
             })
             .then((data) => {
                 if (!data.access_token) return
-                setToken(data.access_token)
+
+                bridge
+                    .send("VKWebAppCallAPIMethod", {
+                        method: "friends.get",
+                        params: {
+                            user_id: parseInt(currentUser?.vkId ?? "0"),
+                            v: "5.131",
+                            access_token: data.access_token,
+                        },
+                    })
+                    .then((data) => {
+                        if (!data.response?.items) return
+                        setFriendsIds(data.response.items)
+                    })
             })
-    }, [tab])
+    }, [currentUser?.vkId, tab])
 
     return (
         <>
