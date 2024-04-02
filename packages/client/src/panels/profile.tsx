@@ -47,17 +47,17 @@ export const Profile = () => {
                         nextLevelXp={data.progress.nextLevelXp}
                     />
                 )}
-            </Group>
 
-            <Group>
-                <Div>
-                    <Button
-                        children={"Кнопка крутой лингвистки"}
-                        stretched
-                        size={"l"}
-                        onClick={translationsTableModal.open}
-                    />
-                </Div>
+                {data?.canModifyOthersTranslations && (
+                    <Div>
+                        <Button
+                            children={"Кнопка крутой лингвистки"}
+                            stretched
+                            size={"l"}
+                            onClick={translationsTableModal.open}
+                        />
+                    </Div>
+                )}
             </Group>
 
             <Group>
