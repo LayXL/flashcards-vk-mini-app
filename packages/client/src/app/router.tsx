@@ -51,13 +51,11 @@ export const router = createHashRouter([
 ])
 
 export const Router = () => {
-    const data = trpc.updateInfo.useQuery(undefined, {
+    trpc.updateInfo.useQuery(undefined, {
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
     })
-
-    console.log(data.data)
 
     const { view, modal, panel } = useActiveVkuiLocation()
     const routeNavigator = useRouteNavigator()
@@ -76,6 +74,8 @@ export const Router = () => {
         queryKey: ["vkStorage", "onboardingCompleted"],
         queryFn: async () => (await getStorageValue("onboardingCompleted")) === "true",
     })
+
+    console.log("onboardingCompleted", onboardingCompleted)
 
     const { mutate: completeOnboarding } = useMutation({
         mutationKey: ["vkStorage", "completeOnboarding"],
