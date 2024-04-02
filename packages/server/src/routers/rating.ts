@@ -46,7 +46,7 @@ export const rating = router({
                     (
                         await ctx.prisma
                             .$queryRaw`with t as (select row_number() over (order by "points" desc) as row_index, "userId" from "UserRankedSeasonStatistic" where "rankedSeasonId"=${season.id}) select "row_index" from t where "userId"=${ctx.userId}`
-                    )[0].row_index
+                    )[0]?.row_index ?? null
                 ),
             },
         }

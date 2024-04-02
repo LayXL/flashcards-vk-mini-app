@@ -74,7 +74,7 @@ export const Router = () => {
         isSuccess,
     } = useQuery({
         queryKey: ["vkStorage", "onboardingCompleted"],
-        queryFn: () => getStorageValue("onboardingCompleted"),
+        queryFn: async () => (await getStorageValue("onboardingCompleted")) === "true",
     })
 
     const { mutate: completeOnboarding } = useMutation({
