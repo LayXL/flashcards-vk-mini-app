@@ -4,6 +4,7 @@ import { DateTime } from "luxon"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { plural } from "../shared/helpers/plural"
 import { useModalState } from "../shared/hooks/useModalState"
@@ -44,7 +45,13 @@ export const Stats = () => {
                         )}
                     </div>
 
-                    <div className={"flex-col text-accent"}>
+                    <div
+                        className={cn(
+                            "text-accent",
+                            currentSeason?.user?.place === null && "hidden",
+                            currentSeason?.user?.place !== null && "flex-col"
+                        )}
+                    >
                         <Subhead children={"Ваше место"} weight={"1"} />
                         <Title
                             children={currentSeason?.user.place?.toString()}

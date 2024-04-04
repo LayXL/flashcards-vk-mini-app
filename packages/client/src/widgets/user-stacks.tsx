@@ -3,8 +3,16 @@ import {
     Icon24LikeOutline,
     Icon24UserOutline,
     Icon28CheckCircleOutline,
+    Icon32Cards2Outline,
 } from "@vkontakte/icons"
-import { Div, Link, Snackbar, SubnavigationBar, SubnavigationButton } from "@vkontakte/vkui"
+import {
+    Div,
+    Link,
+    Placeholder,
+    Snackbar,
+    SubnavigationBar,
+    SubnavigationButton,
+} from "@vkontakte/vkui"
 import { useState } from "react"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -18,7 +26,7 @@ import { StackView } from "./stack-view"
 export const UserStacks = () => {
     const [filter, setFilter] = useState<RouterInput["stacks"]["getUserStacks"]["filter"]>("all")
 
-    const { data, isLoading } = trpc.stacks.getUserStacks.useQuery({
+    const { data, isLoading, isSuccess } = trpc.stacks.getUserStacks.useQuery({
         filter,
     })
 
@@ -80,6 +88,14 @@ export const UserStacks = () => {
                     />
                 ))}
             </Div>
+
+            {isSuccess && data?.items.length === 0 && (
+                <Placeholder
+                    icon={<Icon32Cards2Outline width={56} height={56} />}
+                    header={"У вас нет стопок"}
+                    children={"Создайте свою первую стопку"}
+                />
+            )}
 
             <ModalWrapper isOpened={createStackModal.isOpened} onClose={createStackModal.close}>
                 <ModalBody>

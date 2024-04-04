@@ -3,8 +3,16 @@ import {
     Icon24LikeOutline,
     Icon24UserOutline,
     Icon28CheckCircleOutline,
+    Icon28HieroglyphCharacterOutline,
 } from "@vkontakte/icons"
-import { Div, Link, Snackbar, SubnavigationBar, SubnavigationButton } from "@vkontakte/vkui"
+import {
+    Div,
+    Link,
+    Placeholder,
+    Snackbar,
+    SubnavigationBar,
+    SubnavigationButton,
+} from "@vkontakte/vkui"
 import { ComponentProps, useState } from "react"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -20,7 +28,11 @@ export const UserTranslations = () => {
     // TODO rewrite
     const [filter, setFilter] = useState<RouterInput["stacks"]["getUserStacks"]["filter"]>("all")
 
-    const { data: userTranslations, isLoading } = trpc.translations.getUserTranslations.useQuery()
+    const {
+        data: userTranslations,
+        isLoading,
+        isSuccess,
+    } = trpc.translations.getUserTranslations.useQuery()
 
     const [addedId, setAddedId] = useState<number | null>(null)
 
@@ -76,6 +88,14 @@ export const UserTranslations = () => {
                     />
                 ))}
             </Div>
+
+            {isSuccess && userTranslations?.length === 0 && (
+                <Placeholder
+                    icon={<Icon28HieroglyphCharacterOutline width={56} height={56} />}
+                    header={"У вас нет переводов"}
+                    children={"Создайте свой первый перевод или добавьте из существующих"}
+                />
+            )}
 
             <ModalWrapper
                 isOpened={addTranslationModal.isOpened}

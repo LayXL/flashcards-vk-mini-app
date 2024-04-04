@@ -8,6 +8,7 @@ import {
     TabsItem,
 } from "@vkontakte/vkui"
 import { useEffect, useState } from "react"
+import { PrizePlace } from "../entities/rating/ui/prize-place"
 import { RatingUserCard } from "../entities/rating/ui/rating-user-card"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
@@ -75,13 +76,32 @@ export const Leaderboard = ({ onClose }: LeaderboardProps) => {
                 />
             </Tabs>
 
-            {leaderboardData?.map(({ user, points }, i) => (
+            <div className={"flex gap-2 justify-around items-center py-3"}>
+                {[1, 0, 2].map((i) => (
+                    <div className={"flex-1"}>
+                        {leaderboardData?.slice(0, 3)[i] && (
+                            <PrizePlace
+                                key={i}
+                                place={i + 1}
+                                name={leaderboardData?.slice(0, 3)[i].user.fullName}
+                                points={leaderboardData?.slice(0, 3)[i].points}
+                                avatarUrl={getSuitableAvatarUrl(
+                                    leaderboardData?.slice(0, 3)[i].user.avatarUrls,
+                                    64
+                                )}
+                            />
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            {leaderboardData?.slice(3).map(({ user, points }, i) => (
                 <RatingUserCard
                     key={i}
                     avatar={getSuitableAvatarUrl(user.avatarUrls, 64)}
                     name={user.fullName}
                     points={points}
-                    place={i + 1}
+                    place={i + 4}
                     isCurrentUser={user.id === currentUser?.id}
                 />
             ))}

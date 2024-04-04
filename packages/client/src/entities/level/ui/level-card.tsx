@@ -66,7 +66,7 @@ export const LevelCard = ({
                 <div className={"flex"}>
                     <Subhead
                         children={
-                            nextLevelXp && currentXp ? (
+                            nextLevelXp && currentXp !== undefined ? (
                                 `${nextLevelXp - currentXp} XP до след. уровня`
                             ) : (
                                 <div
@@ -79,7 +79,9 @@ export const LevelCard = ({
                         className={"flex-1"}
                     />
                     <Subhead className={"flex items-center"}>
-                        {currentXp || (
+                        {currentXp !== undefined ? (
+                            currentXp
+                        ) : (
                             <div
                                 className={
                                     "inline-block h-lh w-8 bg-vk-secondary rounded-full animate-pulse mr-1"
