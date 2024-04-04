@@ -13,7 +13,7 @@ export const PrizePlace = ({ name, points, avatarUrl, place }: PrizePlaceProps) 
         <div className={"flex flex-col gap-2 items-center select-none"}>
             <div
                 className={
-                    "aspect-square rounded-full w-[var(--width)] bg-[var(--color)] p-[3px] relative"
+                    "rounded-full w-[var(--width)] h-[var(--width)] bg-[var(--color)] p-[3px] relative"
                 }
                 style={{
                     "--color": place === 1 ? "#FEC106" : place === 2 ? "#A9BBC5" : "#E96F2B",
@@ -22,7 +22,7 @@ export const PrizePlace = ({ name, points, avatarUrl, place }: PrizePlaceProps) 
             >
                 <div
                     className={
-                        "absolute bg-[var(--color)] rounded-full w-6 aspect-square flex items-center justify-center"
+                        "absolute bg-[var(--color)] rounded-full w-6 h-6 flex items-center justify-center"
                     }
                 >
                     <Title level={"3"} weight={"2"} children={place} className={"text-white"} />
