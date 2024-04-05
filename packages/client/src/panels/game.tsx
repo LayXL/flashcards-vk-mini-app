@@ -12,6 +12,7 @@ import {
     Group,
     PanelHeader,
     Placeholder,
+    Spacing,
     Tabs,
     TabsItem,
     Title,
@@ -161,6 +162,7 @@ export const Game = () => {
                     </Group>
                     <Group>
                         <Leaderboard minimized defaultTab={"global"} />
+                        <Spacing size={128} />
                     </Group>
                 </>
             )}
