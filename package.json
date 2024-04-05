@@ -19,7 +19,6 @@
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.4",
     "localtunnel": "^2.0.2",
-    "styled-components": "^6.1.8",
     "ts-node": "^10.9.2"
   }
 }
