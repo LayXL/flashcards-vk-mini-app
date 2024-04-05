@@ -111,7 +111,7 @@ export const ReportsView = () => {
                             />
                             <Button
                                 stretched
-                                children={"Скрыть перевод"}
+                                children={"Решённая жалоба"}
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     changeStatus({ id: item.id, status: "resolved" })
