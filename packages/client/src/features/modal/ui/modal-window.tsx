@@ -7,7 +7,9 @@ type ModalWindowProps = {
     isOpened: boolean
     children: ReactNode
     title?: ReactNode | string
-    buttonType?: "close" | "back"
+    buttonType?: "close" | "back" | "none"
+    fullwidth?: boolean
+    fullscreen?: boolean
 } & (
     | {
           onClose: () => void
@@ -21,14 +23,16 @@ export const ModalWindow = ({
     isOpened,
     children,
     title,
-    buttonType,
+    buttonType = "close",
+    fullwidth,
+    fullscreen,
     ...props
 }: ModalWindowProps) => {
-    const onClose = () => {}
+    const onClose = "onClose" in props ? props.onClose : props.close
 
     return (
-        <ModalWrapper isOpened={isOpened} onClose={props.onClose || props.close}>
-            <ModalBody fullwidth={true} fullscreen={true}>
+        <ModalWrapper isOpened={isOpened} onClose={onClose}>
+            <ModalBody fullwidth={fullwidth} fullscreen={fullscreen}>
                 {title && (
                     <ModalPageHeader
                         before={

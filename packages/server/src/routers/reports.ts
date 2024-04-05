@@ -71,11 +71,20 @@ export const reports = router({
         .query(async ({ ctx, input }) => {
             const items = await ctx.prisma.reportOnTranslation.findMany({
                 take: input.limit + 1,
-                cursor: {
-                    id: input.cursor,
+                cursor: input.cursor
+                    ? {
+                          id: input.cursor,
+                      }
+                    : undefined,
+                where: {
+                    status: input.filter === "all" ? undefined : input.filter,
                 },
                 orderBy: {
                     reportedAt: "desc",
+                },
+                include: {
+                    translation: true,
+                    reportedBy: true,
                 },
             })
 

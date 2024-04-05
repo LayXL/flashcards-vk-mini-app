@@ -16,12 +16,15 @@ import {
 import { useCallback, useState } from "react"
 import { DetailedTranslationCard } from "../entities/translation/ui/detailed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { plural } from "../shared/helpers/plural"
+import { vibrateOnSuccess } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { Skeleton } from "../shared/ui/skeleton"
+import { ReportCreate } from "./report-create"
 import { StackView } from "./stack-view"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
@@ -56,6 +59,8 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
     const viewStack = useModalState(false)
     const editTranslation = useModalState(false)
     const addedTranslationToStack = useModalState(false)
+    const reportTranslationModal = useModalState(false)
+    const onSuccessReportSnackbar = useModalState(false)
     const [commentText, setCommentText] = useState("")
 
     const [viewStackId, setViewStackId] = useState<number | null>(null)
@@ -98,9 +103,11 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                         example={data?.example}
                         onReactClick={toggleReaction}
                         isReacted={data?.isReacted}
+                        reactionsCount={data?.reactionsCount}
                         onAddInStack={addToStack.open}
-                        onEdit={editTranslation.open}
-                        onDelete={onDelete}
+                        onEdit={data?.canEdit ? editTranslation.open : undefined}
+                        onDelete={data?.canEdit ? onDelete : undefined}
+                        onReport={reportTranslationModal.open}
                     />
                 </Div>
 
@@ -166,12 +173,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     />
                 </Div>
             </Group>
-            {/* TODO */}
-            {/* <Group>
-                <Header children={"Больше интересного"} />
 
-                <div style={{ height: 300 }} />
-            </Group> */}
             <ModalWrapper isOpened={addToStack.isOpened} onClose={addToStack.close}>
                 <ModalBody fullscreen={true}>
                     <TranslationAddToStack
@@ -185,16 +187,19 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     />
                 </ModalBody>
             </ModalWrapper>
+
             <ModalWrapper isOpened={viewComments.isOpened} onClose={viewComments.close}>
                 <ModalBody>
                     <TranslationComments onClose={viewComments.close} translationId={id} />
                 </ModalBody>
             </ModalWrapper>
+
             <ModalWrapper isOpened={viewStack.isOpened} onClose={viewStack.close}>
                 <ModalBody fullscreen={true}>
                     {viewStackId && <StackView id={viewStackId} />}
                 </ModalBody>
             </ModalWrapper>
+
             <ModalWrapper isOpened={editTranslation.isOpened} onClose={editTranslation.close}>
                 <ModalBody>
                     {data && (
@@ -215,6 +220,26 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     )}
                 </ModalBody>
             </ModalWrapper>
+
+            <ModalWindow {...reportTranslationModal} fullscreen={false} title={"Пожаловаться"}>
+                <ReportCreate
+                    translationId={id}
+                    onReport={() => {
+                        onSuccessReportSnackbar.open()
+                        reportTranslationModal.close()
+                        vibrateOnSuccess()
+                    }}
+                />
+            </ModalWindow>
+
+            {onSuccessReportSnackbar.isOpened && (
+                <Snackbar
+                    onClose={onSuccessReportSnackbar.close}
+                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
+                    children={"Жалоба отправлена, спасибо за помощь!"}
+                />
+            )}
+
             {addedTranslationToStack.isOpened && (
                 <Snackbar
                     onClose={addedTranslationToStack.close}

@@ -5,12 +5,13 @@ import {
     Icon28LikeFillRed,
     Icon28LikeOutline,
     Icon28MoreHorizontal,
+    Icon28ReportOutline,
 } from "@vkontakte/icons"
 import { Button, Caption, CellButton, Popover, Tappable, Text, Title } from "@vkontakte/vkui"
 import styled from "styled-components"
+import { cn } from "../../../shared/helpers/cn"
 import { vkTheme } from "../../../shared/helpers/vkTheme"
 import { FlagIcon } from "../../flag/ui/flag-icon"
-import { cn } from '../../../shared/helpers/cn';
 
 type DetailedTranslationCardProps = {
     id?: number
@@ -23,10 +24,12 @@ type DetailedTranslationCardProps = {
     }[]
     tags?: string[]
     example?: string | null
+    reactionsCount?: number
     onReactClick?: () => void
     onAddInStack?: () => void
     onEdit?: () => void
     onDelete?: () => void
+    onReport?: () => void
     isReacted?: boolean
 }
 
@@ -37,9 +40,11 @@ export const DetailedTranslationCard = ({
     transcriptions,
     tags,
     example,
+    reactionsCount,
     onReactClick,
     isReacted: isLiked = false,
     onAddInStack,
+    onReport,
     onEdit,
     onDelete,
 }: DetailedTranslationCardProps) => (
@@ -61,24 +66,39 @@ export const DetailedTranslationCard = ({
                                     boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
                                 }}
                             >
-                                <CellButton
-                                    role={"menuitem"}
-                                    before={<Icon28EditOutline />}
-                                    onClick={() => {
-                                        onEdit && onEdit()
-                                        onClose()
-                                    }}
-                                    children={"Редактировать"}
-                                />
-                                <CellButton
-                                    role={"menuitem"}
-                                    before={<Icon28DeleteOutline />}
-                                    onClick={() => {
-                                        onDelete && onDelete()
-                                        onClose()
-                                    }}
-                                    children={"Удалить"}
-                                />
+                                {onReport && (
+                                    <CellButton
+                                        role={"menuitem"}
+                                        before={<Icon28ReportOutline />}
+                                        onClick={() => {
+                                            onReport()
+                                            onClose()
+                                        }}
+                                        children={"Пожаловаться"}
+                                    />
+                                )}
+                                {onEdit && (
+                                    <CellButton
+                                        role={"menuitem"}
+                                        before={<Icon28EditOutline />}
+                                        onClick={() => {
+                                            onEdit()
+                                            onClose()
+                                        }}
+                                        children={"Редактировать"}
+                                    />
+                                )}
+                                {onDelete && (
+                                    <CellButton
+                                        role={"menuitem"}
+                                        before={<Icon28DeleteOutline />}
+                                        onClick={() => {
+                                            onDelete()
+                                            onClose()
+                                        }}
+                                        children={"Удалить"}
+                                    />
+                                )}
                             </div>
                         )}
                         children={
@@ -130,9 +150,14 @@ export const DetailedTranslationCard = ({
                     onClick={onAddInStack}
                 />
                 <Tappable hoverMode={"opacity"} activeMode={"opacity"} onClick={onReactClick}>
-                    <div className={cn("flex flex-row items-center bg-secondary p-2 rounded-[10px] gap-[6px] cursor-pointer text-secondary", isLiked && "bg-vk-accent text-white")}>
+                    <div
+                        className={cn(
+                            "flex flex-row items-center bg-secondary p-2 rounded-[10px] gap-[6px] cursor-pointer text-secondary",
+                            isLiked && "bg-vk-accent text-white"
+                        )}
+                    >
                         {isLiked ? <Icon28LikeFillRed /> : <Icon28LikeOutline />}
-                        12
+                        {reactionsCount}
                     </div>
                 </Tappable>
             </Actions>
@@ -220,4 +245,3 @@ const ExampleWrapper = styled.div`
     flex-direction: column;
     gap: 8px;
 `
-

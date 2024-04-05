@@ -1,11 +1,11 @@
-import { Icon24HieroglyphCharacterOutline } from "@vkontakte/icons"
+import { Icon24HieroglyphCharacterOutline, Icon24ReportOutline } from "@vkontakte/icons"
 import {
     Button,
+    ButtonGroup,
     CardScroll,
     Div,
     Group,
     Header,
-    Link,
     ModalPageHeader,
     PanelHeader,
     PanelHeaderClose,
@@ -16,11 +16,13 @@ import {
 import { useState } from "react"
 import { LevelCard } from "../entities/level/ui/level-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { useModalState } from "../shared/hooks/useModalState"
+import { ReportsView } from "../widgets/reports-view"
 import { TranslationsTable } from "../widgets/translations-table"
 import { UserStacks } from "../widgets/user-stacks"
 import { UserTranslations } from "../widgets/user-translations"
@@ -31,6 +33,7 @@ export const Profile = () => {
     const { data } = trpc.getUser.useQuery()
 
     const translationsTableModal = useModalState()
+    const reportsModal = useModalState()
 
     return (
         <>
@@ -49,21 +52,37 @@ export const Profile = () => {
                     />
                 )}
 
-                {data?.canModifyOthersTranslations && (
+                {(data?.canModifyOthersTranslations || data?.canViewReports) && (
                     <Div>
-                        <Button
-                            before={<Icon24HieroglyphCharacterOutline />}
-                            children={"Кнопка крутой лингвистки"}
-                            stretched
-                            size={"l"}
-                            onClick={translationsTableModal.open}
-                        />
+                        <ButtonGroup stretched mode={"vertical"}>
+                            {data?.canModifyOthersTranslations && (
+                                <Button
+                                    before={<Icon24HieroglyphCharacterOutline />}
+                                    children={"Кнопка крутой лингвистки"}
+                                    stretched
+                                    size={"l"}
+                                    onClick={translationsTableModal.open}
+                                />
+                            )}
+                            {data?.canViewReports && (
+                                <Button
+                                    before={<Icon24ReportOutline />}
+                                    children={"Жалобы"}
+                                    stretched
+                                    size={"l"}
+                                    onClick={reportsModal.open}
+                                />
+                            )}
+                        </ButtonGroup>
                     </Div>
                 )}
             </Group>
 
             <Group>
-                <Header children={"Достижения"} aside={<Link children={"Показать все"} />} />
+                <Header
+                    children={"Достижения"}
+                    // aside={<Link children={"Показать все"} />}
+                />
                 <CardScroll>
                     <div className={"flex gap-2.5"}>
                         <div
@@ -118,6 +137,10 @@ export const Profile = () => {
                     <TranslationsTable />
                 </ModalBody>
             </ModalWrapper>
+
+            <ModalWindow {...reportsModal} title={"Жалобы"} fullscreen={true}>
+                <ReportsView />
+            </ModalWindow>
         </>
     )
 }

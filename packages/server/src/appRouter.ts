@@ -5,6 +5,7 @@ import { game } from "./routers/game"
 import { getUser } from "./routers/getUser"
 import { languages } from "./routers/languages"
 import { rating } from "./routers/rating"
+import { reports } from "./routers/reports"
 import { search } from "./routers/search"
 import { stacks } from "./routers/stacks"
 import { stats } from "./routers/stats"
@@ -26,6 +27,7 @@ export const appRouter = router({
     stats,
     rating,
     categories,
+    reports,
 })
 
 export type AppRouter = typeof appRouter

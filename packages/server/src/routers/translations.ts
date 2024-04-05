@@ -95,6 +95,11 @@ export const translations = router({
                 ...data,
                 authorTranslationsCount,
                 isReacted: reactions.length !== 0,
+                reactionsCount: await ctx.prisma.reactionOnTranslation.count({
+                    where: {
+                        translationId: input.id,
+                    },
+                }),
                 canEdit: data.author.vkId === ctx.vkId.toString(),
                 commentsCount,
             }

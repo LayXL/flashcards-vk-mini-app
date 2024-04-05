@@ -171,10 +171,25 @@ export const stacks = router({
                 where:
                     input.filter === "all"
                         ? {
-                              author: {
-                                  vkId: ctx.vkId,
-                              },
-                              isDeleted: false,
+                              OR: [
+                                  {
+                                      author: {
+                                          vkId: ctx.vkId,
+                                      },
+                                      isDeleted: false,
+                                  },
+                                  {
+                                      isPrivate: false,
+                                      isDeleted: false,
+                                      reactions: {
+                                          some: {
+                                              user: {
+                                                  vkId: ctx.vkId,
+                                              },
+                                          },
+                                      },
+                                  },
+                              ],
                           }
                         : input.filter === "saved"
                         ? {
