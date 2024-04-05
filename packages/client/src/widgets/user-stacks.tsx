@@ -40,6 +40,7 @@ export const UserStacks = () => {
         <>
             <SubnavigationBar>
                 <SubnavigationButton
+                    mode={"outline"}
                     before={<Icon24Add />}
                     children={"Создать"}
                     onClick={() => {

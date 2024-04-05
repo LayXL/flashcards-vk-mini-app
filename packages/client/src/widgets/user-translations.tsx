@@ -44,6 +44,7 @@ export const UserTranslations = () => {
         <>
             <SubnavigationBar>
                 <SubnavigationButton
+                    mode={"outline"}
                     before={<Icon24Add />}
                     children={"Создать"}
                     onClick={() => {
