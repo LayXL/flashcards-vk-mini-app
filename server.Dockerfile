@@ -1,10 +1,12 @@
 FROM node:alpine
 WORKDIR /usr/local
 
-COPY yarn.lock .
-
 COPY package.json .
-COPY /packages/server/package.json ./packages/server
+
+RUN mkdir packages
+RUN mkdir packages/server
+
+COPY packages/server/package.json ./packages/server
 
 RUN npm install yarn
 RUN npm install typescript -g
