@@ -9,7 +9,7 @@ COPY /packages/server/package.json ./packages/server
 RUN npm install yarn
 RUN npm install typescript -g
 
-RUN yarn install --prefer-offline --frozen-lockfile
+RUN yarn install --frozen-lockfile --no-cache
 
 COPY packages/server ./packages/server
 
