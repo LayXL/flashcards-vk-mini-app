@@ -14,11 +14,13 @@ import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 
 type LeaderboardProps = {
-    onClose: () => void
+    onClose?: () => void
+    minimized?: boolean
+    defaultTab?: "friends" | "global"
 }
 
-export const Leaderboard = ({ onClose }: LeaderboardProps) => {
-    const [tab, setTab] = useState<"friends" | "global">("friends")
+export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps) => {
+    const [tab, setTab] = useState<"friends" | "global">(defaultTab || "friends")
     const [frinedsIds, setFriendsIds] = useState<number[] | null>(null)
     const [hasAccessToFriends, setHasAccessToFriends] = useState<boolean | null>(null)
 
@@ -58,23 +60,26 @@ export const Leaderboard = ({ onClose }: LeaderboardProps) => {
 
     return (
         <>
-            <ModalPageHeader
-                before={<PanelHeaderBack onClick={onClose} />}
-                children={"Таблица лидеров"}
-            />
-
-            <Tabs>
-                <TabsItem
-                    children={"Среди друзей"}
-                    onClick={() => setTab("friends")}
-                    selected={tab === "friends"}
-                />
-                <TabsItem
-                    children={"Общий"}
-                    onClick={() => setTab("global")}
-                    selected={tab === "global"}
-                />
-            </Tabs>
+            {!minimized && (
+                <>
+                    <Tabs>
+                        <TabsItem
+                            children={"Среди друзей"}
+                            onClick={() => setTab("friends")}
+                            selected={tab === "friends"}
+                        />
+                        <TabsItem
+                            children={"Общий"}
+                            onClick={() => setTab("global")}
+                            selected={tab === "global"}
+                        />
+                    </Tabs>
+                    <ModalPageHeader
+                        before={<PanelHeaderBack onClick={onClose} />}
+                        children={"Таблица лидеров"}
+                    />
+                </>
+            )}
 
             <div className={"flex gap-2 justify-around items-center py-3"}>
                 {[1, 0, 2].map((i) => (
@@ -95,7 +100,8 @@ export const Leaderboard = ({ onClose }: LeaderboardProps) => {
                 ))}
             </div>
 
-            {leaderboardData?.slice(3).map(({ user, points }, i) => (
+            {/* TODO проверить работу */}
+            {leaderboardData?.slice(3, minimized ? 10 : undefined).map(({ user, points }, i) => (
                 <RatingUserCard
                     key={i}
                     avatar={getSuitableAvatarUrl(user.avatarUrls, 64)}

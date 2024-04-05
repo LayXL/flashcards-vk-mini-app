@@ -23,6 +23,7 @@ import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
 import { GameResults } from "../widgets/game-results"
+import { Leaderboard } from "../widgets/leaderboard"
 import { PlayGame } from "../widgets/play-game"
 import { PlayRankedGame } from "../widgets/play-ranked-game"
 
@@ -157,6 +158,9 @@ export const Game = () => {
                                 </ButtonGroup>
                             }
                         />
+                    </Group>
+                    <Group>
+                        <Leaderboard minimized defaultTab={"global"} />
                     </Group>
                 </>
             )}
