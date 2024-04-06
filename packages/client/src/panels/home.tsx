@@ -32,35 +32,41 @@ export const Home = () => {
                 <DailyStreak />
             </Group>
 
-            <Group>
-                <Header children={"Статистика"} />
+            <div className={"grid grid-cols-1 md:grid-cols-2 gap-x-4"}>
+                <div>
+                    <Group>
+                        <Header children={"Статистика"} />
 
-                <Div>
-                    <Stats />
-                </Div>
-            </Group>
+                        <Div>
+                            <Stats />
+                        </Div>
+                    </Group>
+                </div>
 
-            <Group>
-                <Header children={"Ежедневное задание"} />
+                <div>
+                    <Group>
+                        <Header children={"Ежедневное задание"} />
 
-                <Div>
-                    <div
-                        className={
-                            "bg-vk-accent flex-col gap-3 p-3 rounded-xl cursor-pointer text-white"
-                        }
-                        onClick={fiveLettersModal.open}
-                    >
-                        <Headline weight={"2"} children={"Сыграйте в игру 5 букв"} />
-                        <div className={"flex items-center"}>
-                            <Caption
-                                className={"flex-1"}
-                                children={"Попробуй угадать слово за шесть попыток"}
-                            />
-                            <Button children={"Играть"} mode={"primary"} />
-                        </div>
-                    </div>
-                </Div>
-            </Group>
+                        <Div>
+                            <div
+                                className={
+                                    "bg-vk-accent flex-col gap-3 p-3 rounded-xl cursor-pointer text-white"
+                                }
+                                onClick={fiveLettersModal.open}
+                            >
+                                <Headline weight={"2"} children={"Сыграйте в игру 5 букв"} />
+                                <div className={"flex items-center"}>
+                                    <Caption
+                                        className={"flex-1"}
+                                        children={"Попробуй угадать слово за шесть попыток"}
+                                    />
+                                    <Button children={"Играть"} mode={"primary"} />
+                                </div>
+                            </div>
+                        </Div>
+                    </Group>
+                </div>
+            </div>
 
             <Spacing size={128} />
 

@@ -28,6 +28,7 @@ export const DailyStreak = () => {
                     <DayInDailyStreak
                         key={date}
                         date={date}
+                        today={date === DateTime.now().toISODate()}
                         completed={data?.some((d) => d === date)}
                     />
                 ))}

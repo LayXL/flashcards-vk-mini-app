@@ -18,10 +18,10 @@ export const Stats = () => {
 
     return (
         <>
-            <div className={"flex gap-3 drop-shadow-card"}>
+            <div className={"grid grid-cols-2 gap-3 drop-shadow-card"}>
                 <div
                     className={
-                        "bg-vk-secondary flex-1 p-3 rounded-xl flex-col justify-between cursor-pointer"
+                        "bg-vk-secondary p-3 rounded-xl flex-col justify-between cursor-pointer"
                     }
                     onClick={leaderboardModal.open}
                 >
@@ -80,7 +80,7 @@ export const Stats = () => {
                         <Icon24ChevronRight className={"text-secondary -mr-[3px]"} />
                     </div>
                 </div>
-                <div className={"flex-col gap-3 flex-1"}>
+                <div className={"flex-col gap-3"}>
                     <div
                         className={
                             "bg-vk-secondary p-3 rounded-xl h-[76px] box-border cursor-pointer justify-between flex-col"
