@@ -169,7 +169,6 @@ const StackCardWithModal = ({
                 }}
                 isVerified={isVerified}
                 // todo
-                imageUrl={""}
                 encodedBackground={encodedBackground}
             />
 

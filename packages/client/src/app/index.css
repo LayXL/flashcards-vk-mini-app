@@ -45,3 +45,11 @@ table tfoot tr tf {
     text-align: unset;
     font-weight: unset;
 }
+
+.stack-blur {
+    position: absolute;
+    inset: 0;
+
+    backdrop-filter: blur(8px);
+    mask-image: linear-gradient(rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%);
+}

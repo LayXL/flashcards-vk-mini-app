@@ -74,7 +74,7 @@ export const StackSelect = ({
                             onClick={() => onSelect(stack.id)}
                             translationsCount={stack.translationsCount}
                             isVerified={stack.isVerified}
-                            encodedBackground={encodeStackBackground(stack)}
+                            encodedBackground={stack.encodedBackground}
                         />
                     ))}
                 </Div>

@@ -66,6 +66,15 @@ export const StackBackground = ({
     if (encodedBackground) {
         const stackBackground = decodeStackBackground(encodedBackground)
 
+        if (stackBackground?.isImage && stackBackground.imageUrl) {
+            return (
+                <img
+                    src={"/illustrations/" + stackBackground.imageUrl}
+                    className={"w-full h-full object-cover"}
+                />
+            )
+        }
+
         const Template = templates[stackBackground?.pattern as Pattern]
 
         if (!Template) {

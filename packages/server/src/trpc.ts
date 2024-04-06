@@ -19,8 +19,12 @@ export const prisma = new PrismaClient().$extends({
         stack: {
             encodedBackground: {
                 needs: { pattern: true, palette: true },
-                compute: ({ pattern, palette }) => {
+                compute: ({ pattern, palette, imageUrl }) => {
                     const data = palettes.find((p) => p.id === palette)
+
+                    if (imageUrl) {
+                        return `image:${imageUrl}:${data?.primary}:${data?.secondary}`
+                    }
 
                     return `${pattern}:${data?.primary}:${data?.secondary}`
                 },

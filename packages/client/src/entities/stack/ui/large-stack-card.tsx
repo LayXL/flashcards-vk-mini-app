@@ -51,8 +51,9 @@ export const LargeStackCard = ({
                 </div>
             </div>
             <div className={"flex-1 bg-vk-secondary rounded-xl relative overflow-hidden"}>
-                <div className={"absolute inset-0 overflow-hidden"}>
-                    <StackBackground encodedBackground={encodedBackground} imageUrl={imageUrl} />
+                <div className={"relative overflow-hidden w-full h-full"}>
+                    <StackBackground encodedBackground={encodedBackground} />
+                    {/* {decodedBackground?.imageUrl && <div className={"stack-blur"} />} */}
                 </div>
                 <div className={"absolute inset-0 flex-col justify-between"}>
                     <div>{/* TODO author */}</div>
@@ -60,7 +61,8 @@ export const LargeStackCard = ({
                         <div
                             className={cn(
                                 "inline items-center",
-                                "drop-shadow-[0_0_12px_var(--shadow-color)]"
+                                !decodedBackground?.isImage &&
+                                    "drop-shadow-[0_0_12px_var(--shadow-color)]"
                             )}
                             style={{
                                 "--shadow-color": decodedBackground?.primaryColor ?? "#fff",
@@ -71,7 +73,8 @@ export const LargeStackCard = ({
                                 children={title}
                                 className={cn(
                                     "inline border",
-                                    "[text-shadow:_1px_1px_4px_var(--shadow-color),-1px_1px_4px_var(--shadow-color),1px_-1px_4px_var(--shadow-color),-1px_-1px_4px_var(--shadow-color)]"
+                                    !decodedBackground?.isImage &&
+                                        "[text-shadow:_1px_1px_4px_var(--shadow-color),-1px_1px_4px_var(--shadow-color),1px_-1px_4px_var(--shadow-color),-1px_-1px_4px_var(--shadow-color)]"
                                 )}
                             />
                             {isVerified && <Icon12VerifiedAlt className={"inline-block ml-1"} />}

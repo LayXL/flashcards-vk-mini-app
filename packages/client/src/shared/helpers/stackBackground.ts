@@ -2,20 +2,39 @@ import { trpc } from "../api"
 export const encodeStackBackground = (
     pattern: string,
     primaryColor: string,
-    secondaryColor: string,
+    secondaryColor: string
 ) => {
     return `${pattern}:${primaryColor}:${secondaryColor}`
 }
 
-export const decodeStackBackground = (value?: string) => {
+export const decodeStackBackground = (
+    value?: string
+): {
+    pattern: string
+    isImage: boolean
+    primaryColor?: string | null
+    secondaryColor?: string | null
+    imageUrl?: string | null
+} | null => {
     if (!value) return null
 
-    const [pattern, primaryColor, secondaryColor] = value.split(":")
+    const [pattern, x, y, z] = value.split(":")
+
+    if (pattern === "image") {
+        return {
+            pattern,
+            isImage: true,
+            imageUrl: x,
+            primaryColor: y,
+            secondaryColor: z,
+        }
+    }
 
     return {
         pattern,
-        primaryColor: primaryColor === "undefined" ? null : primaryColor,
-        secondaryColor: secondaryColor === "undefined" ? null : secondaryColor,
+        isImage: false,
+        primaryColor: x === "undefined" ? null : x,
+        secondaryColor: y === "undefined" ? null : y,
     }
 }
 
