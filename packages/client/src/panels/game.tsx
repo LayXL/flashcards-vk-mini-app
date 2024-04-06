@@ -19,6 +19,7 @@ import {
 } from "@vkontakte/vkui"
 import { useState } from "react"
 import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
@@ -51,6 +52,7 @@ export const Game = () => {
     const { data: recentlyGames } = trpc.game.getRecentlyGames.useQuery()
 
     const playGameModal = useModalState()
+    const ratingModal = useModalState()
 
     const [type, setType] = useState<"default" | "ranked">("default")
 
@@ -162,6 +164,16 @@ export const Game = () => {
                     </Group>
                     <Group>
                         <Leaderboard minimized defaultTab={"global"} />
+                        <Div>
+                            <Button
+                                mode={"outline"}
+                                children={"Перейти к рейтингу"}
+                                onClick={ratingModal.open}
+                                stretched
+                                size={"l"}
+                                className={"max-w-96 mx-auto"}
+                            />
+                        </Div>
                         <Spacing size={128} />
                     </Group>
                 </>
@@ -173,6 +185,9 @@ export const Game = () => {
                     {type === "ranked" && <PlayRankedGame onClose={playGameModal.close} />}
                 </ModalBody>
             </ModalWrapper>
+            <ModalWindow {...ratingModal}>
+                <Leaderboard onClose={ratingModal.close} />
+            </ModalWindow>
         </>
     )
 }

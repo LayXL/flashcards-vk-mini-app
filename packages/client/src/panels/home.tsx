@@ -60,7 +60,11 @@ export const Home = () => {
                                         className={"flex-1"}
                                         children={"Попробуй угадать слово за шесть попыток"}
                                     />
-                                    <Button children={"Играть"} mode={"primary"} />
+                                    <Button
+                                        className={"!bg-white !text-black"}
+                                        children={"Играть"}
+                                        mode={"primary"}
+                                    />
                                 </div>
                             </div>
                         </Div>

@@ -62,6 +62,10 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
         <>
             {!minimized && (
                 <>
+                    <ModalPageHeader
+                        before={<PanelHeaderBack onClick={onClose} />}
+                        children={"Таблица лидеров"}
+                    />
                     <Tabs>
                         <TabsItem
                             children={"Среди друзей"}
@@ -74,10 +78,6 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                             selected={tab === "global"}
                         />
                     </Tabs>
-                    <ModalPageHeader
-                        before={<PanelHeaderBack onClick={onClose} />}
-                        children={"Таблица лидеров"}
-                    />
                 </>
             )}
 
