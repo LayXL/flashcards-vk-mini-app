@@ -1,4 +1,4 @@
-import { Button, Div, ModalPageHeader, PanelHeaderBack } from "@vkontakte/vkui"
+import { Button, Div, ModalPageHeader, PanelHeaderBack, Text, Title } from "@vkontakte/vkui"
 import { useCallback } from "react"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
@@ -44,9 +44,16 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                 children={"Приготовились"}
             />
 
-            <Div className={"box-border fixed w-screen bottom-0 bg-vk-content"}>
+            <div className={"h-full flex-col justify-center"}>
+                <Div className={"flex flex-col gap-2"}>
+                    <Title children={"Как играть?"} />
+                    <Text children={"Сам не знаю..."} />
+                </Div>
+            </div>
+
+            <Div className={"box-border fixed w-full bottom-0 bg-vk-content"}>
                 <Button children={"Играть"} stretched={true} onClick={startGame} size={"l"} />
-                <div className={"h-[env(safe-area-inset-bottom)]"} />
+                <div className={"h-inset-bottom"} />
             </Div>
 
             <ModalWrapper isOpened={gameModal.isOpened} onClose={stopGame}>

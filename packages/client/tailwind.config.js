@@ -8,6 +8,9 @@ export default {
     },
     theme: {
         extend: {
+            spacing: {
+                "inset-bottom": "env(safe-area-inset-bottom",
+            },
             height: {
                 lh: "1lh",
             },

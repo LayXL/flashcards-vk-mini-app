@@ -146,8 +146,7 @@ export const Game = () => {
                             header={"Соревнуйся"}
                             children={
                                 <span className={"text-balance"}>
-                                    {/* TODO */}
-                                    Здесь должно быть описание рейтингового режима
+                                    Получай баллы и&nbsp;поднимайся в&nbsp;таблице лидеров
                                 </span>
                             }
                             action={

@@ -122,8 +122,9 @@ model Stack {
   isPrivate       Boolean @default(false)
   isDeleted       Boolean @default(false)
 
-  pattern String?
-  palette Int?
+  pattern  String?
+  palette  Int?
+  imageUrl String?
 
   translations   TranslationInStack[]
   reactions      ReactionOnStack[]

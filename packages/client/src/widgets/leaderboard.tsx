@@ -1,4 +1,4 @@
-import bridge from "@vkontakte/vk-bridge"
+import { useQuery } from "@tanstack/react-query"
 import {
     Button,
     ModalPageHeader,
@@ -7,10 +7,11 @@ import {
     Tabs,
     TabsItem,
 } from "@vkontakte/vkui"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { PrizePlace } from "../entities/rating/ui/prize-place"
 import { RatingUserCard } from "../entities/rating/ui/rating-user-card"
 import { trpc } from "../shared/api"
+import { getFriends } from "../shared/helpers/getFriends"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 
 type LeaderboardProps = {
@@ -21,42 +22,23 @@ type LeaderboardProps = {
 
 export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps) => {
     const [tab, setTab] = useState<"friends" | "global">(defaultTab || "friends")
-    const [frinedsIds, setFriendsIds] = useState<number[] | null>(null)
-    const [hasAccessToFriends, setHasAccessToFriends] = useState<boolean | null>(null)
 
-    // TODO придумать что выводить, если нет друзей, играющие в этот сезон
-
-    const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery({
-        users: tab === "global" ? undefined : frinedsIds ?? [],
-    })
     const { data: currentUser } = trpc.getUser.useQuery()
 
-    useEffect(() => {
-        bridge
-            .send("VKWebAppGetAuthToken", {
-                app_id: 51843841,
-                scope: "friends",
-            })
-            .then((data) => {
-                if (!data.access_token) return
+    const { data: friendsData, refetch: refetchFriends } = useQuery({
+        queryKey: ["friends"],
+        queryFn: () => getFriends(parseInt(currentUser?.vkId ?? "0")),
+        enabled: tab === "friends" || !!currentUser,
+    })
 
-                bridge
-                    .send("VKWebAppCallAPIMethod", {
-                        method: "friends.get",
-                        params: {
-                            user_id: parseInt(currentUser?.vkId ?? "0"),
-                            v: "5.131",
-                            access_token: data.access_token,
-                        },
-                    })
-                    .then((data) => {
-                        if (!data.response?.items) return
-                        setFriendsIds(data.response.items)
-                    })
-                    .catch(() => setHasAccessToFriends(false))
-            })
-            .catch(() => setHasAccessToFriends(false))
-    }, [currentUser?.vkId])
+    const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery(
+        {
+            users: tab === "global" ? undefined : friendsData?.friends ?? [],
+        },
+        {
+            enabled: tab === "global" || (tab === "friends" && friendsData?.friends !== null),
+        }
+    )
 
     return (
         <>
@@ -112,44 +94,13 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                 />
             ))}
 
-            {hasAccessToFriends === false && tab === "friends" && (
+            {friendsData?.friends.length === 0 && tab === "friends" && (
                 <Placeholder
                     header={"Мы не знаем кто ваши друзья"}
                     children={
                         "Пожалуйста, разрешите доступ к друзьям, чтобы посмотреть таблицу лидеров среди друзей"
                     }
-                    action={
-                        <Button
-                            onClick={() => {
-                                bridge
-                                    .send("VKWebAppGetAuthToken", {
-                                        app_id: 51843841,
-                                        scope: "friends",
-                                    })
-                                    .then((data) => {
-                                        if (!data.access_token) return
-
-                                        bridge
-                                            .send("VKWebAppCallAPIMethod", {
-                                                method: "friends.get",
-                                                params: {
-                                                    user_id: parseInt(currentUser?.vkId ?? "0"),
-                                                    v: "5.131",
-                                                    access_token: data.access_token,
-                                                },
-                                            })
-                                            .then((data) => {
-                                                if (!data.response?.items) return
-                                                setFriendsIds(data.response.items)
-                                            })
-                                            .catch(() => setHasAccessToFriends(false))
-                                    })
-                                    .catch(() => setHasAccessToFriends(false))
-                            }}
-                            children={"Разрешить"}
-                            size={"l"}
-                        />
-                    }
+                    action={<Button onClick={refetchFriends} children={"Разрешить"} size={"l"} />}
                 />
             )}
         </>

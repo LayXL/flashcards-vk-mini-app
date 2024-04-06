@@ -98,15 +98,17 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
             {withTimer && (
                 <Div className={"flex-row justify-between items-center flex-1 select-none"}>
                     <div className={"flex-1"}>
-                        <div
-                            className={
-                                "w-[60px] h-[80px] flex items-center justify-center shadow-card bg-vk-secondary rounded-xl"
-                            }
-                        >
-                            <Title level={"2"} weight={"2"}>
-                                {currentCardIndex + 1}/{data.cards.length}
-                            </Title>
-                        </div>
+                        {data.gameSession.type !== "ranked" && (
+                            <div
+                                className={
+                                    "w-[60px] h-[80px] flex items-center justify-center shadow-card bg-vk-secondary rounded-xl"
+                                }
+                            >
+                                <Title level={"2"} weight={"2"}>
+                                    {currentCardIndex + 1}/{data.cards.length}
+                                </Title>
+                            </div>
+                        )}
                     </div>
 
                     {memoizedTimer}
