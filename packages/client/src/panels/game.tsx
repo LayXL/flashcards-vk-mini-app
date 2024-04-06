@@ -185,7 +185,7 @@ export const Game = () => {
                     {type === "ranked" && <PlayRankedGame onClose={playGameModal.close} />}
                 </ModalBody>
             </ModalWrapper>
-            <ModalWindow {...ratingModal}>
+            <ModalWindow {...ratingModal} fullscreen={true}>
                 <Leaderboard onClose={ratingModal.close} />
             </ModalWindow>
         </>
