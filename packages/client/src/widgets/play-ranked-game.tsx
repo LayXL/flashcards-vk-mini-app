@@ -53,7 +53,7 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
 
             <Div className={"box-border fixed w-full bottom-0 bg-vk-content"}>
                 <Button children={"Играть"} stretched={true} onClick={startGame} size={"l"} />
-                <div className={"h-inset-bottom"} />
+                <div className={"h-safe-area-bottom"} />
             </Div>
 
             <ModalWrapper isOpened={gameModal.isOpened} onClose={stopGame}>

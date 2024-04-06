@@ -1,5 +1,5 @@
 import { FloatingPortal } from "@floating-ui/react"
-import { Icon28AddOutline } from "@vkontakte/icons"
+import { Icon28AddOutline, Icon28ErrorOutline } from "@vkontakte/icons"
 import {
     Banner,
     Button,
@@ -15,6 +15,7 @@ import {
     PanelHeaderClose,
     Select,
     SimpleCell,
+    Snackbar,
     Spacing,
     Switch,
     Textarea,
@@ -56,6 +57,7 @@ type TranslationAddProps = {
 export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAddProps) => {
     const additionalInfoModal = useModalState()
     const selectStackModal = useModalState()
+    const inappropriateSnackbar = useModalState()
 
     const utils = trpc.useUtils()
 
@@ -73,7 +75,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
         },
         {
             enabled: !!watch("saveToStackId"),
-        },
+        }
     )
 
     const { data: languageVariations } = trpc.languages.getLanguageVariations.useQuery({
@@ -93,6 +95,9 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
 
                 utils.translations.getUserTranslations.refetch()
             },
+            onError: (error) => {
+                if (error.message.includes("Inappropriate")) inappropriateSnackbar.open()
+            },
         })
 
     const { mutate: editTranslation, isPending: isEditingTranslation } =
@@ -109,6 +114,9 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                     utils.translations.getSingle.refetch({ id: defaultValues.id })
                 }
             },
+            onError: (error) => {
+                if (error.message.includes("Inappropriate")) inappropriateSnackbar.open()
+            },
         })
 
     const { data: duplications } = trpc.translations.findDuplications.useQuery(
@@ -119,12 +127,14 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
         },
         {
             enabled: foreign?.length > 0 && vernacular?.length > 0,
-        },
+        }
     )
 
     const isLoading = isAddingTranslation || isEditingTranslation
 
     const [newTag, setNewTag] = useState("")
+
+    console.log(inappropriateSnackbar)
 
     const onSubmit: SubmitHandler<TranslationFormInputs> = (data) => {
         if (defaultValues?.id) {
@@ -452,7 +462,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                                             allowClearButton={true}
                                             onChange={({ currentTarget: { value } }) =>
                                                 field.onChange(
-                                                    value.length > 0 ? parseInt(value) : null,
+                                                    value.length > 0 ? parseInt(value) : null
                                                 )
                                             }
                                         />
@@ -489,25 +499,29 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
 
                     <Spacing size={128} />
 
-                    <FloatingPortal>
-                        <div
-                            className={
-                                "fixed bg-vk-content pb-[calc(env(safe-area-inset-bottom)_+_8px)] w-full bottom-0"
-                            }
-                        >
-                            <Div>
-                                <Button
-                                    loading={isLoading}
-                                    stretched={true}
-                                    size={"l"}
-                                    children={"Готово"}
-                                    onClick={handleSubmit(onSubmit)}
-                                />
-                            </Div>
-                        </div>
-                    </FloatingPortal>
+                    <div className={"absolute bg-vk-content pb-safe-area-bottom w-full bottom-0"}>
+                        <Div className={"pb-2"}>
+                            <Button
+                                loading={isLoading}
+                                stretched={true}
+                                size={"l"}
+                                children={"Готово"}
+                                onClick={handleSubmit(onSubmit)}
+                            />
+                        </Div>
+                    </div>
                 </ModalBody>
             </ModalWrapper>
+
+            <FloatingPortal>
+                {inappropriateSnackbar.isOpened && (
+                    <Snackbar
+                        before={<Icon28ErrorOutline />}
+                        children={"Вы используете недопустимые слова в переводе"}
+                        onClose={inappropriateSnackbar.close}
+                    />
+                )}
+            </FloatingPortal>
         </>
     )
 }
