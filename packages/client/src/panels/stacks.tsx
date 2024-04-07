@@ -43,47 +43,43 @@ export const Stacks = () => {
         <>
             <PanelHeader children={"Стопки"} />
 
-            <div className={"grid md:grid-cols-2 gap-x-3"}>
-                {data?.map((category) => (
-                    <div>
-                        <Group key={category.id}>
-                            <Header
-                                children={category.name}
-                                aside={
-                                    <Link
-                                        children={"Показать все"}
-                                        onClick={() => {
-                                            setSelectedCategoryId(category.id)
-                                            categoryViewModal.open()
-                                        }}
-                                    />
-                                }
+            {data?.map((category) => (
+                <Group key={category.id}>
+                    <Header
+                        children={category.name}
+                        aside={
+                            <Link
+                                children={"Показать все"}
+                                onClick={() => {
+                                    setSelectedCategoryId(category.id)
+                                    categoryViewModal.open()
+                                }}
                             />
-                            <CardScroll>
-                                <div className={"flex gap-3"}>
-                                    {category.stacks.map((stack) => (
-                                        <LargeStackCard
-                                            key={stack.id}
-                                            title={stack.name}
-                                            translationsCount={stack.translationsCount}
-                                            isVerified={stack.isVerified}
-                                            encodedBackground={stack.encodedBackground}
-                                            onClick={() => {
-                                                setSelectedStackId(stack.id)
-                                                stackViewModal.open()
-                                            }}
-                                            onPlay={() => {
-                                                setSelectedStackId(stack.id)
-                                                stackPlayModal.open()
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                            </CardScroll>
-                        </Group>
-                    </div>
-                ))}
-            </div>
+                        }
+                    />
+                    <CardScroll>
+                        <div className={"flex gap-3"}>
+                            {category.stacks.map((stack) => (
+                                <LargeStackCard
+                                    key={stack.id}
+                                    title={stack.name}
+                                    translationsCount={stack.translationsCount}
+                                    isVerified={stack.isVerified}
+                                    encodedBackground={stack.encodedBackground}
+                                    onClick={() => {
+                                        setSelectedStackId(stack.id)
+                                        stackViewModal.open()
+                                    }}
+                                    onPlay={() => {
+                                        setSelectedStackId(stack.id)
+                                        stackPlayModal.open()
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </CardScroll>
+                </Group>
+            ))}
 
             {data && (
                 <Div>
