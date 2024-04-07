@@ -19,6 +19,7 @@ export const prisma = new PrismaClient().$extends({
         stack: {
             encodedBackground: {
                 needs: { pattern: true, palette: true },
+                // @ts-ignore
                 compute: ({ pattern, palette, imageUrl }) => {
                     const data = palettes.find((p) => p.id === palette)
 
