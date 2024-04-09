@@ -1,3 +1,4 @@
+import { AnimationControls, motion } from "framer-motion"
 import { DateTime } from "luxon"
 import { useEffect, useState } from "react"
 import { useInterval } from "usehooks-ts"
@@ -7,9 +8,10 @@ type TimerProps = {
     endsAt: Date
     max: number
     onEnd?: () => void
+    controls: AnimationControls
 }
 
-export const Timer = ({ endsAt, max, onEnd }: TimerProps) => {
+export const Timer = ({ endsAt, max, onEnd, controls }: TimerProps) => {
     const [displayValue, setDisplayValue] = useState(
         DateTime.fromJSDate(endsAt).diffNow().as("seconds")
     )
@@ -32,12 +34,35 @@ export const Timer = ({ endsAt, max, onEnd }: TimerProps) => {
     }, [endsAt])
 
     return (
-        <div
+        <motion.div
+            animate={controls}
             className={"p-2 rounded-full w-[154px] aspect-square flex select-none"}
+            initial={"initial"}
+            variants={{
+                initial: {
+                    "--bg-color": `var(${vkTheme.colorBackgroundAccent.normal.name})`,
+                    transition: {
+                        duration: 0.2,
+                        delay: 0.6,
+                    },
+                },
+                correct: {
+                    "--bg-color": `var(${vkTheme.colorAccentGreen.normal.name})`,
+                    transition: {
+                        duration: 0.2,
+                    },
+                },
+                incorrect: {
+                    "--bg-color": `var(${vkTheme.colorAccentRed.normal.name})`,
+                    transition: {
+                        duration: 0.2,
+                    },
+                },
+            }}
             style={{
-                background: `conic-gradient(var(${vkTheme.colorBackgroundAccent.normal.name}) ${
-                    progress * 100
-                }%, var(${vkTheme.colorBackgroundContent.normal.name}) 0%)`,
+                background: `conic-gradient(var(--bg-color) ${progress * 100}%, var(${
+                    vkTheme.colorBackgroundContent.normal.name
+                }) 0%)`,
             }}
         >
             <div
@@ -49,6 +74,6 @@ export const Timer = ({ endsAt, max, onEnd }: TimerProps) => {
                 />
                 <span className={"text-xl"}>сек</span>
             </div>
-        </div>
+        </motion.div>
     )
 }

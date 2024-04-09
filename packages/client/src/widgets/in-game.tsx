@@ -1,11 +1,13 @@
+import { Icon28Like, Icon28LikeFillRed } from "@vkontakte/icons"
 import { Button, Div, ModalPageHeader, PanelHeaderBack, Title } from "@vkontakte/vkui"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion"
 import { DateTime } from "luxon"
 import { useMemo, useState } from "react"
 import { useBoolean, useCounter } from "usehooks-ts"
 import { RouterOutput, trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
 import { vibrateOnError, vibrateOnSuccess } from "../shared/helpers/vibrate"
+import { vkTheme } from "../shared/helpers/vkTheme"
 import { Timer } from "../shared/ui/timer"
 
 type InGameProps = {
@@ -15,6 +17,8 @@ type InGameProps = {
 }
 
 export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
+    const controls = useAnimationControls()
+
     const [cards, setCards] = useState<{ order: number; title: string; choices: string[] }[]>(
         data.cards
     )
@@ -40,8 +44,25 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
     )
 
     const memoizedTimer = useMemo(
-        () => <Timer max={60} endsAt={endsAt} onEnd={() => onEndGame()} />,
-        [onEndGame, endsAt]
+        () => <Timer max={60} endsAt={endsAt} onEnd={() => onEndGame()} controls={controls} />,
+        [endsAt, controls, onEndGame]
+    )
+
+    const memoizedAttempts = useMemo(
+        () =>
+            withAttempts && (
+                <div className={"min-w-10 p-3 bg-vk-secondary rounded-xl flex justify-center"}>
+                    {Array.from({ length: attempts.count ?? 0 }).map((_, i) => (
+                        <Icon28LikeFillRed key={i} />
+                    ))}
+                    {Array.from({
+                        length: (data.gameSession.attemptsCount ?? 0) - (attempts.count ?? 0),
+                    }).map((_, i) => (
+                        <Icon28Like key={i} className={"text-secondary"} />
+                    ))}
+                </div>
+            ),
+        [attempts.count, data.gameSession.attemptsCount, withAttempts]
     )
 
     const { mutate: answer } = trpc.game.answer.useMutation({
@@ -51,6 +72,8 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
             }
         },
         onSuccess: ({ status }, _, { cardData }) => {
+            controls.start(status).then(() => controls.start("initial"))
+
             if (status === "correct") {
                 correctAnswers.increment()
 
@@ -113,16 +136,38 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
 
                     {memoizedTimer}
 
-                    <div className={"flex-1"}></div>
+                    <div className={"flex-1 justify-end flex"}>{memoizedAttempts}</div>
                 </Div>
             )}
 
             {!withTimer && (
                 <Div className={"flex-1 select-none"}>
-                    <div className={"flex justify-center"}>
-                        <div
+                    <div className={"flex justify-center gap-2"}>
+                        <motion.div
+                            animate={controls}
+                            variants={{
+                                initial: {
+                                    backgroundColor: `var(${vkTheme.colorBackgroundSecondary.normal.name})`,
+                                    transition: {
+                                        duration: 0.2,
+                                        delay: 0.6,
+                                    },
+                                },
+                                correct: {
+                                    backgroundColor: `var(${vkTheme.colorAccentGreen.normal.name})`,
+                                    transition: {
+                                        duration: 0.2,
+                                    },
+                                },
+                                incorrect: {
+                                    backgroundColor: `var(${vkTheme.colorAccentRed.normal.name})`,
+                                    transition: {
+                                        duration: 0.2,
+                                    },
+                                },
+                            }}
                             className={
-                                "min-w-10 p-3 bg-vk-secondary rounded-xl flex justify-center"
+                                "min-w-10 p-3 bg-vk-secondary rounded-xl flex justify-center items-center"
                             }
                         >
                             <span>
@@ -131,7 +176,8 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                                     : currentCardIndex + 1}
                                 /{data.cards.length}
                             </span>
-                        </div>
+                        </motion.div>
+                        {memoizedAttempts}
                     </div>
                 </Div>
             )}

@@ -55,11 +55,20 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
         attemptCount: number | null
     }>({
         stacks: stackId ? [stackId] : [],
-        selectedModifiers: ["time"],
-        gameDuration: 60,
+        selectedModifiers: [],
+        gameDuration: 30,
         correctAnswerAddDuration: 1,
         attemptCount: 3,
     })
+
+    const { data: stacksData } = trpc.stacks.getSingle.useQuery(
+        {
+            id: gameSettings.stacks[0],
+        },
+        {
+            enabled: gameSettings.stacks.length > 0,
+        }
+    )
 
     const {
         mutate: start,
@@ -122,17 +131,25 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
             />
 
             <Group>
-                <Header mode={"secondary"} children={"Выбрать стопку"} />
+                <Header
+                    mode={"secondary"}
+                    children={"Стопка для игры"}
+                    subtitle={"Возьмём оттуда карточки переводов для игры"}
+                />
                 <SimpleCell
-                    children={"Стопка"}
+                    children={"Выбрать стопку"}
                     onClick={gameStackSelectModal.open}
                     expandable={"always"}
-                    indicator={gameSettings.stacks.join(", ").toString()}
+                    indicator={stacksData?.name}
                 />
             </Group>
 
             <Group>
-                <Header mode={"secondary"} children={"Модификаторы"} />
+                <Header
+                    mode={"secondary"}
+                    children={"Модификаторы"}
+                    subtitle={"Применяй модификаторы для усложнения игры"}
+                />
 
                 <Div className={"flex gap-3"}>
                     <ModifierCard
