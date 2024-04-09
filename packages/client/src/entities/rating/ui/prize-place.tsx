@@ -10,7 +10,7 @@ type PrizePlaceProps = {
 
 export const PrizePlace = ({ name, points, avatarUrl, place }: PrizePlaceProps) => {
     return (
-        <div className={"flex flex-col gap-2 items-center select-none"}>
+        <div className={"flex flex-col gap-2 items-center select-none animate-fade-in"}>
             <div
                 className={
                     "rounded-full w-[var(--width)] h-[var(--width)] bg-[var(--color)] p-[3px] relative"

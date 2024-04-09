@@ -5,7 +5,10 @@ import {
     Icon28CheckCircleOutline,
     Icon28HieroglyphCharacterOutline,
 } from "@vkontakte/icons"
+import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 import {
+    Button,
+    ButtonGroup,
     Div,
     Link,
     Placeholder,
@@ -25,6 +28,7 @@ import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationView } from "./translation-view"
 
 export const UserTranslations = () => {
+    const routeNavigator = useRouteNavigator()
     // TODO rewrite
     const [filter, setFilter] = useState<RouterInput["stacks"]["getUserStacks"]["filter"]>("all")
 
@@ -95,6 +99,22 @@ export const UserTranslations = () => {
                     icon={<Icon28HieroglyphCharacterOutline width={56} height={56} />}
                     header={"У вас нет переводов"}
                     children={"Создайте свой первый перевод или добавьте из существующих"}
+                    action={
+                        <ButtonGroup mode={"vertical"} align={"center"}>
+                            <Button
+                                size={"l"}
+                                mode={"secondary"}
+                                children={"Создать стопку"}
+                                onClick={addTranslationModal.open}
+                            />
+                            <Button
+                                size={"l"}
+                                mode={"tertiary"}
+                                children={"Перейти в ленту"}
+                                onClick={() => routeNavigator.push("/new")}
+                            />
+                        </ButtonGroup>
+                    }
                 />
             )}
 

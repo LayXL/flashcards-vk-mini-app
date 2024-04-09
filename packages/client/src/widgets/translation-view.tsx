@@ -180,7 +180,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                         onClose={addToStack.close}
                         onSuccess={(id) => {
                             addToStack.close()
-                            setViewStackId(id)
+                            setViewStackId(id ?? null)
                             addedTranslationToStack.open()
                         }}
                         translationId={id}
@@ -246,7 +246,9 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
                     // action={"Открыть"}
                     // onActionClick={viewStack.open}
-                    children={"Перевод добавлен в стопку"}
+                    children={
+                        viewStackId ? "Перевод добавлен в стопку" : "Перевод сохранён в избранное"
+                    }
                 />
             )}
         </>

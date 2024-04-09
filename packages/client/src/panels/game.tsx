@@ -24,32 +24,12 @@ import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
-import { GameResults } from "../widgets/game-results"
 import { Leaderboard } from "../widgets/leaderboard"
 import { PlayGame } from "../widgets/play-game"
 import { PlayRankedGame } from "../widgets/play-ranked-game"
 
-const RecentGameCard = ({ id }: { id: number }) => {
-    const { isOpened, open, close } = useModalState()
-
-    return (
-        <>
-            <div onClick={open} className={"p-3 bg-secondary rounded-xl cursor-pointer"}>
-                {id}
-            </div>
-
-            {/* TODO: создается слишком много порталов, заменить на стейт и выводить всего один модал враппер */}
-            <ModalWrapper isOpened={isOpened} onClose={close}>
-                <ModalBody fullscreen={true}>
-                    <GameResults id={id} onClose={close} />
-                </ModalBody>
-            </ModalWrapper>
-        </>
-    )
-}
-
 export const Game = () => {
-    const { data: recentlyGames } = trpc.game.getRecentlyGames.useQuery()
+    // const { data: recentlyGames } = trpc.game.getRecentlyGames.useQuery()
 
     const playGameModal = useModalState()
     const ratingModal = useModalState()
@@ -79,7 +59,7 @@ export const Game = () => {
 
             {type === "default" && (
                 <>
-                    <Group>
+                    <Group className={"animate-fade-in"}>
                         <Placeholder
                             icon={
                                 <Icon28Cards2Outline
@@ -121,7 +101,7 @@ export const Game = () => {
 
             {type === "ranked" && (
                 <>
-                    <Group>
+                    <Group className={"animate-fade-in"}>
                         <Div className={"flex justify-between"}>
                             <Title children={"Попытки на сегодня"} level={"3"} weight={"2"} />
                             <div className={"flex gap-1.5 text-dynamic-red"}>
@@ -161,7 +141,7 @@ export const Game = () => {
                             }
                         />
                     </Group>
-                    <Group>
+                    <Group className={"animate-fade-in"}>
                         <Leaderboard minimized defaultTab={"global"} />
                         <Div>
                             <Button

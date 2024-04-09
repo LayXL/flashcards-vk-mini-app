@@ -5,7 +5,10 @@ import {
     Icon28CheckCircleOutline,
     Icon32Cards2Outline,
 } from "@vkontakte/icons"
+import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 import {
+    Button,
+    ButtonGroup,
     Div,
     Link,
     Placeholder,
@@ -24,6 +27,7 @@ import { StackCreateModal } from "./stack-create"
 import { StackView } from "./stack-view"
 
 export const UserStacks = () => {
+    const routeNavigator = useRouteNavigator()
     const [filter, setFilter] = useState<RouterInput["stacks"]["getUserStacks"]["filter"]>("all")
 
     const { data, isLoading, isSuccess } = trpc.stacks.getUserStacks.useQuery({
@@ -95,6 +99,22 @@ export const UserStacks = () => {
                     icon={<Icon32Cards2Outline width={56} height={56} />}
                     header={"У вас нет стопок"}
                     children={"Создайте свою первую стопку"}
+                    action={
+                        <ButtonGroup mode={"vertical"} align={"center"}>
+                            <Button
+                                size={"l"}
+                                mode={"secondary"}
+                                children={"Создать стопку"}
+                                onClick={createStackModal.open}
+                            />
+                            <Button
+                                size={"l"}
+                                mode={"tertiary"}
+                                children={"Перейти в ленту"}
+                                onClick={() => routeNavigator.push("/new")}
+                            />
+                        </ButtonGroup>
+                    }
                 />
             )}
 

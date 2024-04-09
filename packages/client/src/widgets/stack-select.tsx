@@ -1,10 +1,17 @@
-import { Icon24Add } from "@vkontakte/icons"
-import { Button, ButtonGroup, Div, Group, ModalPageHeader, PanelHeaderBack } from "@vkontakte/vkui"
+import { Icon24Add, Icon28Like } from "@vkontakte/icons"
+import {
+    Button,
+    ButtonGroup,
+    Div,
+    Group,
+    ModalPageHeader,
+    PanelHeaderBack,
+    Title,
+} from "@vkontakte/vkui"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
-import { useEncodeStackBackground } from "../shared/helpers/stackBackground"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
 
@@ -13,6 +20,7 @@ type StackSelectProps = {
     onSelect: (id: number) => void
     onClear?: () => void
     onClose: () => void
+    onFavorite?: () => void
     canCreateNewStack: boolean
     filter?: RouterInput["stacks"]["getUserStacks"]["filter"]
     clearable?: boolean
@@ -22,6 +30,7 @@ export const StackSelect = ({
     title,
     onClose,
     onSelect,
+    onFavorite,
     canCreateNewStack,
     filter,
     clearable,
@@ -30,8 +39,6 @@ export const StackSelect = ({
     const { data } = trpc.stacks.getUserStacks.useQuery({ filter })
 
     const createNewStack = useModalState()
-
-    const encodeStackBackground = useEncodeStackBackground()
 
     return (
         <>
@@ -65,12 +72,21 @@ export const StackSelect = ({
 
             <Group>
                 <Div className={"gap-3 grid grid-cols-cards"}>
+                    {onFavorite && (
+                        <div
+                            className={
+                                "bg-vk-secondary rounded-xl flex flex-col gap-2 items-center justify-center cursor-pointer"
+                            }
+                            onClick={onFavorite}
+                        >
+                            <Icon28Like />
+                            <Title children={"Избранное"} level={"2"} />
+                        </div>
+                    )}
                     {data?.items.map((stack) => (
-                        // TODO redesign
                         <LargeStackCard
                             key={stack.id}
                             title={stack.name}
-                            // TODO image and verified
                             onClick={() => onSelect(stack.id)}
                             translationsCount={stack.translationsCount}
                             isVerified={stack.isVerified}

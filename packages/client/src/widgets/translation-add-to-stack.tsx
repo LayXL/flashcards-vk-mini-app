@@ -6,7 +6,7 @@ type TranslationAddToStackProps = {
     title?: string
     translationId: number
     onClose: () => void
-    onSuccess?: (id: number) => void
+    onSuccess?: (id?: number) => void
 }
 
 export const TranslationAddToStack = ({
@@ -23,6 +23,27 @@ export const TranslationAddToStack = ({
 
             if (onSuccess) {
                 onSuccess(id)
+                return
+            }
+
+            onClose()
+        },
+    })
+
+    const { mutate: addReact } = trpc.translations.addReaction.useMutation({
+        onSuccess: () => {
+            utils.translations.getUserTranslations.invalidate()
+
+            if (onSuccess) {
+                onSuccess()
+                return
+            }
+
+            onClose()
+        },
+        onError: () => {
+            if (onSuccess) {
+                onSuccess()
                 return
             }
 
@@ -47,6 +68,7 @@ export const TranslationAddToStack = ({
             canCreateNewStack={true}
             onClose={onClose}
             onSelect={onSelect}
+            onFavorite={() => addReact({ translationId })}
         />
     )
 }

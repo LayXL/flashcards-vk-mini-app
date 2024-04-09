@@ -20,7 +20,7 @@ export const RatingUserCard = ({
     return (
         <div
             className={cn(
-                "flex px-3 py-1.5 items-center rounded-xl select-none",
+                "flex px-3 py-1.5 items-center rounded-xl select-none animate-fade-in",
                 isCurrentUser && "bg-vk-secondary"
             )}
         >
