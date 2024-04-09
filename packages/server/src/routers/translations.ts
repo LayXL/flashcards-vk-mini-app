@@ -5,24 +5,43 @@ import { checkForInappropriateData } from "../util/checkForInappropriateData"
 import { addTranslationToStack } from "./stacks"
 
 export const translations = router({
-    getUserTranslations: privateProcedure.query(async ({ ctx }) => {
-        return await ctx.prisma.translation.findMany({
-            where: {
-                author: {
-                    vkId: ctx.vkId.toString(),
+    getUserTranslations: privateProcedure
+        .input(
+            z.object({
+                filter: z.enum(["all", "liked", "created"]).default("all"),
+            })
+        )
+        .query(async ({ ctx, input }) => {
+            return await ctx.prisma.translation.findMany({
+                where: {
+                    OR: [
+                        input.filter === "created" || input.filter === "all"
+                            ? {
+                                  authorId: ctx.userId,
+                              }
+                            : {},
+                        input.filter === "liked" || input.filter === "all"
+                            ? {
+                                  reactions: {
+                                      some: {
+                                          userId: ctx.userId,
+                                      },
+                                  },
+                              }
+                            : {},
+                    ],
                 },
-            },
-            include: {
-                language: true,
-                languageVariation: true,
-                tags: true,
-                transcriptions: true,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-        })
-    }),
+                include: {
+                    language: true,
+                    languageVariation: true,
+                    tags: true,
+                    transcriptions: true,
+                },
+                orderBy: {
+                    createdAt: "desc",
+                },
+            })
+        }),
     getSingle: privateProcedure
         .input(z.object({ id: z.number() }))
         .query(async ({ input, ctx }) => {

@@ -30,13 +30,16 @@ import { TranslationView } from "./translation-view"
 export const UserTranslations = () => {
     const routeNavigator = useRouteNavigator()
     // TODO rewrite
-    const [filter, setFilter] = useState<RouterInput["stacks"]["getUserStacks"]["filter"]>("all")
+    const [filter, setFilter] =
+        useState<RouterInput["translations"]["getUserTranslations"]["filter"]>("all")
 
     const {
         data: userTranslations,
         isLoading,
         isSuccess,
-    } = trpc.translations.getUserTranslations.useQuery()
+    } = trpc.translations.getUserTranslations.useQuery({
+        filter,
+    })
 
     const [addedId, setAddedId] = useState<number | null>(null)
 
@@ -57,12 +60,12 @@ export const UserTranslations = () => {
                     }}
                 />
                 <SubnavigationButton
-                    selected={filter === "saved"}
+                    selected={filter === "liked"}
                     before={<Icon24LikeOutline />}
                     children={"Понравившиеся"}
                     onClick={() => {
                         vibrateOnClick()
-                        setFilter(filter === "saved" ? "all" : "saved")
+                        setFilter(filter === "liked" ? "all" : "liked")
                     }}
                 />
                 <SubnavigationButton
