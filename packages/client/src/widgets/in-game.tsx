@@ -120,23 +120,26 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
 
             {withTimer && (
                 <Div className={"flex-row justify-between items-center flex-1 select-none"}>
-                    <div className={"flex-1"}>
+                    <div className={"flex-1 flex justify-start"}>
                         {data.gameSession.type !== "ranked" && (
                             <div
                                 className={
-                                    "w-[60px] h-[80px] flex items-center justify-center shadow-card bg-vk-secondary rounded-xl"
+                                    "min-w-10 p-3 bg-vk-secondary rounded-xl flex justify-center items-center"
                                 }
                             >
-                                <Title level={"2"} weight={"2"}>
-                                    {currentCardIndex + 1}/{data.cards.length}
-                                </Title>
+                                <span>
+                                    {data.gameSession.repeatCards
+                                        ? correctAnswers.count
+                                        : currentCardIndex + 1}
+                                    /{data.cards.length}
+                                </span>
                             </div>
                         )}
                     </div>
 
                     {memoizedTimer}
 
-                    <div className={"flex-1 justify-end flex"}>{memoizedAttempts}</div>
+                    <div className={"flex-1 justify-end flex"} children={memoizedAttempts} />
                 </Div>
             )}
 
