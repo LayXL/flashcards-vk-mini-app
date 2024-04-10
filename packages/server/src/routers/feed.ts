@@ -62,8 +62,8 @@ export const feed = router({
                 include: {
                     author: true,
                 },
-                take: 5,
-                skip: input.cursor * 5,
+                take: 2,
+                skip: input.cursor * 2,
             })
 
             let stackTranslationsCount: Record<number, number> = {}
