@@ -116,7 +116,7 @@ export const translations = router({
                 where: {
                     isPrivate: false,
                     author: {
-                        id: ctx.userId,
+                        id: data.authorId,
                     },
                 },
             })
