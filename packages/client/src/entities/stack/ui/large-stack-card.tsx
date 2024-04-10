@@ -10,7 +10,6 @@ type LargeStackCardProps = {
     isVerified?: boolean
     onClick?: () => void
     onPlay?: () => void
-    imageUrl?: string
     encodedBackground?: string
 }
 
@@ -21,7 +20,6 @@ export const LargeStackCard = ({
     onClick,
     onPlay,
     isVerified,
-    imageUrl,
 }: LargeStackCardProps) => {
     const decodedBackground = decodeStackBackground(encodedBackground) ?? null
 
