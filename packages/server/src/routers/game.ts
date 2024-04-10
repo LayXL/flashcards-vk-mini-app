@@ -500,11 +500,18 @@ export const game = router({
                     },
                 })
 
-                if (
-                    repeatedCount === 0 &&
-                    translationInGameSession.gameSession.stacks.length > 0 &&
-                    translationInGameSession.gameSession.stacks.every((stack) => stack.isVerified)
-                ) {
+                const verifiedStacksWithThisTranslation = await ctx.prisma.translationInStack.count(
+                    {
+                        where: {
+                            translationId: translationInGameSession.translationId,
+                            stack: {
+                                isVerified: true,
+                            },
+                        },
+                    }
+                )
+
+                if (repeatedCount === 0 && verifiedStacksWithThisTranslation > 0) {
                     await addXp(translationInGameSession.gameSession.userId, 1)
                 }
 
