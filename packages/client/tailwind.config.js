@@ -9,6 +9,7 @@ export default {
     theme: {
         extend: {
             spacing: {
+                "safe-area-top": "env(safe-area-inset-top)",
                 "safe-area-bottom": "env(safe-area-inset-bottom)",
             },
             height: {

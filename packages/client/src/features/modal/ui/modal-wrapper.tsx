@@ -6,11 +6,12 @@ import "./modal-keyframes.css"
 
 type ModalWrapperProps = {
     isOpened: boolean
-    onClose: () => void
+    onClose?: () => void
+    close?: () => void
     children: ReactNode
 }
 
-export const ModalWrapper = ({ isOpened, children, onClose }: ModalWrapperProps) => {
+export const ModalWrapper = ({ isOpened, children, ...props }: ModalWrapperProps) => {
     const [isShowing, setIsShowing] = useState(isOpened)
 
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -34,13 +35,15 @@ export const ModalWrapper = ({ isOpened, children, onClose }: ModalWrapperProps)
 
     if (!isShowing) return null
 
+    const close = props.close || props.onClose
+
     return (
-        <ModalContext.Provider value={{ onClose }}>
+        <ModalContext.Provider value={{ onClose: close }}>
             <FloatingPortal>
                 <div
                     onClick={(e) => {
                         e.stopPropagation()
-                        onClose()
+                        close?.()
                     }}
                     children={children}
                     className={cn(

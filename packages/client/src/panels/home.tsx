@@ -16,6 +16,7 @@ import { useModalState } from "../shared/hooks/useModalState"
 import { DailyStreak } from "../widgets/daily-streak"
 import { FiveLetters } from "../widgets/five-letters"
 import { Stats } from "../widgets/stats"
+import { StoriesFeed } from "../widgets/stories-feed"
 
 export const Home = () => {
     const fiveLettersModal = useModalState()
@@ -25,6 +26,8 @@ export const Home = () => {
             <PanelHeader children={"Лёрнинг"} />
 
             <SearchBar />
+
+            <StoriesFeed />
 
             <Group>
                 <Header children={"Ударный режим"} />
