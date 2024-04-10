@@ -28,6 +28,7 @@ import {
     Placeholder,
     Progress,
     Snackbar,
+    Spacing,
     Subhead,
 } from "@vkontakte/vkui"
 import { useState } from "react"
@@ -299,6 +300,8 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                     </Div>
                 </Group>
             </div>
+
+            <Spacing size={128} />
 
             <ModalWrapper
                 isOpened={translationViewModal.isOpened}
