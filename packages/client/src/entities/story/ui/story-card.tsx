@@ -1,5 +1,4 @@
-import { Icon20Cancel } from "@vkontakte/icons"
-import { Caption } from "@vkontakte/vkui"
+import { Caption, ModalPageHeader, PanelHeaderClose } from "@vkontakte/vkui"
 import { ReactNode } from "react"
 import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
 import { cn } from "../../../shared/helpers/cn"
@@ -39,10 +38,9 @@ export const StoryCard = ({ title, content }: StoryCardProps) => {
                                 "bg-[linear-gradient(to_bottom,rgba(0,0,0,.3),rgba(0,0,0,0)_20%)]"
                             )}
                         >
-                            <div className={"pointer-events-auto flex justify-end p-3"}>
-                                <Icon20Cancel
-                                    onClick={() => storyViewModal.close()}
-                                    className={"text-white cursor-pointer"}
+                            <div className={"pointer-events-auto"}>
+                                <ModalPageHeader
+                                    before={<PanelHeaderClose onClick={storyViewModal.close} />}
                                 />
                             </div>
                         </div>
