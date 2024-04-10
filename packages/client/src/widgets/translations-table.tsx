@@ -17,7 +17,9 @@ import { TranslationView } from "./translation-view"
 type Translation = RouterOutput["translations"]["getUserTranslations"][number]
 
 export const TranslationsTable = () => {
-    const { data, refetch } = trpc.translations.getUserTranslations.useQuery()
+    const { data, refetch } = trpc.translations.getUserTranslations.useQuery({
+        filter: "created",
+    })
 
     const [selectedId, setSelectedId] = useState<number | null>(null)
 
