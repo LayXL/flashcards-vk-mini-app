@@ -497,6 +497,7 @@ export const game = router({
                         translation: {
                             id: translationInGameSession.translationId,
                         },
+                        gainedXp: true,
                     },
                 })
 
@@ -527,6 +528,7 @@ export const game = router({
                                 id: translationInGameSession.translationId,
                             },
                         },
+                        gainedXp: repeatedCount === 0 && verifiedStacksWithThisTranslation > 0,
                     },
                 })
             }

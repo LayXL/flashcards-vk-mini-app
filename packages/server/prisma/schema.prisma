@@ -192,6 +192,8 @@ model UserTranslationRepetition {
   user        User        @relation(fields: [userId], references: [id])
   translation Translation @relation(fields: [translationId], references: [id])
 
+  gainedXp Boolean
+
   @@id([userId, translationId, repeatedAt])
 }
 
