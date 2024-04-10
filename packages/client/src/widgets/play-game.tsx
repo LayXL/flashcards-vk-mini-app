@@ -244,7 +244,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                 </Group>
             )}
 
-            <Div className={"box-border fixed w-screen bottom-0 bg-vk-content"}>
+            <Div className={"box-border fixed w-full bottom-0 bg-vk-content"}>
                 <Button children={"Играть"} stretched={true} onClick={startGame} size={"l"} />
                 <div className={"h-[env(safe-area-inset-bottom)]"} />
             </Div>

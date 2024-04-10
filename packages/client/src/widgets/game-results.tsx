@@ -3,7 +3,6 @@ import {
     Button,
     Caption,
     Div,
-    FixedLayout,
     Header,
     ModalPageHeader,
     PanelHeaderBack,
@@ -245,23 +244,22 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                 </div>
             </div>
 
-            <FixedLayout vertical={"bottom"} filled>
-                <Div>
-                    <Button
-                        children={"Продолжить"}
-                        stretched={true}
-                        size={"l"}
-                        onClick={() => {
-                            if (currentStep === 1) {
-                                controls.start("second")
-                                goToNextStep()
-                            } else {
-                                onClose()
-                            }
-                        }}
-                    />
-                </Div>
-            </FixedLayout>
+            <Div className={"box-border fixed w-full bottom-0 bg-vk-content"}>
+                <Button
+                    children={"Продолжить"}
+                    stretched={true}
+                    size={"l"}
+                    onClick={() => {
+                        if (currentStep === 1) {
+                            controls.start("second")
+                            goToNextStep()
+                        } else {
+                            onClose()
+                        }
+                    }}
+                />
+                <div className={"h-safe-area-bottom"} />
+            </Div>
 
             <ModalWrapper
                 isOpened={translationViewModal.isOpened}
