@@ -72,6 +72,17 @@ export const translations = router({
                             },
                         },
                     },
+                    stacks: {
+                        where: {
+                            stack: {
+                                isPrivate: false,
+                            },
+                        },
+                        include: {
+                            stack: true,
+                        },
+                        take: 24,
+                    },
                     comments: {
                         include: {
                             user: {
@@ -103,9 +114,9 @@ export const translations = router({
 
             const authorTranslationsCount = await prisma.translation.count({
                 where: {
+                    isPrivate: false,
                     author: {
-                        // todo isPublic
-                        vkId: ctx.vkId,
+                        id: ctx.userId,
                     },
                 },
             })
@@ -121,6 +132,21 @@ export const translations = router({
                 }),
                 canEdit: data.author.vkId === ctx.vkId.toString(),
                 commentsCount,
+                stacks: await Promise.all(
+                    data.stacks.map(async (stack) => ({
+                        ...stack.stack,
+                        translationsCount: await prisma.translation.count({
+                            where: {
+                                isPrivate: false,
+                                stacks: {
+                                    some: {
+                                        stackId: stack.stack.id,
+                                    },
+                                },
+                            },
+                        }),
+                    }))
+                ),
             }
         }),
     add: privateProcedure

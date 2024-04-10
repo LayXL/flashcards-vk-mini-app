@@ -14,6 +14,7 @@ import {
     Snackbar,
 } from "@vkontakte/vkui"
 import { useCallback, useState } from "react"
+import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { DetailedTranslationCard } from "../entities/translation/ui/detailed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWindow } from "../features/modal/ui/modal-window"
@@ -61,6 +62,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
     const addedTranslationToStack = useModalState(false)
     const reportTranslationModal = useModalState(false)
     const onSuccessReportSnackbar = useModalState(false)
+
     const [commentText, setCommentText] = useState("")
 
     const [viewStackId, setViewStackId] = useState<number | null>(null)
@@ -173,6 +175,26 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     />
                 </Div>
             </Group>
+
+            {(data?.stacks.length ?? 0) > 0 && (
+                <Group>
+                    <Header children={"Стопки с этим переводом"} />
+                    <Div className={"grid-cols-cards grid gap-3"}>
+                        {data?.stacks.map((stack) => (
+                            <LargeStackCard
+                                title={stack.name}
+                                translationsCount={stack.translationsCount}
+                                encodedBackground={stack.encodedBackground}
+                                isVerified={stack.isVerified}
+                                onClick={() => {
+                                    setViewStackId(stack.id)
+                                    viewStack.open()
+                                }}
+                            />
+                        ))}
+                    </Div>
+                </Group>
+            )}
 
             <ModalWrapper isOpened={addToStack.isOpened} onClose={addToStack.close}>
                 <ModalBody fullscreen={true}>
