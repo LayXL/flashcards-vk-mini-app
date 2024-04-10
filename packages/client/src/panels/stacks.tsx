@@ -1,15 +1,18 @@
+import { Icon24AddOutline, Icon28HieroglyphCharacterOutline } from "@vkontakte/icons"
+import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 import {
+    Button,
+    ButtonGroup,
     CardScroll,
     Div,
     Group,
     Header,
-    Headline,
     Link,
     ModalPageHeader,
     PanelHeader,
     PanelHeaderBack,
+    Placeholder,
     Spacing,
-    Subhead,
 } from "@vkontakte/vkui"
 import { useState } from "react"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
@@ -39,6 +42,8 @@ export const Stacks = () => {
     const stackPlayModal = useModalState()
     const categoryViewModal = useModalState()
 
+    const routeNavigator = useRouteNavigator()
+
     return (
         <>
             <PanelHeader children={"Стопки"} />
@@ -58,7 +63,7 @@ export const Stacks = () => {
                         }
                     />
                     <CardScroll>
-                        <div className={"flex gap-3"}>
+                        <div className={"flex gap-3 [&>*]:max-w-[160px]"}>
                             {category.stacks.map((stack) => (
                                 <LargeStackCard
                                     key={stack.id}
@@ -82,16 +87,29 @@ export const Stacks = () => {
             ))}
 
             {data && (
-                <Div>
-                    <div className={"bg-vk-secondary rounded-xl p-3 flex-col gap-2"}>
-                        <Headline weight={"2"} children={"Не нашли подходящую стопку?"} />
-                        {/* TODO: add links */}
-                        <Subhead>
-                            Вы можете найти стопки от других пользователей или же создать
-                            собственные
-                        </Subhead>
-                    </div>
-                </Div>
+                <Placeholder
+                    icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
+                    header={"Не нашли подходящую стопку?"}
+                    children={
+                        "Вы можете найти стопки от других пользователей или же создать собственные"
+                    }
+                    action={
+                        <ButtonGroup mode={"vertical"} align={"center"}>
+                            <Button
+                                size={"l"}
+                                children={"Перейти в ленту"}
+                                onClick={() => routeNavigator.push("/new")}
+                            />
+                            <Button
+                                size={"l"}
+                                mode={"tertiary"}
+                                children={"Создать свою стопку"}
+                                before={<Icon24AddOutline />}
+                                onClick={() => routeNavigator.push("/profile")}
+                            />
+                        </ButtonGroup>
+                    }
+                />
             )}
 
             <Spacing size={256} />

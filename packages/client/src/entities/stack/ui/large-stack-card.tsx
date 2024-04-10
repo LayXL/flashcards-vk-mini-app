@@ -61,7 +61,7 @@ export const LargeStackCard = ({
                                 style={{
                                     backgroundColor: "white",
                                     WebkitMaskImage:
-                                        "linear-gradient(to bottom, white 30%, transparent 75%)",
+                                        "linear-gradient(to bottom, white 50%, transparent 75%)",
                                 }}
                             >
                                 <StackBackground encodedBackground={encodedBackground} />
