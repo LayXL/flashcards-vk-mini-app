@@ -44,6 +44,8 @@ export const ModalWrapper = ({ isOpened, children, onClose }: ModalWrapperProps)
                     }}
                     children={children}
                     className={cn(
+                        "disable-scroll",
+                        // "border-0 m-0 p-0 w-full",
                         "fixed inset-0 h-screen flex-col justify-end",
                         isOpened && "animate-bg-appearing [&>div]:animate-content-appearing",
                         !isOpened && "animate-bg-disappearing [&>div]:animate-content-disappearing"

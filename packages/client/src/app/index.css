@@ -53,3 +53,7 @@ table tfoot tr tf {
     backdrop-filter: blur(8px);
     mask-image: linear-gradient(rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%);
 }
+
+body:has(.disable-scroll) {
+    overflow: hidden;
+}
