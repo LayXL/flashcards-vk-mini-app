@@ -269,6 +269,13 @@ export const stacks = router({
                 },
             })
 
+            if (!data) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Stack not found",
+                })
+            }
+
             const isLiked = await ctx.prisma.reactionOnStack.count({
                 where: {
                     stackId: input.id,

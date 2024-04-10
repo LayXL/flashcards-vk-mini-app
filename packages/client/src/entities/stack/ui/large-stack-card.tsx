@@ -53,6 +53,21 @@ export const LargeStackCard = ({
             <div className={"flex-1 bg-vk-secondary rounded-xl relative overflow-hidden"}>
                 <div className={"relative overflow-hidden w-full h-full"}>
                     <StackBackground encodedBackground={encodedBackground} />
+                    {encodedBackground?.includes("image") && (
+                        <>
+                            <div className={"backdrop-blur-lg absolute inset-0"} />
+                            <div
+                                className={"absolute inset-0"}
+                                style={{
+                                    backgroundColor: "white",
+                                    WebkitMaskImage:
+                                        "linear-gradient(to bottom, white 30%, transparent 75%)",
+                                }}
+                            >
+                                <StackBackground encodedBackground={encodedBackground} />
+                            </div>
+                        </>
+                    )}
                     {/* {decodedBackground?.imageUrl && <div className={"stack-blur"} />} */}
                 </div>
                 <div className={"absolute inset-0 flex-col justify-between"}>
