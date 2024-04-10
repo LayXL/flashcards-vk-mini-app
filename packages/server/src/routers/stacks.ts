@@ -338,10 +338,13 @@ export const stacks = router({
             })
         }),
     duplicate: privateProcedure
-        .input(z.object({ stackId: z.number() }))
+        .input(
+            z.object({
+                stackId: z.number(),
+                name: z.string().min(3).max(96).optional(),
+            })
+        )
         .mutation(async ({ ctx, input }) => {
-            // TODO позволять реагировать только на публичные стопки
-
             const stackData = await prisma.stack.findFirst({
                 where: {
                     id: input.stackId,
@@ -351,8 +354,9 @@ export const stacks = router({
                 select: {
                     name: true,
                     description: true,
-                    // tags: true,
-                    // translations: true,
+                    translations: true,
+                    pattern: true,
+                    palette: true,
                 },
             })
 
@@ -365,10 +369,27 @@ export const stacks = router({
                 data: {
                     author: {
                         connect: {
-                            vkId: ctx.vkId,
+                            id: ctx.userId,
                         },
                     },
-                    ...stackData,
+                    name: input.name || stackData.name,
+                    description: stackData.description,
+                    pattern: stackData.pattern,
+                    palette: stackData.palette,
+                    translations: {
+                        create: stackData.translations.map((translation) => ({
+                            translation: {
+                                connect: {
+                                    id: translation.translationId,
+                                },
+                            },
+                            addedByUser: {
+                                connect: {
+                                    id: ctx.userId,
+                                },
+                            },
+                        })),
+                    },
                 },
             })
         }),

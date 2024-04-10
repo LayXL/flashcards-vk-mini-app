@@ -3,16 +3,20 @@ import {
     Icon24Like,
     Icon24LikeOutline,
     Icon24MoreHorizontal,
+    Icon24Play,
     Icon28AddOutline,
     Icon28CheckCircleOutline,
+    Icon28CopyOutline,
     Icon28DeleteOutline,
     Icon28EditOutline,
-    Icon28ReportOutline,
+    Icon28HieroglyphCharacterOutline,
     Icon28ShareOutline,
 } from "@vkontakte/icons"
+import bridge from "@vkontakte/vk-bridge"
 import {
     ActionSheet,
     ActionSheetItem,
+    Alert,
     Button,
     ButtonGroup,
     Div,
@@ -21,6 +25,7 @@ import {
     Headline,
     ModalPageHeader,
     PanelHeaderBack,
+    Placeholder,
     Progress,
     Snackbar,
     Subhead,
@@ -30,6 +35,7 @@ import { StackBackground } from "../entities/stack/ui/stack-background"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalBody } from "../features/modal/ui/modal-body"
+import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
@@ -38,6 +44,7 @@ import { decodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { Skeleton } from "../shared/ui/skeleton"
+import { DuplicateStack } from "./duplicate-stack"
 import { PlayGame } from "./play-game"
 import { StackCreateModal } from "./stack-create"
 import { TranslationAdd } from "./translation-add"
@@ -46,9 +53,10 @@ import { TranslationView } from "./translation-view"
 
 type StackViewProps = {
     id: number
+    onClose?: () => void
 }
 
-export const StackView = ({ id }: StackViewProps) => {
+export const StackView = ({ id, onClose }: StackViewProps) => {
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
 
     const translationViewModal = useModalState()
@@ -56,12 +64,20 @@ export const StackView = ({ id }: StackViewProps) => {
     const addTranslationToOtherStackModal = useModalState()
     const addTranslationToStackActionSheet = useModalState()
     const translationAddedToStackSnackbar = useModalState()
+    const stackDuplicatedSnackbar = useModalState()
     const createTranslationModal = useModalState()
     const editStackModal = useModalState()
     const playGameModal = useModalState()
+    const duplicateStackModal = useModalState()
+    const deleteStackModal = useModalState()
 
     const modal = useModal()
+    const utils = trpc.useUtils()
     const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
+
+    const close = () => {
+        onClose?.() || modal?.onClose()
+    }
 
     const showMore = useModalState()
 
@@ -77,6 +93,13 @@ export const StackView = ({ id }: StackViewProps) => {
         onSuccess: () => refetch(),
     })
 
+    const { mutate: deleteStack } = trpc.stacks.delete.useMutation({
+        onSuccess: () => {
+            close()
+            utils.stacks.getUserStacks.invalidate()
+        },
+    })
+
     const decodedBackground = decodeStackBackground(data?.encodedBackground)
 
     const exploringStackProgress =
@@ -86,7 +109,7 @@ export const StackView = ({ id }: StackViewProps) => {
         <>
             <ModalPageHeader
                 className={"z-20"}
-                before={<PanelHeaderBack onClick={() => modal?.onClose()} />}
+                before={<PanelHeaderBack onClick={close} />}
                 children={data?.name || <Skeleton className={"w-20"} />}
             />
 
@@ -146,14 +169,15 @@ export const StackView = ({ id }: StackViewProps) => {
                                 stretched
                                 size={"l"}
                                 children={"Играть"}
+                                before={<Icon24Play />}
                                 onClick={playGameModal.open}
                             />
                             <Button
                                 mode={"secondary"}
                                 stretched
                                 size={"l"}
-                                before={<Icon24Add />}
                                 children={"Дублировать"}
+                                onClick={duplicateStackModal.open}
                             />
                         </ButtonGroup>
                     </Div>
@@ -161,7 +185,11 @@ export const StackView = ({ id }: StackViewProps) => {
                 <Group>
                     <Header
                         mode={"primary"}
-                        indicator={data?.translations?.length}
+                        indicator={
+                            (data?.translations?.length ?? 0) > 0
+                                ? data?.translations?.length
+                                : undefined
+                        }
                         aside={
                             data?.isEditable && (
                                 <div
@@ -175,32 +203,53 @@ export const StackView = ({ id }: StackViewProps) => {
                         children={"Переводы"}
                     />
 
-                    <Div className={"py-0"}>
-                        <div className={"bg-vk-secondary rounded-xl p-3 flex-col gap-2"}>
-                            <Headline>
-                                {data ? (
-                                    exploringStackProgress > 0 ? (
-                                        <>
-                                            Стопка изучена на{" "}
-                                            <b>{Math.round(exploringStackProgress)}%</b>
-                                        </>
+                    {(data?.translations?.length ?? 0) > 0 && (
+                        <Div className={"py-0"}>
+                            <div className={"bg-vk-secondary rounded-xl p-3 flex-col gap-2"}>
+                                <Headline>
+                                    {data ? (
+                                        exploringStackProgress > 0 ? (
+                                            <>
+                                                Стопка изучена на{" "}
+                                                <b>{Math.round(exploringStackProgress)}%</b>
+                                            </>
+                                        ) : (
+                                            <>
+                                                Стопка еще не изучена.{" "}
+                                                {data?.isVerified
+                                                    ? "За неё начисляется опыт"
+                                                    : "За неё не начисляется опыт"}
+                                            </>
+                                        )
                                     ) : (
-                                        <>
-                                            Стопка еще не изучена.{" "}
-                                            {data?.isVerified
-                                                ? "За неё начисляется опыт"
-                                                : "За неё не начисляется опыт"}
-                                        </>
-                                    )
-                                ) : (
-                                    <Skeleton className={"w-40 bg-white dark:bg-black/20"} />
+                                        <Skeleton className={"w-40 bg-white dark:bg-black/20"} />
+                                    )}
+                                </Headline>
+                                {exploringStackProgress > 0 && (
+                                    <Progress value={exploringStackProgress} />
                                 )}
-                            </Headline>
-                            {exploringStackProgress > 0 && (
-                                <Progress value={exploringStackProgress} />
-                            )}
-                        </div>
-                    </Div>
+                            </div>
+                        </Div>
+                    )}
+
+                    {data?.translations?.length === 0 && (
+                        <Placeholder
+                            icon={<Icon28HieroglyphCharacterOutline width={56} height={56} />}
+                            header={"Нет переводов"}
+                            children={"В этой стопке пока нет переводов"}
+                            action={
+                                data.isEditable ? (
+                                    <Button
+                                        mode={"secondary"}
+                                        size={"l"}
+                                        before={<Icon24Add />}
+                                        children={"Добавить перевод"}
+                                        onClick={addTranslationToStackActionSheet.open}
+                                    />
+                                ) : undefined
+                            }
+                        />
+                    )}
 
                     <Div className={"grid grid-cols-cards gap-3"}>
                         {!data &&
@@ -327,6 +376,10 @@ export const StackView = ({ id }: StackViewProps) => {
                 </ModalBody>
             </ModalWrapper>
 
+            <ModalWindow {...duplicateStackModal} title={"Дублирование стопки"}>
+                <DuplicateStack stackId={id} onSuccess={duplicateStackModal.close} />
+            </ModalWindow>
+
             {showMore.isOpened && (
                 <ActionSheet onClose={showMore.close} className={"z-30"} toggleRef={undefined}>
                     {data?.isEditable && (
@@ -336,21 +389,68 @@ export const StackView = ({ id }: StackViewProps) => {
                             onClick={editStackModal.open}
                         />
                     )}
-                    <ActionSheetItem before={<Icon28ShareOutline />} children={"Поделиться"} />
                     <ActionSheetItem
+                        before={<Icon28ShareOutline />}
+                        children={"Поделиться стопкой"}
+                        onClick={() => {
+                            bridge.send("VKWebAppShare", {
+                                link: `https://vk.com/app51843841#/stack/${id}`,
+                            })
+                        }}
+                    />
+                    {data?.isEditable && (
+                        <ActionSheetItem
+                            before={<Icon28CopyOutline />}
+                            children={"Дублировать стопку"}
+                            onClick={duplicateStackModal.open}
+                        />
+                    )}
+                    {/* <ActionSheetItem
                         before={<Icon28ReportOutline />}
                         mode={"destructive"}
                         children={"Пожаловаться"}
-                    />
+                    /> */}
                     {data?.isEditable && (
                         <ActionSheetItem
                             before={<Icon28DeleteOutline />}
                             mode={"destructive"}
                             children={"Удалить стопку"}
-                            // TODO
+                            onClick={deleteStackModal.open}
                         />
                     )}
                 </ActionSheet>
+            )}
+
+            <ModalWindow {...duplicateStackModal} title={"Дублирование стопки"}>
+                <DuplicateStack
+                    stackId={id}
+                    onSuccess={() => {
+                        duplicateStackModal.close()
+                        stackDuplicatedSnackbar.open()
+                    }}
+                />
+            </ModalWindow>
+
+            {deleteStackModal.isOpened && (
+                <Alert
+                    actions={[
+                        {
+                            title: "Отмена",
+                            mode: "cancel",
+                        },
+                        {
+                            title: "Удалить",
+                            mode: "destructive",
+                            action: () => {
+                                deleteStack({ id })
+                            },
+                        },
+                    ]}
+                    actionsLayout={"horizontal"}
+                    onClose={deleteStackModal.close}
+                    header={"Подтвердите действие"}
+                    text={"Вы уверены, что хотите удалить стопку?"}
+                />
             )}
 
             {addTranslationToStackActionSheet.isOpened && (
@@ -366,6 +466,14 @@ export const StackView = ({ id }: StackViewProps) => {
                         onClick={createTranslationModal.open}
                     />
                 </ActionSheet>
+            )}
+
+            {stackDuplicatedSnackbar.isOpened && (
+                <Snackbar
+                    onClose={stackDuplicatedSnackbar.close}
+                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
+                    children={"Стопка продублирована в профиль"}
+                />
             )}
 
             {translationAddedToStackSnackbar.isOpened && (

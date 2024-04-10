@@ -3,10 +3,12 @@ import bridge from "@vkontakte/vk-bridge"
 import {
     createHashRouter,
     useActiveVkuiLocation,
+    useParams,
     useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
 import { Epic, ModalRoot, Panel, Root, SplitCol, SplitLayout, View } from "@vkontakte/vkui"
 import { useEffect } from "react"
+import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { Game } from "../panels/game"
 import { Home } from "../panels/home"
 import { New } from "../panels/new"
@@ -14,6 +16,7 @@ import { Profile } from "../panels/profile"
 import { Stacks } from "../panels/stacks"
 import { trpc } from "../shared/api"
 import { getStorageValue } from "../shared/helpers/getStorageValue"
+import { StackView } from "../widgets/stack-view"
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const router = createHashRouter([
@@ -47,6 +50,11 @@ export const router = createHashRouter([
         path: "/profile",
         panel: "profile",
         view: "profile",
+    },
+    {
+        path: "/stack/:id",
+        panel: "stack",
+        view: "main",
     },
 ])
 
@@ -136,6 +144,7 @@ export const Router = () => {
                     <Root nav={"root"} activeView={view!}>
                         <View nav={"main"} activePanel={panel!}>
                             <Panel nav={"home"} children={<Home />} />
+                            <Panel nav={"stack"} children={<ViewStack />} />
                         </View>
                         <View nav={"stacks"} activePanel={panel!}>
                             <Panel nav={"stacks"} children={<Stacks />} />
@@ -153,5 +162,22 @@ export const Router = () => {
                 </Epic>
             </SplitCol>
         </SplitLayout>
+    )
+}
+
+const ViewStack = () => {
+    const routeNavigator = useRouteNavigator()
+    const params = useParams<"id">()
+
+    return (
+        <>
+            <StackView
+                id={parseInt(params?.id ?? "0")}
+                onClose={() => {
+                    routeNavigator.push("/")
+                }}
+            />
+            <TabBar />
+        </>
     )
 }
