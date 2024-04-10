@@ -34,7 +34,7 @@ export const Game = () => {
     const playGameModal = useModalState()
     const ratingModal = useModalState()
 
-    const [type, setType] = useState<"default" | "ranked">("default")
+    const [type, setType] = useState<"default" | "ranked">("ranked")
 
     const { data: ratingAttemptsLeft } = trpc.game.getRatingAttemptsLeftToday.useQuery(undefined, {
         enabled: type === "ranked",
@@ -46,14 +46,14 @@ export const Game = () => {
 
             <Tabs>
                 <TabsItem
-                    onClick={() => setType("default")}
-                    selected={type === "default"}
-                    children={"Обычная игра"}
-                />
-                <TabsItem
                     onClick={() => setType("ranked")}
                     selected={type === "ranked"}
                     children={"Рейтинг"}
+                />
+                <TabsItem
+                    onClick={() => setType("default")}
+                    selected={type === "default"}
+                    children={"Обычная игра"}
                 />
             </Tabs>
 
