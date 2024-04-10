@@ -2,10 +2,8 @@ import { Icon24HieroglyphCharacterOutline, Icon24ReportOutline } from "@vkontakt
 import {
     Button,
     ButtonGroup,
-    CardScroll,
     Div,
     Group,
-    Header,
     ModalPageHeader,
     PanelHeader,
     PanelHeaderClose,
@@ -78,7 +76,7 @@ export const Profile = () => {
                 )}
             </Group>
 
-            <Group>
+            {/* <Group>
                 <Header
                     children={"Достижения"}
                     // aside={<Link children={"Показать все"} />}
@@ -102,7 +100,7 @@ export const Profile = () => {
                         />
                     </div>
                 </CardScroll>
-            </Group>
+            </Group> */}
 
             <Tabs>
                 <TabsItem
