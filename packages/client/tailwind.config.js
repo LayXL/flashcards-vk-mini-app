@@ -20,6 +20,9 @@ export default {
                 "horizontal-regular": "var(--vkui--size_base_padding_horizontal--regular)",
             },
             colors: {
+                learning: {
+                    red: "#FF3A72",
+                },
                 dynamic: {
                     red: vkTheme.colorAccentRed.normal.value,
                     green: vkTheme.colorAccentGreen.normal.value,

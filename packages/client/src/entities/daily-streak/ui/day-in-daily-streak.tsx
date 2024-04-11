@@ -16,8 +16,8 @@ export const DayInDailyStreak = ({ date, completed, today }: DayInDailyStreakPro
         <div
             className={cn(
                 "flex-col bg-vk-secondary py-3 w-12 rounded-xl items-center select-none transition-colors box-border",
-                completed && "bg-vk-accent text-white",
-                today && "border border-solid border-vk-accent"
+                completed && "bg-learning-red text-white",
+                today && "border border-solid border-learning-red"
             )}
         >
             <Title level={"2"} weight={"2"} children={day} />

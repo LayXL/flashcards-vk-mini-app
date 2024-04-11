@@ -6,6 +6,7 @@ import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
+import { SearchBar } from "../features/search/ui/search-bar"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
@@ -85,14 +86,14 @@ export const New = () => {
     useEffect(() => {
         if (isLoading || isFetching) return
 
-        if (!isScrollable && hasNextPage) {
-            fetchNextPage()
-        }
+        if (!isScrollable && hasNextPage) fetchNextPage()
     }, [fetchNextPage, hasNextPage, isLoading, isFetching, isScrollable, infiniteData])
 
     return (
         <>
             <PanelHeader children={"Новое"} />
+
+            <SearchBar />
 
             <InfiniteScroll
                 dataLength={infiniteData?.length ?? 0}
