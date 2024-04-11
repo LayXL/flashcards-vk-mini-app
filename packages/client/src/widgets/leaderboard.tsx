@@ -23,6 +23,7 @@ type LeaderboardProps = {
 export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps) => {
     const [tab, setTab] = useState<"friends" | "global">(defaultTab || "friends")
 
+    const { data: currentUserSeason } = trpc.rating.getCurrentSeason.useQuery()
     const { data: currentUser } = trpc.getUser.useQuery()
 
     const { data: friendsData, refetch: refetchFriends } = useQuery({
@@ -93,6 +94,20 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                     isCurrentUser={user.id === currentUser?.id}
                 />
             ))}
+
+            {!minimized && currentUser && currentUserSeason?.user.place && (
+                <div className={"fixed bottom-0 left-0 right-0 p-3"}>
+                    <div className={"bg-vk-content rounded-xl left-0 right-0 py-3"}>
+                        <RatingUserCard
+                            avatar={getSuitableAvatarUrl(currentUser.avatarUrls, 64)}
+                            name={currentUser.fullName ?? ""}
+                            points={currentUserSeason.user.points}
+                            place={currentUserSeason.user.place}
+                            isCurrentUser={true}
+                        />
+                    </div>
+                </div>
+            )}
 
             {friendsData?.friends.length === 0 && tab === "friends" && (
                 <Placeholder
