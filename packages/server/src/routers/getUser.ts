@@ -48,7 +48,7 @@ export const getUser = privateProcedure.query(async ({ ctx }) => {
     //     },
     // })
 
-    const totalXp = [userProfile?.xp, fiveLettersResolved].reduce((a, b) => a + b, 0)
+    const totalXp = [userProfile?.xp, fiveLettersResolved * 5].reduce((a, b) => a + b, 0)
 
     return {
         ...(await ctx.prisma.user.findFirst({
