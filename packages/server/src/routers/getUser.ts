@@ -32,13 +32,31 @@ export const getUser = privateProcedure.query(async ({ ctx }) => {
         })
     ).length
 
+    const fiveLettersResolved = await ctx.prisma.userDailyStatistic.count({
+        where: {
+            userId: ctx.userId,
+            fiveLetterWordGuessed: true,
+        },
+    })
+
+    // const ratingPoints = await ctx.prisma.userDailyStatistic.aggregate({
+    //     _sum: {
+    //         points: true,
+    //     },
+    //     where: {
+    //         userId: ctx.userId,
+    //     },
+    // })
+
+    const totalXp = [userProfile?.xp, fiveLettersResolved].reduce((a, b) => a + b, 0)
+
     return {
         ...(await ctx.prisma.user.findFirst({
             where: {
                 vkId: ctx.vkId,
             },
         })),
-        progress: getUserProgress(userProfile?.xp || 0),
+        progress: getUserProgress(totalXp),
         stats: {
             todayTranslationsExplored,
             totalTranslationsExplored,
