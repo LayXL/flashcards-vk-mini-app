@@ -9,6 +9,7 @@ import {
     Title,
 } from "@vkontakte/vkui"
 import { motion, useAnimationControls } from "framer-motion"
+import { DateTime } from "luxon"
 import { ReactNode, useState } from "react"
 import { useBoolean, useStep } from "usehooks-ts"
 import { AnswerCard } from "../entities/game/ui/answer-card"
@@ -16,6 +17,7 @@ import { StackBackground } from "../entities/stack/ui/stack-background"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { AnimatedNumber } from "../shared/ui/animated-number"
@@ -77,31 +79,44 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                 duration: 0.6,
                                 type: "spring",
                             }}
-                            className={
-                                "aspect-square w-[200px] bg-secondary rounded-xl overflow-hidden"
-                            }
+                            className={cn(
+                                "aspect-square w-[300px] max-w-full overflow-hidden",
+                                data.type === "ranked" && "mb-8 -mt-8",
+                                data.type !== "ranked" && "bg-secondary rounded-xl w-[200px]"
+                            )}
                         >
-                            {data?.stacks && data.stacks.length > 0 && (
-                                <StackBackground
-                                    encodedBackground={data?.stacks[0].encodedBackground}
+                            {data.type === "ranked" ? (
+                                <img
+                                    className={"rounded-xl w-full h-full object-cover"}
+                                    src={"/cat.svg"}
+                                    alt={""}
                                 />
+                            ) : (
+                                data?.stacks &&
+                                data.stacks.length > 0 && (
+                                    <StackBackground
+                                        encodedBackground={data?.stacks[0].encodedBackground}
+                                    />
+                                )
                             )}
                         </motion.div>
 
                         <Title level={"1"} weight={"1"}>
                             <motion.span>
-                                {"Стопка пройдена!".split("").map((char, i) => (
-                                    <motion.span
-                                        initial={{ visibility: "hidden" }}
-                                        animate={{ visibility: "visible" }}
-                                        transition={{
-                                            delay: 0.6 + i * 0.02,
-                                        }}
-                                        key={i}
-                                    >
-                                        {char}
-                                    </motion.span>
-                                ))}
+                                {(data.type === "ranked" ? "Игра завершена" : "Стопка пройдена!")
+                                    .split("")
+                                    .map((char, i) => (
+                                        <motion.span
+                                            initial={{ visibility: "hidden" }}
+                                            animate={{ visibility: "visible" }}
+                                            transition={{
+                                                delay: 0.6 + i * 0.02,
+                                            }}
+                                            key={i}
+                                        >
+                                            {char}
+                                        </motion.span>
+                                    ))}
                             </motion.span>
                         </Title>
 
@@ -136,7 +151,15 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                                     />
                                     <Stat
                                         caption={"Время"}
-                                        value={data?.finalGameTime}
+                                        value={
+                                            data?.finalGameTime > 0
+                                                ? data.finalGameTime
+                                                : Math.round(
+                                                      DateTime.now()
+                                                          .diff(DateTime.fromISO(data?.startedAt))
+                                                          .as("seconds")
+                                                  )
+                                        }
                                         icon={<Icon12ClockOutline className={"text-accent"} />}
                                         unit={"сек"}
                                     />
@@ -190,29 +213,66 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                         }}
                     >
                         <Div className={"flex gap-3"}>
-                            <Stat
-                                caption={"Баллы"}
-                                value={data?.points}
-                                icon={
-                                    <Icon32CheckbitOutline
-                                        height={12}
-                                        width={12}
-                                        className={"text-accent"}
+                            {data?.type === "default" && (
+                                <>
+                                    <Stat
+                                        caption={"Верно"}
+                                        value={data.points}
+                                        icon={
+                                            <Icon32CheckbitOutline
+                                                height={12}
+                                                width={12}
+                                                className={"text-accent"}
+                                            />
+                                        }
                                     />
-                                }
-                            />
-                            <Stat
-                                caption={"Время"}
-                                value={data?.finalGameTime}
-                                icon={<Icon12ClockOutline className={"text-accent"} />}
-                                unit={"сек"}
-                            />
-                            <Stat
-                                caption={"Отлично"}
-                                value={roundedAccuracy}
-                                icon={<Icon12CheckCircle className={"text-dynamic-green"} />}
-                                unit={"%"}
-                            />
+                                    <Stat
+                                        caption={"Время"}
+                                        value={
+                                            data?.finalGameTime > 0
+                                                ? data.finalGameTime
+                                                : Math.round(
+                                                      DateTime.now()
+                                                          .diff(DateTime.fromISO(data?.startedAt))
+                                                          .as("seconds")
+                                                  )
+                                        }
+                                        icon={<Icon12ClockOutline className={"text-accent"} />}
+                                        unit={"сек"}
+                                    />
+                                    <Stat
+                                        caption={"Результат"}
+                                        value={roundedAccuracy}
+                                        icon={
+                                            <Icon12CheckCircle className={"text-dynamic-green"} />
+                                        }
+                                        unit={"%"}
+                                    />
+                                </>
+                            )}
+                            {data?.type === "ranked" && (
+                                <>
+                                    <Stat
+                                        caption={"Баллы"}
+                                        value={data.points}
+                                        icon={
+                                            <Icon32CheckbitOutline
+                                                height={12}
+                                                width={12}
+                                                className={"text-accent"}
+                                            />
+                                        }
+                                    />
+                                    <Stat
+                                        caption={"Отлично"}
+                                        value={roundedAccuracy}
+                                        icon={
+                                            <Icon12CheckCircle className={"text-dynamic-green"} />
+                                        }
+                                        unit={"%"}
+                                    />
+                                </>
+                            )}
                         </Div>
 
                         <Header children={"Ответы"} />
@@ -220,12 +280,12 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                         <Div className={"flex-col gap-2 flex-1 overflow-scroll pb-36"}>
                             {data?.translations
                                 ?.filter(({ status }) => status !== "unanswered")
-                                .map(({ translation, status }) => (
+                                .map(({ translation, status, answerDuration }) => (
                                     <AnswerCard
                                         key={translation.id}
                                         foreign={translation.foreign}
                                         vernacular={translation.vernacular}
-                                        time={0}
+                                        time={answerDuration}
                                         type={status as "correct" | "incorrect"}
                                         onClick={() => {
                                             vibrateOnClick()

@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server"
-import { differenceInSeconds } from "date-fns"
+import { differenceInMilliseconds, differenceInSeconds } from "date-fns"
 import { startOfDay } from "date-fns/fp"
 import z from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
@@ -47,7 +47,7 @@ export const game = router({
                 z.object({
                     type: z.literal("default"),
                     stackIds: z.number().array(),
-                    gameDuration: z.number().min(10).max(240).nullable().optional().default(null),
+                    gameDuration: z.number().min(5).max(240).nullable().optional().default(null),
                     correctAnswerAddDuration: z
                         .number()
                         .min(0)
@@ -633,8 +633,17 @@ export const game = router({
         const correct = data.translations.filter((x) => x.status === "correct")
         const total = data.translations.filter((x) => x.status !== "unanswered")
 
+        const startedAt = data.startedAt
+
         return {
             ...data,
+            translations: data.translations.map((x, i) => ({
+                ...x,
+                answerDuration: (differenceInMilliseconds(
+                    x.answeredAt,
+                    i === 0 ? startedAt : data.translations[i - 1].answeredAt
+                ) / 1000) as number,
+            })),
             answerAccuracy: correct.length / total.length,
             points: correct.length ?? 0,
             finalGameTime: differenceInSeconds(data.endedAt ?? 0, data.startedAt ?? 0) ?? 0,

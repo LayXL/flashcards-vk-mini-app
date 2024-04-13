@@ -62,9 +62,21 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                 </ModalBody>
             </ModalWrapper>
 
-            <ModalWrapper isOpened={gameResultsModal.isOpened} onClose={gameResultsModal.close}>
+            <ModalWrapper
+                isOpened={gameResultsModal.isOpened}
+                onClose={() => {
+                    onClose?.()
+                    gameResultsModal.close
+                }}
+            >
                 <ModalBody fullscreen={true}>
-                    <GameResults id={data?.gameSession.id ?? 0} onClose={gameResultsModal.close} />
+                    <GameResults
+                        id={data?.gameSession.id ?? 0}
+                        onClose={() => {
+                            onClose?.()
+                            gameResultsModal.close
+                        }}
+                    />
                 </ModalBody>
             </ModalWrapper>
         </>
