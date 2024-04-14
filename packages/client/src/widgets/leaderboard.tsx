@@ -4,6 +4,7 @@ import {
     ModalPageHeader,
     PanelHeaderBack,
     Placeholder,
+    Spacing,
     Tabs,
     TabsItem,
 } from "@vkontakte/vkui"
@@ -95,9 +96,11 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                 />
             ))}
 
+            <Spacing size={128} />
+
             {!minimized && currentUser && currentUserSeason?.user.place && (
                 <div className={"fixed bottom-0 left-0 right-0 p-3"}>
-                    <div className={"bg-vk-content rounded-xl left-0 right-0 py-3"}>
+                    <div className={"bg-vk-secondary rounded-xl left-0 right-0"}>
                         <RatingUserCard
                             avatar={getSuitableAvatarUrl(currentUser.avatarUrls, 64)}
                             name={currentUser.fullName ?? ""}

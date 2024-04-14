@@ -137,7 +137,7 @@ export const Router = () => {
                 })
                 .catch((e) => console.log(e))
         }
-    }, [completeOnboarding, isSuccess, onboardingCompleted])
+    }, [completeOnboarding, isSuccess, onboardingCompleted, routeNavigator])
 
     return (
         <SplitLayout modal={modals}>
