@@ -18,6 +18,7 @@ import { useState } from "react"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
+import { SearchBar } from "../features/search/ui/search-bar"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
@@ -47,6 +48,8 @@ export const Stacks = () => {
     return (
         <>
             <PanelHeader children={"Стопки"} />
+
+            <SearchBar />
 
             {data?.map((category) => (
                 <Group key={category.id}>
