@@ -145,7 +145,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
             </div>
 
             {data?.status === "playing" && (
-                <div className={"fixed w-screen bottom-0"}>
+                <div className={"fixed w-full bottom-0"}>
                     <Keyboard
                         correctLetters={data?.correctLetters ?? []}
                         excludedLetters={data?.excludedLetters ?? []}
