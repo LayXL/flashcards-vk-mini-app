@@ -98,6 +98,8 @@ export const Router = () => {
 
     useEffect(() => {
         if (isSuccess && !onboardingCompleted) {
+            routeNavigator.push("/play")
+
             bridge
                 .send("VKWebAppShowSlidesSheet", {
                     slides: [
