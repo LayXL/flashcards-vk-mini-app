@@ -60,6 +60,15 @@ export const getUser = privateProcedure.query(async ({ ctx }) => {
         stats: {
             todayTranslationsExplored,
             totalTranslationsExplored,
+            todayStats: await ctx.prisma.userDailyStatistic.findFirst({
+                where: {
+                    userId: ctx.userId,
+                    date: {
+                        gte: new Date(new Date().setHours(0, 0, 0, 0)),
+                        lte: new Date(new Date().setHours(23, 59, 59, 999)),
+                    },
+                },
+            }),
         },
     }
 })
