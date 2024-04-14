@@ -47,6 +47,8 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
     const gameResultsModal = useModalState()
     const gameStackSelectModal = useModalState()
 
+    const utils = trpc.useUtils()
+
     const [gameSettings, setGameSettings] = useState<{
         stacks: number[]
         selectedModifiers: ("time" | "attempts" | "repeat")[]
@@ -114,14 +116,16 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
     )
 
     const stopGame = useCallback(() => {
+        utils.game.getRatingAttemptsLeftToday.invalidate()
         gameModal.close()
         resetGameData()
-    }, [gameModal, resetGameData])
+    }, [gameModal, resetGameData, utils.game.getRatingAttemptsLeftToday])
 
     const endGame = useCallback(() => {
+        utils.game.getRatingAttemptsLeftToday.invalidate()
         gameModal.close()
         gameResultsModal.open()
-    }, [gameModal, gameResultsModal])
+    }, [gameModal, gameResultsModal, utils.game.getRatingAttemptsLeftToday])
 
     return (
         <>

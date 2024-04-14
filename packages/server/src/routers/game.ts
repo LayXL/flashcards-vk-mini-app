@@ -202,7 +202,7 @@ export const game = router({
                 ) {
                     throw new TRPCError({
                         code: "BAD_REQUEST",
-                        message: "You have already played 3 ranked games today",
+                        message: "You have already played 3 rating games today",
                     })
                 }
 
