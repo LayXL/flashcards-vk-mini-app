@@ -12,6 +12,7 @@ import { useState } from "react"
 import { PrizePlace } from "../entities/rating/ui/prize-place"
 import { RatingUserCard } from "../entities/rating/ui/rating-user-card"
 import { trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
 import { getFriends } from "../shared/helpers/getFriends"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 
@@ -65,41 +66,45 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                 </>
             )}
 
-            <div className={"flex gap-2 justify-around items-center py-3"}>
-                {[1, 0, 2].map((i) => (
-                    <div className={"flex-1"}>
-                        {leaderboardData?.slice(0, 3)[i] && (
-                            <PrizePlace
-                                key={i}
-                                place={i + 1}
-                                name={leaderboardData?.slice(0, 3)[i].user.fullName}
-                                points={leaderboardData?.slice(0, 3)[i].points}
-                                avatarUrl={getSuitableAvatarUrl(
-                                    leaderboardData?.slice(0, 3)[i].user.avatarUrls,
-                                    64
-                                )}
-                            />
-                        )}
-                    </div>
-                ))}
+            <div className={cn(!minimized && "h-full overflow-scroll")}>
+                <div className={"flex gap-2 justify-around items-center py-3"}>
+                    {[1, 0, 2].map((i) => (
+                        <div className={"flex-1"}>
+                            {leaderboardData?.slice(0, 3)[i] && (
+                                <PrizePlace
+                                    key={i}
+                                    place={i + 1}
+                                    name={leaderboardData?.slice(0, 3)[i].user.fullName}
+                                    points={leaderboardData?.slice(0, 3)[i].points}
+                                    avatarUrl={getSuitableAvatarUrl(
+                                        leaderboardData?.slice(0, 3)[i].user.avatarUrls,
+                                        64
+                                    )}
+                                />
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                {/* TODO проверить работу */}
+                {leaderboardData
+                    ?.slice(3, minimized ? 10 : undefined)
+                    .map(({ user, points }, i) => (
+                        <RatingUserCard
+                            key={i}
+                            avatar={getSuitableAvatarUrl(user.avatarUrls, 64)}
+                            name={user.fullName}
+                            points={points}
+                            place={i + 4}
+                            isCurrentUser={user.id === currentUser?.id}
+                        />
+                    ))}
+
+                {!minimized && <Spacing size={128} />}
             </div>
 
-            {/* TODO проверить работу */}
-            {leaderboardData?.slice(3, minimized ? 10 : undefined).map(({ user, points }, i) => (
-                <RatingUserCard
-                    key={i}
-                    avatar={getSuitableAvatarUrl(user.avatarUrls, 64)}
-                    name={user.fullName}
-                    points={points}
-                    place={i + 4}
-                    isCurrentUser={user.id === currentUser?.id}
-                />
-            ))}
-
-            <Spacing size={128} />
-
             {!minimized && currentUser && currentUserSeason?.user.place && (
-                <div className={"absoulute bottom-0 left-0 right-0 p-3"}>
+                <div className={"fixed bottom-0 left-0 right-0 p-3"}>
                     <div className={"bg-vk-secondary rounded-xl left-0 right-0"}>
                         <RatingUserCard
                             avatar={getSuitableAvatarUrl(currentUser.avatarUrls, 64)}
