@@ -24,7 +24,6 @@ import { RouterProvider } from "@vkontakte/vk-mini-apps-router"
 import { AdaptivityProvider, AppRoot, ConfigProvider } from "@vkontakte/vkui"
 import { Settings } from "luxon"
 import { useEffect, useState } from "react"
-import { createGlobalStyle } from "styled-components"
 import { trpc } from "../shared/api"
 import "./index.css"
 import { Router, router } from "./router"
@@ -63,7 +62,6 @@ export const App = () => {
                     <AdaptivityProvider>
                         <AppRoot>
                             <RouterProvider router={router}>
-                                <GlobalStyles />
                                 <Router />
                             </RouterProvider>
                         </AppRoot>
@@ -73,13 +71,3 @@ export const App = () => {
         </trpc.Provider>
     )
 }
-
-const GlobalStyles = createGlobalStyle`
-    *{
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    *::-webkit-scrollbar{
-        display: none;
-    }
-`

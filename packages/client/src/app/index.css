@@ -57,3 +57,12 @@ table tfoot tr tf {
 body:has(.disable-scroll) {
     overflow: hidden;
 }
+
+* {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
