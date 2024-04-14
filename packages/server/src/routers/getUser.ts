@@ -39,6 +39,13 @@ export const getUser = privateProcedure.query(async ({ ctx }) => {
         },
     })
 
+    const ratingAttemptsUsed = await ctx.prisma.userDailyStatistic.count({
+        where: {
+            userId: ctx.userId,
+            rankedGamesPlayed: 3,
+        },
+    })
+
     // const ratingPoints = await ctx.prisma.userDailyStatistic.aggregate({
     //     _sum: {
     //         points: true,
@@ -48,7 +55,10 @@ export const getUser = privateProcedure.query(async ({ ctx }) => {
     //     },
     // })
 
-    const totalXp = [userProfile?.xp, fiveLettersResolved * 5].reduce((a, b) => a + b, 0)
+    const totalXp = [userProfile?.xp, fiveLettersResolved * 5, ratingAttemptsUsed * 10].reduce(
+        (a, b) => a + b,
+        0
+    )
 
     return {
         ...(await ctx.prisma.user.findFirst({
