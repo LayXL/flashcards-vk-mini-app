@@ -65,7 +65,7 @@ export const Home = () => {
                             <Title
                                 level={"2"}
                                 weight={"3"}
-                                className={"text-muted"}
+                                className={"text-muted font-bold"}
                                 children={"Отгадай слово из 5 букв"}
                             />
 
@@ -122,7 +122,7 @@ export const Home = () => {
                             <div className={"flex justify-between items-center pt-3"}>
                                 <Subhead
                                     children={"Награда за выполнение"}
-                                    className={"max-w-32"}
+                                    className={"max-w-32 text-secondary"}
                                 />
                                 <div className={"flex gap-3 items-center"}>
                                     <Headline children={"5 XP"} className={"text-accent"} />
@@ -149,7 +149,7 @@ export const Home = () => {
                             <Title
                                 level={"2"}
                                 weight={"3"}
-                                className={"text-muted"}
+                                className={"text-muted font-bold"}
                                 children={"Попробуй себя в рейтинге"}
                             />
 
