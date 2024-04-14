@@ -4,6 +4,7 @@ type Story = {
     name: string
     title: string
     content: ReactNode
+    isHidden?: boolean
 }
 
 export const availableStories = [
@@ -20,5 +21,6 @@ export const availableStories = [
                 </span>
             </div>
         ),
+        isHidden: true,
     },
 ]
