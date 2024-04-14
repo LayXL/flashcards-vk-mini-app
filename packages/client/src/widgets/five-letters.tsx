@@ -111,35 +111,47 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
 
                 {data?.status !== "playing" && isSuccess && (
                     <Div className={"flex-col gap-1 flex-1 py-8"}>
-                        <>
-                            <div className={"font-semibold text-2xl text-center"}>
-                                {data?.status === "lost" && "Вы не угадали слово"}
-                                {data?.status === "resolved" && "Вы угадали слово"}
-                            </div>
-                            <div className={"text-center"}>
-                                Игра обновится через{" "}
-                                {DateTime.now()
-                                    .toUTC(0)
-                                    .endOf("day")
-                                    .diffNow()
-                                    .rescale()
-                                    .set({ millisecond: 0, second: 0 })
-                                    .rescale()
-                                    .toHuman()
-                                    .replace(/\s/g, " ")}
-                            </div>
+                        <div className={"font-semibold text-2xl text-center"}>
+                            {data?.status === "lost" && "Вы не угадали слово"}
+                            {data?.status === "resolved" && "Вы угадали слово"}
+                        </div>
+                        <div className={"text-center"}>
+                            Игра обновится через{" "}
+                            {DateTime.now()
+                                .toUTC(0)
+                                .endOf("day")
+                                .diffNow()
+                                .rescale()
+                                .set({ millisecond: 0, second: 0 })
+                                .rescale()
+                                .toHuman()
+                                .replace(/\s/g, " ")}
+                        </div>
 
-                            {data?.status === "lost" && data?.answer && (
-                                <div className={"flex-row gap-1 mx-auto py-8"}>
-                                    {data.answer
-                                        ?.toUpperCase()
-                                        .split("")
-                                        .map((letter, i) => (
-                                            <LetterCell letter={letter} key={i} type={"correct"} />
-                                        ))}
-                                </div>
-                            )}
-                        </>
+                        {data?.status === "lost" && data?.answer && (
+                            <div className={"flex-row gap-1 mx-auto py-8"}>
+                                {data.answer
+                                    ?.toUpperCase()
+                                    .split("")
+                                    .map((letter, i) => (
+                                        <LetterCell letter={letter} key={i} type={"correct"} />
+                                    ))}
+                            </div>
+                        )}
+
+                        {/* <div className={"py-3 mx-auto"}>
+                            <Button
+                                size={"l"}
+                                mode={"secondary"}
+                                onClick={() => {
+                                    bridge.send("VKWebAppShare", {
+                                        link: "https://vk.com",
+                                    })
+                                }}
+                                before={<Icon28ShareOutline />}
+                                children={"Поделиться с друзьями"}
+                            />
+                        </div> */}
                     </Div>
                 )}
             </div>
