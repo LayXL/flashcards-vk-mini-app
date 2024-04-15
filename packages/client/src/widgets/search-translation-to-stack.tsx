@@ -10,9 +10,10 @@ import { TranslationView } from "./translation-view"
 
 type SearchTranslationToStackProps = {
     onSelect: (translationId: number) => void
+    stackId: number
 }
 
-export const SearchTranslationToStack = ({ onSelect }: SearchTranslationToStackProps) => {
+export const SearchTranslationToStack = ({ onSelect, stackId }: SearchTranslationToStackProps) => {
     const [searchQuery, setSearchQuery] = useState("")
 
     const [debouncedSearchQuery] = useDebounceValue(searchQuery, 400)
@@ -20,6 +21,7 @@ export const SearchTranslationToStack = ({ onSelect }: SearchTranslationToStackP
     const { data, isSuccess } = trpc.search.useQuery({
         query: debouncedSearchQuery,
         filter: "translations",
+        ignoredTranslationsInStacks: [stackId],
     })
 
     const viewTranslationModal = useModalState()

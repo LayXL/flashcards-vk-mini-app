@@ -336,6 +336,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                         addTranslationToStackModal.close()
                         addTranslationToStack({ stackId: id, translationId })
                     }}
+                    stackId={id}
                 />
             </ModalWindow>
 

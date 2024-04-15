@@ -1,7 +1,7 @@
 import z from "zod"
 import { prisma, privateProcedure } from "../trpc"
 
-const searchTranslations = async (query: string) => {
+const searchTranslations = async (query: string, ignoredStacks: number[] = []) => {
     const foundTranslationIds = (
         await prisma.$queryRaw<{ id: number }[]>`
             select id,
@@ -27,6 +27,16 @@ const searchTranslations = async (query: string) => {
                 id: {
                     in: foundTranslationIds,
                 },
+                stacks:
+                    ignoredStacks.length > 0
+                        ? {
+                              none: {
+                                  stackId: {
+                                      in: ignoredStacks,
+                                  },
+                              },
+                          }
+                        : undefined,
             },
         })
     ).sort((a, b) => foundTranslationIds.indexOf(a.id) - foundTranslationIds.indexOf(b.id))
@@ -88,13 +98,14 @@ export const search = privateProcedure
         z.object({
             query: z.string().min(3).max(100).trim(),
             filter: z.enum(["translations", "stacks", "all"]).optional().default("all"),
+            ignoredTranslationsInStacks: z.number().array().optional(),
         })
     )
-    .query(async ({ input: { query, filter }, ctx }) => {
+    .query(async ({ input: { query, filter, ignoredTranslationsInStacks }, ctx }) => {
         return {
             translations:
                 filter.includes("translations") || filter === "all"
-                    ? await searchTranslations(query)
+                    ? await searchTranslations(query, ignoredTranslationsInStacks)
                     : [],
             stacks:
                 filter.includes("stacks") || filter === "all"
