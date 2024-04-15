@@ -42,11 +42,12 @@ import { trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { decodeStackBackground } from "../shared/helpers/stackBackground"
-import { vibrateOnClick } from "../shared/helpers/vibrate"
+import { vibrateOnClick, vibrateOnSuccess } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { Skeleton } from "../shared/ui/skeleton"
 import { DuplicateStack } from "./duplicate-stack"
 import { PlayGame } from "./play-game"
+import { SearchTranslationToStack } from "./search-translation-to-stack"
 import { StackCreateModal } from "./stack-create"
 import { TranslationAdd } from "./translation-add"
 import { TranslationAddToStack } from "./translation-add-to-stack"
@@ -84,6 +85,13 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
 
     const { mutate: deleteTranslationFromStack } = trpc.stacks.removeTranslation.useMutation({
         onSuccess: () => refetch(),
+    })
+
+    const { mutate: addTranslationToStack } = trpc.stacks.addTranslation.useMutation({
+        onSuccess: () => {
+            vibrateOnSuccess()
+            refetch()
+        },
     })
 
     const { mutate: addReaction } = trpc.stacks.addReaction.useMutation({
@@ -317,17 +325,19 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                 </ModalBody>
             </ModalWrapper>
 
-            <ModalWrapper
+            <ModalWindow
                 isOpened={addTranslationToStackModal.isOpened}
                 onClose={addTranslationToStackModal.close}
+                title={"Добавить перевод"}
+                fullscreen
             >
-                <ModalBody>
-                    <Placeholder
-                        header={"В разработке"}
-                        children={"В данный момент в разработке"}
-                    />
-                </ModalBody>
-            </ModalWrapper>
+                <SearchTranslationToStack
+                    onSelect={(translationId) => {
+                        addTranslationToStackModal.close()
+                        addTranslationToStack({ stackId: id, translationId })
+                    }}
+                />
+            </ModalWindow>
 
             <ModalWrapper
                 isOpened={addTranslationToOtherStackModal.isOpened}

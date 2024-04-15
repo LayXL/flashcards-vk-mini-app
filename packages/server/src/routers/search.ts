@@ -87,11 +87,18 @@ export const search = privateProcedure
     .input(
         z.object({
             query: z.string().min(3).max(100).trim(),
+            filter: z.enum(["translations", "stacks", "all"]).optional().default("all"),
         })
     )
-    .query(async ({ input: { query }, ctx }) => {
+    .query(async ({ input: { query, filter }, ctx }) => {
         return {
-            translations: await searchTranslations(query),
-            stacks: await searchStacks(query, ctx.userId),
+            translations:
+                filter.includes("translations") || filter === "all"
+                    ? await searchTranslations(query)
+                    : [],
+            stacks:
+                filter.includes("stacks") || filter === "all"
+                    ? await searchStacks(query, ctx.userId)
+                    : [],
         }
     })
