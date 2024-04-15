@@ -124,6 +124,9 @@ model Stack {
   isDeleted       Boolean @default(false)
   isHiddenInFeed  Boolean @default(false)
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
   pattern  String?
   palette  Int?
   imageUrl String?
