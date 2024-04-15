@@ -6,6 +6,7 @@ import DonateIcon from "../assets/icons/donate.svg?react"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
 import { useModalState } from "../shared/hooks/useModalState"
 import { GameResults } from "./game-results"
 import { InGame } from "./in-game"
@@ -54,13 +55,14 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
 
             <div className={"flex justify-center relative select-none"}>
                 <div className={"opacity-40 dark:opacity-80"}>
-                    <div className={"animate-[pulse_4s_1s_cubic-bezier(0.4,_0,_0.6,_1)_infinite]"}>
-                        <div
-                            className={
-                                "animate-[fade-in__0.6s_0.3s_ease-in-out_forwards] opacity-0 absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 -top-[260px] rounded-full blur-3xl bg-vk-accent"
-                            }
-                        />
-                    </div>
+                    {/* <div className={"animate-[pulse_4s_1s_cubic-bezier(0.4,_0,_0.6,_1)_infinite]"}> */}
+                    <div
+                        className={cn(
+                            // "animate-[fade-in__0.6s_0.3s_ease-in-out_forwards]",
+                            "opacity-0 absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 -top-[260px] rounded-full blur-3xl bg-vk-accent"
+                        )}
+                    />
+                    {/* </div> */}
                 </div>
                 <img src={"/cat.svg"} alt={""} className={"z-10"} />
             </div>
@@ -124,7 +126,7 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                 isOpened={gameResultsModal.isOpened}
                 onClose={() => {
                     onClose?.()
-                    gameResultsModal.close
+                    gameResultsModal.close()
                 }}
             >
                 <ModalBody fullscreen={true}>
@@ -132,7 +134,7 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                         id={data?.gameSession.id ?? 0}
                         onClose={() => {
                             onClose?.()
-                            gameResultsModal.close
+                            gameResultsModal.close()
                         }}
                     />
                 </ModalBody>
