@@ -80,7 +80,7 @@ export const Router = () => {
         isSuccess,
     } = useQuery({
         queryKey: ["vkStorage", "onboardingCompleted"],
-        queryFn: async () => (await getStorageValue("onboardingCompleted")) === "true",
+        queryFn: async () => (await getStorageValue("onboardingCompleted_new")) === "true",
         staleTime: Infinity,
     })
 
@@ -88,7 +88,7 @@ export const Router = () => {
         mutationKey: ["vkStorage", "completeOnboarding"],
         mutationFn: () =>
             bridge.send("VKWebAppStorageSet", {
-                key: "onboardingCompleted",
+                key: "onboardingCompleted_new",
                 value: "true",
             }),
         onSuccess: () => {
