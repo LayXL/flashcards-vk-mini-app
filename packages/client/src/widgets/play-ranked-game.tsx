@@ -19,6 +19,8 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
     const gameModal = useModalState()
     const gameResultsModal = useModalState()
 
+    const utils = trpc.useUtils()
+
     const {
         mutate: start,
         data,
@@ -135,6 +137,7 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                         onClose={() => {
                             onClose?.()
                             gameResultsModal.close()
+                            utils.game.getRatingAttemptsLeftToday.invalidate()
                         }}
                     />
                 </ModalBody>
