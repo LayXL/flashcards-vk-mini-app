@@ -18,7 +18,11 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
     const gameModal = useModalState()
     const gameResultsModal = useModalState()
 
-    const { mutate: start, data } = trpc.game.start.useMutation({
+    const {
+        mutate: start,
+        data,
+        isPending,
+    } = trpc.game.start.useMutation({
         onSuccess: () => {
             gameModal.open()
         },
@@ -101,7 +105,13 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
             </Div>
 
             <Div>
-                <Button children={"Играть"} stretched={true} onClick={startGame} size={"l"} />
+                <Button
+                    children={"Играть"}
+                    stretched={true}
+                    onClick={startGame}
+                    size={"l"}
+                    disabled={isPending}
+                />
             </Div>
 
             <ModalWrapper isOpened={gameModal.isOpened} onClose={stopGame}>
