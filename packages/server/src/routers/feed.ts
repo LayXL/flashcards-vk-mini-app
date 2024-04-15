@@ -51,6 +51,7 @@ export const feed = router({
                 where: {
                     isPrivate: false,
                     isDeleted: false,
+                    isHiddenInFeed: false,
                     translations: {
                         some: {
                             translation: {
@@ -64,6 +65,9 @@ export const feed = router({
                 },
                 take: 2,
                 skip: input.cursor * 2,
+                orderBy: {
+                    createdAt: "desc",
+                },
             })
 
             let stackTranslationsCount: Record<number, number> = {}
@@ -82,6 +86,7 @@ export const feed = router({
             const translations = await ctx.prisma.translation.findMany({
                 where: {
                     isPrivate: false,
+                    isHiddenInFeed: false,
                 },
                 include: {
                     author: true,

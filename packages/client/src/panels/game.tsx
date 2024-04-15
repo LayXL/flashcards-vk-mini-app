@@ -159,7 +159,7 @@ export const Game = () => {
             )}
             <TabBar />
             <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
-                <ModalBody fullscreen={true}>
+                <ModalBody fullscreen={type === "default"}>
                     {type === "default" && <PlayGame onClose={playGameModal.close} />}
                     {type === "ranked" && <PlayRankedGame onClose={playGameModal.close} />}
                 </ModalBody>

@@ -234,7 +234,7 @@ export const Home = () => {
             </ModalWrapper>
 
             <ModalWrapper isOpened={playRatingModal.isOpened} onClose={playRatingModal.close}>
-                <ModalBody fullscreen={true}>
+                <ModalBody>
                     <PlayRankedGame onClose={playRatingModal.close} />
                 </ModalBody>
             </ModalWrapper>

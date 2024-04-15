@@ -50,6 +50,7 @@ model Translation {
   createdAt           DateTime @default(now())
   updatedAt           DateTime @default(now())
   isPrivate           Boolean  @default(false)
+  isHiddenInFeed      Boolean  @default(false)
   forRanked           Boolean  @default(false)
 
   stacks                     TranslationInStack[]
@@ -121,6 +122,7 @@ model Stack {
   inheritsStackId Int?
   isPrivate       Boolean @default(false)
   isDeleted       Boolean @default(false)
+  isHiddenInFeed  Boolean @default(false)
 
   pattern  String?
   palette  Int?

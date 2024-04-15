@@ -322,8 +322,10 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                 onClose={addTranslationToStackModal.close}
             >
                 <ModalBody>
-                    {/* TODO доделать */}
-                    <div>В разрабокте</div>
+                    <Placeholder
+                        header={"В разработке"}
+                        children={"В данный момент в разработке"}
+                    />
                 </ModalBody>
             </ModalWrapper>
 
