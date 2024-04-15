@@ -59,7 +59,7 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                     <div
                         className={cn(
                             // "animate-[fade-in__0.6s_0.3s_ease-in-out_forwards]",
-                            "opacity-0 absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 -top-[260px] rounded-full blur-3xl bg-vk-accent"
+                            "absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 -top-[260px] rounded-full blur-3xl bg-vk-accent"
                         )}
                     />
                     {/* </div> */}
