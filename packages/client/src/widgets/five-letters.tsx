@@ -65,8 +65,8 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 onClick={() => {
                     if (isDesktop) inputRef.current?.focus()
                 }}
-                onMouseDown={() => setHideLetters(true)}
-                onMouseUp={() => setHideLetters(false)}
+                onPointerDown={() => setHideLetters(true)}
+                onPointerUp={() => setHideLetters(false)}
             >
                 <div className={"flex-col gap-1 items-center py-4"}>
                     {Array.from({ length: 6 }).map((_, i) => (
