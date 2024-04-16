@@ -15,6 +15,8 @@ const limitToFiveLetters = (x: string) => {
 }
 
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
+    const [hideLetters, setHideLetters] = useState(false)
+
     const utils = trpc.useUtils()
     const { data, isSuccess } = trpc.fiveLetters.getTodayAttempts.useQuery()
 
@@ -63,6 +65,8 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 onClick={() => {
                     if (isDesktop) inputRef.current?.focus()
                 }}
+                onMouseDown={() => setHideLetters(true)}
+                onMouseUp={() => setHideLetters(false)}
             >
                 <div className={"flex-col gap-1 items-center py-4"}>
                     {Array.from({ length: 6 }).map((_, i) => (
@@ -70,30 +74,34 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                             {currentAttempt === i ? (
                                 <>
                                     <LetterCell
-                                        letter={value[0]}
+                                        letter={!hideLetters ? value[0] : undefined}
                                         type={isValueWithError ? "error" : "default"}
                                     />
                                     <LetterCell
-                                        letter={value[1]}
+                                        letter={!hideLetters ? value[1] : undefined}
                                         type={isValueWithError ? "error" : "default"}
                                     />
                                     <LetterCell
-                                        letter={value[2]}
+                                        letter={!hideLetters ? value[2] : undefined}
                                         type={isValueWithError ? "error" : "default"}
                                     />
                                     <LetterCell
-                                        letter={value[3]}
+                                        letter={!hideLetters ? value[3] : undefined}
                                         type={isValueWithError ? "error" : "default"}
                                     />
                                     <LetterCell
-                                        letter={value[4]}
+                                        letter={!hideLetters ? value[4] : undefined}
                                         type={isValueWithError ? "error" : "default"}
                                     />
                                 </>
                             ) : (
                                 <>
                                     {data?.attempts[i]?.map(({ letter, type }, i) => (
-                                        <LetterCell key={i} letter={letter} type={type} />
+                                        <LetterCell
+                                            key={i}
+                                            letter={!hideLetters ? letter : undefined}
+                                            type={type}
+                                        />
                                     )) ?? (
                                         <>
                                             <LetterCell />

@@ -66,7 +66,7 @@ export const feed = router({
                 take: 2,
                 skip: input.cursor * 2,
                 orderBy: {
-                    createdAt: "desc",
+                    id: "desc",
                 },
             })
 
@@ -94,7 +94,7 @@ export const feed = router({
                 take: 10,
                 skip: input.cursor * 10,
                 orderBy: {
-                    createdAt: "desc",
+                    id: "desc",
                 },
             })
 
