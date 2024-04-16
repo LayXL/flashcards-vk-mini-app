@@ -61,7 +61,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
             )}
 
             <div
-                className={"h-full flex-col"}
+                className={"h-full flex-col select-none"}
                 onClick={() => {
                     if (isDesktop) inputRef.current?.focus()
                 }}
