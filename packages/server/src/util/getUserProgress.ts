@@ -27,14 +27,19 @@ const levels = [
 ]
 
 export const getUserProgress = (totalXp: number) => {
-    const currentLevel = [...levels].reverse().find(([, xp]) => totalXp >= xp)
+    totalXp = isNaN(totalXp) ? 0 : totalXp
+
+    const currentLevelData = [...levels].reverse().find(([, xp]) => totalXp >= xp)
+
+    const currentLevel = currentLevelData ? currentLevelData[0] : 0
+    const currentXP = currentLevelData ? currentLevelData[1] : 0
 
     return {
-        currentLevel: currentLevel[0],
-        currentXp: totalXp - currentLevel[1],
-        nextLevelXp: levels.find(([level]) => level === currentLevel[0] + 1)?.[1] ?? 0,
-        nextLevel: currentLevel[0] + 1,
-        totalXp,
-        isMaxLevel: currentLevel[0] === 25,
+        currentLevel: currentLevel,
+        currentXp: (totalXp ?? 0) - currentXP,
+        nextLevelXp: levels.find(([level]) => level === currentLevel + 1)?.[1] ?? 0,
+        nextLevel: currentLevel + 1,
+        totalXp: totalXp ?? 0,
+        isMaxLevel: currentLevel === 25,
     }
 }
