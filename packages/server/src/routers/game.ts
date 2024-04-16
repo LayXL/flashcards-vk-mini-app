@@ -292,7 +292,7 @@ export const game = router({
         })
 
         if (gameSession?.type === "ranked") {
-            const currentSeason = await getCurrentSeason()
+            // const currentSeason = await getCurrentSeason()
 
             const correctAnswersCount = await ctx.prisma.translationInGameSession.count({
                 where: {
@@ -305,24 +305,24 @@ export const game = router({
                 },
             })
 
-            await ctx.prisma.userRankedSeasonStatistic.upsert({
-                where: {
-                    userId_rankedSeasonId: {
-                        userId: ctx.userId,
-                        rankedSeasonId: currentSeason.id,
-                    },
-                },
-                update: {
-                    points: {
-                        increment: correctAnswersCount,
-                    },
-                },
-                create: {
-                    userId: ctx.userId,
-                    rankedSeasonId: currentSeason.id,
-                    points: correctAnswersCount,
-                },
-            })
+            // await ctx.prisma.userRankedSeasonStatistic.upsert({
+            //     where: {
+            //         userId_rankedSeasonId: {
+            //             userId: ctx.userId,
+            //             rankedSeasonId: currentSeason.id,
+            //         },
+            //     },
+            //     update: {
+            //         points: {
+            //             increment: correctAnswersCount,
+            //         },
+            //     },
+            //     create: {
+            //         userId: ctx.userId,
+            //         rankedSeasonId: currentSeason.id,
+            //         points: correctAnswersCount,
+            //     },
+            // })
 
             await ctx.prisma.userDailyStatistic.upsert({
                 where: {
@@ -474,17 +474,16 @@ export const game = router({
                 })
 
                 if (incorrectCount === 0 && unansweredCount === 0) {
-                    await ctx.prisma.gameSession.update({
-                        where: {
-                            id: translationInGameSession.gameSessionId,
-                        },
-                        data: {
-                            status: "ended",
-                            endedAt: new Date(),
-                        },
-                    })
-
-                    await incrementUserGamesPlayedToday(translationInGameSession.gameSession.userId)
+                    // await ctx.prisma.gameSession.update({
+                    //     where: {
+                    //         id: translationInGameSession.gameSessionId,
+                    //     },
+                    //     data: {
+                    //         status: "ended",
+                    //         endedAt: new Date(),
+                    //     },
+                    // })
+                    // await incrementUserGamesPlayedToday(translationInGameSession.gameSession.userId)
                 }
             }
 
@@ -514,6 +513,29 @@ export const game = router({
 
                 if (repeatedCount === 0 && verifiedStacksWithThisTranslation > 0) {
                     await addXp(translationInGameSession.gameSession.userId, 1)
+                }
+
+                if (translationInGameSession.gameSession.type === "ranked") {
+                    const currentSeason = await getCurrentSeason()
+
+                    await ctx.prisma.userRankedSeasonStatistic.upsert({
+                        where: {
+                            userId_rankedSeasonId: {
+                                userId: ctx.userId,
+                                rankedSeasonId: currentSeason.id,
+                            },
+                        },
+                        update: {
+                            points: {
+                                increment: 1,
+                            },
+                        },
+                        create: {
+                            userId: ctx.userId,
+                            rankedSeasonId: currentSeason.id,
+                            points: 1,
+                        },
+                    })
                 }
 
                 await ctx.prisma.userTranslationRepetition.create({
