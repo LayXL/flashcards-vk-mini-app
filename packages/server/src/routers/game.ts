@@ -543,24 +543,24 @@ export const game = router({
                     },
                 })
 
-                await ctx.prisma.userRankedSeasonStatistic.upsert({
-                    where: {
-                        userId_rankedSeasonId: {
-                            userId: ctx.userId,
-                            rankedSeasonId: currentSeason.id,
-                        },
-                    },
-                    update: {
-                        points: {
-                            increment: correctCount,
-                        },
-                    },
-                    create: {
-                        userId: ctx.userId,
-                        rankedSeasonId: currentSeason.id,
-                        points: correctCount,
-                    },
-                })
+                // await ctx.prisma.userRankedSeasonStatistic.upsert({
+                //     where: {
+                //         userId_rankedSeasonId: {
+                //             userId: ctx.userId,
+                //             rankedSeasonId: currentSeason.id,
+                //         },
+                //     },
+                //     update: {
+                //         points: {
+                //             increment: correctCount,
+                //         },
+                //     },
+                //     create: {
+                //         userId: ctx.userId,
+                //         rankedSeasonId: currentSeason.id,
+                //         points: correctCount,
+                //     },
+                // })
 
                 await ctx.prisma.userDailyStatistic.upsert({
                     where: {
