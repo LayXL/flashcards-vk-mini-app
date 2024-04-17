@@ -1,3 +1,4 @@
+import bridge, { EAdsFormats } from "@vkontakte/vk-bridge"
 import {
     Button,
     Cell,
@@ -9,7 +10,7 @@ import {
     Select,
     SimpleCell,
 } from "@vkontakte/vkui"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import AtemptsModifierIcon from "../assets/modifier-icons/attempts.svg?react"
 import RepeatModifierIcon from "../assets/modifier-icons/repeat.svg?react"
 import TimeModifierIcon from "../assets/modifier-icons/time.svg?react"
@@ -126,6 +127,10 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
         gameModal.close()
         gameResultsModal.open()
     }, [gameModal, gameResultsModal, utils.game.getRatingAttemptsLeftToday])
+
+    useEffect(() => {
+        bridge.send("VKWebAppCheckNativeAds", { ad_format: EAdsFormats.INTERSTITIAL })
+    })
 
     return (
         <>
@@ -280,7 +285,18 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
 
             <ModalWrapper isOpened={gameResultsModal.isOpened} onClose={gameResultsModal.close}>
                 <ModalBody fullscreen={true}>
-                    <GameResults id={data?.gameSession.id ?? 0} onClose={gameResultsModal.close} />
+                    <GameResults
+                        id={data?.gameSession.id ?? 0}
+                        onClose={() => {
+                            gameResultsModal.close()
+
+                            if (Math.random() < 0.3) {
+                                bridge.send("VKWebAppShowNativeAds", {
+                                    ad_format: EAdsFormats.INTERSTITIAL,
+                                })
+                            }
+                        }}
+                    />
                 </ModalBody>
             </ModalWrapper>
         </>
