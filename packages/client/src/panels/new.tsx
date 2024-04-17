@@ -94,6 +94,7 @@ export const New = () => {
 
     useUnmount(() => {
         bridge.send("VKWebAppHideBannerAd")
+        setToggleAdsShown(false)
     })
 
     return (
