@@ -2,7 +2,7 @@ import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge"
 import { PanelHeader, Spacing } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
-import { useTimeout, useToggle } from "usehooks-ts"
+import { useTimeout, useToggle, useUnmount } from "usehooks-ts"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -92,7 +92,7 @@ export const New = () => {
         if (!isScrollable && hasNextPage) fetchNextPage()
     }, [fetchNextPage, hasNextPage, isLoading, isFetching, isScrollable, infiniteData])
 
-    useEffect(() => () => {
+    useUnmount(() => {
         bridge.send("VKWebAppHideBannerAd")
     })
 
