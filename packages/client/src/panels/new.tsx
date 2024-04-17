@@ -92,6 +92,10 @@ export const New = () => {
         if (!isScrollable && hasNextPage) fetchNextPage()
     }, [fetchNextPage, hasNextPage, isLoading, isFetching, isScrollable, infiniteData])
 
+    useEffect(() => () => {
+        bridge.send("VKWebAppHideBannerAd")
+    })
+
     return (
         <>
             <PanelHeader children={"Новое"} />
