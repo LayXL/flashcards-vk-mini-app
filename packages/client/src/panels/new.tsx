@@ -1,7 +1,8 @@
+import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge"
 import { PanelHeader, Spacing } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
-import { useTimeout } from "usehooks-ts"
+import { useTimeout, useToggle } from "usehooks-ts"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -28,6 +29,8 @@ export const New = () => {
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
     const translationViewModal = useModalState()
     const translationAddModal = useModalState()
+
+    const [adsShown, _, setToggleAdsShown] = useToggle()
 
     const { data, fetchNextPage, hasNextPage, isSuccess, isLoading, isFetching } =
         trpc.feed.get.useInfiniteQuery(
@@ -98,7 +101,17 @@ export const New = () => {
             <InfiniteScroll
                 dataLength={infiniteData?.length ?? 0}
                 hasMore={hasNextPage}
-                next={fetchNextPage}
+                next={() => {
+                    fetchNextPage()
+
+                    if (!adsShown) {
+                        bridge.send("VKWebAppShowBannerAd", {
+                            banner_location: BannerAdLocation.BOTTOM,
+                            can_close: true,
+                        })
+                        setToggleAdsShown(true)
+                    }
+                }}
                 loader={Array.from({ length: 30 }).map((_, i) => (
                     <div
                         className={"row-span-2 animate-pulse bg-vk-secondary rounded-xl"}
