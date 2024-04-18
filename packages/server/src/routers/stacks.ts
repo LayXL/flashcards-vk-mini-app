@@ -73,7 +73,12 @@ export const stacks = router({
     create: privateProcedure
         .input(
             z.object({
-                name: z.string().min(3).max(96).trim(),
+                name: z
+                    .string()
+                    .min(3)
+                    .max(96)
+                    .trim()
+                    .refine((val) => val.replace(/\s/g, "").length > 0),
                 description: z.string().min(3).max(256).trim().optional(),
                 isPrivate: z.boolean().default(false),
                 pattern: zodPattern.optional(),
@@ -348,7 +353,13 @@ export const stacks = router({
         .input(
             z.object({
                 stackId: z.number(),
-                name: z.string().min(3).max(96).optional(),
+                name: z
+                    .string()
+                    .min(3)
+                    .max(96)
+                    .trim()
+                    .refine((val) => val.replace(/\s/g, "").length > 0)
+                    .optional(),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -383,6 +394,12 @@ export const stacks = router({
                     description: stackData.description,
                     pattern: stackData.pattern,
                     palette: stackData.palette,
+                    isHiddenInFeed: true,
+                    inheritedStack: {
+                        connect: {
+                            id: input.stackId,
+                        },
+                    },
                     translations: {
                         create: stackData.translations.map((translation) => ({
                             translation: {

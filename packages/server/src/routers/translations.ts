@@ -155,8 +155,18 @@ export const translations = router({
                 isPrivate: z.boolean().default(false),
                 languageId: z.number(),
                 languageVariationId: z.number().optional(),
-                vernacular: z.string().min(1).max(100),
-                foreign: z.string().min(1).max(100),
+                vernacular: z
+                    .string()
+                    .trim()
+                    .min(1)
+                    .max(100)
+                    .refine((val) => val.replace(/\s/g, "").length > 0),
+                foreign: z
+                    .string()
+                    .trim()
+                    .min(1)
+                    .max(100)
+                    .refine((val) => val.replace(/\s/g, "").length > 0),
                 tags: z.string().array().max(100),
                 example: z.string().min(1).max(512).optional(),
                 foreignDescription: z.string().min(1).max(512).optional(),
@@ -265,8 +275,18 @@ export const translations = router({
                 id: z.number(),
                 languageId: z.number().optional(),
                 languageVariationId: z.number().optional().nullable(),
-                vernacular: z.string().min(1).max(100).optional(),
-                foreign: z.string().min(1).max(100).optional(),
+                vernacular: z
+                    .string()
+                    .min(1)
+                    .max(100)
+                    .optional()
+                    .refine((val) => val.replace(/\s/g, "").length > 0),
+                foreign: z
+                    .string()
+                    .min(1)
+                    .max(100)
+                    .optional()
+                    .refine((val) => val.replace(/\s/g, "").length > 0),
                 foreignDescription: z.string().min(1).max(512).optional(),
                 tags: z.string().array().max(100).optional(),
                 example: z.string().min(1).max(512).optional(),

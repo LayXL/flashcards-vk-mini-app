@@ -96,10 +96,22 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
     })
 
     const { mutate: addReaction } = trpc.stacks.addReaction.useMutation({
+        onMutate: () => {
+            utils.stacks.getSingle.setData({ id }, (data) => ({
+                ...data,
+                isLiked: true,
+            }))
+        },
         onSuccess: () => refetch(),
     })
 
     const { mutate: removeReaction } = trpc.stacks.removeReaction.useMutation({
+        onMutate: () => {
+            utils.stacks.getSingle.setData({ id }, (data) => ({
+                ...data,
+                isLiked: false,
+            }))
+        },
         onSuccess: () => refetch(),
     })
 
@@ -291,7 +303,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                                     setSelectedTranslation(translation.id)
                                     translationViewModal.open()
                                 }}
-                                isWithMore={true}
+                                isWithMore={data.isEditable}
                                 onRemoveFromStack={
                                     data.isEditable
                                         ? () => {

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
+import { Icon56UsersOutline } from "@vkontakte/icons"
 import {
     Button,
     ModalPageHeader,
@@ -67,24 +68,35 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
             )}
 
             <div className={cn(!minimized && "h-full overflow-scroll")}>
-                <div className={"flex gap-2 justify-around items-center py-3"}>
-                    {[1, 0, 2].map((i) => (
-                        <div className={"flex-1"}>
-                            {leaderboardData?.slice(0, 3)[i] && (
-                                <PrizePlace
-                                    key={i}
-                                    place={i + 1}
-                                    name={leaderboardData?.slice(0, 3)[i].user.fullName}
-                                    points={leaderboardData?.slice(0, 3)[i].points}
-                                    avatarUrl={getSuitableAvatarUrl(
-                                        leaderboardData?.slice(0, 3)[i].user.avatarUrls,
-                                        64
-                                    )}
-                                />
-                            )}
-                        </div>
-                    ))}
-                </div>
+                {(leaderboardData?.length ?? 10) <= 1 && tab === "friends" && (
+                    <Placeholder
+                        className={"h-2/3"}
+                        icon={<Icon56UsersOutline />}
+                        header={"Здесь пусто"}
+                        children={"Пока нет друзей, которые играли в рейтинг"}
+                    />
+                )}
+
+                {(leaderboardData?.length ?? 0) >= 2 && (
+                    <div className={"flex gap-2 justify-around items-center py-3"}>
+                        {[1, 0, 2].map((i) => (
+                            <div className={"flex-1"}>
+                                {leaderboardData?.slice(0, 3)[i] && (
+                                    <PrizePlace
+                                        key={i}
+                                        place={i + 1}
+                                        name={leaderboardData?.slice(0, 3)[i].user.fullName}
+                                        points={leaderboardData?.slice(0, 3)[i].points}
+                                        avatarUrl={getSuitableAvatarUrl(
+                                            leaderboardData?.slice(0, 3)[i].user.avatarUrls,
+                                            64
+                                        )}
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 {/* TODO проверить работу */}
                 {leaderboardData
