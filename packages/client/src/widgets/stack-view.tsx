@@ -1,3 +1,4 @@
+import { FloatingPortal } from "@floating-ui/react"
 import {
     Icon24Add,
     Icon24Like,
@@ -396,44 +397,46 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
             </ModalWindow>
 
             {showMore.isOpened && (
-                <ActionSheet onClose={showMore.close} className={"z-30"} toggleRef={undefined}>
-                    {data?.isEditable && (
+                <FloatingPortal>
+                    <ActionSheet onClose={showMore.close} className={"z-30"} toggleRef={undefined}>
+                        {data?.isEditable && (
+                            <ActionSheetItem
+                                before={<Icon28EditOutline />}
+                                children={"Редактировать стопку"}
+                                onClick={editStackModal.open}
+                            />
+                        )}
                         <ActionSheetItem
-                            before={<Icon28EditOutline />}
-                            children={"Редактировать стопку"}
-                            onClick={editStackModal.open}
+                            before={<Icon28ShareOutline />}
+                            children={"Поделиться стопкой"}
+                            onClick={() => {
+                                bridge.send("VKWebAppShare", {
+                                    link: `https://vk.com/app51843841#/stack/${id}`,
+                                })
+                            }}
                         />
-                    )}
-                    <ActionSheetItem
-                        before={<Icon28ShareOutline />}
-                        children={"Поделиться стопкой"}
-                        onClick={() => {
-                            bridge.send("VKWebAppShare", {
-                                link: `https://vk.com/app51843841#/stack/${id}`,
-                            })
-                        }}
-                    />
-                    {data?.isEditable && (
-                        <ActionSheetItem
-                            before={<Icon28CopyOutline />}
-                            children={"Дублировать стопку"}
-                            onClick={duplicateStackModal.open}
-                        />
-                    )}
-                    {/* <ActionSheetItem
+                        {data?.isEditable && (
+                            <ActionSheetItem
+                                before={<Icon28CopyOutline />}
+                                children={"Дублировать стопку"}
+                                onClick={duplicateStackModal.open}
+                            />
+                        )}
+                        {/* <ActionSheetItem
                         before={<Icon28ReportOutline />}
                         mode={"destructive"}
                         children={"Пожаловаться"}
                     /> */}
-                    {data?.isEditable && (
-                        <ActionSheetItem
-                            before={<Icon28DeleteOutline />}
-                            mode={"destructive"}
-                            children={"Удалить стопку"}
-                            onClick={deleteStackModal.open}
-                        />
-                    )}
-                </ActionSheet>
+                        {data?.isEditable && (
+                            <ActionSheetItem
+                                before={<Icon28DeleteOutline />}
+                                mode={"destructive"}
+                                children={"Удалить стопку"}
+                                onClick={deleteStackModal.open}
+                            />
+                        )}
+                    </ActionSheet>
+                </FloatingPortal>
             )}
 
             <ModalWindow {...duplicateStackModal} title={"Дублирование стопки"}>
