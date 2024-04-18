@@ -117,7 +117,6 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
     return (
         <>
             <ModalPageHeader
-                className={"z-20"}
                 before={<PanelHeaderBack onClick={close} />}
                 children={data?.name || <Skeleton className={"w-20"} />}
             />
@@ -128,10 +127,10 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                         backgroundColor: decodedBackground?.primaryColor ?? "#fff",
                     }}
                     className={
-                        "absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 opacity-50 -top-[260px] rounded-full blur-3xl"
+                        "absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 opacity-50 -top-[260px] rounded-full blur-3xl -z-20"
                     }
                 ></div>
-                <div className={"flex flex-row items-center justify-center gap-6 py-3 z-20"}>
+                <div className={"flex flex-row items-center justify-center gap-6 py-3"}>
                     <div
                         className={"rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"}
                         onClick={showMore.open}
@@ -449,6 +448,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
 
             {deleteStackModal.isOpened && (
                 <Alert
+                    className={"z-100"}
                     actions={[
                         {
                             title: "Отмена",

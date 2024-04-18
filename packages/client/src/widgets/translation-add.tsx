@@ -134,8 +134,6 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
 
     const [newTag, setNewTag] = useState("")
 
-    console.log(inappropriateSnackbar)
-
     const onSubmit: SubmitHandler<TranslationFormInputs> = (data) => {
         if (defaultValues?.id) {
             if (!data.id) return

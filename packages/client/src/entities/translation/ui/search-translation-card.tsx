@@ -33,7 +33,7 @@ export const SearchTranslationCard = ({
                     <Header>
                         <Flags>
                             {languageVariationsFlags.map((flag) => (
-                                <FlagIcon flag={flag} height={24} round={true} />
+                                <FlagIcon key={flag} flag={flag} height={24} round={true} />
                             ))}
                         </Flags>
 

@@ -78,7 +78,7 @@ export const Search = ({ onClose }: SearchProps) => {
                                 children={"Переводы"}
                             />
 
-                            <CardScroll>
+                            <CardScroll className={"overflow-visible"}>
                                 <Div className={"flex gap-3 overflow-visible px-0"}>
                                     {data?.translations.map((translation) => (
                                         <SearchTranslationCard
@@ -105,8 +105,8 @@ export const Search = ({ onClose }: SearchProps) => {
                                 children={"Стопки"}
                             />
 
-                            <CardScroll>
-                                <div className={"flex gap-3 overflow-visible px-0"}>
+                            <CardScroll className={"overflow-visible"}>
+                                <Div className={"flex gap-3 overflow-visible px-0"}>
                                     {data?.stacks.map((stack) => (
                                         <SearchStackCard
                                             key={stack.id}
@@ -116,7 +116,7 @@ export const Search = ({ onClose }: SearchProps) => {
                                             isLiked={stack.isLiked}
                                         />
                                     ))}
-                                </div>
+                                </Div>
                             </CardScroll>
                         </Group>
                     )}
