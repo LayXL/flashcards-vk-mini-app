@@ -398,7 +398,12 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
 
             {showMore.isOpened && (
                 <FloatingPortal>
-                    <ActionSheet onClose={showMore.close} className={"z-30"} toggleRef={undefined}>
+                    <ActionSheet
+                        mode={"sheet"}
+                        onClose={showMore.close}
+                        className={"z-30"}
+                        toggleRef={undefined}
+                    >
                         {data?.isEditable && (
                             <ActionSheetItem
                                 before={<Icon28EditOutline />}
