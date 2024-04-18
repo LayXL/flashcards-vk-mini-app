@@ -53,7 +53,11 @@ export const LargeStackCard = ({
                     <StackBackground encodedBackground={encodedBackground} />
                     {encodedBackground?.includes("image") && (
                         <>
-                            <div className={"backdrop-blur-lg absolute inset-0"} />
+                            <div
+                                className={
+                                    "backdrop-blur-lg absolute inset-0 rounded-xl overflow-hidden"
+                                }
+                            />
                             <div
                                 className={"absolute inset-0"}
                                 style={{
