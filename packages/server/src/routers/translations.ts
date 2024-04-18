@@ -295,6 +295,12 @@ export const translations = router({
                 isPrivate,
             } = input
 
+            if (ctx.userId !== (await prisma.translation.findFirst({ where: { id } })).authorId) {
+                throw new TRPCError({
+                    code: "FORBIDDEN",
+                })
+            }
+
             if (
                 checkForInappropriateData(
                     [
