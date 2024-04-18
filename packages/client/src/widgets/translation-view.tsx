@@ -109,7 +109,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                         onAddInStack={addToStack.open}
                         onEdit={data?.canEdit ? editTranslation.open : undefined}
                         onDelete={data?.canEdit ? onDelete : undefined}
-                        onReport={reportTranslationModal.open}
+                        onReport={data?.canEdit ? undefined : reportTranslationModal.open}
                     />
                 </Div>
 
