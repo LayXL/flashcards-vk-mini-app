@@ -56,6 +56,11 @@ export const router = createHashRouter([
         panel: "stack",
         view: "main",
     },
+    {
+        path: "*",
+        panel: "home",
+        view: "main",
+    },
 ])
 
 export const Router = () => {
