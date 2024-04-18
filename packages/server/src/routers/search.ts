@@ -64,6 +64,7 @@ const searchStacks = async (query: string, userId?: number) => {
                 id: {
                     in: foundStackIds,
                 },
+                isDeleted: false,
             },
         })
     ).sort((a, b) => foundStackIds.indexOf(a.id) - foundStackIds.indexOf(b.id))
