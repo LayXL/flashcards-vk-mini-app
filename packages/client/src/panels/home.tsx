@@ -261,8 +261,9 @@ export const Home = () => {
             </ModalWrapper>
 
             <ModalWrapper isOpened={playRatingModal.isOpened} onClose={playRatingModal.close}>
-                {!hasAdditionalAttempt && ratingAttemptsLeft === 0 ? (
+                {ratingAttemptsLeft === 0 ? (
                     <GetAdditionalAttempt
+                        isExtraEffort={!!hasAdditionalAttempt}
                         onClose={playRatingModal.close}
                         onAction={() => {
                             bridge

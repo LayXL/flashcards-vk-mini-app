@@ -185,6 +185,7 @@ export const Game = () => {
             <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
                 {type === "ranked" && ratingAttemptsLeft === 0 && (
                     <GetAdditionalAttempt
+                        isExtraEffort={!!hasAdditionalAttempt}
                         onClose={playGameModal.close}
                         onAction={() => {
                             bridge
