@@ -21,12 +21,6 @@ export const categories = router({
                             some: {
                                 stackId: stack.id,
                             },
-                            every: {
-                                stack: {
-                                    isDeleted: false,
-                                    isPrivate: false,
-                                },
-                            },
                         },
                     },
                 })
@@ -65,12 +59,6 @@ export const categories = router({
                         stacks: {
                             some: {
                                 stackId: stack.id,
-                            },
-                            every: {
-                                stack: {
-                                    isDeleted: false,
-                                    isPrivate: false,
-                                },
                             },
                         },
                     },
