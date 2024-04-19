@@ -497,17 +497,19 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
 
                     <Spacing size={128} />
 
-                    <div className={"absolute bg-vk-content pb-safe-area-bottom w-full bottom-0"}>
-                        <Div className={"pb-2"}>
-                            <Button
-                                loading={isLoading}
-                                stretched={true}
-                                size={"l"}
-                                children={"Готово"}
-                                onClick={handleSubmit(onSubmit)}
-                            />
-                        </Div>
-                    </div>
+                    <FloatingPortal>
+                        <div className={"fixed bg-vk-content pb-safe-area-bottom w-full bottom-0"}>
+                            <Div className={"pb-2"}>
+                                <Button
+                                    loading={isLoading}
+                                    stretched={true}
+                                    size={"l"}
+                                    children={"Готово"}
+                                    onClick={handleSubmit(onSubmit)}
+                                />
+                            </Div>
+                        </div>
+                    </FloatingPortal>
                 </ModalBody>
             </ModalWrapper>
 
