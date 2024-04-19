@@ -43,7 +43,7 @@ export const Search = ({ onClose }: SearchProps) => {
 
     useTimeout(() => {
         searchBarRef.current?.focus()
-    }, 300)
+    }, 500)
 
     return (
         <>
