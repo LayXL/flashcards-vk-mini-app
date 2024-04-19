@@ -29,7 +29,7 @@ export const RatingUserCard = ({
                     className={"h-12 w-12 bg-vk-secondary rounded-full"}
                     style={{ backgroundImage: `url(${avatar})`, backgroundSize: "cover" }}
                 />
-                <div>
+                <div className={"flex-1"}>
                     <Headline children={name} className={"line-clamp-1"} />
                     <Caption
                         className={"text-secondary"}
