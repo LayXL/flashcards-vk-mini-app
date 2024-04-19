@@ -254,7 +254,19 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
             )}
 
             <Div className={"box-border fixed w-full bottom-0 bg-vk-content"}>
-                <Button children={"Играть"} stretched={true} onClick={startGame} size={"l"} />
+                <Button
+                    disabled={gameSettings.stacks.length === 0}
+                    children={"Играть"}
+                    stretched={true}
+                    onClick={startGame}
+                    size={"l"}
+                />
+                {gameSettings.stacks.length === 0 && (
+                    <div
+                        children={"Сначала выберите стопку"}
+                        className={"pt-3 text-secondary text-sm select-none"}
+                    />
+                )}
                 <div className={"h-[env(safe-area-inset-bottom)]"} />
             </Div>
 
