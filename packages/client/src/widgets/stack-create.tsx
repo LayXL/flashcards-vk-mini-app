@@ -138,24 +138,26 @@ export const StackCreateModal = ({
                                 {palettes?.map((color) => (
                                     <div
                                         className={cn(
-                                            "aspect-square h-[42px] rounded-full overflow-hidden rotate-[135deg] box-border cursor-pointer",
+                                            "h-[42px] w-[42px] rounded-full overflow-hidden box-border cursor-pointer",
                                             "border-solid border-transparent",
                                             watch("palette") == color.id && "border-white"
                                         )}
-                                        key={color.id}
-                                        style={{
-                                            backgroundColor: color.primary,
-                                        }}
-                                        onClick={() => {
-                                            field.onChange(color.id)
-                                        }}
+                                        onClick={() => field.onChange(color.id)}
                                     >
                                         <div
-                                            className={"w-full h-1/2"}
+                                            className={"rotate-[135deg] w-full h-full"}
+                                            key={color.id}
                                             style={{
-                                                backgroundColor: color.secondary,
+                                                backgroundColor: color.primary,
                                             }}
-                                        />
+                                        >
+                                            <div
+                                                className={"w-full h-1/2"}
+                                                style={{
+                                                    backgroundColor: color.secondary,
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 ))}
                             </div>
