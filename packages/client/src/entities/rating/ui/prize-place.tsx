@@ -40,7 +40,7 @@ export const PrizePlace = ({ name, points, avatarUrl, place }: PrizePlaceProps) 
                 </div>
             </div>
             <div className={"flex flex-col gap-1 items-center text-center"}>
-                <Text children={name} className={"line-clamp-1"} />
+                <Text children={name} className={"line-clamp-2"} />
                 <Text
                     children={plural(points, ["балл", "балла", "баллов"])}
                     className={"text-subhead"}

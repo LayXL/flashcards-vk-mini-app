@@ -269,6 +269,8 @@ model UserDailyStatistic {
   rankedGamesPlayed     Int     @default(0)
   fiveLetterWordGuessed Boolean @default(false)
 
+  hasAdditionalAttempt Boolean @default(false)
+
   user User @relation(fields: [userId], references: [id])
 
   @@id([userId, date])

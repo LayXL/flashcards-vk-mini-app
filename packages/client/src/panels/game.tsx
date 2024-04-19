@@ -5,6 +5,7 @@ import {
     Icon28Like,
     Icon28LikeFillRed,
 } from "@vkontakte/icons"
+import bridge, { EAdsFormats } from "@vkontakte/vk-bridge"
 import {
     Button,
     ButtonGroup,
@@ -24,6 +25,7 @@ import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
+import { GetAdditionalAttempt } from "../widgets/get-additional-attempt"
 import { Leaderboard } from "../widgets/leaderboard"
 import { PlayGame } from "../widgets/play-game"
 import { PlayRankedGame } from "../widgets/play-ranked-game"
@@ -31,13 +33,29 @@ import { PlayRankedGame } from "../widgets/play-ranked-game"
 export const Game = () => {
     // const { data: recentlyGames } = trpc.game.getRecentlyGames.useQuery()
 
+    const utils = trpc.useUtils()
+
     const playGameModal = useModalState()
     const ratingModal = useModalState()
 
     const [type, setType] = useState<"default" | "ranked">("ranked")
 
-    const { data: ratingAttemptsLeft } = trpc.game.getRatingAttemptsLeftToday.useQuery(undefined, {
+    const { data: ratingAttemptsLeft, refetch } = trpc.game.getRatingAttemptsLeftToday.useQuery(
+        undefined,
+        {
+            enabled: type === "ranked",
+        }
+    )
+
+    const { data: hasAdditionalAttempt } = trpc.game.hasAdditionalAttempt.useQuery(undefined, {
         enabled: type === "ranked",
+    })
+
+    const { mutate: getAdditionalAttempt } = trpc.game.getAdditionalAttempt.useMutation({
+        onSuccess: () => {
+            refetch()
+            utils.game.hasAdditionalAttempt.setData(undefined, true)
+        },
     })
 
     return (
@@ -104,15 +122,21 @@ export const Game = () => {
                     <Group className={"animate-fade-in"}>
                         <Div className={"flex justify-between"}>
                             <Title children={"Попытки на сегодня"} level={"3"} weight={"2"} />
+
                             <div className={"flex gap-1.5 text-dynamic-red"}>
-                                {Array.from({ length: ratingAttemptsLeft ?? 0 }).map((_, i) => (
-                                    <Icon28LikeFillRed key={i} />
-                                ))}
-                                {Array.from({ length: 3 - (ratingAttemptsLeft ?? 0) }).map(
-                                    (_, i) => (
-                                        <Icon28Like key={i} className={"text-secondary"} />
+                                {Array.from({ length: ratingAttemptsLeft ?? 0 }).map((_, i) =>
+                                    i === 0 && hasAdditionalAttempt ? (
+                                        <Icon28Like key={i} className={"text-amber-400"} />
+                                    ) : (
+                                        <Icon28LikeFillRed key={i} />
                                     )
                                 )}
+                                {Array.from({
+                                    length:
+                                        (hasAdditionalAttempt ? 4 : 3) - (ratingAttemptsLeft ?? 0),
+                                }).map((_, i) => (
+                                    <Icon28Like key={i} className={"text-secondary"} />
+                                ))}
                             </div>
                         </Div>
                         <Placeholder
@@ -159,9 +183,26 @@ export const Game = () => {
             )}
             <TabBar />
             <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
+                {type === "ranked" && ratingAttemptsLeft === 0 && (
+                    <GetAdditionalAttempt
+                        onClose={playGameModal.close}
+                        onAction={() => {
+                            bridge
+                                .send("VKWebAppShowNativeAds", {
+                                    ad_format: EAdsFormats.REWARD,
+                                })
+                                .then(() => {
+                                    getAdditionalAttempt()
+                                })
+                        }}
+                    />
+                )}
+
                 <ModalBody fullscreen={type === "default"}>
                     {type === "default" && <PlayGame onClose={playGameModal.close} />}
-                    {type === "ranked" && <PlayRankedGame onClose={playGameModal.close} />}
+                    {type === "ranked" && ratingAttemptsLeft !== 0 && (
+                        <PlayRankedGame onClose={playGameModal.close} />
+                    )}
                 </ModalBody>
             </ModalWrapper>
             <ModalWindow {...ratingModal} fullscreen={true}>

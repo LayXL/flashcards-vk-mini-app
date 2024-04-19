@@ -2,10 +2,11 @@ import { TRPCError } from "@trpc/server"
 import { differenceInMilliseconds, differenceInSeconds } from "date-fns"
 import { startOfDay } from "date-fns/fp"
 import z from "zod"
-import { prisma, privateProcedure, router } from "../trpc"
+import { privateProcedure, router } from "../trpc"
 import { addXp } from "../util/addXp"
 import { getCurrentSeason } from "../util/getCurrentSeason"
 import { shuffle } from "../util/shuffle"
+import { prisma } from "./../trpc"
 
 const cancelAllGames = async (userId: number) => {
     await prisma.gameSession.updateMany({
@@ -198,7 +199,14 @@ export const game = router({
                         await ctx.prisma.userDailyStatistic.findFirst({
                             where: { userId: ctx.userId, date: startOfDay(new Date()) },
                         })
-                    )?.rankedGamesPlayed ?? 0) >= 3
+                    )?.rankedGamesPlayed ?? 0) >=
+                    ((
+                        await ctx.prisma.userDailyStatistic.findFirst({
+                            where: { userId: ctx.userId, date: startOfDay(new Date()) },
+                        })
+                    )?.hasAdditionalAttempt
+                        ? 4
+                        : 3)
                 ) {
                     throw new TRPCError({
                         code: "BAD_REQUEST",
@@ -676,6 +684,21 @@ export const game = router({
             where: { userId: ctx.userId, date: startOfDay(new Date()) },
         })
 
-        return 3 - (statistics?.rankedGamesPlayed ?? 0)
+        return (statistics.hasAdditionalAttempt ? 4 : 3) - (statistics?.rankedGamesPlayed ?? 0)
+    }),
+    hasAdditionalAttempt: privateProcedure.query(async ({ ctx }) => {
+        const statistics = await ctx.prisma.userDailyStatistic.findFirst({
+            where: { userId: ctx.userId, date: startOfDay(new Date()) },
+        })
+
+        return statistics.hasAdditionalAttempt
+    }),
+    getAdditionalAttempt: privateProcedure.mutation(async ({ ctx }) => {
+        return await ctx.prisma.userDailyStatistic.update({
+            where: { userId_date: { userId: ctx.userId, date: startOfDay(new Date()) } },
+            data: {
+                hasAdditionalAttempt: true,
+            },
+        })
     }),
 })
