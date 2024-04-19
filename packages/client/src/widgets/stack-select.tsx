@@ -99,7 +99,7 @@ export const StackSelect = ({
             {canCreateNewStack && (
                 <ModalWrapper isOpened={createNewStack.isOpened} onClose={createNewStack.close}>
                     <ModalBody>
-                        <StackCreateModal />
+                        <StackCreateModal onClose={createNewStack.close} />
                     </ModalBody>
                 </ModalWrapper>
             )}
