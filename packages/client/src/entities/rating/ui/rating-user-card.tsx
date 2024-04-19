@@ -30,7 +30,7 @@ export const RatingUserCard = ({
                     style={{ backgroundImage: `url(${avatar})`, backgroundSize: "cover" }}
                 />
                 <div>
-                    <Headline children={name} />
+                    <Headline children={name} className={"line-clamp-1"} />
                     <Caption
                         className={"text-secondary"}
                         children={plural(points, ["балл", "балла", "баллов"])}
