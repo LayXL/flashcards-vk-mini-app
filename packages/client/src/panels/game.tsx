@@ -61,7 +61,6 @@ export const Game = () => {
     return (
         <>
             <PanelHeader children={"Играть"} />
-
             <Tabs>
                 <TabsItem
                     onClick={() => setType("ranked")}
@@ -74,7 +73,6 @@ export const Game = () => {
                     children={"Обычная игра"}
                 />
             </Tabs>
-
             {type === "default" && (
                 <>
                     <Group className={"animate-fade-in"}>
@@ -116,7 +114,6 @@ export const Game = () => {
                     </Group> */}
                 </>
             )}
-
             {type === "ranked" && (
                 <>
                     <Group className={"animate-fade-in"}>
@@ -181,11 +178,9 @@ export const Game = () => {
                     </Group>
                 </>
             )}
-
             <TabBar />
-
-            {type === "ranked" && ratingAttemptsLeft === 0 ? (
-                playGameModal.isOpened && (
+            <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
+                {type === "ranked" && ratingAttemptsLeft === 0 ? (
                     <GetAdditionalAttempt
                         isExtraEffort={!!hasAdditionalAttempt}
                         onClose={playGameModal.close}
@@ -199,17 +194,15 @@ export const Game = () => {
                                 })
                         }}
                     />
-                )
-            ) : (
-                <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
+                ) : (
                     <ModalBody fullscreen={type === "default"}>
                         {type === "default" && <PlayGame onClose={playGameModal.close} />}
                         {type === "ranked" && ratingAttemptsLeft !== 0 && (
                             <PlayRankedGame onClose={playGameModal.close} />
                         )}
                     </ModalBody>
-                </ModalWrapper>
-            )}
+                )}
+            </ModalWrapper>
             <ModalWindow {...ratingModal} fullscreen={true}>
                 <Leaderboard onClose={ratingModal.close} />
             </ModalWindow>

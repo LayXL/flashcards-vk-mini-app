@@ -230,16 +230,12 @@ export const Home = () => {
     return (
         <>
             <PanelHeader children={"Лёрнинг"} />
-
             <SearchBar />
-
             <StoriesFeed />
-
             <Group>
                 <Header children={"Ударный режим"} />
                 <DailyStreak />
             </Group>
-
             {windowSize.width <= 768 ? (
                 <>
                     {stats}
@@ -251,17 +247,14 @@ export const Home = () => {
                     <div children={daily} />
                 </div>
             )}
-
             <Spacing size={128} />
-
             <ModalWrapper isOpened={fiveLettersModal.isOpened} onClose={fiveLettersModal.close}>
                 <ModalBody fullscreen>
                     <FiveLetters onClose={fiveLettersModal.close} />
                 </ModalBody>
             </ModalWrapper>
-
-            {ratingAttemptsLeft === 0 ? (
-                playRatingModal.isOpened && (
+            <ModalWrapper isOpened={playRatingModal.isOpened} onClose={playRatingModal.close}>
+                {ratingAttemptsLeft === 0 ? (
                     <GetAdditionalAttempt
                         isExtraEffort={!!hasAdditionalAttempt}
                         onClose={playRatingModal.close}
@@ -275,15 +268,12 @@ export const Home = () => {
                                 })
                         }}
                     />
-                )
-            ) : (
-                <ModalWrapper isOpened={playRatingModal.isOpened} onClose={playRatingModal.close}>
+                ) : (
                     <ModalBody>
                         <PlayRankedGame onClose={playRatingModal.close} />
                     </ModalBody>
-                </ModalWrapper>
-            )}
-
+                )}
+            </ModalWrapper>
             <TabBar />
         </>
     )
