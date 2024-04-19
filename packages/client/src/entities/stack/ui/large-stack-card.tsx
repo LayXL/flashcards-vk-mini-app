@@ -96,7 +96,8 @@ export const LargeStackCard = ({
                                     "leading-none"
                                 )}
                             />
-                            {isVerified && <Icon12VerifiedAlt className={"inline-block ml-1"} />}
+                            &nbsp;
+                            {isVerified && <Icon12VerifiedAlt className={"inline-block"} />}
                         </div>
                         <div className={"flex-row justify-between items-center"}>
                             <div className={"flex-row gap-1"}>
