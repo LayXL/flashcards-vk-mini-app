@@ -3,7 +3,7 @@ import {
     Icon28Dice3Outline,
     Icon28MessageAddBadgeOutline,
 } from "@vkontakte/icons"
-import { Button, Div, Header, Spacing, Subhead } from "@vkontakte/vkui"
+import { Button, Div, Header, Subhead } from "@vkontakte/vkui"
 import { cn } from "../shared/helpers/cn"
 
 type FiveLettersOnboardingProps = {
@@ -84,7 +84,6 @@ export const FiveLettersOnboarding = ({ onClose }: FiveLettersOnboardingProps) =
                     />
                 </div>
             </Div>
-            <Spacing size={96} />
             <Div className={"absolute bottom-0 w-full box-border"}>
                 <Button size={"l"} stretched children={"Понятно"} onClick={onClose} />
             </Div>
