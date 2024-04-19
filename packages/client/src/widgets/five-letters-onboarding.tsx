@@ -84,7 +84,7 @@ export const FiveLettersOnboarding = ({ onClose }: FiveLettersOnboardingProps) =
                     />
                 </div>
             </Div>
-            <Div className={"absolute bottom-0 w-full box-border"}>
+            <Div>
                 <Button size={"l"} stretched children={"Понятно"} onClick={onClose} />
             </Div>
         </>
