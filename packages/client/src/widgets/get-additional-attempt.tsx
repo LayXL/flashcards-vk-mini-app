@@ -23,9 +23,9 @@ export const GetAdditionalAttempt = ({
                         : "Приходите завтра для новых попыток или просмотрите рекламу, чтобы получить дополнительный шанс!"
                 }
                 actions={
-                    !isExtraEffort && (
-                        <>
-                            <Spacing size={16} />
+                    <>
+                        <Spacing size={16} />
+                        {!isExtraEffort && (
                             <Button
                                 size={"l"}
                                 mode={"primary"}
@@ -33,8 +33,8 @@ export const GetAdditionalAttempt = ({
                                 onClick={onAction}
                                 children={"Посмотреть рекламу"}
                             />
-                        </>
-                    )
+                        )}
+                    </>
                 }
                 icon={<Icon56LikeLockOutline />}
             />

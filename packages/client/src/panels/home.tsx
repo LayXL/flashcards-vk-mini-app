@@ -260,27 +260,27 @@ export const Home = () => {
                 </ModalBody>
             </ModalWrapper>
 
-            <ModalWrapper isOpened={playRatingModal.isOpened} onClose={playRatingModal.close}>
-                {ratingAttemptsLeft === 0 ? (
-                    <GetAdditionalAttempt
-                        isExtraEffort={!!hasAdditionalAttempt}
-                        onClose={playRatingModal.close}
-                        onAction={() => {
-                            bridge
-                                .send("VKWebAppShowNativeAds", {
-                                    ad_format: EAdsFormats.REWARD,
-                                })
-                                .then(() => {
-                                    getAdditionalAttempt()
-                                })
-                        }}
-                    />
-                ) : (
+            {ratingAttemptsLeft === 0 ? (
+                <GetAdditionalAttempt
+                    isExtraEffort={!!hasAdditionalAttempt}
+                    onClose={playRatingModal.close}
+                    onAction={() => {
+                        bridge
+                            .send("VKWebAppShowNativeAds", {
+                                ad_format: EAdsFormats.REWARD,
+                            })
+                            .then(() => {
+                                getAdditionalAttempt()
+                            })
+                    }}
+                />
+            ) : (
+                <ModalWrapper isOpened={playRatingModal.isOpened} onClose={playRatingModal.close}>
                     <ModalBody>
                         <PlayRankedGame onClose={playRatingModal.close} />
                     </ModalBody>
-                )}
-            </ModalWrapper>
+                </ModalWrapper>
+            )}
 
             <TabBar />
         </>

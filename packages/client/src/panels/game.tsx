@@ -181,31 +181,33 @@ export const Game = () => {
                     </Group>
                 </>
             )}
-            <TabBar />
-            <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
-                {type === "ranked" && ratingAttemptsLeft === 0 && (
-                    <GetAdditionalAttempt
-                        isExtraEffort={!!hasAdditionalAttempt}
-                        onClose={playGameModal.close}
-                        onAction={() => {
-                            bridge
-                                .send("VKWebAppShowNativeAds", {
-                                    ad_format: EAdsFormats.REWARD,
-                                })
-                                .then(() => {
-                                    getAdditionalAttempt()
-                                })
-                        }}
-                    />
-                )}
 
-                <ModalBody fullscreen={type === "default"}>
-                    {type === "default" && <PlayGame onClose={playGameModal.close} />}
-                    {type === "ranked" && ratingAttemptsLeft !== 0 && (
-                        <PlayRankedGame onClose={playGameModal.close} />
-                    )}
-                </ModalBody>
-            </ModalWrapper>
+            <TabBar />
+
+            {type === "ranked" && ratingAttemptsLeft === 0 ? (
+                <GetAdditionalAttempt
+                    isExtraEffort={!!hasAdditionalAttempt}
+                    onClose={playGameModal.close}
+                    onAction={() => {
+                        bridge
+                            .send("VKWebAppShowNativeAds", {
+                                ad_format: EAdsFormats.REWARD,
+                            })
+                            .then(() => {
+                                getAdditionalAttempt()
+                            })
+                    }}
+                />
+            ) : (
+                <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
+                    <ModalBody fullscreen={type === "default"}>
+                        {type === "default" && <PlayGame onClose={playGameModal.close} />}
+                        {type === "ranked" && ratingAttemptsLeft !== 0 && (
+                            <PlayRankedGame onClose={playGameModal.close} />
+                        )}
+                    </ModalBody>
+                </ModalWrapper>
+            )}
             <ModalWindow {...ratingModal} fullscreen={true}>
                 <Leaderboard onClose={ratingModal.close} />
             </ModalWindow>
