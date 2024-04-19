@@ -1,4 +1,4 @@
-import { Icon28InfoOutline } from "@vkontakte/icons"
+import { Icon16Cancel, Icon28InfoOutline } from "@vkontakte/icons"
 import { Div, ModalPageHeader, PanelHeaderBack, PanelHeaderButton } from "@vkontakte/vkui"
 import { DateTime } from "luxon"
 import { useEffect, useRef, useState } from "react"
@@ -217,7 +217,21 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 </div>
             )}
 
-            <ModalWindow {...onboardingModal} title={"Как играть?"}>
+            <ModalWindow
+                {...onboardingModal}
+                title={"Как играть?"}
+                buttonType={"none"}
+                after={
+                    <div
+                        className={
+                            "w-8 aspect-square flex items-center justify-center cursor-pointer bg-vk-secondary rounded-full opacity-75 text-primary"
+                        }
+                        onClick={onboardingModal.close}
+                    >
+                        <Icon16Cancel />
+                    </div>
+                }
+            >
                 <FiveLettersOnboarding onClose={onboardingModal.close} />
             </ModalWindow>
         </>

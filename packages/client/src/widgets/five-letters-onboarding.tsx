@@ -106,6 +106,6 @@ const LetterCell = ({
             type === "misplaced" && "bg-yellow-400 dark:bg-yellow-500"
         )}
     >
-        <Subhead children={letter} />
+        <Subhead children={letter} weight={"1"} />
     </div>
 )

@@ -10,6 +10,7 @@ type ModalWindowProps = {
     buttonType?: "close" | "back" | "none"
     fullwidth?: boolean
     fullscreen?: boolean
+    after?: ReactNode
 } & (
     | {
           onClose: () => void
@@ -26,6 +27,7 @@ export const ModalWindow = ({
     buttonType = "close",
     fullwidth,
     fullscreen,
+    after,
     ...props
 }: ModalWindowProps) => {
     const onClose = "onClose" in props ? props.onClose : props.close
@@ -43,6 +45,7 @@ export const ModalWindow = ({
                             ) : undefined
                         }
                         children={title}
+                        after={after}
                     />
                 )}
                 {children}
