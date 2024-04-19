@@ -24,7 +24,7 @@ type LeaderboardProps = {
 }
 
 export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps) => {
-    const [tab, setTab] = useState<"friends" | "global">(defaultTab || "friends")
+    const [tab, setTab] = useState<"friends" | "global">(defaultTab || "global")
 
     const { data: currentUserSeason } = trpc.rating.getCurrentSeason.useQuery()
     const { data: currentUser } = trpc.getUser.useQuery()
@@ -33,6 +33,7 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
         queryKey: ["friends"],
         queryFn: () => getFriends(parseInt(currentUser?.vkId ?? "0")),
         enabled: tab === "friends" || !!currentUser,
+        retry: false,
     })
 
     const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery(
@@ -54,14 +55,14 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                     />
                     <Tabs>
                         <TabsItem
-                            children={"Среди друзей"}
-                            onClick={() => setTab("friends")}
-                            selected={tab === "friends"}
-                        />
-                        <TabsItem
                             children={"Общий"}
                             onClick={() => setTab("global")}
                             selected={tab === "global"}
+                        />
+                        <TabsItem
+                            children={"Среди друзей"}
+                            onClick={() => setTab("friends")}
+                            selected={tab === "friends"}
                         />
                     </Tabs>
                 </>
