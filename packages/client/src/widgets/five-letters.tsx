@@ -22,7 +22,7 @@ const limitToFiveLetters = (x: string) => {
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
     const [hideLetters, setHideLetters] = useState(false)
 
-    const fiveLettersOnboardingCompletion = useOnboardingCompletion("fiveLetters")
+    const fiveLettersOnboardingCompletion = useOnboardingCompletion("fiveLetters2")
     const onboardingModal = useModalState(false, {
         onClose: () => {
             fiveLettersOnboardingCompletion.complete()
@@ -217,10 +217,8 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 </div>
             )}
 
-            <ModalWindow {...onboardingModal} title={"Как играть?"} fullscreen>
-                <div className={"h-full overflow-scroll"}>
-                    <FiveLettersOnboarding onClose={onboardingModal.close} />
-                </div>
+            <ModalWindow {...onboardingModal} title={"Как играть?"}>
+                <FiveLettersOnboarding onClose={onboardingModal.close} />
             </ModalWindow>
         </>
     )
