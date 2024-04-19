@@ -1,10 +1,15 @@
-import { Div, ModalPageHeader, PanelHeaderBack } from "@vkontakte/vkui"
+import { Icon28InfoOutline } from "@vkontakte/icons"
+import { Div, ModalPageHeader, PanelHeaderBack, PanelHeaderButton } from "@vkontakte/vkui"
 import { DateTime } from "luxon"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { isDesktop } from "react-device-detect"
+import { ModalWindow } from "../features/modal/ui/modal-window"
 import { trpc } from "../shared/api"
+import { useModalState } from "../shared/hooks/useModalState"
+import { useOnboardingCompletion } from "../shared/hooks/useOnboardingCompletion"
 import { Keyboard } from "../shared/ui/keyboard"
 import { LetterCell } from "../shared/ui/letter-cell"
+import { FiveLettersOnboarding } from "./five-letters-onboarding"
 
 const limitToFiveLetters = (x: string) => {
     if (x.length > 5) {
@@ -16,6 +21,23 @@ const limitToFiveLetters = (x: string) => {
 
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
     const [hideLetters, setHideLetters] = useState(false)
+
+    const fiveLettersOnboardingCompletion = useOnboardingCompletion("fiveLetters")
+    const onboardingModal = useModalState(false, {
+        onClose: () => {
+            fiveLettersOnboardingCompletion.complete()
+        },
+    })
+
+    useEffect(() => {
+        if (
+            !fiveLettersOnboardingCompletion.isCompleted &&
+            typeof fiveLettersOnboardingCompletion.isCompleted === "boolean"
+        ) {
+            onboardingModal.open()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fiveLettersOnboardingCompletion.isCompleted])
 
     const utils = trpc.useUtils()
     const { data, isSuccess } = trpc.fiveLetters.getTodayAttempts.useQuery()
@@ -39,7 +61,16 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
 
     return (
         <>
-            <ModalPageHeader children={"5 букв"} before={<PanelHeaderBack onClick={onClose} />} />
+            <ModalPageHeader
+                children={"5 букв"}
+                before={<PanelHeaderBack onClick={onClose} />}
+                after={
+                    <PanelHeaderButton
+                        onClick={() => onboardingModal.open()}
+                        children={<Icon28InfoOutline />}
+                    />
+                }
+            />
 
             {data?.status === "playing" && (
                 <input
@@ -185,6 +216,12 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                     />
                 </div>
             )}
+
+            <ModalWindow {...onboardingModal} title={"Как играть?"} fullscreen>
+                <div className={"h-full overflow-scroll"}>
+                    <FiveLettersOnboarding onClose={onboardingModal.close} />
+                </div>
+            </ModalWindow>
         </>
     )
 }

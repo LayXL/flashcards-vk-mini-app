@@ -26,6 +26,7 @@ export default {
                 dynamic: {
                     red: vkTheme.colorAccentRed.normal.value,
                     green: vkTheme.colorAccentGreen.normal.value,
+                    yellow: vkTheme.colorAccentOrange.normal.value,
                 },
             },
             backgroundColor: {
