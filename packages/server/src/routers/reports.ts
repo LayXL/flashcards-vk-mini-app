@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server"
 import z from "zod"
 import { privateProcedure, router } from "../trpc"
 
-const moderatorProcedure = privateProcedure.use(async ({ ctx, next }) => {
+export const moderatorProcedure = privateProcedure.use(async ({ ctx, next }) => {
     if (!ctx.user.canViewReports) {
         throw new TRPCError({
             code: "UNAUTHORIZED",

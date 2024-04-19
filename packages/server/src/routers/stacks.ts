@@ -4,6 +4,7 @@ import { prisma, privateProcedure, router } from "../trpc"
 import { checkForInappropriateData } from "../util/checkForInappropriateData"
 import { palettes } from "../util/palettes"
 import { patterns } from "../util/patterns"
+import { moderatorProcedure } from "./reports"
 
 const zodPattern = z.enum([
     "solid",
@@ -457,4 +458,24 @@ export const stacks = router({
                 },
             })
         }),
+    hide: moderatorProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+        return await prisma.stack.update({
+            where: {
+                id: input.id,
+            },
+            data: {
+                isHiddenInFeed: true,
+            },
+        })
+    }),
+    show: moderatorProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+        return await prisma.stack.update({
+            where: {
+                id: input.id,
+            },
+            data: {
+                isHiddenInFeed: false,
+            },
+        })
+    }),
 })

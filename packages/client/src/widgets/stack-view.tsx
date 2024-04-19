@@ -10,6 +10,7 @@ import {
     Icon28CopyOutline,
     Icon28DeleteOutline,
     Icon28EditOutline,
+    Icon28HideOutline,
     Icon28HieroglyphCharacterOutline,
     Icon28ShareOutline,
 } from "@vkontakte/icons"
@@ -77,6 +78,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
     const modal = useModal()
     const utils = trpc.useUtils()
     const { data, refetch } = trpc.stacks.getSingle.useQuery({ id })
+    const { data: currentUser } = trpc.getUser.useQuery()
 
     const close = () => {
         onClose?.() || modal?.onClose()
@@ -85,6 +87,14 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
     const showMore = useModalState()
 
     const { mutate: deleteTranslationFromStack } = trpc.stacks.removeTranslation.useMutation({
+        onSuccess: () => refetch(),
+    })
+
+    const { mutate: hide } = trpc.stacks.hide.useMutation({
+        onSuccess: () => refetch(),
+    })
+
+    const { mutate: show } = trpc.stacks.show.useMutation({
         onSuccess: () => refetch(),
     })
 
@@ -432,6 +442,20 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                                 })
                             }}
                         />
+                        {currentUser?.canViewReports && !data?.isHiddenInFeed && (
+                            <ActionSheetItem
+                                before={<Icon28HideOutline />}
+                                children={"Скрыть стопку из ленты"}
+                                onClick={() => hide({ id })}
+                            />
+                        )}
+                        {currentUser?.canViewReports && data?.isHiddenInFeed && (
+                            <ActionSheetItem
+                                before={<Icon28HideOutline />}
+                                children={"Показать стопку из ленты"}
+                                onClick={() => show({ id })}
+                            />
+                        )}
                         {data?.isEditable && (
                             <ActionSheetItem
                                 before={<Icon28CopyOutline />}
@@ -439,11 +463,6 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                                 onClick={duplicateStackModal.open}
                             />
                         )}
-                        {/* <ActionSheetItem
-                        before={<Icon28ReportOutline />}
-                        mode={"destructive"}
-                        children={"Пожаловаться"}
-                    /> */}
                         {data?.isEditable && (
                             <ActionSheetItem
                                 before={<Icon28DeleteOutline />}

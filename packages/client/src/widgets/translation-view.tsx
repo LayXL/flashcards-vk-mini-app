@@ -38,12 +38,21 @@ type TranslationViewModalProps = {
 
 export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
     const { data, refetch, isLoading } = trpc.translations.getSingle.useQuery({ id })
+    const { data: currentUser } = trpc.getUser.useQuery()
 
     const { mutate: react } = trpc.translations.addReaction.useMutation({
         onSuccess: () => refetch(),
     })
 
     const { mutate: unreact } = trpc.translations.removeReaction.useMutation({
+        onSuccess: () => refetch(),
+    })
+
+    const { mutate: hide } = trpc.translations.hide.useMutation({
+        onSuccess: () => refetch(),
+    })
+
+    const { mutate: show } = trpc.translations.show.useMutation({
         onSuccess: () => refetch(),
     })
 
@@ -110,6 +119,16 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                         onEdit={data?.canEdit ? editTranslation.open : undefined}
                         onDelete={data?.canEdit ? onDelete : undefined}
                         onReport={data?.canEdit ? undefined : reportTranslationModal.open}
+                        onHide={
+                            currentUser?.canViewReports && !data?.isHiddenInFeed
+                                ? () => hide({ id })
+                                : undefined
+                        }
+                        onShow={
+                            currentUser?.canViewReports && data?.isHiddenInFeed
+                                ? () => show({ id })
+                                : undefined
+                        }
                     />
                 </Div>
 

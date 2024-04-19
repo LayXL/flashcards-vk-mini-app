@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 import { prisma, privateProcedure, router } from "../trpc"
 import { checkForInappropriateData } from "../util/checkForInappropriateData"
+import { moderatorProcedure } from "./reports"
 import { addTranslationToStack } from "./stacks"
 
 export const translations = router({
@@ -465,12 +466,19 @@ export const translations = router({
             })
         )
         .mutation(async ({ ctx, input }) => {
-            // TODO позволять комментировать только на публичные переводы
+            if (checkForInappropriateData(input.text)) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Inappropriate data",
+                })
+            }
+
             return await prisma.comment.create({
                 data: {
                     translation: {
                         connect: {
                             id: input.translationId,
+                            isPrivate: false,
                         },
                     },
                     user: {
@@ -577,4 +585,24 @@ export const translations = router({
                 },
             })
         }),
+    hide: moderatorProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+        return await prisma.translation.update({
+            where: {
+                id: input.id,
+            },
+            data: {
+                isHiddenInFeed: true,
+            },
+        })
+    }),
+    show: moderatorProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+        return await prisma.translation.update({
+            where: {
+                id: input.id,
+            },
+            data: {
+                isHiddenInFeed: false,
+            },
+        })
+    }),
 })

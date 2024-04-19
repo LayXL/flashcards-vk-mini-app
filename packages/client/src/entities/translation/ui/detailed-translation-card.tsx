@@ -2,6 +2,7 @@ import {
     Icon24Add,
     Icon28DeleteOutline,
     Icon28EditOutline,
+    Icon28HideOutline,
     Icon28LikeFillRed,
     Icon28LikeOutline,
     Icon28MoreHorizontal,
@@ -30,6 +31,8 @@ type DetailedTranslationCardProps = {
     onEdit?: () => void
     onDelete?: () => void
     onReport?: () => void
+    onHide?: () => void
+    onShow?: () => void
     isReacted?: boolean
 }
 
@@ -47,6 +50,8 @@ export const DetailedTranslationCard = ({
     onReport,
     onEdit,
     onDelete,
+    onHide,
+    onShow,
 }: DetailedTranslationCardProps) => (
     <Wrapper>
         <Primary>
@@ -97,6 +102,28 @@ export const DetailedTranslationCard = ({
                                             onClose()
                                         }}
                                         children={"Удалить"}
+                                    />
+                                )}
+                                {onHide && (
+                                    <CellButton
+                                        role={"menuitem"}
+                                        before={<Icon28HideOutline />}
+                                        onClick={() => {
+                                            onHide()
+                                            onClose()
+                                        }}
+                                        children={"Скрыть из ленты"}
+                                    />
+                                )}
+                                {onShow && (
+                                    <CellButton
+                                        role={"menuitem"}
+                                        before={<Icon28HideOutline />}
+                                        onClick={() => {
+                                            onShow()
+                                            onClose()
+                                        }}
+                                        children={"Показать в ленте"}
                                     />
                                 )}
                             </div>
