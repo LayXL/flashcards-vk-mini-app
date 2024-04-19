@@ -54,6 +54,7 @@ export const LevelCard = ({
                             />
                         )
                     }
+                    className={"line-clamp-1"}
                     level={"3"}
                     weight={"3"}
                 />
