@@ -261,19 +261,21 @@ export const Home = () => {
             </ModalWrapper>
 
             {ratingAttemptsLeft === 0 ? (
-                <GetAdditionalAttempt
-                    isExtraEffort={!!hasAdditionalAttempt}
-                    onClose={playRatingModal.close}
-                    onAction={() => {
-                        bridge
-                            .send("VKWebAppShowNativeAds", {
-                                ad_format: EAdsFormats.REWARD,
-                            })
-                            .then(() => {
-                                getAdditionalAttempt()
-                            })
-                    }}
-                />
+                playRatingModal.isOpened && (
+                    <GetAdditionalAttempt
+                        isExtraEffort={!!hasAdditionalAttempt}
+                        onClose={playRatingModal.close}
+                        onAction={() => {
+                            bridge
+                                .send("VKWebAppShowNativeAds", {
+                                    ad_format: EAdsFormats.REWARD,
+                                })
+                                .then(() => {
+                                    getAdditionalAttempt()
+                                })
+                        }}
+                    />
+                )
             ) : (
                 <ModalWrapper isOpened={playRatingModal.isOpened} onClose={playRatingModal.close}>
                     <ModalBody>

@@ -185,19 +185,21 @@ export const Game = () => {
             <TabBar />
 
             {type === "ranked" && ratingAttemptsLeft === 0 ? (
-                <GetAdditionalAttempt
-                    isExtraEffort={!!hasAdditionalAttempt}
-                    onClose={playGameModal.close}
-                    onAction={() => {
-                        bridge
-                            .send("VKWebAppShowNativeAds", {
-                                ad_format: EAdsFormats.REWARD,
-                            })
-                            .then(() => {
-                                getAdditionalAttempt()
-                            })
-                    }}
-                />
+                playGameModal.isOpened && (
+                    <GetAdditionalAttempt
+                        isExtraEffort={!!hasAdditionalAttempt}
+                        onClose={playGameModal.close}
+                        onAction={() => {
+                            bridge
+                                .send("VKWebAppShowNativeAds", {
+                                    ad_format: EAdsFormats.REWARD,
+                                })
+                                .then(() => {
+                                    getAdditionalAttempt()
+                                })
+                        }}
+                    />
+                )
             ) : (
                 <ModalWrapper isOpened={playGameModal.isOpened} onClose={playGameModal.close}>
                     <ModalBody fullscreen={type === "default"}>
