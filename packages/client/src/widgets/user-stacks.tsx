@@ -17,11 +17,13 @@ import {
     SubnavigationButton,
 } from "@vkontakte/vkui"
 import { useState } from "react"
+import InfiniteScroll from "react-infinite-scroll-component"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
+import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
 import { StackView } from "./stack-view"
@@ -30,15 +32,23 @@ export const UserStacks = () => {
     const routeNavigator = useRouteNavigator()
     const [filter, setFilter] = useState<RouterInput["stacks"]["getUserStacks"]["filter"]>("all")
 
-    const { data, isLoading, isSuccess } = trpc.stacks.getUserStacks.useQuery({
-        filter,
-    })
+    const { data, isLoading, isSuccess, fetchNextPage, hasNextPage } =
+        trpc.stacks.getUserStacks.useInfiniteQuery(
+            {
+                filter,
+            },
+            {
+                getNextPageParam: (lastPage) => lastPage.cursor,
+            }
+        )
 
     const createStackModal = useModalState()
     const stackCreatedSnackbar = useModalState()
     const stackCreatedModal = useModalState()
 
     const [createdStackId, setCreatedStackId] = useState<number>()
+
+    const infiniteData = useInfiniteList(data)
 
     return (
         <>
@@ -72,29 +82,35 @@ export const UserStacks = () => {
                 />
             </SubnavigationBar>
 
-            {/* TODO: infinite scroll */}
-            <Div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"}>
-                {isLoading &&
-                    Array.from({ length: 20 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className={"w-full h-full animate-pulse bg-vk-secondary rounded-xl"}
+            <InfiniteScroll
+                next={fetchNextPage}
+                hasMore={hasNextPage}
+                loader={<></>}
+                dataLength={infiniteData?.length ?? 0}
+            >
+                <Div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"}>
+                    {isLoading &&
+                        Array.from({ length: 20 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className={"w-full h-full animate-pulse bg-vk-secondary rounded-xl"}
+                            />
+                        ))}
+
+                    {infiniteData?.map((stack) => (
+                        <StackCardWithModal
+                            key={stack.id}
+                            id={stack.id}
+                            name={stack.name}
+                            translationsCount={stack.translationsCount}
+                            isVerified={stack.isVerified}
+                            encodedBackground={stack.encodedBackground}
                         />
                     ))}
+                </Div>
+            </InfiniteScroll>
 
-                {data?.items.map((stack) => (
-                    <StackCardWithModal
-                        key={stack.id}
-                        id={stack.id}
-                        name={stack.name}
-                        translationsCount={stack.translationsCount}
-                        isVerified={stack.isVerified}
-                        encodedBackground={stack.encodedBackground}
-                    />
-                ))}
-            </Div>
-
-            {isSuccess && data?.items.length === 0 && (
+            {isSuccess && infiniteData?.length === 0 && (
                 <Placeholder
                     icon={<Icon32Cards2Outline width={56} height={56} />}
                     header={"У вас нет стопок"}

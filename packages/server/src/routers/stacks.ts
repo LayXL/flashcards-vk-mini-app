@@ -215,6 +215,11 @@ export const stacks = router({
                               },
                           },
                 take: input.limit + 1,
+                cursor: input.cursor
+                    ? {
+                          id: input.cursor,
+                      }
+                    : undefined,
             })
 
             let stackTranslationsCount: Record<number, number> = {}
@@ -235,7 +240,7 @@ export const stacks = router({
                     ...stack,
                     translationsCount: stackTranslationsCount[stack.id],
                 })),
-                cursor: stacks.slice(-1)[0]?.id || null,
+                cursor: stacks.length <= input.limit ? null : stacks[stacks.length - 1].id,
             }
         }),
     getSingle: privateProcedure
