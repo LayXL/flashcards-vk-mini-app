@@ -1,4 +1,5 @@
 import { Icon28CheckCircleOn, Icon28Like, Icon28LikeFillRed } from "@vkontakte/icons"
+import bridge, { EAdsFormats } from "@vkontakte/vk-bridge"
 import {
     Button,
     Caption,
@@ -23,6 +24,7 @@ import { plural } from "../shared/helpers/plural"
 import { useModalState } from "../shared/hooks/useModalState"
 import { DailyStreak } from "../widgets/daily-streak"
 import { FiveLetters } from "../widgets/five-letters"
+import { GetAdditionalAttempt } from "../widgets/get-additional-attempt"
 import { PlayRankedGame } from "../widgets/play-ranked-game"
 import { Stats } from "../widgets/stats"
 import { StoriesFeed } from "../widgets/stories-feed"
@@ -38,6 +40,16 @@ export const Home = () => {
     const playRatingModal = useModalState()
 
     const windowSize = useWindowSize()
+
+    const utils = trpc.useUtils()
+
+    const { data: hasAdditionalAttempt } = trpc.game.hasAdditionalAttempt.useQuery()
+
+    const { mutate: getAdditionalAttempt } = trpc.game.getAdditionalAttempt.useMutation({
+        onSuccess: () => {
+            utils.game.hasAdditionalAttempt.setData(undefined, true)
+        },
+    })
 
     const stats = (
         <Group>
@@ -164,14 +176,19 @@ export const Home = () => {
 
                         <div className={"flex justify-between items-center"}>
                             <div className={"flex gap-1.5"}>
-                                {Array.from({ length: ratingAttemptsLeft ?? 0 }).map((_, i) => (
-                                    <Icon28LikeFillRed key={i} />
-                                ))}
-                                {Array.from({ length: 3 - (ratingAttemptsLeft ?? 0) }).map(
-                                    (_, i) => (
-                                        <Icon28Like key={i} className={"text-secondary"} />
+                                {Array.from({ length: ratingAttemptsLeft ?? 0 }).map((_, i) =>
+                                    i === 0 && hasAdditionalAttempt ? (
+                                        <Icon28Like key={i} className={"text-amber-400"} />
+                                    ) : (
+                                        <Icon28LikeFillRed key={i} />
                                     )
                                 )}
+                                {Array.from({
+                                    length:
+                                        (hasAdditionalAttempt ? 4 : 3) - (ratingAttemptsLeft ?? 0),
+                                }).map((_, i) => (
+                                    <Icon28Like key={i} className={"text-secondary"} />
+                                ))}
                             </div>
 
                             <Subhead weight={"2"} className={"text-muted"}>
@@ -187,14 +204,24 @@ export const Home = () => {
                                 ) : (
                                     <>
                                         <span>{ratingAttemptsLeft}</span>
-                                        <span className={"text-secondary"}>/3</span>
+                                        <span className={"text-secondary"}>
+                                            /{hasAdditionalAttempt ? 4 : 3}
+                                        </span>
                                     </>
                                 )}
                             </Subhead>
                         </div>
                     </div>
 
-                    <Button children={"Начать"} size={"l"} onClick={playRatingModal.open} />
+                    <Button
+                        children={
+                            !hasAdditionalAttempt && ratingAttemptsLeft === 0
+                                ? "Получить доп. попытку"
+                                : "Начать"
+                        }
+                        size={"l"}
+                        onClick={playRatingModal.open}
+                    />
                 </div>
             </Div>
         </Group>
@@ -234,9 +261,24 @@ export const Home = () => {
             </ModalWrapper>
 
             <ModalWrapper isOpened={playRatingModal.isOpened} onClose={playRatingModal.close}>
-                <ModalBody>
-                    <PlayRankedGame onClose={playRatingModal.close} />
-                </ModalBody>
+                {!hasAdditionalAttempt && ratingAttemptsLeft === 0 ? (
+                    <GetAdditionalAttempt
+                        onClose={playRatingModal.close}
+                        onAction={() => {
+                            bridge
+                                .send("VKWebAppShowNativeAds", {
+                                    ad_format: EAdsFormats.REWARD,
+                                })
+                                .then(() => {
+                                    getAdditionalAttempt()
+                                })
+                        }}
+                    />
+                ) : (
+                    <ModalBody>
+                        <PlayRankedGame onClose={playRatingModal.close} />
+                    </ModalBody>
+                )}
             </ModalWrapper>
 
             <TabBar />
