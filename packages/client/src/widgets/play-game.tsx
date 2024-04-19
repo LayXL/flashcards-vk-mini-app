@@ -23,9 +23,9 @@ import { GameResults } from "./game-results"
 import { InGame } from "./in-game"
 import { StackSelect } from "./stack-select"
 
-const attempts = Array.from({ length: 6 }).map((_, i) => ({
-    label: i === 0 ? "Ни шанса на ошибку ☠️" : i.toString(),
-    value: i.toString(),
+const attempts = Array.from({ length: 5 }).map((_, i) => ({
+    label: i === 0 ? "Ни шанса на ошибку ☠️" : (i + 1).toString(),
+    value: (i + 1).toString(),
 }))
 
 const gameDurations = Array.from({ length: 60 / 5 }).map((_, i) => ({
