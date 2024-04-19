@@ -25,13 +25,21 @@ export const GetAdditionalAttempt = ({
                 actions={
                     <>
                         <Spacing size={16} />
-                        {!isExtraEffort && (
+                        {!isExtraEffort ? (
                             <Button
                                 size={"l"}
                                 mode={"primary"}
                                 stretched
                                 onClick={onAction}
                                 children={"Посмотреть рекламу"}
+                            />
+                        ) : (
+                            <Button
+                                size={"l"}
+                                mode={"primary"}
+                                stretched
+                                onClick={onClose}
+                                children={"Хорошо"}
                             />
                         )}
                     </>
