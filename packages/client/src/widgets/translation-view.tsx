@@ -138,62 +138,64 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     </Div>
                 )}
             </Group>
-            <Group>
-                <Header
-                    children={
-                        isLoading
-                            ? "Комментарии"
-                            : (data?.commentsCount ?? 0) > 0
-                            ? plural(data?.commentsCount ?? 0, [
-                                  "комментарий",
-                                  "комментария",
-                                  "комментариев",
-                              ])
-                            : "Нет комментариев"
-                    }
-                    aside={
-                        data?.commentsCount ? (
-                            <Link children={"Показать все"} onClick={viewComments.open} />
-                        ) : null
-                    }
-                />
-
-                {data?.comments.map((comment) => (
-                    <SimpleCell
-                        key={comment.id}
-                        before={
-                            <Avatar
-                                size={32}
-                                src={getSuitableAvatarUrl(comment.user.avatarUrls, 32)}
-                            />
+            {!data?.isPrivate && (
+                <Group>
+                    <Header
+                        children={
+                            isLoading
+                                ? "Комментарии"
+                                : (data?.commentsCount ?? 0) > 0
+                                ? plural(data?.commentsCount ?? 0, [
+                                      "комментарий",
+                                      "комментария",
+                                      "комментариев",
+                                  ])
+                                : "Нет комментариев"
                         }
-                        subtitle={comment.user.firstName}
-                        children={comment.text}
+                        aside={
+                            data?.commentsCount ? (
+                                <Link children={"Показать все"} onClick={viewComments.open} />
+                            ) : null
+                        }
                     />
-                ))}
 
-                <Div>
-                    <Input
-                        value={commentText}
-                        onChange={({ currentTarget: { value } }) => setCommentText(value)}
-                        placeholder={"Оставьте комментарий"}
-                        readOnly={isAddingComment}
-                        after={
-                            commentText.length > 0 && (
-                                <Icon24Send
-                                    className={"text-accent cursor-pointer"}
-                                    onClick={() =>
-                                        addComment({
-                                            translationId: id,
-                                            text: commentText,
-                                        })
-                                    }
+                    {data?.comments.map((comment) => (
+                        <SimpleCell
+                            key={comment.id}
+                            before={
+                                <Avatar
+                                    size={32}
+                                    src={getSuitableAvatarUrl(comment.user.avatarUrls, 32)}
                                 />
-                            )
-                        }
-                    />
-                </Div>
-            </Group>
+                            }
+                            subtitle={comment.user.firstName}
+                            children={comment.text}
+                        />
+                    ))}
+
+                    <Div>
+                        <Input
+                            value={commentText}
+                            onChange={({ currentTarget: { value } }) => setCommentText(value)}
+                            placeholder={"Оставьте комментарий"}
+                            readOnly={isAddingComment}
+                            after={
+                                commentText.length > 0 && (
+                                    <Icon24Send
+                                        className={"text-accent cursor-pointer"}
+                                        onClick={() =>
+                                            addComment({
+                                                translationId: id,
+                                                text: commentText,
+                                            })
+                                        }
+                                    />
+                                )
+                            }
+                        />
+                    </Div>
+                </Group>
+            )}
 
             {(data?.stacks.length ?? 0) > 0 && (
                 <Group>
