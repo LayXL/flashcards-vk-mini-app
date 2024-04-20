@@ -203,6 +203,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     <Div className={"grid-cols-cards grid gap-3"}>
                         {data?.stacks.map((stack) => (
                             <LargeStackCard
+                                key={stack.id}
                                 title={stack.name}
                                 translationsCount={stack.translationsCount}
                                 encodedBackground={stack.encodedBackground}
