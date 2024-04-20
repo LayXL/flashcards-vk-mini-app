@@ -8,8 +8,6 @@ type ModalBodyProps = {
 }
 
 export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: ModalBodyProps) => {
-    // useScrollLock()
-
     return (
         <div
             onClick={(e) => {
@@ -22,7 +20,7 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                 "max-h-screen w-full",
                 "pb-[env(safe-area-inset-bottom)] mx-auto mt-[env(safe-area-inset-top)]",
                 fullscreen && "h-screen",
-                !fullwidth && "max-w-[480px]"
+                !fullwidth && "max-w-[520px]"
             )}
             children={children}
         />

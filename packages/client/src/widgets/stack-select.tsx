@@ -1,4 +1,4 @@
-import { Icon24Add, Icon28Like } from "@vkontakte/icons"
+import { Icon24Add, Icon28LikeOutline, Icon32Cards2Outline } from "@vkontakte/icons"
 import {
     Button,
     ButtonGroup,
@@ -6,12 +6,15 @@ import {
     Group,
     ModalPageHeader,
     PanelHeaderBack,
-    Title,
+    Placeholder,
 } from "@vkontakte/vkui"
+import { useId } from "react"
+import InfiniteScroll from "react-infinite-scroll-component"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
+import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
 
@@ -36,7 +39,17 @@ export const StackSelect = ({
     clearable,
     onClear,
 }: StackSelectProps) => {
-    const { data } = trpc.stacks.getUserStacks.useQuery({ filter })
+    const id = useId()
+
+    const { data, fetchNextPage, hasNextPage, isSuccess } =
+        trpc.stacks.getUserStacks.useInfiniteQuery(
+            { filter },
+            {
+                getNextPageParam: (lastPage) => lastPage.cursor,
+            }
+        )
+
+    const inifiniteData = useInfiniteList({ pages: [] })
 
     const createNewStack = useModalState()
 
@@ -47,7 +60,7 @@ export const StackSelect = ({
                 children={title || "Выберите стопку"}
             />
 
-            {(clearable || canCreateNewStack) && (
+            {(clearable || canCreateNewStack || onFavorite) && (
                 <Group>
                     <Div>
                         <ButtonGroup stretched={true}>
@@ -63,38 +76,62 @@ export const StackSelect = ({
                                     onClick={createNewStack.open}
                                 />
                             )}
+                            {onFavorite && (
+                                <Button
+                                    stretched={true}
+                                    size={"l"}
+                                    before={<Icon28LikeOutline />}
+                                    children={"В избранное"}
+                                    onClick={onFavorite}
+                                />
+                            )}
                         </ButtonGroup>
                     </Div>
                 </Group>
             )}
 
-            {/* TODO infinite scroll */}
-
-            <Group>
-                <Div className={"gap-3 grid grid-cols-cards"}>
-                    {onFavorite && (
-                        <div
-                            className={
-                                "bg-vk-secondary rounded-xl flex flex-col gap-2 items-center justify-center cursor-pointer"
-                            }
-                            onClick={onFavorite}
-                        >
-                            <Icon28Like />
-                            <Title children={"Избранное"} level={"2"} />
-                        </div>
-                    )}
-                    {data?.items.map((stack) => (
-                        <LargeStackCard
-                            key={stack.id}
-                            title={stack.name}
-                            onClick={() => onSelect(stack.id)}
-                            translationsCount={stack.translationsCount}
-                            isVerified={stack.isVerified}
-                            encodedBackground={stack.encodedBackground}
-                        />
-                    ))}
-                </Div>
-            </Group>
+            <Div className={"h-full overflow-y-scroll overscroll-contain"} id={id}>
+                {inifiniteData?.length === 0 && isSuccess ? (
+                    <Placeholder
+                        stretched
+                        icon={<Icon32Cards2Outline height={56} width={56} />}
+                        header={"Здесь пусто!"}
+                        children={"Нет стопок для выбора"}
+                        action={
+                            canCreateNewStack && (
+                                <Button
+                                    stretched={true}
+                                    size={"l"}
+                                    mode={"secondary"}
+                                    before={<Icon24Add />}
+                                    children={"Создать стопку"}
+                                    onClick={createNewStack.open}
+                                />
+                            )
+                        }
+                    />
+                ) : (
+                    <InfiniteScroll
+                        scrollableTarget={id}
+                        className={"gap-3 grid grid-cols-cards"}
+                        next={fetchNextPage}
+                        hasMore={hasNextPage}
+                        loader={undefined}
+                        dataLength={inifiniteData?.length ?? 0}
+                    >
+                        {inifiniteData?.map((stack) => (
+                            <LargeStackCard
+                                key={stack.id}
+                                title={stack.name}
+                                onClick={() => onSelect(stack.id)}
+                                translationsCount={stack.translationsCount}
+                                isVerified={stack.isVerified}
+                                encodedBackground={stack.encodedBackground}
+                            />
+                        ))}
+                    </InfiniteScroll>
+                )}
+            </Div>
 
             {canCreateNewStack && (
                 <ModalWrapper isOpened={createNewStack.isOpened} onClose={createNewStack.close}>
