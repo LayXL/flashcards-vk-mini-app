@@ -257,6 +257,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                                 foreignDescription: data.foreignDescription ?? undefined,
                                 tags: data.tags.map(({ name }) => name),
                                 transcriptions: data.transcriptions,
+                                isPrivate: data.isPrivate,
                             }}
                             onClose={editTranslation.close}
                         />
