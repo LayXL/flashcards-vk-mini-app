@@ -49,7 +49,7 @@ export const StackSelect = ({
             }
         )
 
-    const inifiniteData = useInfiniteList({ pages: [] })
+    const inifiniteData = useInfiniteList(data)
 
     const createNewStack = useModalState()
 
