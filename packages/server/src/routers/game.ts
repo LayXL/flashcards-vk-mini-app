@@ -684,7 +684,7 @@ export const game = router({
             where: { userId: ctx.userId, date: startOfDay(new Date()) },
         })
 
-        return (statistics.hasAdditionalAttempt ? 4 : 3) - (statistics?.rankedGamesPlayed ?? 0)
+        return (statistics?.hasAdditionalAttempt ? 4 : 3) - (statistics?.rankedGamesPlayed ?? 0)
     }),
     hasAdditionalAttempt: privateProcedure.query(async ({ ctx }) => {
         const statistics = await ctx.prisma.userDailyStatistic.findFirst({
