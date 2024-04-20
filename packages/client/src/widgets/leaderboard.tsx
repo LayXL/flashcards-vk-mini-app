@@ -81,10 +81,9 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                 {(leaderboardData?.length ?? 0) >= 2 && (
                     <div className={"flex gap-2 justify-around items-center py-3"}>
                         {[1, 0, 2].map((i) => (
-                            <div className={"flex-1"}>
+                            <div className={"flex-1"} key={i}>
                                 {leaderboardData?.slice(0, 3)[i] && (
                                     <PrizePlace
-                                        key={i}
                                         place={i + 1}
                                         name={leaderboardData?.slice(0, 3)[i].user.fullName}
                                         points={leaderboardData?.slice(0, 3)[i].points}
@@ -104,7 +103,7 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                     ?.slice(3, minimized ? 10 : undefined)
                     .map(({ user, points }, i) => (
                         <RatingUserCard
-                            key={i}
+                            key={user.id}
                             avatar={getSuitableAvatarUrl(user.avatarUrls, 64)}
                             name={user.fullName}
                             points={points}
