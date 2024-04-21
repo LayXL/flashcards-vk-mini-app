@@ -36,7 +36,12 @@ export const LevelCard = ({ avatarUrl, level, name, currentXp, nextLevelXp }: Le
                         "absolute -bottom-1.5 min-w-3.5 flex justify-center left-1/2 -translate-x-1/2 bg-vk-accent px-1.5 py-[2px] rounded-full"
                     }
                 >
-                    <Caption level={"2"} weight={"1"} children={`${level}`} />
+                    <Caption
+                        level={"2"}
+                        weight={"1"}
+                        children={`${level}`}
+                        className={"text-white"}
+                    />
                 </div>
             </div>
             <div className={"flex flex-col gap-2"}>
