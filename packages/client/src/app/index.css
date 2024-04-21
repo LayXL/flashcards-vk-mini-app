@@ -69,7 +69,7 @@ body:has(.disable-scroll) {
 
 .press-scale {
     scale: 1;
-    transition: scale 0.3s ease-in-out;
+    transition: scale 0.12s ease-in-out;
 }
 
 /* .press-scale:hover {
