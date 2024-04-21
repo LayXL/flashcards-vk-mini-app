@@ -66,3 +66,16 @@ body:has(.disable-scroll) {
 *::-webkit-scrollbar {
     display: none;
 }
+
+.press-scale {
+    scale: 1;
+    transition: scale 0.1s ease-in-out;
+}
+
+.press-scale:hover {
+    scale: 1.02;
+}
+
+.press-scale:active {
+    scale: 0.95;
+}
