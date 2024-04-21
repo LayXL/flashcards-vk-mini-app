@@ -75,10 +75,10 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                     onPointerUp={() => {
                         setIsTouchNone(false)
                     }}
-                    onDragEnd={(e, { offset }) => {
+                    onDragEnd={(e, { offset, velocity }) => {
                         console.log(offset)
 
-                        if (offset.y > -50) {
+                        if (offset.y > 100 || velocity.y > 100) {
                             modal?.onClose()
                         }
                     }}
