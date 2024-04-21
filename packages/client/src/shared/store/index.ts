@@ -5,7 +5,7 @@ export const vkSignDataState = atom<object | null>({
     default: null,
 })
 
-export const modalsCountAtom = atom<number>({
-    key: "VKSignData",
-    default: 0,
+export const modalsIdsState = atom<Array<string>>({
+    key: "modalsIds",
+    default: [],
 })

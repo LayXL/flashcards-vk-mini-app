@@ -486,41 +486,48 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
             </ModalWindow>
 
             {deleteStackModal.isOpened && (
-                <Alert
-                    className={"z-100"}
-                    actions={[
-                        {
-                            title: "Отмена",
-                            mode: "cancel",
-                        },
-                        {
-                            title: "Удалить",
-                            mode: "destructive",
-                            action: () => {
-                                deleteStack({ id })
+                <FloatingPortal>
+                    <Alert
+                        className={"z-100"}
+                        actions={[
+                            {
+                                title: "Отмена",
+                                mode: "cancel",
                             },
-                        },
-                    ]}
-                    actionsLayout={"horizontal"}
-                    onClose={deleteStackModal.close}
-                    header={"Подтвердите действие"}
-                    text={"Вы уверены, что хотите удалить стопку?"}
-                />
+                            {
+                                title: "Удалить",
+                                mode: "destructive",
+                                action: () => {
+                                    deleteStack({ id })
+                                },
+                            },
+                        ]}
+                        actionsLayout={"horizontal"}
+                        onClose={deleteStackModal.close}
+                        header={"Подтвердите действие"}
+                        text={"Вы уверены, что хотите удалить стопку?"}
+                    />
+                </FloatingPortal>
             )}
 
             {addTranslationToStackActionSheet.isOpened && (
-                <ActionSheet onClose={addTranslationToStackActionSheet.close} toggleRef={undefined}>
-                    <ActionSheetItem
-                        before={<Icon28AddOutline />}
-                        children={"Добавить существующий перевод"}
-                        onClick={addTranslationToStackModal.open}
-                    />
-                    <ActionSheetItem
-                        before={<Icon28AddOutline />}
-                        children={"Создать новый перевод"}
-                        onClick={createTranslationModal.open}
-                    />
-                </ActionSheet>
+                <FloatingPortal>
+                    <ActionSheet
+                        onClose={addTranslationToStackActionSheet.close}
+                        toggleRef={undefined}
+                    >
+                        <ActionSheetItem
+                            before={<Icon28AddOutline />}
+                            children={"Добавить существующий перевод"}
+                            onClick={addTranslationToStackModal.open}
+                        />
+                        <ActionSheetItem
+                            before={<Icon28AddOutline />}
+                            children={"Создать новый перевод"}
+                            onClick={createTranslationModal.open}
+                        />
+                    </ActionSheet>
+                </FloatingPortal>
             )}
 
             {stackDuplicatedSnackbar.isOpened && (
