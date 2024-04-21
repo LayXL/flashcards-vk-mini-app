@@ -680,7 +680,7 @@ export const game = router({
         }
 
         return Array.from(stacksSet).map((x) => ({
-            ...stacks.find((y) => y.id === x),
+            ...stacks.filter((y) => y.id === x)[0],
             translationsCount: stacksTranslationsCount.find((y) => y.id === x)?.count ?? 0,
         }))
     }),

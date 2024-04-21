@@ -127,8 +127,14 @@ export const Game = () => {
                                         translationsCount={stack.translationsCount}
                                         encodedBackground={stack.encodedBackground}
                                         isVerified={stack.isVerified}
-                                        onClick={() => {}}
-                                        onPlay={() => {}}
+                                        onClick={() => {
+                                            setSelectedStack(stack.id)
+                                            viewStackModal.open()
+                                        }}
+                                        onPlay={() => {
+                                            setSelectedStack(stack.id)
+                                            playGameModal.open()
+                                        }}
                                     />
                                 ))}
                             </Div>
@@ -219,7 +225,12 @@ export const Game = () => {
                     />
                 ) : (
                     <ModalBody fullscreen={type === "default"}>
-                        {type === "default" && <PlayGame onClose={playGameModal.close} />}
+                        {type === "default" && (
+                            <PlayGame
+                                onClose={playGameModal.close}
+                                stackId={selectedStack ?? undefined}
+                            />
+                        )}
                         {type === "ranked" && ratingAttemptsLeft !== 0 && (
                             <PlayRankedGame onClose={playGameModal.close} />
                         )}
