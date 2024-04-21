@@ -1,4 +1,9 @@
-import { Icon16Cancel, Icon28InfoOutline } from "@vkontakte/icons"
+import {
+    Icon16Cancel,
+    Icon28HideOutline,
+    Icon28InfoOutline,
+    Icon28ViewOutline,
+} from "@vkontakte/icons"
 import { Div, ModalPageHeader, PanelHeaderBack, PanelHeaderButton } from "@vkontakte/vkui"
 import { DateTime } from "luxon"
 import { useEffect, useRef, useState } from "react"
@@ -65,10 +70,16 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 children={"5 букв"}
                 before={<PanelHeaderBack onClick={onClose} />}
                 after={
-                    <PanelHeaderButton
-                        onClick={() => onboardingModal.open()}
-                        children={<Icon28InfoOutline />}
-                    />
+                    <>
+                        <PanelHeaderButton
+                            onClick={() => setHideLetters(!hideLetters)}
+                            children={hideLetters ? <Icon28ViewOutline /> : <Icon28HideOutline />}
+                        />
+                        <PanelHeaderButton
+                            onClick={() => onboardingModal.open()}
+                            children={<Icon28InfoOutline />}
+                        />
+                    </>
                 }
             />
 
@@ -96,8 +107,6 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 onClick={() => {
                     if (isDesktop) inputRef.current?.focus()
                 }}
-                onPointerDown={() => setHideLetters(true)}
-                onPointerUp={() => setHideLetters(false)}
             >
                 <div className={"flex-col gap-1 items-center py-4"}>
                     {Array.from({ length: 6 }).map((_, i) => (
@@ -198,9 +207,9 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
             {data?.status === "playing" && (
                 <div className={"fixed w-full bottom-0"}>
                     <Keyboard
-                        correctLetters={data?.correctLetters ?? []}
-                        excludedLetters={data?.excludedLetters ?? []}
-                        misplacedLetters={data?.misplacedLetters ?? []}
+                        correctLetters={hideLetters ? [] : data?.correctLetters ?? []}
+                        excludedLetters={hideLetters ? [] : data?.excludedLetters ?? []}
+                        misplacedLetters={hideLetters ? [] : data?.misplacedLetters ?? []}
                         onType={(letter) => {
                             setValue((prev) => limitToFiveLetters(prev + letter))
                             setIsValueWithError(false)
