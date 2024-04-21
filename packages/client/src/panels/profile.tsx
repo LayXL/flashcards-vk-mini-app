@@ -52,11 +52,11 @@ export const Profile = () => {
 
                 {(data?.canModifyOthersTranslations || data?.canViewReports) && (
                     <Div>
-                        <ButtonGroup stretched mode={"vertical"}>
+                        <ButtonGroup stretched mode={"horizontal"}>
                             {data?.canModifyOthersTranslations && (
                                 <Button
                                     before={<Icon24HieroglyphCharacterOutline />}
-                                    children={"Кнопка крутой лингвистки"}
+                                    mode={"secondary"}
                                     stretched
                                     size={"l"}
                                     onClick={translationsTableModal.open}
@@ -65,7 +65,7 @@ export const Profile = () => {
                             {data?.canViewReports && (
                                 <Button
                                     before={<Icon24ReportOutline />}
-                                    children={"Жалобы"}
+                                    mode={"secondary"}
                                     stretched
                                     size={"l"}
                                     onClick={reportsModal.open}

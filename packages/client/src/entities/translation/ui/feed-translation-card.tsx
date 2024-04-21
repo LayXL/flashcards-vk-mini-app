@@ -35,7 +35,7 @@ export const FeedTranslationCard = ({
                 onClick={onClick}
             >
                 <div className={"flex justify-between"}>
-                    <Subhead className={"line-clamp-1"} weight={"1"} children={foreign} />
+                    <Subhead className={"line-clamp-1 break-all"} weight={"1"} children={foreign} />
                     {isWithMore && (
                         <Icon16MoreHorizontal
                             onClick={(e) => {
@@ -46,7 +46,10 @@ export const FeedTranslationCard = ({
                     )}
                 </div>
                 <div className={"flex"}>
-                    <Caption children={vernacular} className={"text-subhead line-clamp-1"} />
+                    <Caption
+                        children={vernacular}
+                        className={"text-subhead line-clamp-1 break-all"}
+                    />
                 </div>
                 <div className={"flex justify-between"}>
                     <div className={"flex gap-2 items-center"}>

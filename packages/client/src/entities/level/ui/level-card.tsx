@@ -1,4 +1,6 @@
-import { Div, Subhead, Text, Title } from "@vkontakte/vkui"
+import { Icon20StarsFilled } from "@vkontakte/icons"
+import { Caption, Div, Subhead, Title } from "@vkontakte/vkui"
+import { vkTheme } from "../../../shared/helpers/vkTheme"
 
 type LevelCardProps = {
     avatarUrl?: string
@@ -20,84 +22,45 @@ export const LevelCard = ({
     const progress = currentXp && nextLevelXp ? (currentXp / nextLevelXp) * 100 : 0
 
     return (
-        <Div className={"flex gap-3 items-center select-none animate-fade-in"}>
-            <div className={"flex-col items-center"}>
-                <div
-                    className={"rounded-full w-16 aspect-square bg-vk-secondary"}
-                    style={
-                        avatarUrl
-                            ? {
-                                  backgroundImage: `url(${avatarUrl})`,
-                                  backgroundSize: "cover",
-                              }
-                            : undefined
-                    }
-                />
+        <Div className={"flex gap-3 items-center select-none animate-fade-in py-4"}>
+            <div
+                className={"rounded-full p-[3px] relative"}
+                style={{
+                    background: `conic-gradient(var(${vkTheme.colorAccentBlue.normal.name}) ${progress}%, var(${vkTheme.colorIconTertiary.normal.name}) 0%)`,
+                }}
+            >
+                <div className={"p-[3px] bg-vk-content rounded-full"}>
+                    <div
+                        className={"bg-vk-content rounded-full size-[60px]"}
+                        style={{
+                            backgroundSize: "cover",
+                            backgroundImage: avatarUrl ? `url(${avatarUrl})` : undefined,
+                        }}
+                    />
+                </div>
                 <div
                     className={
-                        "bg-accent rounded-full border-solid border-vk-content -mt-2.5 w-10 flex items-center justify-center"
+                        "absolute -bottom-1.5 min-w-3.5 flex justify-center left-1/2 -translate-x-1/2 bg-vk-accent px-1.5 py-[2px] rounded-full"
                     }
                 >
-                    <Text
-                        children={level || <div className={"h-lh"} />}
-                        weight={"2"}
-                        className={"text-white"}
-                    />
+                    <Caption level={"2"} weight={"1"} children={`${level}`} />
                 </div>
             </div>
-            <div className={"flex-col gap-1 flex-1"}>
+            <div className={"flex flex-col gap-2"}>
                 <Title
-                    children={
-                        name || (
-                            <div
-                                className={"h-lh w-20 bg-vk-secondary rounded-full animate-pulse"}
-                            />
-                        )
-                    }
-                    className={"line-clamp-1"}
-                    level={"3"}
-                    weight={"3"}
+                    level={"2"}
+                    weight={"2"}
+                    children={name}
+                    className={"line-clamp-1 break-all"}
                 />
-                <div className={"h-1 bg-vk-secondary rounded-full"}>
-                    <div
-                        className={"h-full bg-accent rounded-full"}
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
-                <div className={"flex"}>
-                    <Subhead
-                        children={
-                            nextLevelXp && currentXp !== undefined ? (
-                                `${nextLevelXp - currentXp} XP до след. уровня`
-                            ) : (
-                                <div
-                                    className={
-                                        "inline-block h-lh w-40 bg-vk-secondary rounded-full animate-pulse"
-                                    }
-                                />
-                            )
-                        }
-                        className={"flex-1"}
-                    />
-                    <Subhead className={"flex items-center"}>
-                        {currentXp !== undefined ? (
-                            currentXp
-                        ) : (
-                            <div
-                                className={
-                                    "inline-block h-lh w-8 bg-vk-secondary rounded-full animate-pulse mr-1"
-                                }
-                            />
+                <div className={"flex gap-1.5 items-center"}>
+                    <div className={"flex gap-2 items-center text-accent"}>
+                        <Icon20StarsFilled />
+                        {nextLevelXp !== undefined && currentXp !== undefined && (
+                            <Subhead weight={"1"} children={`${nextLevelXp - currentXp} XP`} />
                         )}
-                        /
-                        {nextLevelXp || (
-                            <div
-                                className={
-                                    "inline-block h-lh w-8 bg-vk-secondary rounded-full animate-pulse ml-1"
-                                }
-                            />
-                        )}
-                    </Subhead>
+                    </div>
+                    <Subhead children={`до следующего уровня`} />
                 </div>
             </div>
         </Div>
