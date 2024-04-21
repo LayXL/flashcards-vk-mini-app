@@ -63,7 +63,6 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                         if (!clicked) return
 
                         if (e.movementY < 0) {
-                            e.preventDefault()
                             return setClicked(false)
                         } else if (e.movementY > 0) {
                             setIsTouchNone(true)
@@ -76,8 +75,6 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                         setIsTouchNone(false)
                     }}
                     onDragEnd={(e, { offset, velocity }) => {
-                        console.log(offset)
-
                         if (offset.y > 100 || velocity.y > 100) {
                             modal?.onClose()
                         }
