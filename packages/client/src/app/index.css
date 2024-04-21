@@ -79,3 +79,11 @@ body:has(.disable-scroll) {
 .press-scale:active {
     scale: 0.95;
 }
+
+.vkuiTabbarItem__in {
+    transition: scale 0.3s ease-in-out;
+}
+
+.vkuiTabbarItem:active .vkuiTabbarItem__in {
+    scale: 0.95;
+}
