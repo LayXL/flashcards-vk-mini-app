@@ -50,7 +50,7 @@ export const FiveLettersOnboarding = ({ onClose }: FiveLettersOnboardingProps) =
                     </div>
                     <Subhead
                         className={"text-secondary"}
-                        children={"Серый означает, что такой буквы в слове нет."}
+                        children={"Серый означает, что такой буквы в слове нет"}
                     />
                 </div>
                 <div className={"flex flex-col gap-2"}>
@@ -64,7 +64,7 @@ export const FiveLettersOnboarding = ({ onClose }: FiveLettersOnboardingProps) =
                     <Subhead
                         className={"text-secondary"}
                         children={
-                            "Жёлтый указывает на то, что буква есть в слове, но стоит в других местах."
+                            "Жёлтый указывает на то, что буква есть в слове, но стоит в других местах"
                         }
                     />
                 </div>
@@ -79,7 +79,7 @@ export const FiveLettersOnboarding = ({ onClose }: FiveLettersOnboardingProps) =
                     <Subhead
                         className={"text-secondary"}
                         children={
-                            "Зелёный обозначает, что эта буква есть в слове и стоит на нужном месте."
+                            "Зелёный обозначает, что эта буква есть в слове и стоит на нужном месте"
                         }
                     />
                 </div>
