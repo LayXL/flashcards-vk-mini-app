@@ -26,7 +26,7 @@ export const FiveLettersOnboarding = ({ onClose }: FiveLettersOnboardingProps) =
                     <Icon28Dice3Outline className={"text-dynamic-yellow"} />
                     <Subhead
                         className={"flex-1"}
-                        children={"У вас 6 попыток чтобы угадать слово"}
+                        children={"У вас 6 попыток, чтобы угадать слово"}
                     />
                 </div>
                 <div className={"flex gap-3 items-center"}>
