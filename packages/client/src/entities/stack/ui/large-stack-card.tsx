@@ -93,7 +93,6 @@ export const LargeStackCard = ({
                                     !decodedBackground?.isImage &&
                                         "[text-shadow:_1px_1px_4px_var(--shadow-color),-1px_1px_4px_var(--shadow-color),1px_-1px_4px_var(--shadow-color),-1px_-1px_4px_var(--shadow-color)]",
                                     title.length > 24 && "text-xs",
-                                    "line-clamp-3 break-all",
                                     "leading-none"
                                 )}
                             />

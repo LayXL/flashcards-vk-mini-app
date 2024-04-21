@@ -11,14 +11,7 @@ type LevelCardProps = {
     nextLevelXp?: number
 }
 
-export const LevelCard = ({
-    avatarUrl,
-    level,
-    name,
-    currentLevelXp,
-    currentXp,
-    nextLevelXp,
-}: LevelCardProps) => {
+export const LevelCard = ({ avatarUrl, level, name, currentXp, nextLevelXp }: LevelCardProps) => {
     const progress = currentXp && nextLevelXp ? (currentXp / nextLevelXp) * 100 : 0
 
     return (
