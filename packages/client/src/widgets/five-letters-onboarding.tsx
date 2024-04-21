@@ -19,21 +19,21 @@ export const FiveLettersOnboarding = ({ onClose }: FiveLettersOnboardingProps) =
                     <Icon28MessageAddBadgeOutline className={"text-accent"} />
                     <Subhead
                         className={"flex-1"}
-                        children={"Каждый день мы загадываем новое английское слово из 5 букв."}
+                        children={"Каждый день мы загадываем новое английское слово из 5 букв"}
                     />
                 </div>
                 <div className={"flex gap-3 items-center"}>
-                    <Icon28Dice3Outline className={"text-dynamic-green"} />
+                    <Icon28Dice3Outline className={"text-dynamic-yellow"} />
                     <Subhead
                         className={"flex-1"}
-                        children={"У вас 6 попыток на угадывания слова."}
+                        children={"У вас 6 попыток чтобы угадать слово"}
                     />
                 </div>
                 <div className={"flex gap-3 items-center"}>
-                    <Icon28CupOutline className={"text-dynamic-yellow"} />
+                    <Icon28CupOutline className={"text-dynamic-green"} />
                     <Subhead
                         className={"flex-1"}
-                        children={"Когда вы угадаете слово, то все буквы окрасятся в зелёный цвет."}
+                        children={"Когда вы угадаете слово, то все буквы окрасятся в зелёный цвет"}
                     />
                 </div>
             </Div>
