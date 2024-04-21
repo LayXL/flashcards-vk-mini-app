@@ -49,7 +49,10 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                 )}
             >
                 <motion.div
-                    className={cn("rounded-t-2xl bg-vk-content", isTouchNone && "touch-none")}
+                    className={cn(
+                        "rounded-t-2xl bg-vk-content h-full",
+                        isTouchNone && "touch-none"
+                    )}
                     children={children}
                     drag={"y"}
                     dragControls={controls}
