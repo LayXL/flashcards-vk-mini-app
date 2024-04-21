@@ -15,6 +15,8 @@ export const LetterCell = ({ letter, type = "default" }: LetterCellProps) => {
             className={"focus:outline-none text-center"}
             appearance={"inversion"}
             shown={["error", "default"].includes(type) ? false : undefined}
+            hoverDelay={0}
+            disableCloseAfterClick={true}
             text={
                 type === "excluded"
                     ? "Этой буквы нет в слове"
