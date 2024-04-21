@@ -1,6 +1,5 @@
 import {
     Icon24Add,
-    Icon28DeleteOutline,
     Icon28EditOutline,
     Icon28HideOutline,
     Icon28LikeFillRed,
@@ -94,15 +93,16 @@ export const DetailedTranslationCard = ({
                                     />
                                 )}
                                 {onDelete && (
-                                    <CellButton
-                                        role={"menuitem"}
-                                        before={<Icon28DeleteOutline />}
-                                        onClick={() => {
-                                            onDelete()
-                                            onClose()
-                                        }}
-                                        children={"Удалить"}
-                                    />
+                                    <></>
+                                    // <CellButton
+                                    //     role={"menuitem"}
+                                    //     before={<Icon28DeleteOutline />}
+                                    //     onClick={() => {
+                                    //         onDelete()
+                                    //         onClose()
+                                    //     }}
+                                    //     children={"Удалить"}
+                                    // />
                                 )}
                                 {onHide && (
                                     <CellButton
