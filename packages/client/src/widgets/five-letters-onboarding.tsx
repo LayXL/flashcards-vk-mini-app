@@ -39,7 +39,7 @@ export const FiveLettersOnboarding = ({ onClose }: FiveLettersOnboardingProps) =
             </Div>
             <Header children={"Подсказки"} mode={"secondary"} />
             <Div className={"flex flex-col gap-4 pt-0"}>
-                <Subhead children={"После каждой попытки цвет букв меняется, чтобы помочь вам:"} />
+                <Subhead children={"После каждой попытки цвет букв меняется:"} />
                 <div className={"flex flex-col gap-2"}>
                     <div className={"flex gap-1 select-none"}>
                         <LetterCell letter={"B"} type={"excluded"} />
