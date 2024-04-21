@@ -35,12 +35,13 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                     "overscroll-contain",
                     "w-full",
                     "pb-safe-area-bottom mx-auto mt-safe-area-top",
+                    "rounded-t-2xl bg-vk-content",
                     fullscreen && "h-screen",
                     !fullwidth && "max-w-[540px]",
                     depth > 3 && "invisible"
                 )}
             >
-                <div className={"rounded-t-2xl bg-vk-content h-full"} children={children} />
+                <div className={"h-full"} children={children} />
             </div>
         </AdaptivityProvider>
     )
