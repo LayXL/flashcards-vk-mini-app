@@ -80,6 +80,8 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
     } = trpc.game.start.useMutation({
         onSuccess: () => {
             gameModal.open()
+            utils.game.getRecentlyStacks.invalidate()
+            utils.game.getRecentlyGames.invalidate()
         },
     })
 
