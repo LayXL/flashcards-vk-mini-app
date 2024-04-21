@@ -72,18 +72,18 @@ body:has(.disable-scroll) {
     transition: scale 0.3s ease-in-out;
 }
 
-.press-scale:hover {
+/* .press-scale:hover {
     scale: 1.02;
-}
+} */
 
 .press-scale:active {
     scale: 0.95;
 }
 
-.vkuiTabbarItem__in {
+/* .vkuiTabbarItem__in {
     transition: scale 0.3s ease-in-out;
-}
+} */
 
-.vkuiTabbarItem:active .vkuiTabbarItem__in {
+/* .vkuiTabbarItem:active .vkuiTabbarItem__in {
     scale: 0.95;
-}
+} */
