@@ -30,7 +30,7 @@ export const FeedTranslationCard = ({
         <>
             <div
                 className={
-                    "flex flex-col gap-2 bg-secondary p-3 pr-[9px] rounded-xl cursor-pointer animate-fade-in"
+                    "press-scale flex flex-col gap-2 bg-secondary p-3 pr-[9px] rounded-xl cursor-pointer animate-fade-in"
                 }
                 onClick={onClick}
             >
