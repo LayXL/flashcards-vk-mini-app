@@ -21,7 +21,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { httpBatchLink } from "@trpc/client"
 import bridge from "@vkontakte/vk-bridge"
 import { RouterProvider } from "@vkontakte/vk-mini-apps-router"
-import { AdaptivityProvider, AppRoot, ConfigProvider } from "@vkontakte/vkui"
+import { AdaptivityProvider, AppRoot, ConfigProvider, useAppearance } from "@vkontakte/vkui"
 import { Settings } from "luxon"
 import { useEffect, useState } from "react"
 import { trpc } from "../shared/api"
@@ -55,10 +55,12 @@ export const App = () => {
         bridge.send("VKWebAppInit", {})
     }, [])
 
+    const appearance = useAppearance()
+
     return (
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <QueryClientProvider client={queryClient}>
-                <ConfigProvider transitionMotionEnabled={false}>
+                <ConfigProvider transitionMotionEnabled={false} appearance={appearance}>
                     <AdaptivityProvider>
                         <AppRoot>
                             <RouterProvider router={router}>
