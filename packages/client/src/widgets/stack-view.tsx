@@ -187,7 +187,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                 </div>
                 {data?.description && (
                     <Div>
-                        <Subhead className={"text-center text-secondary"}>
+                        <Subhead className={"text-center text-secondary break-words"}>
                             {data?.description}
                         </Subhead>
                     </Div>
