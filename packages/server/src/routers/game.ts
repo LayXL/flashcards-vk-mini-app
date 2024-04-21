@@ -642,6 +642,48 @@ export const game = router({
             },
         })
     }),
+    getRecentlyStacks: privateProcedure.query(async ({ ctx }) => {
+        const games = await ctx.prisma.gameSession.findMany({
+            where: {
+                user: {
+                    vkId: ctx.vkId,
+                },
+            },
+            include: {
+                stacks: true,
+            },
+            orderBy: {
+                startedAt: "desc",
+            },
+            take: 20,
+        })
+
+        const stacks = games.map((x) => x.stacks).flatMap((x) => x)
+
+        const stacksSet = new Set(stacks.map((x) => x.id))
+
+        const stacksTranslationsCount = []
+
+        for (const stack of stacksSet) {
+            stacksTranslationsCount.push({
+                id: stack,
+                count: await ctx.prisma.translation.count({
+                    where: {
+                        stacks: {
+                            some: {
+                                stackId: stack,
+                            },
+                        },
+                    },
+                }),
+            })
+        }
+
+        return Array.from(stacksSet).map((x) => ({
+            ...stacks.find((y) => y.id === x),
+            translationsCount: stacksTranslationsCount.find((y) => y.id === x)?.count ?? 0,
+        }))
+    }),
     getGameResults: privateProcedure.input(z.number()).query(async ({ ctx, input }) => {
         const data = await ctx.prisma.gameSession.findFirst({
             where: {
@@ -691,7 +733,7 @@ export const game = router({
             where: { userId: ctx.userId, date: startOfDay(new Date()) },
         })
 
-        return statistics.hasAdditionalAttempt
+        return statistics?.hasAdditionalAttempt
     }),
     getAdditionalAttempt: privateProcedure.mutation(async ({ ctx }) => {
         return await ctx.prisma.userDailyStatistic.update({

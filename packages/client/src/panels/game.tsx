@@ -11,6 +11,7 @@ import {
     ButtonGroup,
     Div,
     Group,
+    Header,
     PanelHeader,
     Placeholder,
     Spacing,
@@ -19,6 +20,7 @@ import {
     Title,
 } from "@vkontakte/vkui"
 import { useState } from "react"
+import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
@@ -29,6 +31,7 @@ import { GetAdditionalAttempt } from "../widgets/get-additional-attempt"
 import { Leaderboard } from "../widgets/leaderboard"
 import { PlayGame } from "../widgets/play-game"
 import { PlayRankedGame } from "../widgets/play-ranked-game"
+import { StackView } from "../widgets/stack-view"
 
 export const Game = () => {
     // const { data: recentlyGames } = trpc.game.getRecentlyGames.useQuery()
@@ -47,6 +50,10 @@ export const Game = () => {
         }
     )
 
+    const { data: recentlyStacks } = trpc.game.getRecentlyStacks.useQuery(undefined, {
+        enabled: type === "default",
+    })
+
     const { data: hasAdditionalAttempt } = trpc.game.hasAdditionalAttempt.useQuery(undefined, {
         enabled: type === "ranked",
     })
@@ -56,6 +63,12 @@ export const Game = () => {
             refetch()
             utils.game.hasAdditionalAttempt.setData(undefined, true)
         },
+    })
+
+    const [selectedStack, setSelectedStack] = useState<number | null>(null)
+
+    const viewStackModal = useModalState(false, {
+        onClose: () => setSelectedStack(null),
     })
 
     return (
@@ -103,15 +116,25 @@ export const Game = () => {
                             }
                         />
                     </Group>
-                    {/* TODO: изменить раздел */}
-                    {/* <Group>
-                        <Header children={"Недавние игры"} />
-                        <Div className={"flex-col gap-2"}>
-                            {recentlyGames?.map((game) => (
-                                <RecentGameCard key={game.id} id={game.id} />
-                            ))}
-                        </Div>
-                    </Group> */}
+                    {(recentlyStacks?.length ?? 0) > 0 && (
+                        <Group>
+                            <Header children={"Недавние стопки"} />
+                            <Div className={"gap-3 grid grid-cols-cards"}>
+                                {recentlyStacks?.map((stack) => (
+                                    <LargeStackCard
+                                        key={stack.id}
+                                        title={stack.name}
+                                        translationsCount={stack.translationsCount}
+                                        encodedBackground={stack.encodedBackground}
+                                        isVerified={stack.isVerified}
+                                        onClick={() => {}}
+                                        onPlay={() => {}}
+                                    />
+                                ))}
+                            </Div>
+                            <Spacing size={64} />
+                        </Group>
+                    )}
                 </>
             )}
             {type === "ranked" && (
@@ -202,6 +225,11 @@ export const Game = () => {
                         )}
                     </ModalBody>
                 )}
+            </ModalWrapper>
+            <ModalWrapper isOpened={viewStackModal.isOpened} onClose={viewStackModal.close}>
+                <ModalBody fullscreen={true}>
+                    {selectedStack && <StackView id={selectedStack} />}
+                </ModalBody>
             </ModalWrapper>
             <ModalWindow {...ratingModal} fullscreen={true}>
                 <Leaderboard onClose={ratingModal.close} />
