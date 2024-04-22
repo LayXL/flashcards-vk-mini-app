@@ -43,7 +43,7 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                     "w-full",
                     "pb-safe-area-bottom mx-auto mt-safe-area-top",
                     "rounded-t-2xl bg-vk-content",
-                    fullscreen && "h-screen [&>.refresh-view]:h-screen",
+                    fullscreen && "h-screen",
                     !fullwidth && "max-w-[540px]",
                     depth > 3 && "invisible"
                 )}
