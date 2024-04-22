@@ -53,14 +53,14 @@ export const ModalBody = ({
                     depth > 3 && "invisible"
                 )}
                 onTouchStart={
-                    !disableDragToClose
+                    !disableDragToClose && depth === 1
                         ? (e) => {
                               setStartY(e.touches[0].clientY)
                           }
                         : undefined
                 }
                 onTouchMove={
-                    !disableDragToClose
+                    !disableDragToClose && depth === 1
                         ? (e) => {
                               if (e.currentTarget.scrollTop !== 0) return
 
@@ -75,7 +75,7 @@ export const ModalBody = ({
                         : undefined
                 }
                 onTouchEnd={
-                    !disableDragToClose
+                    !disableDragToClose && depth === 1
                         ? () => {
                               setDelta(0)
                           }
