@@ -87,3 +87,7 @@ body:has(.disable-scroll) {
 /* .vkuiTabbarItem:active .vkuiTabbarItem__in {
     scale: 0.95;
 } */
+
+.disable-scroll>div>div .vkuiPullToRefresh__spinner {
+    visibility: hidden;
+}
