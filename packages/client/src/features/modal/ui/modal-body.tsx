@@ -1,5 +1,5 @@
 import { AdaptivityProvider } from "@vkontakte/vkui"
-import { ReactNode, useEffect, useId, useMemo } from "react"
+import { ReactNode, useEffect, useId, useMemo, useState } from "react"
 import { useRecoilState } from "recoil"
 import { cn } from "../../../shared/helpers/cn"
 import { modalsIdsState } from "../../../shared/store"
@@ -28,6 +28,10 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
 
     const depth = useMemo(() => ids.length - ids.findIndex((modalId) => modalId === id), [id, ids])
 
+    const [startY, setStartY] = useState(0)
+
+    const [delta, setDelta] = useState(0)
+
     return (
         <AdaptivityProvider viewWidth={2}>
             <div
@@ -35,16 +39,41 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                 className={cn(
                     "relative",
                     "overflow-auto",
-                    "overscroll-contain",
-                    "w-full",
-                    "pb-safe-area-bottom mx-auto mt-safe-area-top",
+                    "overscroll-none",
                     "rounded-t-2xl bg-vk-content",
+                    "pt-safe-area-top mx-auto w-full pb-safe-area-bottom",
                     fullscreen && "h-screen",
                     !fullwidth && "max-w-[540px]",
                     depth > 3 && "invisible"
                 )}
+                onTouchStart={(e) => {
+                    setStartY(e.touches[0].clientY)
+                }}
+                onTouchMove={(e) => {
+                    console.log(e.currentTarget.scrollTop)
+
+                    if (e.currentTarget.scrollTop !== 0) return
+
+                    // e.currentTarget.scrollTo({ top: 0 })
+
+                    const deltaY = e.touches[0].clientY - startY
+
+                    setDelta(deltaY > 0 ? deltaY : 0)
+
+                    if (deltaY > 128) modal?.onClose()
+                }}
+                onTouchEnd={() => {
+                    setDelta(0)
+                }}
             >
-                <div className={"h-full"} children={children} />
+                <div
+                    className={"h-full"}
+                    children={children}
+                    style={{
+                        transform: `translateY(${delta}px)`,
+                        touchAction: delta > 0 ? "none" : undefined,
+                    }}
+                />
             </div>
         </AdaptivityProvider>
     )
