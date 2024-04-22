@@ -69,7 +69,7 @@ export const SubscribeToCommunityStory = () => {
                     </motion.p>
                 </Div>
             </div>
-            <Div className={"absolute bottom-0 w-full box-border mb-safe-area-bottom"}>
+            <Div className={"absolute bottom-0 w-full box-border mb-safe-area-bottom z-10"}>
                 <Button
                     className={"!bg-white !text-[#0077FF]"}
                     children={"Подписаться"}

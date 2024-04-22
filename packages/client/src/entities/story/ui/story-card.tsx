@@ -1,4 +1,4 @@
-import { ModalPageHeader, PanelHeaderClose, Subhead } from "@vkontakte/vkui"
+import { ConfigProvider, ModalPageHeader, PanelHeaderClose, Subhead } from "@vkontakte/vkui"
 import { ReactNode } from "react"
 import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
 import { trpc } from "../../../shared/api"
@@ -56,7 +56,11 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
                             <div className={"pointer-events-auto"}>
                                 <ModalPageHeader
                                     noSeparator
-                                    before={<PanelHeaderClose onClick={storyViewModal.close} />}
+                                    after={
+                                        <ConfigProvider platform={"android"}>
+                                            <PanelHeaderClose onClick={storyViewModal.close} />
+                                        </ConfigProvider>
+                                    }
                                 />
                             </div>
                         </div>
