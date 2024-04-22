@@ -1,4 +1,4 @@
-import { AdaptivityProvider, ConfigProvider, PullToRefresh } from "@vkontakte/vkui"
+import { AdaptivityProvider } from "@vkontakte/vkui"
 import { ReactNode, useEffect, useId, useMemo } from "react"
 // import PullToRefresh from "react-pull-to-refresh"
 import { useRecoilState } from "recoil"
@@ -30,27 +30,22 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
     const depth = useMemo(() => ids.length - ids.findIndex((modalId) => modalId === id), [id, ids])
 
     return (
-        <ConfigProvider platform={"ios"}>
-            <AdaptivityProvider viewWidth={2}>
-                <PullToRefresh
-                    onRefresh={() => {
-                        modal?.onClose()
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    className={cn(
-                        "relative flex-col",
-                        "overflow-auto",
-                        "overscroll-contain",
-                        "w-full",
-                        "pb-safe-area-bottom mx-auto mt-safe-area-top",
-                        "rounded-t-2xl bg-vk-content",
-                        fullscreen && "h-screen",
-                        !fullwidth && "max-w-[540px]",
-                        depth > 3 && "invisible"
-                    )}
-                    children={children}
-                />
-            </AdaptivityProvider>
-        </ConfigProvider>
+        <AdaptivityProvider viewWidth={2}>
+            <div
+                onClick={(e) => e.stopPropagation()}
+                className={cn(
+                    "relative flex-col",
+                    "overflow-auto",
+                    "overscroll-contain",
+                    "w-full",
+                    "pb-safe-area-bottom mx-auto mt-safe-area-top",
+                    "rounded-t-2xl bg-vk-content",
+                    fullscreen && "h-screen",
+                    !fullwidth && "max-w-[540px]",
+                    depth > 3 && "invisible"
+                )}
+                children={children}
+            />
+        </AdaptivityProvider>
     )
 }

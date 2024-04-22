@@ -88,6 +88,6 @@ body:has(.disable-scroll) {
     scale: 0.95;
 } */
 
-.disable-scroll>div>div .vkuiPullToRefresh__spinner {
+/* .disable-scroll>div>div .vkuiPullToRefresh__spinner {
     visibility: hidden;
-}
+} */

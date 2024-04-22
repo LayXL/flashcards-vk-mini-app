@@ -120,6 +120,7 @@ export const New = () => {
             <PullToRefresh
                 onRefresh={() => {
                     refetch()
+                    vibrateOnClick()
                 }}
                 isFetching={isFetching}
             >
