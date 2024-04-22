@@ -1,6 +1,6 @@
 import { AdaptivityProvider } from "@vkontakte/vkui"
 import { ReactNode, useEffect, useId, useMemo } from "react"
-import PullToRefresh from "react-pull-to-refresh"
+// import PullToRefresh from "react-pull-to-refresh"
 import { useRecoilState } from "recoil"
 import { cn } from "../../../shared/helpers/cn"
 import { modalsIdsState } from "../../../shared/store"
@@ -31,10 +31,10 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
 
     return (
         <AdaptivityProvider viewWidth={2}>
-            <PullToRefresh
-                onRefresh={() => {
-                    modal?.onClose()
-                }}
+            <div
+                // onRefresh={() => {
+                //     modal?.onClose()
+                // }}
                 onClick={(e) => e.stopPropagation()}
                 className={cn(
                     "relative flex-col",
