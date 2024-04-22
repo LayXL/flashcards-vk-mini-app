@@ -75,9 +75,8 @@ export const SubscribeToCommunityStory = () => {
                     children={"Подписаться"}
                     stretched
                     size={"l"}
-                    onClick={() => {
-                        window.open("https://vk.com/learning_app")?.focus()
-                    }}
+                    href={"https://vk.com/learning_app"}
+                    target={"_blank"}
                 />
             </Div>
         </div>
