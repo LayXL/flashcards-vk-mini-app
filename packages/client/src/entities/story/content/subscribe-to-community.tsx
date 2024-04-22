@@ -1,7 +1,9 @@
 import { Button, Div } from "@vkontakte/vkui"
-import { motion } from "framer-motion"
+import { motion, useAnimationControls } from "framer-motion"
 
 export const SubscribeToCommunityStory = () => {
+    const controls = useAnimationControls()
+
     return (
         <div className={"bg-[#FF3B73] flex justify-between relative text-white"}>
             <motion.div
@@ -11,16 +13,20 @@ export const SubscribeToCommunityStory = () => {
                 className={"w-full h-full absolute"}
             >
                 <motion.img
-                    transition={{
-                        delay: 0.15,
-                        duration: 0.5,
-                        type: "spring",
-                        bounce: 0.15,
-                    }}
+                    animate={controls}
                     initial={{ translateY: "100%" }}
-                    animate={{ translateY: "0%" }}
                     src={"/stories/duck.png"}
                     className={"w-full h-full object-cover object-center"}
+                    onLoad={() => {
+                        controls.start({
+                            translateY: "0%",
+                            transition: {
+                                duration: 0.5,
+                                type: "spring",
+                                bounce: 0.15,
+                            },
+                        })
+                    }}
                 />
             </motion.div>
             <div className={"flex flex-col font-vk-sans"}>
