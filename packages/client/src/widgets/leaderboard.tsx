@@ -46,7 +46,7 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
     )
 
     return (
-        <>
+        <div className={cn(!minimized && "h-full flex flex-col")}>
             {!minimized && (
                 <>
                     <ModalPageHeader
@@ -68,7 +68,7 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                 </>
             )}
 
-            <div className={cn(!minimized && "h-full overflow-scroll")}>
+            <div className={"h-full overflow-scroll"}>
                 {(leaderboardData?.length ?? 10) <= 1 && tab === "friends" && (
                     <Placeholder
                         className={"h-2/3"}
@@ -138,6 +138,6 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                     action={<Button onClick={refetchFriends} children={"Разрешить"} size={"l"} />}
                 />
             )}
-        </>
+        </div>
     )
 }

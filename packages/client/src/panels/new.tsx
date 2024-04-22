@@ -1,6 +1,6 @@
-import { Icon24ChevronDown, Icon24Refresh } from "@vkontakte/icons"
+import { Icon24Refresh } from "@vkontakte/icons"
 import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge"
-import { PanelHeader, Spacing } from "@vkontakte/vkui"
+import { PanelHeader, PullToRefresh, Spacing } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { useTimeout, useToggle, useUnmount } from "usehooks-ts"
@@ -117,97 +117,94 @@ export const New = () => {
 
             <SearchBar />
 
-            <InfiniteScroll
-                pullDownToRefresh
-                pullDownToRefreshContent={
-                    <div className={"py-4 opacity-60 flex items-center justify-center gap-2"}>
-                        <Icon24ChevronDown />
-                        <span>Тяните для обновления</span>
-                    </div>
-                }
-                releaseToRefreshContent={<ReleaseToRefresh />}
-                pullDownToRefreshThreshold={100}
-                refreshFunction={refetch}
-                dataLength={infiniteData?.length ?? 0}
-                hasMore={hasNextPage}
-                next={() => {
-                    fetchNextPage()
-
-                    if (!adsShown) {
-                        bridge.send("VKWebAppShowBannerAd", {
-                            banner_location: BannerAdLocation.BOTTOM,
-                            can_close: true,
-                        })
-                        setToggleAdsShown(true)
-                    }
+            <PullToRefresh
+                onRefresh={() => {
+                    refetch()
                 }}
-                loader={Array.from({ length: 30 }).map((_, i) => (
-                    <div
-                        className={"row-span-2 animate-pulse bg-vk-secondary rounded-xl"}
-                        key={i}
-                    />
-                ))}
-                className={"py-3 px-3"}
+                isFetching={isFetching}
             >
-                <div
-                    className={"grid gap-3"}
-                    // ref={gridRef}
-                    style={{
-                        gridAutoRows: 100,
-                        gridAutoFlow: "dense",
-                        gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+                <InfiniteScroll
+                    dataLength={infiniteData?.length ?? 0}
+                    hasMore={hasNextPage}
+                    next={() => {
+                        fetchNextPage()
+
+                        if (!adsShown) {
+                            bridge.send("VKWebAppShowBannerAd", {
+                                banner_location: BannerAdLocation.BOTTOM,
+                                can_close: true,
+                            })
+                            setToggleAdsShown(true)
+                        }
                     }}
+                    loader={Array.from({ length: 30 }).map((_, i) => (
+                        <div
+                            className={"row-span-2 animate-pulse bg-vk-secondary rounded-xl"}
+                            key={i}
+                        />
+                    ))}
+                    className={"py-3 px-3"}
                 >
-                    {(!isSuccess || !isAnimationCompleted) &&
-                        Array.from({ length: 30 }).map((_, i) => (
-                            <div className={"row-span-2 animate-pulse"} key={i}>
-                                <div
-                                    style={{
-                                        "--delay": i * 25 + "ms",
-                                    }}
-                                    className={cn(
-                                        "w-full h-full bg-vk-secondary rounded-xl",
-                                        "animate-[slide-in_600ms_var(--delay)_ease_forwards]",
-                                        "translate-y-full"
-                                    )}
-                                />
-                            </div>
-                        ))}
-                    {isAnimationCompleted &&
-                        infiniteData?.map((x, i) =>
-                            x.type === "stack" ? (
-                                <div className={"row-span-2"} key={i}>
-                                    <LargeStackCard
-                                        title={x.stackData.name}
-                                        translationsCount={x.stackData.translationsCount}
-                                        isVerified={x.stackData.isVerified}
-                                        encodedBackground={x.stackData.encodedBackground}
-                                        onClick={onClickStack(x.stackData.id)}
-                                        onPlay={onPlayStack(x.stackData.id)}
+                    <div
+                        className={"grid gap-3"}
+                        // ref={gridRef}
+                        style={{
+                            gridAutoRows: 100,
+                            gridAutoFlow: "dense",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+                        }}
+                    >
+                        {(!isSuccess || !isAnimationCompleted) &&
+                            Array.from({ length: 30 }).map((_, i) => (
+                                <div className={"row-span-2 animate-pulse"} key={i}>
+                                    <div
+                                        style={{
+                                            "--delay": i * 25 + "ms",
+                                        }}
+                                        className={cn(
+                                            "w-full h-full bg-vk-secondary rounded-xl",
+                                            "animate-[slide-in_600ms_var(--delay)_ease_forwards]",
+                                            "translate-y-full"
+                                        )}
                                     />
                                 </div>
-                            ) : x.type === "translation" ? (
-                                <div className={"row-span-1"} key={i}>
-                                    <FeedTranslationCard
-                                        foreign={x.translationData.foreign}
-                                        vernacular={x.translationData.vernacular}
-                                        authorName={x.translationData.author.firstName ?? ""}
-                                        authorAvatarUrl={
-                                            getSuitableAvatarUrl(
-                                                x.translationData.author.avatarUrls,
-                                                32
-                                            ) ?? ""
-                                        }
-                                        onClick={onClickTranslation(x.translationData.id)}
-                                        onAdd={onClickAddTranslation(x.translationData.id)}
-                                    />
-                                </div>
-                            ) : (
-                                <></>
-                            )
-                        )}
-                </div>
-            </InfiniteScroll>
+                            ))}
+                        {isAnimationCompleted &&
+                            infiniteData?.map((x, i) =>
+                                x.type === "stack" ? (
+                                    <div className={"row-span-2"} key={i}>
+                                        <LargeStackCard
+                                            title={x.stackData.name}
+                                            translationsCount={x.stackData.translationsCount}
+                                            isVerified={x.stackData.isVerified}
+                                            encodedBackground={x.stackData.encodedBackground}
+                                            onClick={onClickStack(x.stackData.id)}
+                                            onPlay={onPlayStack(x.stackData.id)}
+                                        />
+                                    </div>
+                                ) : x.type === "translation" ? (
+                                    <div className={"row-span-1"} key={i}>
+                                        <FeedTranslationCard
+                                            foreign={x.translationData.foreign}
+                                            vernacular={x.translationData.vernacular}
+                                            authorName={x.translationData.author.firstName ?? ""}
+                                            authorAvatarUrl={
+                                                getSuitableAvatarUrl(
+                                                    x.translationData.author.avatarUrls,
+                                                    32
+                                                ) ?? ""
+                                            }
+                                            onClick={onClickTranslation(x.translationData.id)}
+                                            onAdd={onClickAddTranslation(x.translationData.id)}
+                                        />
+                                    </div>
+                                ) : (
+                                    <></>
+                                )
+                            )}
+                    </div>
+                </InfiniteScroll>
+            </PullToRefresh>
 
             <Spacing size={256} />
 
