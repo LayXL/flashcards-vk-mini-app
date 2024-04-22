@@ -1,3 +1,4 @@
+import { Icon24ChevronDown, Icon24Refresh } from "@vkontakte/icons"
 import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge"
 import { PanelHeader, Spacing } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
@@ -32,7 +33,7 @@ export const New = () => {
 
     const [adsShown, _, setToggleAdsShown] = useToggle()
 
-    const { data, fetchNextPage, hasNextPage, isSuccess, isLoading, isFetching } =
+    const { data, fetchNextPage, hasNextPage, isSuccess, isLoading, isFetching, refetch } =
         trpc.feed.get.useInfiniteQuery(
             {},
             {
@@ -104,6 +105,21 @@ export const New = () => {
             <SearchBar />
 
             <InfiniteScroll
+                pullDownToRefresh
+                pullDownToRefreshContent={
+                    <div className={"py-4 opacity-60 flex items-center justify-center gap-2"}>
+                        <Icon24ChevronDown />
+                        <span>Тяните для обновления</span>
+                    </div>
+                }
+                releaseToRefreshContent={
+                    <div className={"py-4 opacity-60 flex items-center justify-center gap-2"}>
+                        <Icon24Refresh className={"animate-spin"} />
+                        <span>Отпустите для обновления</span>
+                    </div>
+                }
+                pullDownToRefreshThreshold={100}
+                refreshFunction={refetch}
                 dataLength={infiniteData?.length ?? 0}
                 hasMore={hasNextPage}
                 next={() => {

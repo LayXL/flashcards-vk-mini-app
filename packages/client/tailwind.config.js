@@ -90,6 +90,10 @@ export default {
                     from: { transform: "translateY(100%)" },
                     to: { transform: "translateY(0)" },
                 },
+                spin: {
+                    from: { transform: "rotate(0deg)" },
+                    to: { transform: "rotate(360deg)" },
+                },
             },
             animation: {
                 "bg-appearing": "background-appearing 0.3s ease forwards",
@@ -97,6 +101,7 @@ export default {
                 "content-appearing": "content-appearing 0.3s ease forwards",
                 "content-disappearing": "content-disappearing 0.3s ease forwards",
                 "fade-in": "fade-in 0.3s ease",
+                spin: "spin 1s linear infinite",
             },
         },
     },
