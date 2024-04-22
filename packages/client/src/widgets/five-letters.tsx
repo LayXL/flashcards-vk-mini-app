@@ -50,6 +50,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
     const { mutate: answer, isPending } = trpc.fiveLetters.answer.useMutation({
         onSuccess: (data) => {
             utils.fiveLetters.getTodayAttempts.setData(undefined, data)
+            utils.getUser.invalidate()
             setValue("")
         },
         onError: () => {
