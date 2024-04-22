@@ -22,6 +22,19 @@ import { StackView } from "../widgets/stack-view"
 import { TranslationAddToStack } from "../widgets/translation-add-to-stack"
 import { TranslationView } from "../widgets/translation-view"
 
+const ReleaseToRefresh = () => {
+    useEffect(() => {
+        vibrateOnClick()
+    })
+
+    return (
+        <div className={"py-4 opacity-60 flex items-center justify-center gap-2"}>
+            <Icon24Refresh className={"animate-spin"} />
+            <span>Отпустите для обновления</span>
+        </div>
+    )
+}
+
 export const New = () => {
     const [selectedStack, setSelectedStack] = useState<number | null>(null)
     const stackViewModal = useModalState()
@@ -112,12 +125,7 @@ export const New = () => {
                         <span>Тяните для обновления</span>
                     </div>
                 }
-                releaseToRefreshContent={
-                    <div className={"py-4 opacity-60 flex items-center justify-center gap-2"}>
-                        <Icon24Refresh className={"animate-spin"} />
-                        <span>Отпустите для обновления</span>
-                    </div>
-                }
+                releaseToRefreshContent={<ReleaseToRefresh />}
                 pullDownToRefreshThreshold={100}
                 refreshFunction={refetch}
                 dataLength={infiniteData?.length ?? 0}
