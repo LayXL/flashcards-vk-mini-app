@@ -344,9 +344,8 @@ model Story {
   id   Int    @id @default(autoincrement())
   name String
 
-  createdAt       DateTime          @default(now())
-  availableUntil  DateTime?
-  UserViewedStory UserViewedStory[]
+  createdAt      DateTime  @default(now())
+  availableUntil DateTime?
 }
 
 model UserViewedStory {
@@ -355,8 +354,8 @@ model UserViewedStory {
 
   viewedAt DateTime @default(now())
 
-  user  User  @relation(fields: [userId], references: [id])
-  story Story @relation(fields: [storyId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  // story Story @relation(fields: [storyId], references: [id])
 
   @@id([userId, storyId])
 }

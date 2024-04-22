@@ -242,7 +242,7 @@ export const Game = () => {
                     {selectedStack && <StackView id={selectedStack} />}
                 </ModalBody>
             </ModalWrapper>
-            <ModalWindow {...ratingModal} fullscreen={true}>
+            <ModalWindow {...ratingModal} fullscreen={true} disableDragToClose>
                 <Leaderboard onClose={ratingModal.close} />
             </ModalWindow>
         </>

@@ -103,6 +103,9 @@ export default {
                 "fade-in": "fade-in 0.3s ease",
                 spin: "spin 1s linear infinite",
             },
+            fontFamily: {
+                "vk-sans": ["VKSans", "sans-serif"],
+            },
         },
     },
     plugins: [],

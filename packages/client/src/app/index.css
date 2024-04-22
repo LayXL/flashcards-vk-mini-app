@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'VKSans';
+    font-weight: 700;
+    src: url('/fonts/VKSansDisplay-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'VKSans';
+    font-weight: 600;
+    src: url('/fonts/VKSansDisplay-DemiBold.ttf');
+}
+
+@font-face {
+    font-family: 'VKSans';
+    font-weight: 500;
+    src: url('/fonts/VKSansDisplay-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'VKSans';
+    font-weight: 400;
+    src: url('/fonts/VKSansDisplay-Regular.ttf');
+}
+
 .vkuiIcon {
     box-sizing: content-box;
 }

@@ -118,7 +118,7 @@ export const Stats = () => {
                 </div>
             </div>
             <ModalWrapper isOpened={leaderboardModal.isOpened} onClose={leaderboardModal.close}>
-                <ModalBody fullscreen>
+                <ModalBody fullscreen disableDragToClose>
                     <Leaderboard onClose={leaderboardModal.close} />
                 </ModalBody>
             </ModalWrapper>

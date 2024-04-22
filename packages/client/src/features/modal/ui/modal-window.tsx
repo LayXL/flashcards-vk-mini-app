@@ -11,6 +11,7 @@ type ModalWindowProps = {
     fullwidth?: boolean
     fullscreen?: boolean
     after?: ReactNode
+    disableDragToClose?: boolean
 } & (
     | {
           onClose: () => void
@@ -28,13 +29,18 @@ export const ModalWindow = ({
     fullwidth,
     fullscreen,
     after,
+    disableDragToClose,
     ...props
 }: ModalWindowProps) => {
     const onClose = "onClose" in props ? props.onClose : props.close
 
     return (
         <ModalWrapper isOpened={isOpened} onClose={onClose}>
-            <ModalBody fullwidth={fullwidth} fullscreen={fullscreen}>
+            <ModalBody
+                fullwidth={fullwidth}
+                fullscreen={fullscreen}
+                disableDragToClose={disableDragToClose}
+            >
                 {title && (
                     <ModalPageHeader
                         before={

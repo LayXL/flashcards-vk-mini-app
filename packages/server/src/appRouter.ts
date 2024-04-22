@@ -9,6 +9,7 @@ import { reports } from "./routers/reports"
 import { search } from "./routers/search"
 import { stacks } from "./routers/stacks"
 import { stats } from "./routers/stats"
+import { stories } from "./routers/stories"
 import { translations } from "./routers/translations"
 import { updateInfo } from "./routers/updateInfo"
 import { privateProcedure, router } from "./trpc"
@@ -28,6 +29,7 @@ export const appRouter = router({
     rating,
     categories,
     reports,
+    stories,
 })
 
 export type AppRouter = typeof appRouter

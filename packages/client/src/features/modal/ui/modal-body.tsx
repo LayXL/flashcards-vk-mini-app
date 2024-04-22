@@ -9,9 +9,15 @@ type ModalBodyProps = {
     children: ReactNode
     fullscreen?: boolean
     fullwidth?: boolean
+    disableDragToClose?: boolean
 }
 
-export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: ModalBodyProps) => {
+export const ModalBody = ({
+    children,
+    fullscreen = false,
+    fullwidth = false,
+    disableDragToClose,
+}: ModalBodyProps) => {
     const id = useId()
 
     const modal = useModal()
@@ -46,25 +52,35 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                     !fullwidth && "max-w-[540px]",
                     depth > 3 && "invisible"
                 )}
-                onTouchStart={(e) => {
-                    setStartY(e.touches[0].clientY)
-                }}
-                onTouchMove={(e) => {
-                    console.log(e.currentTarget.scrollTop)
+                onTouchStart={
+                    !disableDragToClose
+                        ? (e) => {
+                              setStartY(e.touches[0].clientY)
+                          }
+                        : undefined
+                }
+                onTouchMove={
+                    !disableDragToClose
+                        ? (e) => {
+                              if (e.currentTarget.scrollTop !== 0) return
 
-                    if (e.currentTarget.scrollTop !== 0) return
+                              // e.currentTarget.scrollTo({ top: 0 })
 
-                    // e.currentTarget.scrollTo({ top: 0 })
+                              const deltaY = e.touches[0].clientY - startY
 
-                    const deltaY = e.touches[0].clientY - startY
+                              setDelta(deltaY > 0 ? deltaY : 0)
 
-                    setDelta(deltaY > 0 ? deltaY : 0)
-
-                    if (deltaY > 128) modal?.onClose()
-                }}
-                onTouchEnd={() => {
-                    setDelta(0)
-                }}
+                              if (deltaY > 128) modal?.onClose()
+                          }
+                        : undefined
+                }
+                onTouchEnd={
+                    !disableDragToClose
+                        ? () => {
+                              setDelta(0)
+                          }
+                        : undefined
+                }
             >
                 <div
                     className={"h-full"}

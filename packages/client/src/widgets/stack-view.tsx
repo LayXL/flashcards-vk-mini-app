@@ -141,7 +141,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
         <>
             <ModalPageHeader
                 before={<PanelHeaderBack onClick={close} />}
-                children={data?.name || <Skeleton className={"w-20"} />}
+                children={data?.name || <Skeleton className={"w-20 bg-vk-default/20"} />}
             />
 
             <div className={"flex flex-col relative"}>
