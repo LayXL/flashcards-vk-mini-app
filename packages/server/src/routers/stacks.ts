@@ -80,7 +80,13 @@ export const stacks = router({
                     .max(96)
                     .trim()
                     .refine((val) => val.replace(/\s/g, "").length > 0),
-                description: z.string().min(3).max(256).trim().optional(),
+                description: z
+                    .string()
+                    .min(3)
+                    .max(256)
+                    .trim()
+                    .refine((val) => val.replace(/\s/g, "").length > 0)
+                    .optional(),
                 isPrivate: z.boolean().default(false),
                 pattern: zodPattern.optional(),
                 palette: z.number().min(1).max(palettes.length).optional(),
@@ -113,8 +119,21 @@ export const stacks = router({
         .input(
             z.object({
                 id: z.number(),
-                name: z.string().min(3).max(96).trim().optional(),
-                description: z.string().min(3).max(256).trim().optional().nullable(),
+                name: z
+                    .string()
+                    .min(3)
+                    .max(96)
+                    .trim()
+                    .refine((val) => val.replace(/\s/g, "").length > 0)
+                    .optional(),
+                description: z
+                    .string()
+                    .min(3)
+                    .max(256)
+                    .trim()
+                    .refine((val) => val.replace(/\s/g, "").length > 0)
+                    .optional()
+                    .nullable(),
                 isPrivate: z.boolean().optional(),
                 pattern: zodPattern.optional(),
                 palette: z.number().min(1).max(palettes.length).optional(),
