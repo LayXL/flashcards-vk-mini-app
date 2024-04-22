@@ -10,7 +10,7 @@ export const SubscribeToCommunityStory = () => {
                 initial={{ scale: 1 }}
                 animate={{ scale: 1.1 }}
                 transition={{ duration: 30, easings: ["easeInOut"] }}
-                className={"w-full h-full absolute"}
+                className={"w-full h-full absolute -z-10"}
             >
                 <motion.img
                     animate={controls}
@@ -69,7 +69,7 @@ export const SubscribeToCommunityStory = () => {
                     </motion.p>
                 </Div>
             </div>
-            <Div className={"absolute bottom-0 w-full box-border mb-safe-area-bottom z-10"}>
+            <Div className={"absolute bottom-0 w-full box-border mb-safe-area-bottom"}>
                 <Button
                     className={"!bg-white !text-[#0077FF]"}
                     children={"Подписаться"}
