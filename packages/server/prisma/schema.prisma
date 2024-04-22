@@ -36,6 +36,7 @@ model User {
   UserRankedSeasonStatistic       UserRankedSeasonStatistic[]
   FiveLetterWordOfDayUserProgress FiveLetterWordOfDayUserProgress[]
   ReportOnTranslation             ReportOnTranslation[]
+  UserViewedStory                 UserViewedStory[]
 }
 
 model Translation {
@@ -337,4 +338,25 @@ model ReportOnTranslation {
 
   reportedBy  User        @relation(fields: [reportedById], references: [id])
   translation Translation @relation(fields: [translationId], references: [id])
+}
+
+model Story {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  createdAt       DateTime          @default(now())
+  availableUntil  DateTime?
+  UserViewedStory UserViewedStory[]
+}
+
+model UserViewedStory {
+  userId  Int
+  storyId Int
+
+  viewedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  story Story @relation(fields: [storyId], references: [id])
+
+  @@id([userId, storyId])
 }
