@@ -322,6 +322,15 @@ export const translations = router({
                 })
             }
 
+            console.log([
+                ...transcriptions
+                    ?.filter(({ id }) => !id)
+                    .map(({ transcription, languageVariationId }) => ({
+                        transcription: transcription,
+                        languageVariationId: languageVariationId,
+                    })),
+            ])
+
             if (
                 checkForInappropriateData(
                     [
@@ -365,18 +374,6 @@ export const translations = router({
                             },
                         })),
                     },
-                    transcriptions: {
-                        createMany: {
-                            data: [
-                                ...transcriptions
-                                    ?.filter(({ id }) => !id)
-                                    .map(({ transcription, languageVariationId }) => ({
-                                        transcription: transcription,
-                                        languageVariationId: languageVariationId,
-                                    })),
-                            ],
-                        },
-                    },
                     updatedAt: new Date(),
                     isPrivate: isPrivate ?? undefined,
                 },
@@ -384,6 +381,28 @@ export const translations = router({
                     transcriptions: true,
                 },
             })
+
+            const newTranscriptions = transcriptions?.filter(({ id }) => !id)
+
+            for (const newTranscription of newTranscriptions) {
+                await prisma.transcription.create({
+                    data: {
+                        transcription: newTranscription.transcription,
+                        languageVariation: newTranscription.languageVariationId
+                            ? {
+                                  connect: {
+                                      id: newTranscription.languageVariationId,
+                                  },
+                              }
+                            : undefined,
+                        translation: {
+                            connect: {
+                                id,
+                            },
+                        },
+                    },
+                })
+            }
 
             const oldTranscriptions = transcriptions?.filter(({ id }) => id)
 
