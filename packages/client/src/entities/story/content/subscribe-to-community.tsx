@@ -63,7 +63,6 @@ export const SubscribeToCommunityStory = () => {
                         }}
                         initial={{ translateX: "-100%" }}
                         animate={{ translateX: "0%" }}
-                        className={"text-4xl font-bold"}
                         className={"text-xl font-medium"}
                     >
                         И узнавай о&nbsp;новых возможностях в&nbsp;приложении
