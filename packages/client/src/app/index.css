@@ -91,3 +91,13 @@ body:has(.disable-scroll) {
 /* .disable-scroll>div>div .vkuiPullToRefresh__spinner {
     visibility: hidden;
 } */
+
+/* .ptr__pull-down {
+    visibility: hidden !important;
+}
+
+.ptr__children {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+} */

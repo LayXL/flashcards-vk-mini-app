@@ -1,6 +1,5 @@
 import { AdaptivityProvider } from "@vkontakte/vkui"
 import { ReactNode, useEffect, useId, useMemo } from "react"
-// import PullToRefresh from "react-pull-to-refresh"
 import { useRecoilState } from "recoil"
 import { cn } from "../../../shared/helpers/cn"
 import { modalsIdsState } from "../../../shared/store"
@@ -34,7 +33,7 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
             <div
                 onClick={(e) => e.stopPropagation()}
                 className={cn(
-                    "relative flex-col",
+                    "relative",
                     "overflow-auto",
                     "overscroll-contain",
                     "w-full",
@@ -44,8 +43,9 @@ export const ModalBody = ({ children, fullscreen = false, fullwidth = false }: M
                     !fullwidth && "max-w-[540px]",
                     depth > 3 && "invisible"
                 )}
-                children={children}
-            />
+            >
+                <div className={"h-full"} children={children} />
+            </div>
         </AdaptivityProvider>
     )
 }
