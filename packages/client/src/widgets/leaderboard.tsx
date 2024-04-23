@@ -116,8 +116,8 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
             </div>
 
             {!minimized && currentUser && currentUserSeason?.user.place && (
-                <div className={"fixed bottom-0 left-0 right-0 p-3 mb-safe-area-bottom"}>
-                    <div className={"bg-vk-secondary rounded-xl left-0 right-0"}>
+                <div className={"fixed bottom-0 left-0 right-0 p-3"}>
+                    <div className={"bg-vk-secondary rounded-xl"}>
                         <RatingUserCard
                             avatar={getSuitableAvatarUrl(currentUser.avatarUrls, 64)}
                             name={currentUser.fullName ?? ""}

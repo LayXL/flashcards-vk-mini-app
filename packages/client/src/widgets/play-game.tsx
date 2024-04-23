@@ -292,19 +292,19 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
             </ModalWrapper>
 
             <ModalWrapper isOpened={gameModal.isOpened} onClose={stopGame}>
-                <ModalBody fullscreen={true}>
+                <ModalBody fullscreen={true} disableDragToClose>
                     {data && <InGame onEndGame={endGame} onStopGame={stopGame} data={data} />}
                 </ModalBody>
             </ModalWrapper>
 
             <ModalWrapper isOpened={gameResultsModal.isOpened} onClose={gameResultsModal.close}>
-                <ModalBody fullscreen={true}>
+                <ModalBody fullscreen={true} disableDragToClose>
                     <GameResults
                         id={data?.gameSession.id ?? 0}
                         onClose={() => {
                             gameResultsModal.close()
 
-                            if (Math.random() < 0.3) {
+                            if (Math.random() <= 0.3) {
                                 bridge.send("VKWebAppShowNativeAds", {
                                     ad_format: EAdsFormats.INTERSTITIAL,
                                 })

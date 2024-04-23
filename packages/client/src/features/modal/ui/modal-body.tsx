@@ -64,8 +64,6 @@ export const ModalBody = ({
                         ? (e) => {
                               if (e.currentTarget.scrollTop !== 0) return
 
-                              // e.currentTarget.scrollTo({ top: 0 })
-
                               const deltaY = e.touches[0].clientY - startY
 
                               setDelta(deltaY > 0 ? deltaY : 0)
