@@ -138,7 +138,7 @@ export const Stacks = () => {
                         children={selectedCategory?.name}
                     />
 
-                    <Div className={"grid grid-cols-cards gap-3"}>
+                    <Div className={"grid grid-cols-cards gap-3 mb-safe-area-bottom"}>
                         {selectedCategory?.stacks.map((stack) => (
                             <LargeStackCard
                                 key={stack.id}
