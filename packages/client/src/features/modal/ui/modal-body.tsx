@@ -47,7 +47,7 @@ export const ModalBody = ({
                     "overflow-auto",
                     "overscroll-none",
                     "rounded-t-2xl bg-vk-content",
-                    "pt-safe-area-top mx-auto w-full pb-safe-area-bottom",
+                    "pt-safe-area-top mx-auto w-full",
                     fullscreen && "h-screen",
                     !fullwidth && "max-w-[540px]",
                     depth > 3 && "invisible"
