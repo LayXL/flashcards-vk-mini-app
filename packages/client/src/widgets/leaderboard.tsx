@@ -124,6 +124,7 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                     <div
                         className={cn(
                             "fixed bottom-0 left-0 right-0 p-3 mb-safe-area-bottom",
+                            "max-w-[540px] mx-auto",
                             modal?.isOpenedAnimation
                                 ? "animate-content-appearing"
                                 : "animate-content-disappearing"

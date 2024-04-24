@@ -45,7 +45,7 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
                     <div className={"w-full h-full bg-black"} onClick={(e) => e.stopPropagation()}>
                         <div
                             className={
-                                "rounded-xl h-full overflow-hidden relative [&>*]:h-full max-w-[480px] mx-auto select-none"
+                                "rounded-xl h-full overflow-hidden relative [&>*]:h-full mx-auto select-none"
                             }
                         >
                             {content}
