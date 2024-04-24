@@ -515,7 +515,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                                 <Div className={"pb-2 flex flex-col gap-2"}>
                                     {!watch("isPrivate") && (
                                         <Subhead className={"opacity-60"}>
-                                            Нажимая кнопку "Готово", вы соглашаетесь с{" "}
+                                            Нажимая кнопку "Готово", вы соглашаетесь с&nbsp;
                                             <Link
                                                 href={"https://dev.vk.com/ru/user-agreement"}
                                                 target={"_blank"}

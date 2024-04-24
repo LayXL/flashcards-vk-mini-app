@@ -232,7 +232,7 @@ export const StackCreateModal = ({
             <Div className={"flex flex-col gap-2"}>
                 {!watch("isPrivate") && (
                     <Subhead className={"opacity-60"}>
-                        Нажимая кнопку "Создать", вы соглашаетесь с{" "}
+                        Нажимая кнопку "Создать", вы соглашаетесь с&nbsp;
                         <Link href={"https://dev.vk.com/ru/user-agreement"} target={"_blank"}>
                             Пользовательским соглашением
                         </Link>
