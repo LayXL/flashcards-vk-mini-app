@@ -1,5 +1,6 @@
 import { ConfigProvider, ModalPageHeader, PanelHeaderClose, Subhead } from "@vkontakte/vkui"
 import { ReactNode } from "react"
+import { ModalBody } from "../../../features/modal/ui/modal-body"
 import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
 import { trpc } from "../../../shared/api"
 import { cn } from "../../../shared/helpers/cn"
@@ -40,35 +41,37 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
                 <Subhead children={title} />
             </div>
             <ModalWrapper {...storyViewModal}>
-                <div className={"w-full h-full bg-black"} onClick={(e) => e.stopPropagation()}>
-                    <div
-                        className={
-                            "rounded-xl h-full overflow-hidden relative [&>*]:h-full max-w-[480px] mx-auto select-none"
-                        }
-                    >
-                        {content}
+                <ModalBody fullscreen>
+                    <div className={"w-full h-full bg-black"} onClick={(e) => e.stopPropagation()}>
                         <div
-                            className={cn(
-                                "absolute inset-0 pt-safe-area-top pointer-events-none"
-                                // "bg-[linear-gradient(to_bottom,rgba(0,0,0,.3),rgba(0,0,0,0)_20%)]"
-                            )}
+                            className={
+                                "rounded-xl h-full overflow-hidden relative [&>*]:h-full max-w-[480px] mx-auto select-none"
+                            }
                         >
-                            <div className={"pointer-events-auto"}>
-                                <ModalPageHeader
-                                    noSeparator
-                                    after={
-                                        <ConfigProvider platform={"android"}>
-                                            <PanelHeaderClose onClick={storyViewModal.close} />
-                                        </ConfigProvider>
-                                    }
-                                />
+                            {content}
+                            <div
+                                className={cn(
+                                    "absolute inset-0 pt-safe-area-top pointer-events-none"
+                                    // "bg-[linear-gradient(to_bottom,rgba(0,0,0,.3),rgba(0,0,0,0)_20%)]"
+                                )}
+                            >
+                                <div className={"pointer-events-auto"}>
+                                    <ModalPageHeader
+                                        noSeparator
+                                        after={
+                                            <ConfigProvider platform={"android"}>
+                                                <PanelHeaderClose onClick={storyViewModal.close} />
+                                            </ConfigProvider>
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
+                        <div className={"pb-safe-area-bottom"}>
+                            {/* <IconButton children={<Icon28Like />} /> */}
+                        </div>
                     </div>
-                    <div className={"pb-safe-area-bottom"}>
-                        {/* <IconButton children={<Icon28Like />} /> */}
-                    </div>
-                </div>
+                </ModalBody>
             </ModalWrapper>
         </>
     )

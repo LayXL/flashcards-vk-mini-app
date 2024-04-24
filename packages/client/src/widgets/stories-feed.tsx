@@ -15,7 +15,7 @@ export const StoriesFeed = () => {
         (stories?.length ?? 0) > 0 && (
             <Group>
                 <CardScroll>
-                    <Div className={"px-0"}>
+                    <Div className={"px-0 flex gap-3"}>
                         {stories?.map((story, i) => (
                             <StoryCard
                                 id={story.id}
