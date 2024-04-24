@@ -98,8 +98,9 @@ export default {
             animation: {
                 "bg-appearing": "background-appearing 0.3s ease forwards",
                 "bg-disappearing": "background-disappearing 0.3s ease",
-                "content-appearing": "content-appearing 0.3s ease forwards",
+                "content-appearing": "content-appearing 0.3s ease",
                 "content-disappearing": "content-disappearing 0.3s ease forwards",
+                "content-disappearing-gesture": "content-disappearing-gesture 0.3s ease forwards",
                 "fade-in": "fade-in 0.3s ease",
                 spin: "spin 1s linear infinite",
             },

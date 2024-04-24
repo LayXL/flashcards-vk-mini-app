@@ -46,11 +46,16 @@ export const ModalBody = ({
                     "relative",
                     "overflow-auto",
                     "overscroll-none",
-                    "rounded-t-2xl",
+                    "rounded-t-2xl bg-vk-content",
                     "pt-safe-area-top mx-auto w-full",
                     fullscreen && "h-screen",
                     !fullwidth && "max-w-[540px]",
-                    depth > 3 && "invisible"
+                    depth > 3 && "invisible",
+                    modal?.isOpenedAnimation
+                        ? "animate-content-appearing"
+                        : delta !== 0
+                        ? "animate-content-disappearing-gesture"
+                        : "animate-content-disappearing"
                 )}
                 onTouchStart={
                     !disableDragToClose && depth === 1
@@ -73,21 +78,19 @@ export const ModalBody = ({
                         : undefined
                 }
                 onTouchEnd={
-                    !disableDragToClose && depth === 1
+                    !disableDragToClose && depth === 1 && delta < 128
                         ? () => {
                               setDelta(0)
                           }
                         : undefined
                 }
+                style={{
+                    transform: `translateY(${delta}px)`,
+                    touchAction: delta > 0 ? "none" : undefined,
+                    "--delta": `${delta}px`,
+                }}
             >
-                <div
-                    className={"h-full rounded-t-2xl bg-vk-content"}
-                    children={children}
-                    style={{
-                        transform: `translateY(${delta}px)`,
-                        touchAction: delta > 0 ? "none" : undefined,
-                    }}
-                />
+                <div className={"h-full flex flex-col"} children={children} />
             </div>
         </AdaptivityProvider>
     )

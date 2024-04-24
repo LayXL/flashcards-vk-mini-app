@@ -38,7 +38,7 @@ export const ModalWrapper = ({ isOpened, children, ...props }: ModalWrapperProps
     const close = props.close || props.onClose
 
     return (
-        <ModalContext.Provider value={{ onClose: close }}>
+        <ModalContext.Provider value={{ onClose: close!, isOpenedAnimation: isOpened }}>
             <FloatingPortal root={document.body}>
                 <div
                     onClick={() => {
@@ -50,8 +50,8 @@ export const ModalWrapper = ({ isOpened, children, ...props }: ModalWrapperProps
                     className={cn(
                         "disable-scroll",
                         "fixed inset-0 flex-col justify-end",
-                        isOpened && "animate-bg-appearing [&>div]:animate-content-appearing",
-                        !isOpened && "animate-bg-disappearing [&>div]:animate-content-disappearing"
+                        isOpened && "animate-bg-appearing",
+                        !isOpened && "animate-bg-disappearing"
                     )}
                 />
             </FloatingPortal>

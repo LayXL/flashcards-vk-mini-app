@@ -1,3 +1,4 @@
+import { FloatingPortal } from "@floating-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import { Icon56UsersOutline } from "@vkontakte/icons"
 import {
@@ -12,6 +13,7 @@ import {
 import { useState } from "react"
 import { PrizePlace } from "../entities/rating/ui/prize-place"
 import { RatingUserCard } from "../entities/rating/ui/rating-user-card"
+import { useModal } from "../features/modal/contexts/modal-context"
 import { trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
 import { getFriends } from "../shared/helpers/getFriends"
@@ -25,6 +27,8 @@ type LeaderboardProps = {
 
 export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps) => {
     const [tab, setTab] = useState<"friends" | "global">(defaultTab || "global")
+
+    const modal = useModal()
 
     const { data: currentUserSeason } = trpc.rating.getCurrentSeason.useQuery()
     const { data: currentUser } = trpc.getUser.useQuery()
@@ -116,17 +120,26 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
             </div>
 
             {!minimized && currentUser && currentUserSeason?.user.place && (
-                <div className={"fixed bottom-0 left-0 right-0 p-3"}>
-                    <div className={"bg-vk-secondary rounded-xl"}>
-                        <RatingUserCard
-                            avatar={getSuitableAvatarUrl(currentUser.avatarUrls, 64)}
-                            name={currentUser.fullName ?? ""}
-                            points={currentUserSeason.user.points}
-                            place={currentUserSeason.user.place}
-                            isCurrentUser={true}
-                        />
+                <FloatingPortal>
+                    <div
+                        className={cn(
+                            "fixed bottom-0 left-0 right-0 p-3 mb-safe-area-bottom",
+                            modal?.isOpenedAnimation
+                                ? "animate-content-appearing"
+                                : "animate-content-disappearing"
+                        )}
+                    >
+                        <div className={"bg-vk-secondary rounded-xl"}>
+                            <RatingUserCard
+                                avatar={getSuitableAvatarUrl(currentUser.avatarUrls, 64)}
+                                name={currentUser.fullName ?? ""}
+                                points={currentUserSeason.user.points}
+                                place={currentUserSeason.user.place}
+                                isCurrentUser={true}
+                            />
+                        </div>
                     </div>
-                </div>
+                </FloatingPortal>
             )}
 
             {friendsData?.friends.length === 0 && tab === "friends" && (

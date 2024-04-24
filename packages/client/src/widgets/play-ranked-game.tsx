@@ -116,6 +116,7 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                     size={"l"}
                     disabled={isPending}
                 />
+                <div className={"h-safe-area-bottom"} />
             </Div>
 
             <ModalWrapper isOpened={gameModal.isOpened} onClose={stopGame}>

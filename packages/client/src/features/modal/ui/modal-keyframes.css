@@ -37,3 +37,13 @@
         transform: translateY(100%);
     }
 }
+
+@keyframes content-disappearing-gesture {
+    from {
+        transform: translateY(var(--delta));
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}

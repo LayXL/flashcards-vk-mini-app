@@ -1,15 +1,18 @@
+import { FloatingPortal } from "@floating-ui/react"
 import {
     Icon16Cancel,
     Icon28HideOutline,
     Icon28InfoOutline,
     Icon28ViewOutline,
 } from "@vkontakte/icons"
-import { Div, ModalPageHeader, PanelHeaderBack, PanelHeaderButton } from "@vkontakte/vkui"
+import { Div, ModalPageHeader, PanelHeaderBack, PanelHeaderButton, Spacing } from "@vkontakte/vkui"
 import { DateTime } from "luxon"
 import { useEffect, useRef, useState } from "react"
 import { isDesktop } from "react-device-detect"
+import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalWindow } from "../features/modal/ui/modal-window"
 import { trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
 import { useModalState } from "../shared/hooks/useModalState"
 import { useOnboardingCompletion } from "../shared/hooks/useOnboardingCompletion"
 import { Keyboard } from "../shared/ui/keyboard"
@@ -26,6 +29,8 @@ const limitToFiveLetters = (x: string) => {
 
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
     const [hideLetters, setHideLetters] = useState(false)
+
+    const modal = useModal()
 
     const fiveLettersOnboardingCompletion = useOnboardingCompletion("fiveLetters2")
     const onboardingModal = useModalState(false, {
@@ -104,7 +109,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
             )}
 
             <div
-                className={"h-full flex-col select-none"}
+                className={"flex-col select-none"}
                 onClick={() => {
                     if (isDesktop) inputRef.current?.focus()
                 }}
@@ -203,28 +208,39 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                         </div> */}
                     </Div>
                 )}
+
+                <Spacing size={256} />
             </div>
 
             {data?.status === "playing" && (
-                <div className={"fixed w-full bottom-0"}>
-                    <Keyboard
-                        correctLetters={hideLetters ? [] : data?.correctLetters ?? []}
-                        excludedLetters={hideLetters ? [] : data?.excludedLetters ?? []}
-                        misplacedLetters={hideLetters ? [] : data?.misplacedLetters ?? []}
-                        onType={(letter) => {
-                            setValue((prev) => limitToFiveLetters(prev + letter))
-                            setIsValueWithError(false)
-                        }}
-                        onBackspace={() => {
-                            setValue((prev) => prev.slice(0, -1))
-                            setIsValueWithError(false)
-                        }}
-                        onEnter={() => {
-                            if (isPending) return
-                            answer(value)
-                        }}
-                    />
-                </div>
+                <FloatingPortal>
+                    <div
+                        className={cn(
+                            "fixed w-full bottom-0",
+                            modal?.isOpenedAnimation
+                                ? "animate-content-appearing"
+                                : "animate-content-disappearing"
+                        )}
+                    >
+                        <Keyboard
+                            correctLetters={hideLetters ? [] : data?.correctLetters ?? []}
+                            excludedLetters={hideLetters ? [] : data?.excludedLetters ?? []}
+                            misplacedLetters={hideLetters ? [] : data?.misplacedLetters ?? []}
+                            onType={(letter) => {
+                                setValue((prev) => limitToFiveLetters(prev + letter))
+                                setIsValueWithError(false)
+                            }}
+                            onBackspace={() => {
+                                setValue((prev) => prev.slice(0, -1))
+                                setIsValueWithError(false)
+                            }}
+                            onEnter={() => {
+                                if (isPending) return
+                                answer(value)
+                            }}
+                        />
+                    </div>
+                </FloatingPortal>
             )}
 
             <ModalWindow
