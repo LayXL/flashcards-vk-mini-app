@@ -10,6 +10,7 @@ import {
     Group,
     Header,
     Input,
+    Link,
     ModalPageHeader,
     PanelHeaderBack,
     PanelHeaderClose,
@@ -17,6 +18,7 @@ import {
     SimpleCell,
     Snackbar,
     Spacing,
+    Subhead,
     Switch,
     Textarea,
 } from "@vkontakte/vkui"
@@ -510,7 +512,18 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                     <FloatingPortal>
                         <div className={"fixed pb-safe-area-bottom w-full bottom-0"}>
                             <div className={"max-w-[540px] mx-auto bg-vk-content"}>
-                                <Div className={"pb-2"}>
+                                <Div className={"pb-2 flex flex-col gap-2"}>
+                                    {!watch("isPrivate") && (
+                                        <Subhead className={"opacity-60"}>
+                                            Нажимая кнопку "Готово", вы соглашаетесь с{" "}
+                                            <Link
+                                                href={"https://dev.vk.com/ru/user-agreement"}
+                                                target={"_blank"}
+                                            >
+                                                Пользовательским соглашением
+                                            </Link>
+                                        </Subhead>
+                                    )}
                                     <Button
                                         loading={isLoading}
                                         stretched={true}
