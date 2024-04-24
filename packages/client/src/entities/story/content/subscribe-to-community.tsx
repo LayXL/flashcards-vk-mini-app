@@ -31,7 +31,7 @@ export const SubscribeToCommunityStory = () => {
             </motion.div>
             <div
                 className={
-                    "flex flex-col font-vk-sans pointer-events-none touch-none justify-between h-full pb-safe-area-bottom absolute z-10"
+                    "flex flex-col font-vk-sans pointer-events-none touch-none justify-between h-full absolute z-10"
                 }
             >
                 <div>
@@ -75,7 +75,7 @@ export const SubscribeToCommunityStory = () => {
                         </motion.p>
                     </Div>
                 </div>
-                <Div>
+                <Div className={"mb-safe-area-bottom"}>
                     <Button
                         className={"!bg-white !text-[#0077FF]"}
                         children={"Подписаться"}
