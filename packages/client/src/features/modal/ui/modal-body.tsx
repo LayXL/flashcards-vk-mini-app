@@ -46,7 +46,7 @@ export const ModalBody = ({
                     "relative",
                     "overflow-auto",
                     "overscroll-none",
-                    "rounded-t-2xl bg-vk-content",
+                    "rounded-t-2xl",
                     "pt-safe-area-top mx-auto w-full",
                     fullscreen && "h-screen",
                     !fullwidth && "max-w-[540px]",
@@ -81,7 +81,7 @@ export const ModalBody = ({
                 }
             >
                 <div
-                    className={"h-full"}
+                    className={"h-full rounded-t-2xl bg-vk-content"}
                     children={children}
                     style={{
                         transform: `translateY(${delta}px)`,
