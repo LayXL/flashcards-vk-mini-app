@@ -31,7 +31,7 @@ export const SubscribeToCommunityStory = () => {
             </motion.div>
             <div
                 className={
-                    "flex flex-col font-vk-sans pointer-events-none touch-none justify-between h-full pb-safe-area-bottom"
+                    "flex flex-col font-vk-sans pointer-events-none touch-none justify-between h-full pb-safe-area-bottom absolute z-10"
                 }
             >
                 <div>
