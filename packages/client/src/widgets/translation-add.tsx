@@ -325,17 +325,27 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                     </>
                 )}
 
-                <Div>
-                    <Button
-                        loading={isLoading}
-                        stretched={true}
-                        size={"l"}
-                        children={defaultValues?.id ? "Изменить" : "Продолжить"}
-                        onClick={
-                            defaultValues?.id ? handleSubmit(onSubmit) : additionalInfoModal.open
-                        }
-                    />
-                </Div>
+                <Spacing size={64} />
+
+                <FloatingPortal>
+                    <div className={"fixed pb-safe-area-bottom w-full bottom-0"}>
+                        <div className={"max-w-[540px] mx-auto bg-vk-content"}>
+                            <Div className={"pb-2"}>
+                                <Button
+                                    loading={isLoading}
+                                    stretched={true}
+                                    size={"l"}
+                                    children={defaultValues?.id ? "Изменить" : "Продолжить"}
+                                    onClick={
+                                        defaultValues?.id
+                                            ? handleSubmit(onSubmit)
+                                            : additionalInfoModal.open
+                                    }
+                                />
+                            </Div>
+                        </div>
+                    </div>
+                </FloatingPortal>
             </Group>
 
             <ModalWrapper isOpened={selectStackModal.isOpened} onClose={selectStackModal.close}>
@@ -498,16 +508,18 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                     <Spacing size={128} />
 
                     <FloatingPortal>
-                        <div className={"fixed bg-vk-content pb-safe-area-bottom w-full bottom-0"}>
-                            <Div className={"pb-2"}>
-                                <Button
-                                    loading={isLoading}
-                                    stretched={true}
-                                    size={"l"}
-                                    children={"Готово"}
-                                    onClick={handleSubmit(onSubmit)}
-                                />
-                            </Div>
+                        <div className={"fixed pb-safe-area-bottom w-full bottom-0"}>
+                            <div className={"max-w-[540px] mx-auto bg-vk-content"}>
+                                <Div className={"pb-2"}>
+                                    <Button
+                                        loading={isLoading}
+                                        stretched={true}
+                                        size={"l"}
+                                        children={"Готово"}
+                                        onClick={handleSubmit(onSubmit)}
+                                    />
+                                </Div>
+                            </div>
                         </div>
                     </FloatingPortal>
                 </ModalBody>

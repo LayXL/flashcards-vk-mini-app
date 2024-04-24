@@ -45,7 +45,7 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
                     <div className={"w-full h-full bg-black"} onClick={(e) => e.stopPropagation()}>
                         <div
                             className={
-                                "rounded-xl h-full overflow-hidden relative [&>*]:h-full mx-auto select-none"
+                                "rounded-xl h-full overflow-hidden relative [&>*]:h-full maxmx-auto select-none"
                             }
                         >
                             {content}
@@ -67,9 +67,9 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
                                 </div>
                             </div>
                         </div>
-                        <div className={"pb-safe-area-bottom"}>
-                            {/* <IconButton children={<Icon28Like />} /> */}
-                        </div>
+                        {/* <div className={"pb-safe-area-bottom"}> */}
+                        {/* <IconButton children={<Icon28Like />} /> */}
+                        {/* </div> */}
                     </div>
                 </ModalBody>
             </ModalWrapper>

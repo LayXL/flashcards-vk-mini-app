@@ -123,14 +123,13 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                 <FloatingPortal>
                     <div
                         className={cn(
-                            "fixed bottom-0 left-0 right-0 p-3 mb-safe-area-bottom",
-                            "max-w-[540px] mx-auto",
+                            "fixed bottom-0 left-0 right-0 p-3 mb-safe-area-bottom flex flex-col items-center",
                             modal?.isOpenedAnimation
                                 ? "animate-content-appearing"
                                 : "animate-content-disappearing"
                         )}
                     >
-                        <div className={"bg-vk-secondary rounded-xl"}>
+                        <div className={"bg-vk-secondary rounded-xl max-w-[540px] w-full"}>
                             <RatingUserCard
                                 avatar={getSuitableAvatarUrl(currentUser.avatarUrls, 64)}
                                 name={currentUser.fullName ?? ""}
