@@ -6,6 +6,7 @@ import {
     Header,
     Link,
     ModalPageHeader,
+    PanelHeaderBack,
     PanelHeaderClose,
     Placeholder,
     Search as SearchBar,
@@ -47,7 +48,8 @@ export const Search = ({ onClose }: SearchProps) => {
 
     return (
         <>
-            <ModalPageHeader before={<PanelHeaderClose onClick={onClose} />} children={"Поиск"} />
+            <ModalPageHeader before={<PanelHeaderBack onClick={onClose} />} children={"Поиск"} />
+
             <SearchBar
                 getRef={searchBarRef}
                 value={searchQuery}
