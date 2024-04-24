@@ -7,8 +7,12 @@ import {
     Group,
     Header,
     Input,
+    Link,
     ModalPageHeader,
     PanelHeaderClose,
+    SimpleCell,
+    Subhead,
+    Switch,
 } from "@vkontakte/vkui"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { Pattern, StackBackground } from "../entities/stack/ui/stack-background"
@@ -20,6 +24,7 @@ type StackFormInputs = {
     description: string
     pattern: string
     palette: number
+    isPrivate: boolean
 }
 
 type StackCreateModalProps = {
@@ -68,6 +73,7 @@ export const StackCreateModal = ({
                 description: data.description?.length >= 3 ? data.description : null,
                 pattern: data.pattern as Pattern,
                 palette: data.palette,
+                isPrivate: data.isPrivate,
             })
         } else {
             createStack({
@@ -75,6 +81,7 @@ export const StackCreateModal = ({
                 description: data.description?.length >= 3 ? data.description : undefined,
                 pattern: data.pattern as Pattern,
                 palette: data.palette,
+                isPrivate: data.isPrivate,
             })
         }
     }
@@ -201,8 +208,36 @@ export const StackCreateModal = ({
                         </FormItem>
                     )}
                 />
+
+                <Controller
+                    control={control}
+                    name={"isPrivate"}
+                    render={({ field }) => (
+                        <FormItem>
+                            <SimpleCell
+                                children={"Скрыть стопку"}
+                                subtitle={"Видеть cможете только вы"}
+                                Component={"label"}
+                                after={
+                                    <Switch
+                                        checked={!!field.value}
+                                        onChange={() => field.onChange(!field.value)}
+                                    />
+                                }
+                            />
+                        </FormItem>
+                    )}
+                />
             </Group>
-            <Div>
+            <Div className={"flex flex-col gap-2"}>
+                {!watch("isPrivate") && (
+                    <Subhead className={"opacity-60"}>
+                        Нажимая кнопку "Создать", вы соглашаетесь с{" "}
+                        <Link href={"https://dev.vk.com/ru/user-agreement"} target={"_blank"}>
+                            Пользовательским соглашением
+                        </Link>
+                    </Subhead>
+                )}
                 <Button
                     stretched={true}
                     size={"l"}

@@ -43,9 +43,10 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
 
     const endGame = useCallback(() => {
         end()
+        utils.game.getRatingAttemptsLeftToday.invalidate()
         gameModal.close()
         gameResultsModal.open()
-    }, [end, gameModal, gameResultsModal])
+    }, [end, gameModal, gameResultsModal, utils.game.getRatingAttemptsLeftToday])
 
     return (
         <>
