@@ -10,7 +10,7 @@ export const SubscribeToCommunityStory = () => {
                 initial={{ scale: 1 }}
                 animate={{ scale: 1.1 }}
                 transition={{ duration: 30, easings: ["easeInOut"] }}
-                className={"w-full h-full absolute z-10 pointer-events-none touch-none"}
+                className={"w-full h-full absolute pointer-events-none touch-none"}
             >
                 <motion.img
                     animate={controls}
@@ -31,7 +31,7 @@ export const SubscribeToCommunityStory = () => {
             </motion.div>
             <div
                 className={
-                    "flex flex-col font-vk-sans z-20 pointer-events-none touch-none justify-between"
+                    "flex flex-col font-vk-sans pointer-events-none touch-none justify-between h-full"
                 }
             >
                 <div>
