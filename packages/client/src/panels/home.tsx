@@ -119,10 +119,8 @@ export const Home = () => {
                                     </span>
                                 ) : (
                                     <>
-                                        <span>
-                                            {fiveLettersProgress?.correctLetters.length ?? 0}
-                                        </span>
-                                        <span className={"text-secondary"}>/5</span>
+                                        <span>{fiveLettersProgress?.attempts.length ?? 0}</span>
+                                        <span className={"text-secondary"}>/6</span>
                                     </>
                                 )}
                             </Subhead>
