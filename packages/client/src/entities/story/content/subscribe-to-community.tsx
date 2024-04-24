@@ -72,14 +72,20 @@ export const SubscribeToCommunityStory = () => {
                     </Div>
                 </div>
                 <Div className={"mb-safe-area-bottom"}>
-                    <Button
-                        className={"!bg-white !text-[#0077FF]"}
-                        children={"Подписаться"}
-                        stretched
-                        size={"l"}
-                        href={"https://vk.com/learning_app"}
-                        target={"_blank"}
-                    />
+                    <motion.div
+                        initial={{ translateY: "150%" }}
+                        animate={{ translateY: 0 }}
+                        transition={{ delay: 0.5 }}
+                    >
+                        <Button
+                            className={"!bg-white !text-[#0077FF] z-50"}
+                            children={"Подписаться"}
+                            stretched
+                            size={"l"}
+                            href={"https://vk.com/learning_app"}
+                            target={"_blank"}
+                        />
+                    </motion.div>
                 </Div>
             </div>
         </div>
