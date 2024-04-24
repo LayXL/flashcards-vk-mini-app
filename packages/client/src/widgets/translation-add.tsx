@@ -426,7 +426,11 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                                             if (value.includes(" ")) {
                                                 setNewTag("")
 
-                                                if (value.trim().length === 0) return
+                                                if (
+                                                    value.trim().length === 0 ||
+                                                    field.value?.includes(value.trim())
+                                                )
+                                                    return
 
                                                 field.onChange([
                                                     ...(field.value ?? []),
