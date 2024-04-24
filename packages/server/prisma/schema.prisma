@@ -17,6 +17,8 @@ model User {
   avatarUrls Json?
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
 
+  lastActivityAt DateTime @default(now()) @db.Timestamptz(3)
+
   canDeleteOthersComments     Boolean @default(false)
   canModifyOthersTranslations Boolean @default(false)
   canViewReports              Boolean @default(false)

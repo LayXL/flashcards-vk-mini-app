@@ -96,6 +96,16 @@ export const privateProcedure = t.procedure.use(async (opts) => {
         await prisma.user.create({
             data: {
                 vkId: opts.ctx.vkId,
+                lastActivityAt: new Date(),
+            },
+        })
+    } else {
+        await prisma.user.update({
+            where: {
+                vkId: opts.ctx.vkId,
+            },
+            data: {
+                lastActivityAt: new Date(),
             },
         })
     }
