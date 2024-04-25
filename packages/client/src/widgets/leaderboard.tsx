@@ -46,8 +46,6 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
         retry: false,
     })
 
-    console.log(tab === "friends" && !!currentUser)
-
     const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery(
         {
             users: tab === "global" ? undefined : friendsData?.friends ?? [],
