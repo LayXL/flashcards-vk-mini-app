@@ -78,8 +78,13 @@ export const t = initTRPC.context<Context>().create({
     errorFormatter: (opts) => {
         const { shape, error } = opts
 
+        const message =
+            error.message.includes("trpc") || error.message.includes("prisma")
+                ? undefined
+                : error.message
+
         return {
-            ...shape,
+            message,
             data: {
                 code: shape.data.code,
                 httpStatus: shape.data.httpStatus,

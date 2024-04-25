@@ -2,6 +2,14 @@ import { privateProcedure } from "../trpc"
 import { getUserProgress } from "../util/getUserProgress"
 
 export const getUser = privateProcedure.query(async ({ ctx }) => {
+    const data = await ctx.prisma.userProfile.findFirst({
+        where: {
+            user: {
+                id: 1234,
+            },
+        },
+    })
+
     const userProfile = await ctx.prisma.userProfile.findFirst({
         where: {
             user: {
