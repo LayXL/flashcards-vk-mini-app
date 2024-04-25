@@ -20,30 +20,30 @@ export const stories = router({
                         },
                     })) > 0,
             },
-            {
-                id: StoryType.SUBSCRIBE_TO_COMMUNITY,
-                title: "Вступай в сообщество",
-                previewUrl: "stories/duck_preview.png",
-                isViewed:
-                    (await ctx.prisma.userViewedStory.count({
-                        where: {
-                            userId: ctx.userId,
-                            storyId: StoryType.SUBSCRIBE_TO_COMMUNITY,
-                        },
-                    })) > 0,
-            },
-            {
-                id: StoryType.SUBSCRIBE_TO_COMMUNITY,
-                title: "Вступай в сообщество",
-                previewUrl: "stories/duck_preview.png",
-                isViewed:
-                    (await ctx.prisma.userViewedStory.count({
-                        where: {
-                            userId: ctx.userId,
-                            storyId: StoryType.SUBSCRIBE_TO_COMMUNITY,
-                        },
-                    })) > 0,
-            },
+            // {
+            //     id: StoryType.SUBSCRIBE_TO_COMMUNITY,
+            //     title: "Вступай в сообщество",
+            //     previewUrl: "stories/duck_preview.png",
+            //     isViewed:
+            //         (await ctx.prisma.userViewedStory.count({
+            //             where: {
+            //                 userId: ctx.userId,
+            //                 storyId: StoryType.SUBSCRIBE_TO_COMMUNITY,
+            //             },
+            //         })) > 0,
+            // },
+            // {
+            //     id: StoryType.SUBSCRIBE_TO_COMMUNITY,
+            //     title: "Вступай в сообщество",
+            //     previewUrl: "stories/duck_preview.png",
+            //     isViewed:
+            //         (await ctx.prisma.userViewedStory.count({
+            //             where: {
+            //                 userId: ctx.userId,
+            //                 storyId: StoryType.SUBSCRIBE_TO_COMMUNITY,
+            //             },
+            //         })) > 0,
+            // },
         ]
     }),
     viewStory: privateProcedure
