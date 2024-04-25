@@ -1,4 +1,4 @@
-import { ModalPageHeader, PanelHeaderBack, PanelHeaderClose } from "@vkontakte/vkui"
+import { ConfigProvider, ModalPageHeader, PanelHeaderBack, PanelHeaderClose } from "@vkontakte/vkui"
 import { ReactNode } from "react"
 import { ModalBody } from "./modal-body"
 import { ModalWrapper } from "./modal-wrapper"
@@ -44,11 +44,13 @@ export const ModalWindow = ({
                 {title && (
                     <ModalPageHeader
                         before={
-                            buttonType === "back" ? (
-                                <PanelHeaderBack onClick={onClose} />
-                            ) : buttonType === "close" ? (
-                                <PanelHeaderClose onClick={onClose} />
-                            ) : undefined
+                            <ConfigProvider platform={"android"}>
+                                {buttonType === "back" ? (
+                                    <PanelHeaderBack onClick={onClose} />
+                                ) : buttonType === "close" ? (
+                                    <PanelHeaderClose onClick={onClose} />
+                                ) : undefined}
+                            </ConfigProvider>
                         }
                         children={title}
                         after={after}

@@ -1,4 +1,4 @@
-import { Card, CardGrid, Group, Header, Headline, Title } from "@vkontakte/vkui"
+import { Card, CardGrid, Group, Header, Headline, Spacing, Title } from "@vkontakte/vkui"
 import { trpc } from "../shared/api"
 
 export const AdminStats = () => {
@@ -66,6 +66,7 @@ export const AdminStats = () => {
                     </Card>
                 </CardGrid>
             </Group>
+            <Spacing size={72} />
         </>
     )
 }
