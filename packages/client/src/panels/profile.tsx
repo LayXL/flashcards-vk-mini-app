@@ -1,4 +1,8 @@
-import { Icon24HieroglyphCharacterOutline, Icon24ReportOutline } from "@vkontakte/icons"
+import {
+    Icon24HieroglyphCharacterOutline,
+    Icon24ReportOutline,
+    Icon28StatisticsOutline,
+} from "@vkontakte/icons"
 import {
     Button,
     ButtonGroup,
@@ -6,6 +10,7 @@ import {
     Group,
     ModalPageHeader,
     PanelHeader,
+    PanelHeaderButton,
     PanelHeaderClose,
     Spacing,
     Tabs,
@@ -20,6 +25,7 @@ import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
 import { useModalState } from "../shared/hooks/useModalState"
+import { AdminStats } from "../widgets/admin-stats"
 import { ReportsView } from "../widgets/reports-view"
 import { TranslationsTable } from "../widgets/translations-table"
 import { UserStacks } from "../widgets/user-stacks"
@@ -32,10 +38,21 @@ export const Profile = () => {
 
     const translationsTableModal = useModalState()
     const reportsModal = useModalState()
+    const adminStatsModal = useModalState()
 
     return (
         <>
-            <PanelHeader children={"Профиль"} />
+            <PanelHeader
+                children={"Профиль"}
+                before={
+                    data?.canModifyOthersTranslations && (
+                        <PanelHeaderButton
+                            children={<Icon28StatisticsOutline />}
+                            onClick={adminStatsModal.open}
+                        />
+                    )
+                }
+            />
 
             <Group>
                 {!data && <LevelCard />}
@@ -138,6 +155,10 @@ export const Profile = () => {
 
             <ModalWindow {...reportsModal} title={"Жалобы"} fullscreen={true}>
                 <ReportsView />
+            </ModalWindow>
+
+            <ModalWindow {...adminStatsModal} title={"Статистика"} fullscreen={true}>
+                <AdminStats />
             </ModalWindow>
         </>
     )

@@ -1,5 +1,6 @@
 import { DateTime } from "luxon"
 import { privateProcedure, router } from "../trpc"
+import { moderatorProcedure } from "./reports"
 
 export const stats = router({
     getActiveDays: privateProcedure.query(async ({ ctx }) => {
@@ -41,5 +42,30 @@ export const stats = router({
         })
 
         return daysWithPoints
+    }),
+    getAdminStats: moderatorProcedure.query(async ({ ctx }) => {
+        return {
+            users: {
+                total: await ctx.prisma.user.count(),
+                online: await ctx.prisma.user.count({
+                    where: { lastActivityAt: { gt: new Date(Date.now() - 1000 * 60 * 3) } },
+                }),
+                today: await ctx.prisma.user.count({
+                    where: { lastActivityAt: { gt: new Date(Date.now() - 1000 * 60 * 60 * 24) } },
+                }),
+            },
+            translations: {
+                total: await ctx.prisma.translation.count(),
+                today: await ctx.prisma.translation.count({
+                    where: { createdAt: { gt: new Date(Date.now() - 1000 * 60 * 60 * 24) } },
+                }),
+            },
+            stacks: {
+                total: await ctx.prisma.stack.count(),
+                today: await ctx.prisma.stack.count({
+                    where: { createdAt: { gt: new Date(Date.now() - 1000 * 60 * 60 * 24) } },
+                }),
+            },
+        }
     }),
 })
