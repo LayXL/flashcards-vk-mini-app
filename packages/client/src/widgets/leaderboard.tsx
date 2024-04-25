@@ -33,12 +33,20 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
     const { data: currentUserSeason } = trpc.rating.getCurrentSeason.useQuery()
     const { data: currentUser } = trpc.getUser.useQuery()
 
-    const { data: friendsData, refetch: refetchFriends } = useQuery({
+    const {
+        data: friendsData,
+        refetch: refetchFriends,
+        isError,
+        isPending,
+        isSuccess,
+    } = useQuery({
         queryKey: ["friends"],
         queryFn: () => getFriends(parseInt(currentUser?.vkId ?? "0")),
-        enabled: tab === "friends" || !!currentUser,
+        enabled: tab === "friends" && !!currentUser,
         retry: false,
     })
+
+    console.log(tab === "friends" && !!currentUser)
 
     const { data: leaderboardData } = trpc.rating.getLeaderboard.useQuery(
         {
@@ -73,7 +81,7 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
             )}
 
             <div className={"h-full overflow-scroll"}>
-                {(leaderboardData?.length ?? 10) <= 1 && tab === "friends" && (
+                {(leaderboardData?.length ?? 10) <= 1 && tab === "friends" && isSuccess && (
                     <Placeholder
                         className={"h-2/3"}
                         icon={<Icon56UsersOutline />}
@@ -81,6 +89,25 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                         children={"Пока нет друзей, которые играли в рейтинг"}
                     />
                 )}
+
+                {(friendsData?.friends.length === 0 || isError || isPending) &&
+                    tab === "friends" && (
+                        <Placeholder
+                            icon={<Icon56UsersOutline />}
+                            header={"Мы не знаем кто ваши друзья"}
+                            children={
+                                "Пожалуйста, разрешите доступ к друзьям, чтобы посмотреть таблицу лидеров среди друзей"
+                            }
+                            action={
+                                <Button
+                                    loading={isPending}
+                                    onClick={() => refetchFriends()}
+                                    children={"Разрешить"}
+                                    size={"l"}
+                                />
+                            }
+                        />
+                    )}
 
                 {(leaderboardData?.length ?? 0) >= 2 && (
                     <div className={"flex gap-2 justify-around items-center py-3"}>
@@ -119,7 +146,7 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                 {!minimized && <Spacing size={128} />}
             </div>
 
-            {!minimized && currentUser && currentUserSeason?.user.place && (
+            {!minimized && currentUser && currentUserSeason?.user.place && tab === "global" && (
                 <FloatingPortal>
                     <div
                         className={cn(
@@ -140,16 +167,6 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                         </div>
                     </div>
                 </FloatingPortal>
-            )}
-
-            {friendsData?.friends.length === 0 && tab === "friends" && (
-                <Placeholder
-                    header={"Мы не знаем кто ваши друзья"}
-                    children={
-                        "Пожалуйста, разрешите доступ к друзьям, чтобы посмотреть таблицу лидеров среди друзей"
-                    }
-                    action={<Button onClick={refetchFriends} children={"Разрешить"} size={"l"} />}
-                />
             )}
         </div>
     )
