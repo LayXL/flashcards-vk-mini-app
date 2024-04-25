@@ -74,7 +74,19 @@ export const createContext = async ({ req, res }: trpcExpress.CreateExpressConte
 
 export type Context = inferAsyncReturnType<typeof createContext>
 
-export const t = initTRPC.context<Context>().create()
+export const t = initTRPC.context<Context>().create({
+    errorFormatter: (opts) => {
+        const { shape, error } = opts
+
+        return {
+            ...shape,
+            data: {
+                code: shape.data.code,
+                httpStatus: shape.data.httpStatus,
+            },
+        }
+    },
+})
 
 export const router = t.router
 
