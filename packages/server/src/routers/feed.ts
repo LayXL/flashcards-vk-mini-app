@@ -59,6 +59,9 @@ export const feed = router({
                             },
                         },
                     },
+                    authorId: {
+                        not: ctx.userId,
+                    },
                 },
                 include: {
                     author: true,
@@ -87,6 +90,9 @@ export const feed = router({
                 where: {
                     isPrivate: false,
                     isHiddenInFeed: false,
+                    authorId: {
+                        not: ctx.userId,
+                    },
                 },
                 include: {
                     author: true,
