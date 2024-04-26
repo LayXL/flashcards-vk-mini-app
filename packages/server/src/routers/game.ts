@@ -425,6 +425,7 @@ export const game = router({
                 data: {
                     status: isCorrect ? "correct" : "incorrect",
                     answeredAt: new Date(),
+                    answer: isCorrect ? undefined : input.answer,
                 },
                 select: {
                     status: true,

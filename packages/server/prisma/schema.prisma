@@ -247,6 +247,7 @@ model TranslationInGameSession {
   order         Int
   status        TranslationInGameSessionStatus @default(unanswered)
   answeredAt    DateTime?
+  answer        String?
 
   gameSession GameSession @relation(fields: [gameSessionId], references: [id])
   translation Translation @relation(fields: [translationId], references: [id])

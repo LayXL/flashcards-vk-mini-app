@@ -234,6 +234,9 @@ export const stacks = router({
                                   vkId: ctx.vkId,
                               },
                           },
+                orderBy: {
+                    createdAt: "desc",
+                },
                 take: input.limit + 1,
                 cursor: input.cursor
                     ? {
