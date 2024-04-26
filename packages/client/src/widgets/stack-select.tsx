@@ -17,6 +17,8 @@ import { RouterInput, trpc } from "../shared/api"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
+import { vkApi } from "../../../server/src/vkApi"
+import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 
 type StackSelectProps = {
     title?: string
@@ -50,6 +52,8 @@ export const StackSelect = ({
         )
 
     const inifiniteData = useInfiniteList(data)
+
+    const routeNavigator = useRouteNavigator()
 
     const createNewStack = useModalState()
 
@@ -95,19 +99,29 @@ export const StackSelect = ({
                     <Placeholder
                         stretched
                         icon={<Icon32Cards2Outline height={56} width={56} />}
-                        header={"Здесь пусто!"}
-                        children={"Нет стопок для выбора"}
+                        header={"Нет стопок для выбора"}
+                        children={"Вы можете найти их в ленте"}
                         action={
-                            canCreateNewStack && (
+                            <ButtonGroup mode={"vertical"} align={"center"}>
                                 <Button
                                     stretched={true}
                                     size={"l"}
-                                    mode={"secondary"}
-                                    before={<Icon24Add />}
-                                    children={"Создать стопку"}
-                                    onClick={createNewStack.open}
+                                    children={"Найти стопки"}
+                                    onClick={() => {
+                                        routeNavigator.push("/new")
+                                    }}
                                 />
-                            )
+                                {canCreateNewStack && (
+                                    <Button
+                                        stretched={true}
+                                        size={"l"}
+                                        mode={"secondary"}
+                                        before={<Icon24Add />}
+                                        children={"Создать стопку"}
+                                        onClick={createNewStack.open}
+                                    />
+                                )}
+                            </ButtonGroup>
                         }
                     />
                 ) : (
