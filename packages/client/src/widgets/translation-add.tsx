@@ -327,7 +327,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                     </>
                 )}
 
-                <Spacing size={64} />
+                <Spacing size={128} />
 
                 <FloatingPortal>
                     <div className={"fixed pb-safe-area-bottom w-full bottom-0"}>
