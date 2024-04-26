@@ -10,7 +10,6 @@ import {
     Group,
     ModalPageHeader,
     PanelHeader,
-    PanelHeaderButton,
     PanelHeaderClose,
     Spacing,
     Tabs,
@@ -42,17 +41,7 @@ export const Profile = () => {
 
     return (
         <>
-            <PanelHeader
-                children={"Профиль"}
-                before={
-                    data?.canModifyOthersTranslations && (
-                        <PanelHeaderButton
-                            children={<Icon28StatisticsOutline />}
-                            onClick={adminStatsModal.open}
-                        />
-                    )
-                }
-            />
+            <PanelHeader children={"Профиль"} />
 
             <Group>
                 {!data && <LevelCard />}
@@ -86,6 +75,15 @@ export const Profile = () => {
                                     stretched
                                     size={"l"}
                                     onClick={reportsModal.open}
+                                />
+                            )}
+                            {data.canModifyOthersTranslations && (
+                                <Button
+                                    before={<Icon28StatisticsOutline />}
+                                    mode={"secondary"}
+                                    stretched
+                                    size={"l"}
+                                    onClick={adminStatsModal.open}
                                 />
                             )}
                         </ButtonGroup>
