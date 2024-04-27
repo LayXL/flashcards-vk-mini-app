@@ -6,7 +6,8 @@ import {
     useParams,
     useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
-import { Epic, ModalRoot, Panel, Root, SplitCol, SplitLayout, View } from "@vkontakte/vkui"
+import { useLocation } from "@vkontakte/vk-mini-apps-router/dist/hooks/hooks"
+import { Epic, Panel, Root, SplitCol, SplitLayout, View } from "@vkontakte/vkui"
 import { useEffect } from "react"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { Game } from "../panels/game"
@@ -57,6 +58,11 @@ export const router = createHashRouter([
         view: "main",
     },
     {
+        path: "/fiveLetters",
+        panel: "fiveLetters",
+        view: "main",
+    },
+    {
         path: "*",
         panel: "home",
         view: "main",
@@ -70,14 +76,9 @@ export const Router = () => {
         refetchOnReconnect: false,
     })
 
-    const { view, modal, panel } = useActiveVkuiLocation()
+    const { view, panel } = useActiveVkuiLocation()
     const routeNavigator = useRouteNavigator()
-
-    const modals = (
-        <ModalRoot activeModal={modal} onClose={() => routeNavigator.hideModal()}>
-            <></>
-        </ModalRoot>
-    )
+    const location = useLocation()
 
     const {
         data: onboardingCompleted,
@@ -103,7 +104,7 @@ export const Router = () => {
 
     useEffect(() => {
         if (isSuccess && !onboardingCompleted) {
-            routeNavigator.push("/play")
+            if (location.pathname === "/") routeNavigator.push("/play")
 
             bridge
                 .send("VKWebAppShowSlidesSheet", {
@@ -145,13 +146,14 @@ export const Router = () => {
     }, [completeOnboarding, isSuccess, onboardingCompleted, routeNavigator])
 
     return (
-        <SplitLayout modal={modals}>
+        <SplitLayout>
             <SplitCol>
                 <Epic activeStory={"root"}>
                     <Root nav={"root"} activeView={view!}>
                         <View nav={"main"} activePanel={panel!}>
                             <Panel nav={"home"} children={<Home />} />
                             <Panel nav={"stack"} children={<ViewStack />} />
+                            <Panel nav={"fiveLetters"} children={<Home openFiveLetters />} />
                         </View>
                         <View nav={"stacks"} activePanel={panel!}>
                             <Panel nav={"stacks"} children={<Stacks />} />

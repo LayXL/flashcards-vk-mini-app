@@ -29,14 +29,14 @@ import { PlayRankedGame } from "../widgets/play-ranked-game"
 import { Stats } from "../widgets/stats"
 import { StoriesFeed } from "../widgets/stories-feed"
 
-export const Home = () => {
+export const Home = ({ openFiveLetters }: { openFiveLetters?: boolean }) => {
     const { data: fiveLettersProgress } = trpc.fiveLetters.getTodayAttempts.useQuery()
     const { data: ratingAttemptsLeft } = trpc.game.getRatingAttemptsLeftToday.useQuery()
     const { data: user } = trpc.getUser.useQuery()
 
     const latestAttempt = fiveLettersProgress?.attempts[fiveLettersProgress.attempts.length - 1]
 
-    const fiveLettersModal = useModalState()
+    const fiveLettersModal = useModalState(openFiveLetters)
     const playRatingModal = useModalState()
 
     const windowSize = useWindowSize()
