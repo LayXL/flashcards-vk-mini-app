@@ -118,7 +118,7 @@ export const Game = () => {
                     </Group>
                     {(recentlyStacks?.length ?? 0) > 0 && (
                         <Group>
-                            <Header children={"Недавние стопки"} />
+                            <Header children={"Недавние коллекции"} />
                             <Div className={"gap-3 grid grid-cols-cards"}>
                                 {recentlyStacks?.map((stack) => (
                                     <LargeStackCard

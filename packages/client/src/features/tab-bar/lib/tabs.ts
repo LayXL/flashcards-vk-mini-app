@@ -12,7 +12,7 @@ export const tabs = [
     //     url: "/",
     // },
     // {
-    //     label: "Стопки",
+    //     label: "Коллекции",
     //     icon: Icon28Cards2Outline,
     //     view: "stacks",
     //     url: "/stacks",

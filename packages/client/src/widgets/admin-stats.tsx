@@ -50,7 +50,7 @@ export const AdminStats = () => {
                 </CardGrid>
             </Group>
             <Group>
-                <Header children={"Стопки"} />
+                <Header children={"Коллекции"} />
                 <CardGrid size={"l"}>
                     <Card>
                         <div className={"p-4 flex flex-col gap-1"}>

@@ -320,7 +320,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                         <Header children={"Сохранить"} mode={"secondary"} />
                         <SimpleCell
                             expandable={"always"}
-                            children={"Стопка"}
+                            children={"Коллекция"}
                             onClick={selectStackModal.open}
                             indicator={stackData?.name}
                         />

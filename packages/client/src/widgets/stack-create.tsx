@@ -90,7 +90,7 @@ export const StackCreateModal = ({
         <>
             <ModalPageHeader
                 before={<PanelHeaderClose onClick={onClose} />}
-                children={id ? "Редактировать стопку" : "Создать стопку"}
+                children={id ? "Редактировать коллекцию" : "Создать коллекцию"}
             />
 
             <Group>
@@ -183,7 +183,7 @@ export const StackCreateModal = ({
                     }}
                     render={({ field, fieldState }) => (
                         <FormItem
-                            top={"Название стопки"}
+                            top={"Название коллекции"}
                             status={fieldState.error ? "error" : "default"}
                         >
                             <Input value={field.value} onChange={field.onChange} />
@@ -201,7 +201,7 @@ export const StackCreateModal = ({
                     }}
                     render={({ field, fieldState }) => (
                         <FormItem
-                            top={"Описание стопки"}
+                            top={"Описание коллекции"}
                             status={fieldState.error ? "error" : "default"}
                         >
                             <Input value={field.value} onChange={field.onChange} />
@@ -215,8 +215,8 @@ export const StackCreateModal = ({
                     render={({ field }) => (
                         <FormItem>
                             <SimpleCell
-                                children={"Скрыть стопку"}
-                                subtitle={"Видеть cможете только вы"}
+                                children={"Скрыть коллекцию"}
+                                subtitle={"Видеть сможете только вы"}
                                 Component={"label"}
                                 after={
                                     <Switch

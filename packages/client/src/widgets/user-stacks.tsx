@@ -114,13 +114,13 @@ export const UserStacks = () => {
                 <Placeholder
                     icon={<Icon32Cards2Outline width={56} height={56} />}
                     header={"У вас нет стопок"}
-                    children={"Создайте свою первую стопку"}
+                    children={"Создайте свою первую коллекцию"}
                     action={
                         <ButtonGroup mode={"vertical"} align={"center"}>
                             <Button
                                 size={"l"}
                                 mode={"secondary"}
-                                children={"Создать стопку"}
+                                children={"Создать коллекцию"}
                                 onClick={createStackModal.open}
                             />
                             <Button
@@ -150,7 +150,7 @@ export const UserStacks = () => {
                 <Snackbar
                     onClose={stackCreatedSnackbar.close}
                     before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
-                    children={"Стопка успешно создана"}
+                    children={"Коллекция успешно создана"}
                     after={
                         <Link
                             children={"Перейти"}
