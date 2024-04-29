@@ -113,7 +113,7 @@ export const UserStacks = () => {
             {isSuccess && infiniteData?.length === 0 && (
                 <Placeholder
                     icon={<Icon32Cards2Outline width={56} height={56} />}
-                    header={"У вас нет стопок"}
+                    header={"У вас нет коллекций"}
                     children={"Создайте свою первую коллекцию"}
                     action={
                         <ButtonGroup mode={"vertical"} align={"center"}>

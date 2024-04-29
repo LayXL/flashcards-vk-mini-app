@@ -55,13 +55,13 @@ export const AdminStats = () => {
                     <Card>
                         <div className={"p-4 flex flex-col gap-1"}>
                             <Title children={data?.stacks.today} />
-                            <Headline className={"opacity-60"} children={"Стопок за сегодня"} />
+                            <Headline className={"opacity-60"} children={"Коллекций за сегодня"} />
                         </div>
                     </Card>
                     <Card>
                         <div className={"p-4 flex flex-col gap-1"}>
                             <Title children={data?.stacks.total} />
-                            <Headline className={"opacity-60"} children={"Всего стопок"} />
+                            <Headline className={"opacity-60"} children={"Всего коллекций"} />
                         </div>
                     </Card>
                 </CardGrid>
