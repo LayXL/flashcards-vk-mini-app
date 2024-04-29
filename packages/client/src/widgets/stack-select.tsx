@@ -98,7 +98,7 @@ export const StackSelect = ({
                     <Placeholder
                         stretched
                         icon={<Icon32Cards2Outline height={56} width={56} />}
-                        header={"Нет стопок для выбора"}
+                        header={"Нет коллекций для выбора"}
                         children={"Вы можете найти их в ленте"}
                         action={
                             <ButtonGroup mode={"vertical"} align={"center"}>
