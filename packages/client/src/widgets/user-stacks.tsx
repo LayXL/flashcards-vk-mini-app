@@ -135,7 +135,7 @@ export const UserStacks = () => {
             )}
 
             <ModalWrapper isOpened={createStackModal.isOpened} onClose={createStackModal.close}>
-                <ModalBody>
+                <ModalBody disableDragToClose>
                     <StackCreateModal
                         onClose={createStackModal.close}
                         onSuccess={(id) => {
