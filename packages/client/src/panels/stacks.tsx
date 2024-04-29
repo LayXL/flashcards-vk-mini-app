@@ -47,7 +47,7 @@ export const Stacks = () => {
 
     return (
         <>
-            <PanelHeader children={"Стопки"} />
+            <PanelHeader children={"Коллекции"} />
 
             <SearchBar />
 
@@ -92,9 +92,9 @@ export const Stacks = () => {
             {data && (
                 <Placeholder
                     icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
-                    header={"Не нашли подходящую стопку?"}
+                    header={"Не нашли подходящую коллекцию?"}
                     children={
-                        "Вы можете найти стопки от других пользователей или же создать собственные"
+                        "Вы можете найти коллекции от других пользователей или же создать собственные"
                     }
                     action={
                         <ButtonGroup mode={"vertical"} align={"center"}>
@@ -106,7 +106,7 @@ export const Stacks = () => {
                             <Button
                                 size={"l"}
                                 mode={"tertiary"}
-                                children={"Создать свою стопку"}
+                                children={"Создать свою коллекцию"}
                                 before={<Icon24AddOutline />}
                                 onClick={() => routeNavigator.push("/profile")}
                             />

@@ -1,4 +1,5 @@
 import { Icon24Add, Icon28LikeOutline, Icon32Cards2Outline } from "@vkontakte/icons"
+import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 import {
     Button,
     ButtonGroup,
@@ -17,8 +18,6 @@ import { RouterInput, trpc } from "../shared/api"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useModalState } from "../shared/hooks/useModalState"
 import { StackCreateModal } from "./stack-create"
-import { vkApi } from "../../../server/src/vkApi"
-import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 
 type StackSelectProps = {
     title?: string
@@ -61,7 +60,7 @@ export const StackSelect = ({
         <>
             <ModalPageHeader
                 before={<PanelHeaderBack onClick={onClose} />}
-                children={title || "Выберите стопку"}
+                children={title || "Выберите коллекцию"}
             />
 
             {(clearable || canCreateNewStack || onFavorite) && (
@@ -106,7 +105,7 @@ export const StackSelect = ({
                                 <Button
                                     stretched={true}
                                     size={"l"}
-                                    children={"Найти стопки"}
+                                    children={"Найти коллекции"}
                                     onClick={() => {
                                         routeNavigator.push("/new")
                                     }}
@@ -117,7 +116,7 @@ export const StackSelect = ({
                                         size={"l"}
                                         mode={"secondary"}
                                         before={<Icon24Add />}
-                                        children={"Создать стопку"}
+                                        children={"Создать коллекцию"}
                                         onClick={createNewStack.open}
                                     />
                                 )}

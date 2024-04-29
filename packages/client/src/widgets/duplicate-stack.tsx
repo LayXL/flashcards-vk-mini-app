@@ -20,7 +20,7 @@ export const DuplicateStack = ({ stackId, onSuccess }: DuplicateStackProps) => {
 
     return (
         <>
-            <FormItem top={"Название стопки"} status={isError ? "error" : "default"}>
+            <FormItem top={"Название коллекции"} status={isError ? "error" : "default"}>
                 <Input
                     placeholder={data?.name}
                     value={name}

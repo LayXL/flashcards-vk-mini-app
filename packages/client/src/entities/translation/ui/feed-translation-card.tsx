@@ -80,7 +80,7 @@ export const FeedTranslationCard = ({
                                 }}
                                 mode={"destructive"}
                                 before={<Icon28Delete />}
-                                children={"Удалить из стопки"}
+                                children={"Удалить из коллекции"}
                             />
                         )}
                     </ActionSheet>

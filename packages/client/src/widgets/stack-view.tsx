@@ -241,12 +241,12 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                                     {data ? (
                                         exploringStackProgress > 0 ? (
                                             <>
-                                                Стопка изучена на{" "}
+                                                Коллекция изучена на{" "}
                                                 <b>{Math.round(exploringStackProgress)}%</b>
                                             </>
                                         ) : (
                                             <>
-                                                Стопка еще не изучена.{" "}
+                                                Коллекция еще не изучена.{" "}
                                                 {data?.isVerified
                                                     ? "За неё начисляется опыт"
                                                     : "За неё не начисляется опыт"}
@@ -267,7 +267,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                         <Placeholder
                             icon={<Icon28HieroglyphCharacterOutline width={56} height={56} />}
                             header={"Нет переводов"}
-                            children={"В этой стопке пока нет переводов"}
+                            children={"В этой коллекции пока нет переводов"}
                             action={
                                 data.isEditable ? (
                                     <Button
@@ -414,7 +414,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                 </ModalBody>
             </ModalWrapper>
 
-            <ModalWindow {...duplicateStackModal} title={"Дублирование стопки"}>
+            <ModalWindow {...duplicateStackModal} title={"Дублирование коллекции"}>
                 <DuplicateStack stackId={id} onSuccess={duplicateStackModal.close} />
             </ModalWindow>
 
@@ -429,13 +429,13 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                         {data?.isEditable && (
                             <ActionSheetItem
                                 before={<Icon28EditOutline />}
-                                children={"Редактировать стопку"}
+                                children={"Редактировать коллекцию"}
                                 onClick={editStackModal.open}
                             />
                         )}
                         <ActionSheetItem
                             before={<Icon28ShareOutline />}
-                            children={"Поделиться стопкой"}
+                            children={"Поделиться коллекцией"}
                             onClick={() => {
                                 bridge.send("VKWebAppShare", {
                                     link: `https://vk.com/app51843841#/stack/${id}`,
@@ -445,21 +445,21 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                         {currentUser?.canViewReports && !data?.isHiddenInFeed && (
                             <ActionSheetItem
                                 before={<Icon28HideOutline />}
-                                children={"Скрыть стопку из ленты"}
+                                children={"Скрыть коллекцию из ленты"}
                                 onClick={() => hide({ id })}
                             />
                         )}
                         {currentUser?.canViewReports && data?.isHiddenInFeed && (
                             <ActionSheetItem
                                 before={<Icon28HideOutline />}
-                                children={"Показать стопку из ленты"}
+                                children={"Показать коллекцию в ленте"}
                                 onClick={() => show({ id })}
                             />
                         )}
                         {data?.isEditable && (
                             <ActionSheetItem
                                 before={<Icon28CopyOutline />}
-                                children={"Дублировать стопку"}
+                                children={"Дублировать коллекцию"}
                                 onClick={duplicateStackModal.open}
                             />
                         )}
@@ -467,7 +467,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                             <ActionSheetItem
                                 before={<Icon28DeleteOutline />}
                                 mode={"destructive"}
-                                children={"Удалить стопку"}
+                                children={"Удалить коллекцию"}
                                 onClick={deleteStackModal.open}
                             />
                         )}
@@ -475,7 +475,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                 </FloatingPortal>
             )}
 
-            <ModalWindow {...duplicateStackModal} title={"Дублирование стопки"}>
+            <ModalWindow {...duplicateStackModal} title={"Дублирование коллекции"}>
                 <DuplicateStack
                     stackId={id}
                     onSuccess={() => {
@@ -505,7 +505,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                         actionsLayout={"horizontal"}
                         onClose={deleteStackModal.close}
                         header={"Подтвердите действие"}
-                        text={"Вы уверены, что хотите удалить стопку?"}
+                        text={"Вы уверены, что хотите удалить коллекцию?"}
                     />
                 </FloatingPortal>
             )}
@@ -534,7 +534,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                 <Snackbar
                     onClose={stackDuplicatedSnackbar.close}
                     before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
-                    children={"Стопка продублирована в профиль"}
+                    children={"Коллекция продублирована в профиль"}
                 />
             )}
 
@@ -542,7 +542,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                 <Snackbar
                     onClose={translationAddedToStackSnackbar.close}
                     before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
-                    children={"Перевод добавлен в стопку"}
+                    children={"Перевод добавлен в коллекцию"}
                 />
             )}
         </>

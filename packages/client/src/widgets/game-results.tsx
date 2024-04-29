@@ -103,7 +103,7 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
 
                         <Title level={"1"} weight={"1"}>
                             <motion.span>
-                                {(data.type === "ranked" ? "Игра завершена" : "Стопка пройдена!")
+                                {(data.type === "ranked" ? "Игра завершена" : "Коллекция пройдена!")
                                     .split("")
                                     .map((char, i) => (
                                         <motion.span

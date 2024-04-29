@@ -144,11 +144,11 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
             <Group>
                 <Header
                     mode={"secondary"}
-                    children={"Стопка для игры"}
+                    children={"Коллекция для игры"}
                     subtitle={"Возьмём оттуда карточки переводов для игры"}
                 />
                 <SimpleCell
-                    children={"Выбрать стопку"}
+                    children={"Выбрать коллекцию"}
                     onClick={gameStackSelectModal.open}
                     expandable={"always"}
                     indicator={stacksData?.name}
@@ -265,7 +265,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                 />
                 {gameSettings.stacks.length === 0 && (
                     <div
-                        children={"Сначала выберите стопку"}
+                        children={"Сначала выберите коллекцию"}
                         className={"pt-3 text-secondary text-sm select-none"}
                     />
                 )}

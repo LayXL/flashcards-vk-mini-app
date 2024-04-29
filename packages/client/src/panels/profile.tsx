@@ -121,7 +121,7 @@ export const Profile = () => {
                 <TabsItem
                     onClick={() => setTab("stacks")}
                     selected={tab === "stacks"}
-                    children={"Стопки"}
+                    children={"Коллекции"}
                 />
                 <TabsItem
                     onClick={() => setTab("translations")}
