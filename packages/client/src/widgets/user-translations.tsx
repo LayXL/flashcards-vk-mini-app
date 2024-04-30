@@ -107,7 +107,7 @@ export const UserTranslations = () => {
                             <Button
                                 size={"l"}
                                 mode={"secondary"}
-                                children={"Создать коллекцию"}
+                                children={"Создать стопку"}
                                 onClick={addTranslationModal.open}
                             />
                             <Button
