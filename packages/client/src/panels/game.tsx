@@ -10,7 +10,7 @@ export const Game = () => {
 
     return (
         <>
-            <PanelHeader children={"Режимы"} />
+            <PanelHeader children={"Игровые режимы"} />
 
             <SelectGame />
 
