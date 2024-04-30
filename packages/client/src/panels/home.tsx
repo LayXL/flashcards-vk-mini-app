@@ -229,7 +229,9 @@ export const Home = ({ openFiveLetters }: { openFiveLetters?: boolean }) => {
         <>
             <PanelHeader children={"Лёрнинг"} />
             <SearchBar />
-            <StoriesFeed />
+            <Group>
+                <StoriesFeed />
+            </Group>
             <Group>
                 <Header children={"Ударный режим"} />
                 <DailyStreak />
