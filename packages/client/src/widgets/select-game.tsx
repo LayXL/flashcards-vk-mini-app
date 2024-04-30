@@ -44,7 +44,11 @@ export const SelectGame = () => {
                     <GameModeCard
                         title={"Обычная игра"}
                         caption={"С любой стопкой"}
-                        cover={<div className={"bg-accent rounded-xl h-36 w-full"}></div>}
+                        cover={
+                            <div className={"bg-learning-red rounded-xl h-36 w-full"}>
+                                <p className={"font-['Impact'] text-2xl p-3"}>самая обычная</p>
+                            </div>
+                        }
                         onClick={playDefaultGameModal.open}
                     />
                     <div className={"flex gap-3 [&>*]:flex-1"}>
@@ -63,13 +67,13 @@ export const SelectGame = () => {
                                     </span>
                                 )
                             }
-                            cover={<div className={"bg-accent rounded-xl h-36 w-full"}></div>}
+                            cover={<div className={"bg-learning-red rounded-xl h-36 w-full"}></div>}
                             onClick={playRatingGameModal.open}
                         />
                         <GameModeCard
                             title={"Пять букв"}
                             // caption={"6"}
-                            cover={<div className={"bg-accent rounded-xl h-36 w-full"}></div>}
+                            cover={<div className={"bg-learning-red rounded-xl h-36 w-full"}></div>}
                             onClick={playFiveLettersGameModal.open}
                         />
                     </div>
