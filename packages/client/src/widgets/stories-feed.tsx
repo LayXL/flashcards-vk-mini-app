@@ -1,4 +1,4 @@
-import { CardScroll, Div, Group } from "@vkontakte/vkui"
+import { CardScroll, Div } from "@vkontakte/vkui"
 import { FC, createElement } from "react"
 import { SubscribeToCommunityStory } from "../entities/story/content/subscribe-to-community"
 import { StoryCard } from "../entities/story/ui/story-card"
@@ -13,22 +13,20 @@ export const StoriesFeed = () => {
 
     return (
         (stories?.length ?? 0) > 0 && (
-            <Group>
-                <CardScroll>
-                    <Div className={"px-0 flex gap-3"}>
-                        {stories?.map((story, i) => (
-                            <StoryCard
-                                id={story.id}
-                                isViewed={story.isViewed}
-                                title={story.title}
-                                key={i}
-                                content={createElement(content[story.id])}
-                                previewUrl={story.previewUrl}
-                            />
-                        ))}
-                    </Div>
-                </CardScroll>
-            </Group>
+            <CardScroll>
+                <Div className={"px-0 flex gap-3"}>
+                    {stories?.map((story, i) => (
+                        <StoryCard
+                            id={story.id}
+                            isViewed={story.isViewed}
+                            title={story.title}
+                            key={i}
+                            content={createElement(content[story.id])}
+                            previewUrl={story.previewUrl}
+                        />
+                    ))}
+                </Div>
+            </CardScroll>
         )
     )
 }

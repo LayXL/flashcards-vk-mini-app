@@ -72,15 +72,17 @@ export const ModalBody = ({
                               const deltaY = e.touches[0].clientY - startY
 
                               setDelta(deltaY > 0 ? deltaY : 0)
-
-                              if (deltaY > 128) modal?.onClose()
                           }
                         : undefined
                 }
                 onTouchEnd={
-                    !disableDragToClose && depth === 1 && delta < 128
+                    !disableDragToClose && depth === 1
                         ? () => {
-                              setDelta(0)
+                              if (delta < 128) {
+                                  setDelta(0)
+                              } else {
+                                  modal?.onClose()
+                              }
                           }
                         : undefined
                 }

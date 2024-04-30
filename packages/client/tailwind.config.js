@@ -11,6 +11,7 @@ export default {
             spacing: {
                 "safe-area-top": "env(safe-area-inset-top)",
                 "safe-area-bottom": "env(safe-area-inset-bottom)",
+                "tabbar-height": "var(--vkui_internal--tabbar_height)",
             },
             height: {
                 lh: "1lh",
@@ -45,6 +46,15 @@ export default {
                     accentThemed: vkTheme.colorBackgroundAccentThemed.normal.value,
                     content: vkTheme.colorBackgroundContent.normal.value,
                     modal: vkTheme.colorBackgroundModal.normal.value,
+                },
+                typography: {
+                    primary: vkTheme.colorTextPrimary.normal.value,
+                    secondary: vkTheme.colorTextSecondary.normal.value,
+                    subhead: vkTheme.colorTextSubhead.normal.value,
+                    tertiary: vkTheme.colorTextTertiary.normal.value,
+                    accent: vkTheme.colorTextAccent.normal.value,
+                    accentThemed: vkTheme.colorTextAccentThemed.normal.value,
+                    muted: vkTheme.colorTextMuted.normal.value,
                 },
             },
             borderColor: {
