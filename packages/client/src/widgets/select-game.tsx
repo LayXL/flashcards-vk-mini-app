@@ -46,37 +46,40 @@ export const SelectGame = () => {
                     }
                 >
                     <GameModeCard
+                        title={"Изучение"}
+                        cover={<div className={"bg-learning-red rounded-xl aspect-square"}></div>}
+                        onClick={playOfficialStacksModal.open}
+                    />
+                    <GameModeCard
+                        className={"col-span-2"}
+                        title={"Рейтинговая игра"}
+                        caption={
+                            ratingAttemptsLeft === 0 && !hasAdditionalAttempt ? (
+                                <span className={"flex gap-1 items-center"}>
+                                    1
+                                    <Icon16Like className={"text-dynamic-yellow"} />
+                                </span>
+                            ) : (
+                                <span className={"flex gap-1 items-center"}>
+                                    {ratingAttemptsLeft}
+                                    <Icon16Like className={"text-learning-red"} />
+                                </span>
+                            )
+                        }
+                        cover={<div className={"bg-learning-red rounded-xl h-full w-full"}></div>}
+                        onClick={playRatingGameModal.open}
+                    />
+                    <GameModeCard
+                        className={"col-span-2"}
+                        title={"Пять букв"}
+                        cover={<div className={"bg-learning-red rounded-xl h-full w-full"}></div>}
+                        onClick={playFiveLettersGameModal.open}
+                    />
+                    <GameModeCard
                         title={"Обычная игра"}
-                        caption={"С любой стопкой"}
-                        cover={<div className={"bg-accent rounded-xl h-36 w-full"}></div>}
+                        cover={<div className={"bg-learning-red rounded-xl aspect-square"}></div>}
                         onClick={playDefaultGameModal.open}
                     />
-                    <div className={"flex gap-3 [&>*]:flex-1"}>
-                        <GameModeCard
-                            title={"Рейтинговая"}
-                            caption={
-                                ratingAttemptsLeft === 0 && !hasAdditionalAttempt ? (
-                                    <span className={"flex gap-1 items-center"}>
-                                        1
-                                        <Icon16Like className={"text-dynamic-yellow"} />
-                                    </span>
-                                ) : (
-                                    <span className={"flex gap-1 items-center"}>
-                                        {ratingAttemptsLeft}
-                                        <Icon16Like className={"text-learning-red"} />
-                                    </span>
-                                )
-                            }
-                            cover={<div className={"bg-accent rounded-xl h-36 w-full"}></div>}
-                            onClick={playRatingGameModal.open}
-                        />
-                        <GameModeCard
-                            title={"Пять букв"}
-                            // caption={"6"}
-                            cover={<div className={"bg-accent rounded-xl h-36 w-full"}></div>}
-                            onClick={playFiveLettersGameModal.open}
-                        />
-                    </div>
                 </Div>
             </Group>
 
