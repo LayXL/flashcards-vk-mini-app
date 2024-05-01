@@ -1,10 +1,4 @@
-import {
-    Caption,
-    ConfigProvider,
-    ModalPageHeader,
-    PanelHeaderClose,
-    Subhead,
-} from "@vkontakte/vkui"
+import { Caption, ConfigProvider, ModalPageHeader, PanelHeaderClose } from "@vkontakte/vkui"
 import { ReactNode } from "react"
 import { ModalBody } from "../../../features/modal/ui/modal-body"
 import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
