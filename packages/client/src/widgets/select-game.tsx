@@ -7,6 +7,7 @@ import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
+import { Categories } from "./categories"
 import { FiveLetters } from "./five-letters"
 import { GetAdditionalAttempt } from "./get-additional-attempt"
 import { Leaderboard } from "./leaderboard"
@@ -17,6 +18,7 @@ import { StoriesFeed } from "./stories-feed"
 export const SelectGame = () => {
     const utils = trpc.useUtils()
 
+    const playOfficialStacksModal = useModalState()
     const playDefaultGameModal = useModalState()
     const playRatingGameModal = useModalState()
     const playFiveLettersGameModal = useModalState()
@@ -33,14 +35,16 @@ export const SelectGame = () => {
         },
     })
 
-    const type = "ranked"
-
     return (
         <>
             <Group>
                 <StoriesFeed />
 
-                <Div className={"max-w-[380px] mx-auto flex flex-col gap-8"}>
+                <Div
+                    className={
+                        "max-w-[390px] md:grid-cols-6 md:max-w-[940px] mx-auto grid grid-cols-3 gap-x-3 gap-y-6"
+                    }
+                >
                     <GameModeCard
                         title={"Обычная игра"}
                         caption={"С любой стопкой"}
@@ -92,6 +96,10 @@ export const SelectGame = () => {
             </Group>
 
             <div className={"h-tabbar-height"} />
+
+            <ModalWindow {...playOfficialStacksModal} fullscreen title={"Изучение"}>
+                <Categories />
+            </ModalWindow>
 
             <ModalWindow {...playDefaultGameModal} fullscreen>
                 <PlayGame onClose={playDefaultGameModal.close} />

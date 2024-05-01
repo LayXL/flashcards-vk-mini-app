@@ -15,6 +15,7 @@ export const GameModeCard = ({ title, caption, cover, className, onClick }: Game
     return (
         <div
             className={cn(
+                "animate-fade-in",
                 "flex flex-col gap-1.5 cursor-pointer press-scale select-none",
                 className
             )}
@@ -22,7 +23,7 @@ export const GameModeCard = ({ title, caption, cover, className, onClick }: Game
         >
             {cover}
             <div className={"flex gap-1.5 justify-center items-center"}>
-                <Subhead weight={"2"} children={title} />
+                <Subhead weight={"2"} children={title} className={"line-clamp-1"} />
                 {caption && (
                     <>
                         <div className={"size-[3px] rounded-full bg-typography-secondary"} />

@@ -734,7 +734,7 @@ export const game = router({
             where: { userId: ctx.userId, date: startOfDay(new Date()) },
         })
 
-        return statistics?.hasAdditionalAttempt
+        return statistics?.hasAdditionalAttempt ?? false
     }),
     getAdditionalAttempt: privateProcedure.mutation(async ({ ctx }) => {
         return await ctx.prisma.userDailyStatistic.update({
