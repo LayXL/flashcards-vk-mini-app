@@ -27,7 +27,7 @@ const AnimatedImage = (props: { src: string } & HTMLMotionProps<"img">) => {
             onLoad={() => setImageLoaded(true)}
             initial={props.initial}
             animate={imageLoaded ? props.animate : undefined}
-            transition={{ duration: 0.3, type: "spring", bounce: 0, ...props.transition }}
+            transition={{ duration: 0.6, type: "spring", bounce: 0, ...props.transition }}
             className={props.className}
             src={props.src}
         />
@@ -111,12 +111,14 @@ export const SelectGame = () => {
                                     className={"absolute w-1/2 bottom-0 right-[3%]"}
                                     initial={{ translateX: "100%", opacity: 0 }}
                                     animate={{ translateX: 0, opacity: 1 }}
+                                    transition={{ delay: 0.3 }}
                                 />
                                 <AnimatedImage
                                     src={"/game-objects/pedestal.webp"}
                                     className={"absolute w-[60%] bottom-0 left-[3%]"}
                                     initial={{ translateX: "-100%", opacity: 0 }}
                                     animate={{ translateX: 0, opacity: 1 }}
+                                    transition={{ delay: 0.1 }}
                                 />
                             </div>
                         }
@@ -137,6 +139,7 @@ export const SelectGame = () => {
                                     className={"absolute w-full bottom-0"}
                                     initial={{ translateY: "100%", opacity: 0 }}
                                     animate={{ translateY: 0, opacity: 1 }}
+                                    transition={{ delay: 0.3 }}
                                 />
                             </div>
                         }
@@ -156,6 +159,7 @@ export const SelectGame = () => {
                                     className={"absolute w-full bottom-0"}
                                     initial={{ translateY: "100%", opacity: 0 }}
                                     animate={{ translateY: 0, opacity: 1 }}
+                                    transition={{ delay: 0.5 }}
                                 />
                             </div>
                         }

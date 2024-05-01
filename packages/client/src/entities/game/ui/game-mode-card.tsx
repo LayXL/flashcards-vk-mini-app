@@ -2,6 +2,7 @@ import { Subhead } from "@vkontakte/vkui"
 import { ClassValue } from "clsx"
 import { ReactNode } from "react"
 import { cn } from "../../../shared/helpers/cn"
+import { vibrateOnClick } from "../../../shared/helpers/vibrate"
 
 type GameModeCardProps = {
     title: ReactNode
@@ -19,7 +20,10 @@ export const GameModeCard = ({ title, caption, cover, className, onClick }: Game
                 "flex flex-col gap-1.5 cursor-pointer press-scale select-none",
                 className
             )}
-            onClick={onClick}
+            onClick={() => {
+                vibrateOnClick()
+                onClick?.()
+            }}
         >
             {cover}
             <div className={"flex gap-1.5 justify-center items-center"}>
