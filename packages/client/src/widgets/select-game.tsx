@@ -115,7 +115,7 @@ export const SelectGame = () => {
                                 />
                                 <AnimatedImage
                                     src={"/game-objects/pedestal.webp"}
-                                    className={"absolute w-[60%] bottom-0 left-[3%]"}
+                                    className={"absolute w-[60%] -bottom-1 left-[3%]"}
                                     initial={{ translateX: "-100%", opacity: 0 }}
                                     animate={{ translateX: 0, opacity: 1 }}
                                     transition={{ delay: 0.1 }}
