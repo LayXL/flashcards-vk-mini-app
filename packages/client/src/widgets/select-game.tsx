@@ -7,6 +7,7 @@ import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
+import { Categories } from "./categories"
 import { FiveLetters } from "./five-letters"
 import { GetAdditionalAttempt } from "./get-additional-attempt"
 import { Leaderboard } from "./leaderboard"
@@ -17,6 +18,7 @@ import { StoriesFeed } from "./stories-feed"
 export const SelectGame = () => {
     const utils = trpc.useUtils()
 
+    const playOfficialStacksModal = useModalState()
     const playDefaultGameModal = useModalState()
     const playRatingGameModal = useModalState()
     const playFiveLettersGameModal = useModalState()
@@ -33,50 +35,51 @@ export const SelectGame = () => {
         },
     })
 
-    const type = "ranked"
-
     return (
         <>
             <Group>
                 <StoriesFeed />
 
-                <Div className={"max-w-[380px] mx-auto flex flex-col gap-8"}>
+                <Div
+                    className={
+                        "max-w-[390px] md:grid-cols-6 md:max-w-[940px] mx-auto grid grid-cols-3 gap-x-3 gap-y-6"
+                    }
+                >
+                    <GameModeCard
+                        title={"Изучение"}
+                        cover={<div className={"bg-learning-red rounded-xl aspect-square"}></div>}
+                        onClick={playOfficialStacksModal.open}
+                    />
+                    <GameModeCard
+                        className={"col-span-2"}
+                        title={"Рейтинговая игра"}
+                        caption={
+                            ratingAttemptsLeft === 0 && !hasAdditionalAttempt ? (
+                                <span className={"flex gap-1 items-center"}>
+                                    1
+                                    <Icon16Like className={"text-dynamic-yellow"} />
+                                </span>
+                            ) : (
+                                <span className={"flex gap-1 items-center"}>
+                                    {ratingAttemptsLeft}
+                                    <Icon16Like className={"text-learning-red"} />
+                                </span>
+                            )
+                        }
+                        cover={<div className={"bg-learning-red rounded-xl h-full w-full"}></div>}
+                        onClick={playRatingGameModal.open}
+                    />
+                    <GameModeCard
+                        className={"col-span-2"}
+                        title={"Пять букв"}
+                        cover={<div className={"bg-learning-red rounded-xl h-full w-full"}></div>}
+                        onClick={playFiveLettersGameModal.open}
+                    />
                     <GameModeCard
                         title={"Обычная игра"}
-                        caption={"С любой стопкой"}
-                        cover={
-                            <div className={"bg-learning-red rounded-xl h-36 w-full"}>
-                                <p className={"font-['Impact'] text-2xl p-3"}>самая обычная</p>
-                            </div>
-                        }
+                        cover={<div className={"bg-learning-red rounded-xl aspect-square"}></div>}
                         onClick={playDefaultGameModal.open}
                     />
-                    <div className={"flex gap-3 [&>*]:flex-1"}>
-                        <GameModeCard
-                            title={"Рейтинговая"}
-                            caption={
-                                ratingAttemptsLeft === 0 && !hasAdditionalAttempt ? (
-                                    <span className={"flex gap-1 items-center"}>
-                                        1
-                                        <Icon16Like className={"text-dynamic-yellow"} />
-                                    </span>
-                                ) : (
-                                    <span className={"flex gap-1 items-center"}>
-                                        {ratingAttemptsLeft}
-                                        <Icon16Like className={"text-learning-red"} />
-                                    </span>
-                                )
-                            }
-                            cover={<div className={"bg-learning-red rounded-xl h-36 w-full"}></div>}
-                            onClick={playRatingGameModal.open}
-                        />
-                        <GameModeCard
-                            title={"Пять букв"}
-                            // caption={"6"}
-                            cover={<div className={"bg-learning-red rounded-xl h-36 w-full"}></div>}
-                            onClick={playFiveLettersGameModal.open}
-                        />
-                    </div>
                 </Div>
             </Group>
 
@@ -96,6 +99,10 @@ export const SelectGame = () => {
             </Group>
 
             <div className={"h-tabbar-height"} />
+
+            <ModalWindow {...playOfficialStacksModal} fullscreen title={"Изучение"}>
+                <Categories />
+            </ModalWindow>
 
             <ModalWindow {...playDefaultGameModal} fullscreen>
                 <PlayGame onClose={playDefaultGameModal.close} />
