@@ -68,7 +68,7 @@ export const CreateContent = ({ isOpened, setIsOpened }: CreateContentProps) => 
                                 "size-14 flex items-center justify-center rounded-full bg-[#0077FF]"
                             }
                         >
-                            <Icon28HieroglyphCharacterOutline />
+                            <Icon28HieroglyphCharacterOutline className={"text-white"} />
                         </div>
                         <Subhead children={"Перевод"} weight={"2"} />
                     </div>
@@ -83,7 +83,7 @@ export const CreateContent = ({ isOpened, setIsOpened }: CreateContentProps) => 
                                 "size-14 flex items-center justify-center rounded-full bg-learning-red"
                             }
                         >
-                            <Icon28Cards2Outline />
+                            <Icon28Cards2Outline className={"text-white"} />
                         </div>
                         <Subhead children={"Коллекция"} weight={"2"} />
                     </div>
