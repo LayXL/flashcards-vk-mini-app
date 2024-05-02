@@ -90,7 +90,6 @@ export const ModalBody = ({
                     transform: `translateY(${delta}px)`,
                     touchAction: delta > 0 ? "none" : undefined,
                     "--delta": `${delta}px`,
-                    transition: delta !== 0 ? "transform 0.12s ease-in-out" : undefined,
                 }}
             >
                 <div className={"h-full flex flex-col"} children={children} />
