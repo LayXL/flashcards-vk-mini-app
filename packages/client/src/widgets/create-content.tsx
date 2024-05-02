@@ -88,6 +88,7 @@ export const CreateContent = ({ isOpened, setIsOpened }: CreateContentProps) => 
                         <Subhead children={"Коллекция"} weight={"2"} />
                     </div>
                 </Div>
+                <div className={"h-safe-area-bottom"} />
             </ModalWindow>
 
             <ModalWindow {...createStackModal} disableDragToClose>

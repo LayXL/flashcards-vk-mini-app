@@ -23,8 +23,8 @@ import { StackView } from "../widgets/stack-view"
 export const router = createHashRouter([
     {
         path: "/",
-        panel: "new",
-        view: "new",
+        panel: "play",
+        view: "play",
     },
     {
         path: "/play",
