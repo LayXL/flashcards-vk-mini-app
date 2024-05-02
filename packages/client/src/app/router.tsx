@@ -104,8 +104,6 @@ export const Router = () => {
 
     useEffect(() => {
         if (isSuccess && !onboardingCompleted) {
-            if (location.pathname === "/") routeNavigator.push("/play")
-
             bridge
                 .send("VKWebAppShowSlidesSheet", {
                     slides: [
