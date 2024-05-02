@@ -17,7 +17,7 @@ export const Game = () => {
 
             <TabBar />
 
-            <ModalWindow {...ratingModal} fullscreen={true} disableDragToClose>
+            <ModalWindow {...ratingModal} fullscreen={true} disableDragToClose={true}>
                 <Leaderboard onClose={ratingModal.close} />
             </ModalWindow>
         </>
