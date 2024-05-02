@@ -58,17 +58,6 @@ export const stats = router({
                 ? 0
                 : parseInt(sql[0].count)
 
-        console.log(endDate)
-
-        console.log(DateTime.now().toUTC().startOf("day"))
-
-        console.log(
-            DateTime.fromJSDate(endDate)
-                .diff(DateTime.now().toUTC().startOf("day"))
-                .negate()
-                .as("days")
-        )
-
         return {
             startDate,
             endDate,
