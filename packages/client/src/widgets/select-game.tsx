@@ -219,7 +219,7 @@ export const SelectGame = () => {
                 <FiveLetters onClose={playFiveLettersGameModal.close} />
             </ModalWindow>
 
-            <ModalWindow {...leaderboardModal} fullscreen>
+            <ModalWindow {...leaderboardModal} fullscreen disableDragToClose>
                 <Leaderboard onClose={leaderboardModal.close} />
             </ModalWindow>
         </>

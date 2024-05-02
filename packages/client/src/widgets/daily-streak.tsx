@@ -2,9 +2,10 @@ import { Icon28FireAltOutline } from "@vkontakte/icons"
 import { Headline } from "@vkontakte/vkui"
 import { trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
+import { Skeleton } from "../shared/ui/skeleton"
 
 export const DailyStreak = () => {
-    const { data: dailyStreak } = trpc.stats.getDailyStreak.useQuery()
+    const { data: dailyStreak, isLoading } = trpc.stats.getDailyStreak.useQuery()
 
     return (
         <div
@@ -14,7 +15,10 @@ export const DailyStreak = () => {
             )}
         >
             <Icon28FireAltOutline />
-            <Headline weight={"2"} children={dailyStreak?.streakCount} />
+            <Headline
+                weight={"2"}
+                children={dailyStreak?.streakCount || <Skeleton className={"w-[1ch]"} />}
+            />
         </div>
     )
 }
