@@ -35,17 +35,15 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
                     isViewed && "bg-[#818C99]"
                 )}
             >
-                <div className={"p-[2px] bg-vk-content rounded-[10px] box-border w-full h-full"}>
-                    <div
-                        className={
-                            "w-full h-full rounded-xl flex items-end text-white p-1 box-border"
-                        }
-                        style={{
-                            background: `linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.5) 100%), url(${previewUrl}) lightgray 50% / cover no-repeat`,
-                        }}
-                    >
-                        <Caption children={title} level={"2"} />
-                    </div>
+                <div
+                    className={
+                        "p-1.5 bg-vk-content rounded-[10px] box-border w-full h-full flex items-end border-solid border-2 border-vk-content"
+                    }
+                    style={{
+                        background: `linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.5) 100%), url(${previewUrl}) lightgray 50% / cover no-repeat`,
+                    }}
+                >
+                    <Caption children={title} level={"2"} />
                 </div>
             </div>
             <ModalWrapper {...storyViewModal}>
