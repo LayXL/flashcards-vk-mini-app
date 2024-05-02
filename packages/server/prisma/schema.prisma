@@ -265,7 +265,7 @@ model UserProfile {
 
 model UserDailyStatistic {
   userId Int
-  date   DateTime
+  date   DateTime @db.Date
 
   xp                    Int     @default(0)
   points                Int     @default(0)
