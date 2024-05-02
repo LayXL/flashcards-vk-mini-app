@@ -9,8 +9,8 @@ export const DailyStreak = () => {
     return (
         <div
             className={cn(
-                "py-2 px-3 text-learning-red flex items-center gap-1 select-none",
-                dailyStreak?.today && "text-secondary"
+                "py-2 px-3 text-secondary flex items-center gap-1 select-none",
+                dailyStreak?.today && "text-learning-red"
             )}
         >
             <Icon28FireAltOutline />
