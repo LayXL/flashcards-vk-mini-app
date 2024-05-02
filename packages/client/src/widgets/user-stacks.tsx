@@ -2,7 +2,6 @@ import {
     Icon24Add,
     Icon24LikeOutline,
     Icon24UserOutline,
-    Icon28CheckCircleOutline,
     Icon32Cards2Outline,
 } from "@vkontakte/icons"
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
@@ -10,9 +9,7 @@ import {
     Button,
     ButtonGroup,
     Div,
-    Link,
     Placeholder,
-    Snackbar,
     SubnavigationBar,
     SubnavigationButton,
 } from "@vkontakte/vkui"
@@ -43,10 +40,6 @@ export const UserStacks = () => {
         )
 
     const createStackModal = useModalState()
-    const stackCreatedSnackbar = useModalState()
-    const stackCreatedModal = useModalState()
-
-    const [createdStackId, setCreatedStackId] = useState<number>()
 
     const infiniteData = useInfiniteList(data)
 
@@ -135,34 +128,6 @@ export const UserStacks = () => {
             )}
 
             <CreateContent {...createStackModal} />
-
-            {stackCreatedSnackbar.isOpened && (
-                <Snackbar
-                    onClose={stackCreatedSnackbar.close}
-                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
-                    children={"Коллекция успешно создана"}
-                    after={
-                        <Link
-                            children={"Перейти"}
-                            onClick={() => {
-                                stackCreatedSnackbar.close()
-                                stackCreatedModal.open()
-                            }}
-                        />
-                    }
-                />
-            )}
-
-            {createdStackId && (
-                <ModalWrapper
-                    isOpened={stackCreatedModal.isOpened}
-                    onClose={stackCreatedModal.close}
-                >
-                    <ModalBody>
-                        <StackView id={createdStackId} />
-                    </ModalBody>
-                </ModalWrapper>
-            )}
         </>
     )
 }

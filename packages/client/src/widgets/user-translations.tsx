@@ -2,7 +2,6 @@ import {
     Icon24Add,
     Icon24LikeOutline,
     Icon24UserOutline,
-    Icon28CheckCircleOutline,
     Icon28HieroglyphCharacterOutline,
 } from "@vkontakte/icons"
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
@@ -10,9 +9,7 @@ import {
     Button,
     ButtonGroup,
     Div,
-    Link,
     Placeholder,
-    Snackbar,
     SubnavigationBar,
     SubnavigationButton,
 } from "@vkontakte/vkui"
@@ -41,11 +38,7 @@ export const UserTranslations = () => {
         filter,
     })
 
-    const [addedId, setAddedId] = useState<number | null>(null)
-
     const addTranslationModal = useModalState()
-    const addedTranslationSnackbar = useModalState()
-    const viewAddedTranslationModal = useModalState()
 
     return (
         <>
@@ -122,34 +115,6 @@ export const UserTranslations = () => {
             )}
 
             <CreateContent {...addTranslationModal} />
-
-            {addedTranslationSnackbar.isOpened && (
-                <Snackbar
-                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
-                    after={
-                        <Link
-                            onClick={() => {
-                                viewAddedTranslationModal.open()
-                                addedTranslationSnackbar.close()
-                            }}
-                            children={"Посмотреть"}
-                        />
-                    }
-                    onClose={addedTranslationSnackbar.close}
-                    children={"Перевод добавлен"}
-                />
-            )}
-
-            <ModalWrapper
-                isOpened={viewAddedTranslationModal.isOpened}
-                onClose={viewAddedTranslationModal.close}
-            >
-                <ModalBody fullscreen>
-                    {addedId && (
-                        <TranslationView id={addedId} onClose={viewAddedTranslationModal.close} />
-                    )}
-                </ModalBody>
-            </ModalWrapper>
         </>
     )
 }
