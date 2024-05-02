@@ -9,6 +9,7 @@ import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
+import { plural } from "../shared/helpers/plural"
 import { useModalState } from "../shared/hooks/useModalState"
 import { Skeleton } from "../shared/ui/skeleton"
 import { Categories } from "./categories"
@@ -47,6 +48,8 @@ export const SelectGame = () => {
     const { data: currentSeason } = trpc.rating.getCurrentSeason.useQuery()
 
     const { data: ratingAttemptsLeft, refetch } = trpc.game.getRatingAttemptsLeftToday.useQuery()
+
+    const { data: fiveLetters } = trpc.fiveLetters.getTodayAttempts.useQuery()
 
     const { data: hasAdditionalAttempt } = trpc.game.hasAdditionalAttempt.useQuery()
 
@@ -138,6 +141,15 @@ export const SelectGame = () => {
                     <GameModeCard
                         className={"col-span-2"}
                         title={"Пять букв"}
+                        caption={
+                            fiveLetters?.status === "resolved"
+                                ? "Вы угадали!"
+                                : `Осталось ${plural(6 - fiveLetters?.attempts.length ?? 6, [
+                                      "попытка",
+                                      "попытки",
+                                      "попыток",
+                                  ])}`
+                        }
                         cover={
                             <div className={"relative rounded-xl overflow-hidden h-full w-full"}>
                                 <div
