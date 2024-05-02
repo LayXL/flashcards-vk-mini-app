@@ -48,8 +48,8 @@ export const stats = router({
             with streak_data as(select date, "userId", case when date(date + interval '1 day') = lag(date) over (partition by "userId" order by date desc) is null then true else date(date + interval '1 day') = lag(date) over (partition by "userId" order by date desc) end as x from "UserDailyStatistic" where "userId" = ${ctx.userId} and ( xp > 0 or points > 0 or "fiveLetterWordGuessed" = true) order by date desc) select count(*), min(date) as start_date, max(date) as end_date from streak_data where case when (select max(date) from streak_data where x = false) is null then true else date > (select max(date) from streak_data where x = false) end;
         `
 
-        const startDate = sql[0].start_date
-        const endDate = sql[0].end_date
+        const startDate = sql[0].start_date as Date
+        const endDate = sql[0].end_date as Date
         const streakCount =
             DateTime.fromJSDate(endDate)
                 .diff(DateTime.now().toUTC().startOf("day"))
