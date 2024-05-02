@@ -143,7 +143,7 @@ export const SelectGame = () => {
                         title={"Пять букв"}
                         caption={
                             fiveLetters?.status === "resolved"
-                                ? "Вы угадали!"
+                                ? "Вы угадали"
                                 : `${plural(6 - (fiveLetters?.attempts?.length ?? 0), [
                                       "попытка",
                                       "попытки",

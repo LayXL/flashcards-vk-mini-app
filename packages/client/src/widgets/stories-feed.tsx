@@ -1,12 +1,8 @@
 import { CardScroll, Div } from "@vkontakte/vkui"
-import { FC, createElement } from "react"
-import { SubscribeToCommunityStory } from "../entities/story/content/subscribe-to-community"
+import { createElement } from "react"
+import { storiesContent } from "../entities/story/lib/content"
 import { StoryCard } from "../entities/story/ui/story-card"
 import { trpc } from "../shared/api"
-
-const content: Record<number, FC> = {
-    1: () => <SubscribeToCommunityStory />,
-}
 
 export const StoriesFeed = () => {
     const { data: stories, isLoading } = trpc.stories.getAvailableStories.useQuery()
@@ -25,7 +21,7 @@ export const StoriesFeed = () => {
                         isViewed={story.isViewed}
                         title={story.title}
                         key={i}
-                        content={createElement(content[story.id])}
+                        content={createElement(storiesContent[story.id])}
                         previewUrl={story.previewUrl}
                     />
                 ))}

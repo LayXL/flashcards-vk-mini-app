@@ -73,7 +73,7 @@ export const SubscribeToCommunityStory = () => {
                 </div>
                 <Div className={"mb-safe-area-bottom"}>
                     <motion.div
-                        initial={{ translateY: "150%" }}
+                        initial={{ translateY: "200%" }}
                         animate={{ translateY: 0 }}
                         transition={{ delay: 0.5 }}
                     >
