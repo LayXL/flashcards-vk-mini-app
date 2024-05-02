@@ -144,7 +144,7 @@ export const SelectGame = () => {
                         caption={
                             fiveLetters?.status === "resolved"
                                 ? "Вы угадали!"
-                                : `Осталось ${plural(6 - (fiveLetters?.attempts?.length ?? 0), [
+                                : `${plural(6 - (fiveLetters?.attempts?.length ?? 0), [
                                       "попытка",
                                       "попытки",
                                       "попыток",
