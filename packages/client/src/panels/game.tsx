@@ -11,7 +11,7 @@ export const Game = () => {
 
     return (
         <>
-            <PanelHeader children={"Игровые режимы"} before={<DailyStreak />} />
+            <PanelHeader children={"Играть"} before={<DailyStreak />} />
 
             <SelectGame />
 
