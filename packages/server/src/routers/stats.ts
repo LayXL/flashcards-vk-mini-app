@@ -62,6 +62,11 @@ export const stats = router({
             startDate,
             endDate,
             streakCount,
+            today:
+                DateTime.fromJSDate(endDate)
+                    .diff(DateTime.now().toUTC().startOf("day"))
+                    .negate()
+                    .as("days") === 0,
         }
     }),
     getAdminStats: moderatorProcedure.query(async ({ ctx }) => {
