@@ -25,7 +25,7 @@ import { RouterInput, trpc } from "../shared/api"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useModalState } from "../shared/hooks/useModalState"
-import { StackCreateModal } from "./stack-create"
+import { CreateContent } from "./create-content"
 import { StackView } from "./stack-view"
 
 export const UserStacks = () => {
@@ -134,17 +134,7 @@ export const UserStacks = () => {
                 />
             )}
 
-            <ModalWrapper isOpened={createStackModal.isOpened} onClose={createStackModal.close}>
-                <ModalBody disableDragToClose>
-                    <StackCreateModal
-                        onClose={createStackModal.close}
-                        onSuccess={(id) => {
-                            stackCreatedSnackbar.open()
-                            setCreatedStackId(id)
-                        }}
-                    />
-                </ModalBody>
-            </ModalWrapper>
+            <CreateContent {...createStackModal} />
 
             {stackCreatedSnackbar.isOpened && (
                 <Snackbar

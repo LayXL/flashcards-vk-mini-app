@@ -2,6 +2,7 @@ import { Icon16Like, Icon24ChevronDown } from "@vkontakte/icons"
 import bridge, { EAdsFormats } from "@vkontakte/vk-bridge"
 import { Button, Div, Group, Header } from "@vkontakte/vkui"
 import { HTMLMotionProps, motion } from "framer-motion"
+import { DateTime } from "luxon"
 import { useState } from "react"
 import { GameModeCard } from "../entities/game/ui/game-mode-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -43,6 +44,8 @@ export const SelectGame = () => {
     const playFiveLettersGameModal = useModalState()
     const leaderboardModal = useModalState()
 
+    const { data: currentSeason } = trpc.rating.getCurrentSeason.useQuery()
+
     const { data: ratingAttemptsLeft, refetch } = trpc.game.getRatingAttemptsLeftToday.useQuery()
 
     const { data: hasAdditionalAttempt } = trpc.game.hasAdditionalAttempt.useQuery()
@@ -53,6 +56,14 @@ export const SelectGame = () => {
             utils.game.hasAdditionalAttempt.setData(undefined, true)
         },
     })
+
+    const ratingDaysLeft = DateTime.fromISO(currentSeason?.season?.endsAt ?? "")
+        .diffNow()
+        .rescale()
+        .shiftTo("days")
+        .toHuman({
+            maximumFractionDigits: 0,
+        })
 
     return (
         <>
@@ -169,7 +180,10 @@ export const SelectGame = () => {
             </Group>
 
             <Group>
-                <Header children={"Лидеры в рейтинге"} />
+                <Header
+                    children={"Лидеры в рейтинге"}
+                    subtitle={`${ratingDaysLeft} до конца сезона`}
+                />
                 <Leaderboard minimized={true} defaultTab={"global"} />
                 <Div>
                     <Button

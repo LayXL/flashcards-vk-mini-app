@@ -21,9 +21,9 @@ import { FeedTranslationCard } from "../entities/translation/ui/feed-translation
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
-import { vibrateOnClick, vibrateOnSuccess } from "../shared/helpers/vibrate"
+import { vibrateOnClick } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
-import { TranslationAdd } from "./translation-add"
+import { CreateContent } from "./create-content"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationView } from "./translation-view"
 
@@ -121,22 +121,7 @@ export const UserTranslations = () => {
                 />
             )}
 
-            <ModalWrapper
-                isOpened={addTranslationModal.isOpened}
-                onClose={addTranslationModal.close}
-            >
-                <ModalBody>
-                    <TranslationAdd
-                        onClose={addTranslationModal.close}
-                        onAdd={(id) => {
-                            addTranslationModal.close()
-                            addedTranslationSnackbar.open()
-                            vibrateOnSuccess()
-                            setAddedId(id)
-                        }}
-                    />
-                </ModalBody>
-            </ModalWrapper>
+            <CreateContent {...addTranslationModal} />
 
             {addedTranslationSnackbar.isOpened && (
                 <Snackbar
