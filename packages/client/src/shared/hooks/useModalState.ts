@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export const useModalState = (
     defaultState: boolean = false,
-    { onClose }: { onClose?: () => void } = {}
+    { onClose, onOpen }: { onClose?: () => void; onOpen?: () => void } = {}
 ) => {
     const [isOpened, setIsOpened] = useState(defaultState)
 
@@ -13,6 +13,9 @@ export const useModalState = (
             onClose?.()
             setIsOpened(false)
         },
-        open: () => setIsOpened(true),
+        open: () => {
+            onOpen?.()
+            setIsOpened(true)
+        },
     }
 }

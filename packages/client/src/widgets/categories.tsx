@@ -9,23 +9,19 @@ import {
     Header,
     Link,
     ModalPageHeader,
-    PanelHeader,
     PanelHeaderBack,
     Placeholder,
-    Spacing,
 } from "@vkontakte/vkui"
 import { useState } from "react"
 import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
-import { SearchBar } from "../features/search/ui/search-bar"
-import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
-import { PlayGame } from "../widgets/play-game"
-import { StackView } from "../widgets/stack-view"
+import { PlayGame } from "./play-game"
+import { StackView } from "./stack-view"
 
-export const Stacks = () => {
+export const Categories = () => {
     const [selectedStackId, setSelectedStackId] = useState<number | null>(null)
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
 
@@ -47,10 +43,6 @@ export const Stacks = () => {
 
     return (
         <>
-            <PanelHeader children={"Коллекции"} />
-
-            <SearchBar />
-
             {data?.map((category) => (
                 <Group key={category.id}>
                     <Header
@@ -90,32 +82,32 @@ export const Stacks = () => {
             ))}
 
             {data && (
-                <Placeholder
-                    icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
-                    header={"Не нашли подходящую коллекцию?"}
-                    children={
-                        "Вы можете найти коллекции от других пользователей или же создать собственные"
-                    }
-                    action={
-                        <ButtonGroup mode={"vertical"} align={"center"}>
-                            <Button
-                                size={"l"}
-                                children={"Перейти в ленту"}
-                                onClick={() => routeNavigator.push("/new")}
-                            />
-                            <Button
-                                size={"l"}
-                                mode={"tertiary"}
-                                children={"Создать свою коллекцию"}
-                                before={<Icon24AddOutline />}
-                                onClick={() => routeNavigator.push("/profile")}
-                            />
-                        </ButtonGroup>
-                    }
-                />
+                <div className={"min-h-screen"}>
+                    <Placeholder
+                        icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
+                        header={"Не нашли подходящую коллекцию?"}
+                        children={
+                            "Вы можете найти коллекции от других пользователей или же создать собственные"
+                        }
+                        action={
+                            <ButtonGroup mode={"vertical"} align={"center"}>
+                                <Button
+                                    size={"l"}
+                                    children={"Перейти в ленту"}
+                                    onClick={() => routeNavigator.push("/new")}
+                                />
+                                <Button
+                                    size={"l"}
+                                    mode={"tertiary"}
+                                    children={"Создать свою коллекцию"}
+                                    before={<Icon24AddOutline />}
+                                    onClick={() => routeNavigator.push("/profile")}
+                                />
+                            </ButtonGroup>
+                        }
+                    />
+                </div>
             )}
-
-            <Spacing size={256} />
 
             <ModalWrapper isOpened={stackViewModal.isOpened} onClose={stackViewModal.close}>
                 <ModalBody fullscreen>
@@ -159,8 +151,6 @@ export const Stacks = () => {
                     </Div>
                 </ModalBody>
             </ModalWrapper>
-
-            <TabBar />
         </>
     )
 }

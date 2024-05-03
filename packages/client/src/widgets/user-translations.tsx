@@ -2,7 +2,6 @@ import {
     Icon24Add,
     Icon24LikeOutline,
     Icon24UserOutline,
-    Icon28CheckCircleOutline,
     Icon28HieroglyphCharacterOutline,
 } from "@vkontakte/icons"
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
@@ -10,9 +9,7 @@ import {
     Button,
     ButtonGroup,
     Div,
-    Link,
     Placeholder,
-    Snackbar,
     SubnavigationBar,
     SubnavigationButton,
 } from "@vkontakte/vkui"
@@ -21,9 +18,9 @@ import { FeedTranslationCard } from "../entities/translation/ui/feed-translation
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
-import { vibrateOnClick, vibrateOnSuccess } from "../shared/helpers/vibrate"
+import { vibrateOnClick } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
-import { TranslationAdd } from "./translation-add"
+import { CreateContent } from "./create-content"
 import { TranslationAddToStack } from "./translation-add-to-stack"
 import { TranslationView } from "./translation-view"
 
@@ -41,11 +38,7 @@ export const UserTranslations = () => {
         filter,
     })
 
-    const [addedId, setAddedId] = useState<number | null>(null)
-
     const addTranslationModal = useModalState()
-    const addedTranslationSnackbar = useModalState()
-    const viewAddedTranslationModal = useModalState()
 
     return (
         <>
@@ -121,50 +114,7 @@ export const UserTranslations = () => {
                 />
             )}
 
-            <ModalWrapper
-                isOpened={addTranslationModal.isOpened}
-                onClose={addTranslationModal.close}
-            >
-                <ModalBody>
-                    <TranslationAdd
-                        onClose={addTranslationModal.close}
-                        onAdd={(id) => {
-                            addTranslationModal.close()
-                            addedTranslationSnackbar.open()
-                            vibrateOnSuccess()
-                            setAddedId(id)
-                        }}
-                    />
-                </ModalBody>
-            </ModalWrapper>
-
-            {addedTranslationSnackbar.isOpened && (
-                <Snackbar
-                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
-                    after={
-                        <Link
-                            onClick={() => {
-                                viewAddedTranslationModal.open()
-                                addedTranslationSnackbar.close()
-                            }}
-                            children={"Посмотреть"}
-                        />
-                    }
-                    onClose={addedTranslationSnackbar.close}
-                    children={"Перевод добавлен"}
-                />
-            )}
-
-            <ModalWrapper
-                isOpened={viewAddedTranslationModal.isOpened}
-                onClose={viewAddedTranslationModal.close}
-            >
-                <ModalBody fullscreen>
-                    {addedId && (
-                        <TranslationView id={addedId} onClose={viewAddedTranslationModal.close} />
-                    )}
-                </ModalBody>
-            </ModalWrapper>
+            <CreateContent {...addTranslationModal} />
         </>
     )
 }

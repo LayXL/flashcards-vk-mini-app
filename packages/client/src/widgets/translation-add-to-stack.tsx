@@ -63,7 +63,7 @@ export const TranslationAddToStack = ({
 
     return (
         <StackSelect
-            title={title || "Добавить в стопку"}
+            title={title || "Добавить в коллекцию"}
             filter={"created"}
             canCreateNewStack={true}
             onClose={onClose}

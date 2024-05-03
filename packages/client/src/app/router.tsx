@@ -23,8 +23,8 @@ import { StackView } from "../widgets/stack-view"
 export const router = createHashRouter([
     {
         path: "/",
-        panel: "home",
-        view: "main",
+        panel: "play",
+        view: "play",
     },
     {
         path: "/play",
@@ -104,8 +104,6 @@ export const Router = () => {
 
     useEffect(() => {
         if (isSuccess && !onboardingCompleted) {
-            if (location.pathname === "/") routeNavigator.push("/play")
-
             bridge
                 .send("VKWebAppShowSlidesSheet", {
                     slides: [
@@ -130,7 +128,7 @@ export const Router = () => {
                         {
                             title: "Создавайте свои переводы",
                             subtitle:
-                                "Станьте творцом своего лингвистического мира, добавляя собственные варианты переводов и стопки.",
+                                "Станьте творцом своего лингвистического мира, добавляя собственные варианты переводов в коллекции.",
                             media: {
                                 type: "image",
                                 url: "https://flashcards-vk.layxl.dev/onboarding/3.webp",

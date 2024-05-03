@@ -59,7 +59,7 @@ export const Search = ({ onClose }: SearchProps) => {
             {debouncedSearchQuery.length < 3 ? (
                 <Placeholder
                     icon={<Icon32Cards2Outline width={56} height={56} />}
-                    children={"Начните вводить запрос сверху, чтобы найти стопку или перевод"}
+                    children={"Начните вводить запрос сверху, чтобы найти коллекцию или перевод"}
                 />
             ) : data?.translations?.length === 0 && data?.stacks?.length === 0 && isSuccess ? (
                 <Placeholder
@@ -104,7 +104,7 @@ export const Search = ({ onClose }: SearchProps) => {
                                         onClick={moreStacksModal.open}
                                     />
                                 }
-                                children={"Стопки"}
+                                children={"Коллекции"}
                             />
 
                             <CardScroll className={"overflow-visible"}>
@@ -154,7 +154,7 @@ export const Search = ({ onClose }: SearchProps) => {
                 <ModalBody fullscreen>
                     <ModalPageHeader
                         before={<PanelHeaderClose onClick={moreStacksModal.close} />}
-                        children={"Стопки по запросу"}
+                        children={"Коллекции по запросу"}
                     />
                     <Div className={"grid grid-cols-cards gap-2"}>
                         {data?.stacks.map((stack) => (

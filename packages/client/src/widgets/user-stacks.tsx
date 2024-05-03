@@ -2,7 +2,6 @@ import {
     Icon24Add,
     Icon24LikeOutline,
     Icon24UserOutline,
-    Icon28CheckCircleOutline,
     Icon32Cards2Outline,
 } from "@vkontakte/icons"
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
@@ -10,9 +9,7 @@ import {
     Button,
     ButtonGroup,
     Div,
-    Link,
     Placeholder,
-    Snackbar,
     SubnavigationBar,
     SubnavigationButton,
 } from "@vkontakte/vkui"
@@ -25,7 +22,7 @@ import { RouterInput, trpc } from "../shared/api"
 import { vibrateOnClick } from "../shared/helpers/vibrate"
 import useInfiniteList from "../shared/hooks/useInfiniteList"
 import { useModalState } from "../shared/hooks/useModalState"
-import { StackCreateModal } from "./stack-create"
+import { CreateContent } from "./create-content"
 import { StackView } from "./stack-view"
 
 export const UserStacks = () => {
@@ -43,10 +40,6 @@ export const UserStacks = () => {
         )
 
     const createStackModal = useModalState()
-    const stackCreatedSnackbar = useModalState()
-    const stackCreatedModal = useModalState()
-
-    const [createdStackId, setCreatedStackId] = useState<number>()
 
     const infiniteData = useInfiniteList(data)
 
@@ -113,14 +106,14 @@ export const UserStacks = () => {
             {isSuccess && infiniteData?.length === 0 && (
                 <Placeholder
                     icon={<Icon32Cards2Outline width={56} height={56} />}
-                    header={"У вас нет стопок"}
-                    children={"Создайте свою первую стопку"}
+                    header={"У вас нет коллекций"}
+                    children={"Создайте свою первую коллекцию"}
                     action={
                         <ButtonGroup mode={"vertical"} align={"center"}>
                             <Button
                                 size={"l"}
                                 mode={"secondary"}
-                                children={"Создать стопку"}
+                                children={"Создать коллекцию"}
                                 onClick={createStackModal.open}
                             />
                             <Button
@@ -134,45 +127,7 @@ export const UserStacks = () => {
                 />
             )}
 
-            <ModalWrapper isOpened={createStackModal.isOpened} onClose={createStackModal.close}>
-                <ModalBody disableDragToClose>
-                    <StackCreateModal
-                        onClose={createStackModal.close}
-                        onSuccess={(id) => {
-                            stackCreatedSnackbar.open()
-                            setCreatedStackId(id)
-                        }}
-                    />
-                </ModalBody>
-            </ModalWrapper>
-
-            {stackCreatedSnackbar.isOpened && (
-                <Snackbar
-                    onClose={stackCreatedSnackbar.close}
-                    before={<Icon28CheckCircleOutline fill={"var(--vkui--color_icon_positive)"} />}
-                    children={"Стопка успешно создана"}
-                    after={
-                        <Link
-                            children={"Перейти"}
-                            onClick={() => {
-                                stackCreatedSnackbar.close()
-                                stackCreatedModal.open()
-                            }}
-                        />
-                    }
-                />
-            )}
-
-            {createdStackId && (
-                <ModalWrapper
-                    isOpened={stackCreatedModal.isOpened}
-                    onClose={stackCreatedModal.close}
-                >
-                    <ModalBody>
-                        <StackView id={createdStackId} />
-                    </ModalBody>
-                </ModalWrapper>
-            )}
+            <CreateContent {...createStackModal} />
         </>
     )
 }

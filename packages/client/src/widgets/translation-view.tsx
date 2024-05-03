@@ -199,7 +199,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
 
             {(data?.stacks.length ?? 0) > 0 && (
                 <Group>
-                    <Header children={"Стопки с этим переводом"} />
+                    <Header children={"Коллекции с этим переводом"} />
                     <Div className={"grid-cols-cards grid gap-3"}>
                         {data?.stacks.map((stack) => (
                             <LargeStackCard
@@ -292,7 +292,9 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     // action={"Открыть"}
                     // onActionClick={viewStack.open}
                     children={
-                        viewStackId ? "Перевод добавлен в стопку" : "Перевод сохранён в избранное"
+                        viewStackId
+                            ? "Перевод добавлен в коллекцию"
+                            : "Перевод сохранён в избранное"
                     }
                 />
             )}

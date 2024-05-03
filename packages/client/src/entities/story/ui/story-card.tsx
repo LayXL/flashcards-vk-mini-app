@@ -1,4 +1,4 @@
-import { ConfigProvider, ModalPageHeader, PanelHeaderClose, Subhead } from "@vkontakte/vkui"
+import { Caption, ConfigProvider, ModalPageHeader, PanelHeaderClose } from "@vkontakte/vkui"
 import { ReactNode } from "react"
 import { ModalBody } from "../../../features/modal/ui/modal-body"
 import { ModalWrapper } from "../../../features/modal/ui/modal-wrapper"
@@ -31,14 +31,20 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
                     if (!isViewed) mutate({ id })
                 }}
                 className={cn(
-                    "rounded-2xl border-solid border-2 p-2 border-vk-accent size-32 box-border flex items-end text-white cursor-pointer",
-                    isViewed && "border-[#818C99]"
+                    "rounded-xl p-[2px] bg-vk-accent size-24 box-border cursor-pointer",
+                    isViewed && "bg-[#818C99]"
                 )}
-                style={{
-                    background: `linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.5) 100%), url(${previewUrl}) lightgray 50% / cover no-repeat`,
-                }}
             >
-                <Subhead children={title} />
+                <div
+                    className={
+                        "p-1.5 bg-vk-content rounded-[10px] box-border w-full h-full flex items-end border-solid border-2 border-vk-content"
+                    }
+                    style={{
+                        background: `linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.5) 100%), url(${previewUrl}) lightgray 50% / cover no-repeat`,
+                    }}
+                >
+                    <Caption children={title} level={"2"} />
+                </div>
             </div>
             <ModalWrapper {...storyViewModal}>
                 <ModalBody fullscreen>

@@ -1,38 +1,24 @@
-import { CardScroll } from "@vkontakte/vkui"
-import { DateTime } from "luxon"
-import { useEffect } from "react"
-import { DayInDailyStreak } from "../entities/daily-streak/ui/day-in-daily-streak"
+import { Icon28FireAltOutline } from "@vkontakte/icons"
+import { Headline } from "@vkontakte/vkui"
 import { trpc } from "../shared/api"
+import { cn } from "../shared/helpers/cn"
+import { Skeleton } from "../shared/ui/skeleton"
 
 export const DailyStreak = () => {
-    useEffect(() => {
-        document
-            .getElementById("dailyStreak")
-            ?.getElementsByClassName("vkuiHorizontalScroll__in")[0]
-            .scroll({
-                left: 9999,
-                behavior: "instant",
-            })
-    })
-
-    const { data } = trpc.stats.getActiveDays.useQuery()
-
-    const days = Array.from({ length: 30 }).map((_, i) =>
-        DateTime.now().toUTC().minus({ days: i }).toISODate()
-    )
+    const { data: dailyStreak, isLoading } = trpc.stats.getDailyStreak.useQuery()
 
     return (
-        <CardScroll id={"dailyStreak"}>
-            <div className={"flex-row-reverse gap-2"}>
-                {days.map((date) => (
-                    <DayInDailyStreak
-                        key={date}
-                        date={date}
-                        today={date === DateTime.now().toISODate()}
-                        completed={data?.some((d) => d === date)}
-                    />
-                ))}
-            </div>
-        </CardScroll>
+        <div
+            className={cn(
+                "py-2 px-3 text-secondary flex items-center gap-1 select-none",
+                dailyStreak?.today && "text-learning-red"
+            )}
+        >
+            <Icon28FireAltOutline />
+            <Headline
+                weight={"2"}
+                children={dailyStreak?.streakCount || <Skeleton className={"w-[1ch]"} />}
+            />
+        </div>
     )
 }
