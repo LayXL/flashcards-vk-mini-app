@@ -227,7 +227,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                         {nextCardData && (
                             <div
                                 className={
-                                    "absolute inset-0 pointer-events-none -z-10 overflow-visible pb-safe-area-bottom"
+                                    "absolute inset-0 pointer-events-none -z-10 overflow-visible"
                                 }
                                 style={{ filter: "brightness(1.1)" }}
                             >
@@ -243,6 +243,8 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                         )}
                     </div>
                 </div>
+
+                <div className={"h-safe-area-bottom"} />
             </Div>
         </div>
     )

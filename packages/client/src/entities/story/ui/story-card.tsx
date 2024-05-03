@@ -37,7 +37,7 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
             >
                 <div
                     className={
-                        "p-1.5 bg-vk-content rounded-[10px] box-border w-full h-full flex items-end border-solid border-2 border-vk-content"
+                        "p-1.5 bg-vk-content rounded-[10px] box-border w-full h-full flex items-end border-solid border-2 border-vk-content text-white"
                     }
                     style={{
                         background: `linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.5) 100%), url(${previewUrl}) lightgray 50% / cover no-repeat`,
