@@ -203,7 +203,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                             )}
                         />
                     </div>
-                    <div className={"relative select-none overflow-visible pb-2"}>
+                    <div className={"relative select-none overflow-visible"}>
                         <div className={"z-10 overflow-visible"}>
                             {currentCardData && (
                                 <Card
@@ -241,10 +241,10 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                                 />
                             </div>
                         )}
-
-                        <div className={"h-safe-area-bottom"} />
                     </div>
                 </div>
+
+                <div className={"h-safe-area-bottom"} />
             </Div>
         </div>
     )
