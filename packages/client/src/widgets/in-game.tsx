@@ -203,7 +203,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                             )}
                         />
                     </div>
-                    <div className={"relative select-none overflow-visible"}>
+                    <div className={"relative select-none overflow-visible pb-2"}>
                         <div className={"z-10 overflow-visible"}>
                             {currentCardData && (
                                 <Card
@@ -227,7 +227,7 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                         {nextCardData && (
                             <div
                                 className={
-                                    "absolute inset-0 pointer-events-none -z-10 overflow-visible pb-safe-area-bottom"
+                                    "absolute inset-0 pointer-events-none -z-10 overflow-visible"
                                 }
                                 style={{ filter: "brightness(1.1)" }}
                             >
@@ -241,6 +241,8 @@ export const InGame = ({ onStopGame, onEndGame, data }: InGameProps) => {
                                 />
                             </div>
                         )}
+
+                        <div className={"h-safe-area-bottom"} />
                     </div>
                 </div>
             </Div>
