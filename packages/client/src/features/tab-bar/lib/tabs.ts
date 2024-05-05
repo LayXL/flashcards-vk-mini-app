@@ -1,6 +1,6 @@
 import {
+    Icon28GameOutline,
     Icon28HieroglyphCharacterOutline,
-    Icon28PlayCircle,
     Icon28UserCircleOutline,
 } from "@vkontakte/icons"
 
@@ -25,7 +25,7 @@ export const tabs = [
     },
     {
         label: "Играть",
-        icon: Icon28PlayCircle,
+        icon: Icon28GameOutline,
         view: "play",
         url: "/play",
     },
