@@ -19,6 +19,7 @@ import { useOnboardingCompletion } from "../shared/hooks/useOnboardingCompletion
 import { Keyboard } from "../shared/ui/keyboard"
 import { LetterCell } from "../shared/ui/letter-cell"
 import { FiveLettersOnboarding } from "./five-letters-onboarding"
+import { vibrateOnError } from "../shared/helpers/vibrate"
 
 const limitToFiveLetters = (x: string) => {
     if (x.length > 5) {
@@ -58,6 +59,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
             setValue("")
         },
         onError: () => {
+            vibrateOnError()
             setIsValueWithError(true)
         },
     })
