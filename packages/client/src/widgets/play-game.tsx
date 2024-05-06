@@ -45,7 +45,7 @@ type PlayGameProps = {
 
 export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
     const gameModal = useModalState()
-    const gameResultsModal = useModalState()
+    const gameResultsModal = useModalState(false, { onClose })
     const gameStackSelectModal = useModalState()
 
     const utils = trpc.useUtils()
@@ -70,7 +70,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
         },
         {
             enabled: gameSettings.stacks.length > 0,
-        }
+        },
     )
 
     const {
@@ -115,7 +115,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                 }))
             }
         },
-        [setGameSettings]
+        [setGameSettings],
     )
 
     const stopGame = useCallback(() => {
