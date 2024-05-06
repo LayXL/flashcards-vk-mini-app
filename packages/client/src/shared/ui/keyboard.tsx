@@ -2,20 +2,19 @@ import bridge from "@vkontakte/vk-bridge"
 import { ClassValue } from "clsx"
 import { motion } from "framer-motion"
 import { cn } from "../helpers/cn"
-
-type KeyboardProps = {
-    onType: (letter: string) => void
-    onEnter: () => void
-    onBackspace: () => void
-    correctLetters: string[]
-    misplacedLetters: string[]
-    excludedLetters: string[]
-}
+import { ReactNode } from "react"
+import {
+    Icon16Delete,
+    Icon16Done,
+    Icon16EraserOutline,
+    Icon24Back,
+    Icon24Done,
+} from "@vkontakte/icons"
 
 const keys = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
 type KeyProps = {
-    letter: string
+    letter: ReactNode
     onClick: () => void
     className?: ClassValue
     type?: "default" | "excluded" | "correct" | "misplaced"
@@ -36,16 +35,26 @@ const Key = ({ letter, onClick, className, type = "default" }: KeyProps) => {
                 type === "correct" && "bg-green-400 dark:bg-green-500",
                 type === "excluded" && "bg-gray-300 dark:bg-gray-500",
                 type === "misplaced" && "bg-yellow-400 dark:bg-yellow-500",
-                className
+                className,
             )}
             onClick={() => {
                 bridge.send("VKWebAppTapticSelectionChanged", {})
                 onClick?.()
             }}
         >
-            <span children={letter} />
+            {typeof letter === "string" ? <span children={letter} /> : letter}
         </motion.div>
     )
+}
+
+type KeyboardProps = {
+    onType: (letter: string) => void
+    onEnter: () => void
+    onBackspace: () => void
+    correctLetters: string[]
+    misplacedLetters: string[]
+    excludedLetters: string[]
+    highlightEnter?: boolean
 }
 
 export const Keyboard = ({
@@ -55,6 +64,7 @@ export const Keyboard = ({
     correctLetters,
     excludedLetters,
     misplacedLetters,
+    highlightEnter,
 }: KeyboardProps) => {
     return (
         <div
@@ -66,8 +76,11 @@ export const Keyboard = ({
                 <div key={i} className={"flex flex-row gap-1.5 w-full justify-center"}>
                     {i === 2 && (
                         <Key
-                            letter={"⏎"}
-                            className={"w-auto flex-1 aspect-[unset] px-1 max-w-12"}
+                            letter={<Icon24Done />}
+                            className={cn(
+                                "w-auto flex-1 aspect-[unset] px-1 max-w-12",
+                                highlightEnter && "bg-learning-red",
+                            )}
                             onClick={onEnter}
                         />
                     )}
@@ -81,10 +94,10 @@ export const Keyboard = ({
                                 correctLetters?.includes(letter)
                                     ? "correct"
                                     : misplacedLetters?.includes(letter)
-                                    ? "misplaced"
-                                    : excludedLetters?.includes(letter)
-                                    ? "excluded"
-                                    : "default"
+                                      ? "misplaced"
+                                      : excludedLetters?.includes(letter)
+                                        ? "excluded"
+                                        : "default"
                             }
                         />
                     ))}
@@ -92,7 +105,9 @@ export const Keyboard = ({
                     {i === 2 && (
                         <Key
                             letter={"⌫"}
-                            className={"w-auto flex-1 aspect-[unset] px-1 max-w-12"}
+                            className={
+                                "w-auto flex-1 aspect-[unset] px-1 max-w-12 text-learning-red text-2xl"
+                            }
                             onClick={onBackspace}
                         />
                     )}
