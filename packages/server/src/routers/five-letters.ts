@@ -65,7 +65,9 @@ const toFiveLetterResult = (word: string, attempts: string[]) => {
             const correctLettersCount = correctLetters.filter(
                 (x) => x === letter.toLowerCase()
             ).length
-            const lettersInAttemptCount = results[i].filter((x) => x.letter === letter).length
+            const lettersInAttemptCount = results[i].filter(
+                (x) => x.letter === letter && (x.type === "misplaced" || x.type === "correct")
+            ).length
 
             if (lettersInAttemptCount > correctLettersCount && type === "misplaced") {
                 results[i][j].type = "excluded"
