@@ -58,6 +58,21 @@ const toFiveLetterResult = (word: string, attempts: string[]) => {
         })
     }
 
+    for (const i in results) {
+        for (const [j, { letter, type }] of [...results[i]].map(
+            (x, i) => [i, x] as [number, LetterResult]
+        )) {
+            const correctLettersCount = correctLetters.filter(
+                (x) => x === letter.toLowerCase()
+            ).length
+            const lettersInAttemptCount = results[i].filter((x) => x.letter === letter).length
+
+            if (lettersInAttemptCount > correctLettersCount && type === "misplaced") {
+                results[i][j].type = "excluded"
+            }
+        }
+    }
+
     const foundCorrectLetters = Array.from(
         new Set(
             [...results]
