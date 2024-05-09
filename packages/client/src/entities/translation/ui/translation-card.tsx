@@ -45,8 +45,15 @@ export const TranslationCard = ({
                     />
                 )}
                 <div className={"pt-4 text-center"}>
-                    <Subhead children={foreign} className={"font-semibold text-muted"} />
-                    <Caption children={vernacular} level={"2"} className={"text-subhead"} />
+                    <Subhead
+                        children={foreign}
+                        className={"font-semibold text-muted line-clamp-1"}
+                    />
+                    <Caption
+                        children={vernacular}
+                        level={"2"}
+                        className={"text-subhead line-clamp-2"}
+                    />
                 </div>
                 <div className={"flex justify-between"}>
                     <div className={"flex-1"}>
