@@ -49,9 +49,11 @@ export const TranslationCard = ({
                     <Caption children={vernacular} level={"2"} className={"text-subhead"} />
                 </div>
                 <div className={"flex justify-between"}>
-                    {authorName && (
-                        <AuthorCard authorName={authorName} authorAvatarUrl={authorAvatarUrl} />
-                    )}
+                    <div className={"flex-1"}>
+                        {authorName && (
+                            <AuthorCard authorName={authorName} authorAvatarUrl={authorAvatarUrl} />
+                        )}
+                    </div>
                     <Icon20AddCircle
                         className={"text-accent"}
                         onClick={(e) => {
