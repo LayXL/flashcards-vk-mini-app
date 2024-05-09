@@ -150,6 +150,8 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                             title={data?.name}
                             translationsCount={data?.translations?.length}
                             encodedBackground={data?.encodedBackground}
+                            authorAvatarUrl={getSuitableAvatarUrl(data?.author?.avatarUrls, 32)}
+                            authorName={data?.author?.firstName}
                         />
                     </div>
                     <div
