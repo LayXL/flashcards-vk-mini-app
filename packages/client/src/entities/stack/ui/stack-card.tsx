@@ -26,9 +26,10 @@ export const StackCard = ({
 }: StackCardProps) => {
     return (
         <div
-            className={
-                "press-scale w-full h-full cursor-pointer animate-fade-in rounded-xl flex flex-col overflow-hidden min-w-[140px] min-h-[216px]"
-            }
+            className={cn(
+                "w-full h-full animate-fade-in rounded-xl flex flex-col overflow-hidden min-w-[140px] min-h-[216px]",
+                onClick && "press-scale cursor-pointer"
+            )}
             onClick={onClick}
         >
             <div className={"flex-1 relative"}>
