@@ -58,7 +58,7 @@ export const Categories = () => {
                         }
                     />
                     <CardScroll>
-                        <div className={"flex gap-3 [&>*]:max-w-[160px]"}>
+                        <div className={"flex gap-3 [&>*]:w-[160px]"}>
                             {category.stacks.map((stack) => (
                                 <StackCard
                                     key={stack.id}
@@ -82,31 +82,29 @@ export const Categories = () => {
             ))}
 
             {data && (
-                <div className={"min-h-screen"}>
-                    <Placeholder
-                        icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
-                        header={"Не нашли подходящую коллекцию?"}
-                        children={
-                            "Вы можете найти коллекции от других пользователей или же создать собственные"
-                        }
-                        action={
-                            <ButtonGroup mode={"vertical"} align={"center"}>
-                                <Button
-                                    size={"l"}
-                                    children={"Перейти в ленту"}
-                                    onClick={() => routeNavigator.push("/new")}
-                                />
-                                <Button
-                                    size={"l"}
-                                    mode={"tertiary"}
-                                    children={"Создать свою коллекцию"}
-                                    before={<Icon24AddOutline />}
-                                    onClick={() => routeNavigator.push("/profile")}
-                                />
-                            </ButtonGroup>
-                        }
-                    />
-                </div>
+                <Placeholder
+                    icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
+                    header={"Не нашли подходящую коллекцию?"}
+                    children={
+                        "Вы можете найти коллекции от других пользователей или же создать собственные"
+                    }
+                    action={
+                        <ButtonGroup mode={"vertical"} align={"center"}>
+                            <Button
+                                size={"l"}
+                                children={"Перейти в ленту"}
+                                onClick={() => routeNavigator.push("/new")}
+                            />
+                            <Button
+                                size={"l"}
+                                mode={"tertiary"}
+                                children={"Создать свою коллекцию"}
+                                before={<Icon24AddOutline />}
+                                onClick={() => routeNavigator.push("/profile")}
+                            />
+                        </ButtonGroup>
+                    }
+                />
             )}
 
             <ModalWrapper isOpened={stackViewModal.isOpened} onClose={stackViewModal.close}>
