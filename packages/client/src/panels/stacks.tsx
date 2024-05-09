@@ -15,7 +15,7 @@ import {
     Spacing,
 } from "@vkontakte/vkui"
 import { useState } from "react"
-import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
+import { StackCard } from "../entities/stack/ui/stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { SearchBar } from "../features/search/ui/search-bar"
@@ -68,7 +68,7 @@ export const Stacks = () => {
                     <CardScroll>
                         <div className={"flex gap-3 [&>*]:max-w-[160px]"}>
                             {category.stacks.map((stack) => (
-                                <LargeStackCard
+                                <StackCard
                                     key={stack.id}
                                     title={stack.name}
                                     translationsCount={stack.translationsCount}
@@ -140,7 +140,7 @@ export const Stacks = () => {
 
                     <Div className={"grid grid-cols-cards gap-3 mb-safe-area-bottom"}>
                         {selectedCategory?.stacks.map((stack) => (
-                            <LargeStackCard
+                            <StackCard
                                 key={stack.id}
                                 title={stack.name}
                                 translationsCount={stack.translationsCount}

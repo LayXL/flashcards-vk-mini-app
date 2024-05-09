@@ -14,7 +14,7 @@ import {
     Snackbar,
 } from "@vkontakte/vkui"
 import { useCallback, useState } from "react"
-import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
+import { StackCard } from "../entities/stack/ui/stack-card"
 import { DetailedTranslationCard } from "../entities/translation/ui/detailed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWindow } from "../features/modal/ui/modal-window"
@@ -202,7 +202,7 @@ export const TranslationView = ({ id, onClose }: TranslationViewModalProps) => {
                     <Header children={"Коллекции с этим переводом"} />
                     <Div className={"grid-cols-cards grid gap-3"}>
                         {data?.stacks.map((stack) => (
-                            <LargeStackCard
+                            <StackCard
                                 key={stack.id}
                                 title={stack.name}
                                 translationsCount={stack.translationsCount}

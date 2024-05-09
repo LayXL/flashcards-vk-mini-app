@@ -4,7 +4,7 @@ import { PanelHeader, PullToRefresh, Spacing } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { useTimeout, useToggle, useUnmount } from "usehooks-ts"
-import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
+import { StackCard } from "../entities/stack/ui/stack-card"
 import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
@@ -166,7 +166,7 @@ export const New = () => {
                             infiniteData?.map((x, i) =>
                                 x.type === "stack" ? (
                                     <div className={"row-span-2"} key={i}>
-                                        <LargeStackCard
+                                        <StackCard
                                             title={x.stackData.name}
                                             translationsCount={x.stackData.translationsCount}
                                             isVerified={x.stackData.isVerified}
