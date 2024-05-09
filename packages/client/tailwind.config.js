@@ -84,7 +84,7 @@ export default {
                 card: "0px 2px 24px 0px rgba(0, 0, 0, 0.08), 0px 0px 2px 0px rgba(0, 0, 0, 0.08);",
             },
             gridTemplateColumns: {
-                cards: "repeat(auto-fill, minmax(152px, 1fr))",
+                cards: "repeat(auto-fill, minmax(140px, 1fr))",
             },
             transitionProperty: {
                 height: "height",

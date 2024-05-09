@@ -1,7 +1,5 @@
-import { Icon12VerifiedAlt, Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
-import { Caption, Subhead } from "@vkontakte/vkui"
-import { cn } from "../../../shared/helpers/cn"
-import { decodeStackBackground } from "../../../shared/helpers/stackBackground"
+import { Icon12Verified, Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
+import { Avatar, Caption, Subhead } from "@vkontakte/vkui"
 import { StackBackground } from "./stack-background"
 
 type LargeStackCardProps = {
@@ -11,6 +9,8 @@ type LargeStackCardProps = {
     onClick?: () => void
     onPlay?: () => void
     encodedBackground?: string
+    authorName?: string | null
+    authorAvatarUrl?: string | null
 }
 
 export const LargeStackCard = ({
@@ -20,101 +20,62 @@ export const LargeStackCard = ({
     onClick,
     onPlay,
     isVerified,
+    authorName,
+    authorAvatarUrl,
 }: LargeStackCardProps) => {
-    const decodedBackground = decodeStackBackground(encodedBackground) ?? null
-
     return (
         <div
             className={
-                "press-scale w-full min-h-[212px] min-w-[160px] max-w-[320px] h-full flex-col cursor-pointer text-white animate-fade-in"
+                "press-scale w-full h-full cursor-pointer animate-fade-in rounded-xl flex flex-col overflow-hidden"
             }
             onClick={onClick}
         >
-            <div className={"w-full"}>
-                <div className={"h-[6px] px-6"}>
-                    <div
-                        className={"relative w-full h-full rounded-t-[10px] overflow-hidden"}
-                        style={{
-                            background: decodedBackground?.primaryColor ?? "#fff",
-                        }}
-                    />
-                </div>
-                <div className={"h-[8px] px-3"}>
-                    <div
-                        className={"relative w-full h-full rounded-t-[10px] overflow-hidden"}
-                        style={{
-                            background: decodedBackground?.secondaryColor ?? "#fff",
-                        }}
-                    />
-                </div>
-            </div>
-            <div className={"flex-1 bg-vk-secondary rounded-xl relative overflow-hidden"}>
-                <div className={"relative overflow-hidden w-full h-full"}>
-                    <StackBackground encodedBackground={encodedBackground} />
-                    {encodedBackground?.includes("image") && (
-                        <>
+            <div className={"flex-1 relative"}>
+                <div className={"p-1.5 flex"}>
+                    {isVerified ? (
+                        <div
+                            className={
+                                "flex gap-1 px-1.5 bg-learning-red rounded-xl h-5 items-center text-white"
+                            }
+                        >
+                            <Caption children={"Лёрнинг"} level={"2"} />
+                            <Icon12Verified />
+                        </div>
+                    ) : (
+                        authorName && (
                             <div
                                 className={
-                                    "backdrop-blur-lg absolute inset-0 rounded-xl overflow-hidden"
+                                    "flex p-[1px] items-center gap-1 bg-vk-accent rounded-xl pr-1.5 text-white"
                                 }
-                            />
-                            <div
-                                className={"absolute inset-0"}
-                                style={{
-                                    backgroundColor: "white",
-                                    WebkitMaskImage:
-                                        "linear-gradient(to bottom, white 50%, transparent 75%)",
-                                }}
                             >
-                                <StackBackground encodedBackground={encodedBackground} />
+                                {authorAvatarUrl && <Avatar src={authorAvatarUrl} size={18} />}
+                                <Caption children={authorName} level={"2"} />
                             </div>
-                        </>
+                        )
                     )}
-                    {/* {decodedBackground?.imageUrl && <div className={"stack-blur"} />} */}
                 </div>
-                <div className={"absolute inset-0 flex-col justify-between"}>
-                    <div>{/* TODO author */}</div>
-                    <div className={"flex-col p-3 gap-2"}>
-                        <div
-                            className={cn(
-                                "inline items-center",
-                                !decodedBackground?.isImage &&
-                                    "drop-shadow-[0_0_12px_var(--shadow-color)]"
-                            )}
-                            style={{
-                                "--shadow-color": decodedBackground?.primaryColor ?? "#fff",
-                            }}
-                        >
-                            <Subhead
-                                weight={"1"}
-                                children={title}
-                                className={cn(
-                                    "inline border",
-                                    !decodedBackground?.isImage &&
-                                        "[text-shadow:_1px_1px_4px_var(--shadow-color),-1px_1px_4px_var(--shadow-color),1px_-1px_4px_var(--shadow-color),-1px_-1px_4px_var(--shadow-color)]",
-                                    title.length > 24 && "text-xs",
-                                    "leading-none"
-                                )}
-                            />
-                            &nbsp;
-                            {isVerified && <Icon12VerifiedAlt className={"inline-block"} />}
-                        </div>
-                        <div className={"flex-row justify-between items-center"}>
-                            <div className={"flex-row gap-1"}>
-                                <Icon16Cards2 />
-                                <Caption children={translationsCount} />
-                            </div>
-                            {onPlay && (
-                                <Icon24PlayCircle
-                                    className={"cursor-pointer"}
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-                                        onPlay && onPlay()
-                                    }}
-                                />
-                            )}
-                        </div>
+                <div className={"h-[calc(100%+0.375rem)] w-full bg-accent absolute -z-10 inset-0"}>
+                    <StackBackground encodedBackground={encodedBackground} />
+                </div>
+            </div>
+            <div className={"bg-vk-secondary rounded-t-md p-2 flex flex-col gap-1.5"}>
+                <Subhead children={title} className={"text-muted font-semibold"} />
+                <div className={"flex"}>
+                    <div className={"flex-1 flex items-center gap-1"}>
+                        <Icon16Cards2
+                            className={isVerified ? "text-learning-red" : "text-accent"}
+                        />
+                        <Caption children={translationsCount} level={"2"} />
                     </div>
+                    {onPlay && (
+                        <Icon24PlayCircle
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                onPlay()
+                            }}
+                            className={isVerified ? "text-learning-red" : "text-accent"}
+                        />
+                    )}
                 </div>
             </div>
         </div>

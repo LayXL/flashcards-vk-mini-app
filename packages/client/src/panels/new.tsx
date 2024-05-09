@@ -146,15 +146,7 @@ export const New = () => {
                     ))}
                     className={"py-3 px-3"}
                 >
-                    <div
-                        className={"grid gap-3"}
-                        // ref={gridRef}
-                        style={{
-                            gridAutoRows: 100,
-                            gridAutoFlow: "dense",
-                            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-                        }}
-                    >
+                    <div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[100px]"}>
                         {(!isSuccess || !isAnimationCompleted) &&
                             Array.from({ length: 30 }).map((_, i) => (
                                 <div className={"row-span-2 animate-pulse"} key={i}>
@@ -181,6 +173,13 @@ export const New = () => {
                                             encodedBackground={x.stackData.encodedBackground}
                                             onClick={onClickStack(x.stackData.id)}
                                             onPlay={onPlayStack(x.stackData.id)}
+                                            authorAvatarUrl={
+                                                getSuitableAvatarUrl(
+                                                    x.stackData.author.avatarUrls,
+                                                    32
+                                                ) ?? ""
+                                            }
+                                            authorName={x.stackData.author.firstName}
                                         />
                                     </div>
                                 ) : x.type === "translation" ? (
