@@ -77,7 +77,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
         },
         {
             enabled: !!watch("saveToStackId"),
-        }
+        },
     )
 
     const { data: languageVariations } = trpc.languages.getLanguageVariations.useQuery({
@@ -129,7 +129,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
         },
         {
             enabled: foreign?.length > 0 && vernacular?.length > 0,
-        }
+        },
     )
 
     const isLoading = isAddingTranslation || isEditingTranslation
@@ -217,7 +217,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                     }}
                     render={({ field, fieldState }) => (
                         <FormItem
-                            top={"На родном языке"}
+                            top={"На русском"}
                             status={fieldState.error ? "error" : "default"}
                         >
                             <Input
@@ -239,7 +239,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                     }}
                     render={({ field, fieldState }) => (
                         <FormItem
-                            top={"На языке перевода"}
+                            top={"На английском"}
                             status={fieldState.error ? "error" : "default"}
                         >
                             <Input
@@ -478,7 +478,7 @@ export const TranslationAdd = ({ defaultValues, onClose, onAdd }: TranslationAdd
                                             allowClearButton={true}
                                             onChange={({ currentTarget: { value } }) =>
                                                 field.onChange(
-                                                    value.length > 0 ? parseInt(value) : null
+                                                    value.length > 0 ? parseInt(value) : null,
                                                 )
                                             }
                                         />

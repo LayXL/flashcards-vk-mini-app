@@ -1,6 +1,7 @@
 import { FloatingPortal } from "@floating-ui/react"
 import {
     Icon16Cancel,
+    Icon16ErrorCircleOutline,
     Icon28HideOutline,
     Icon28InfoOutline,
     Icon28ViewOutline,
@@ -18,6 +19,7 @@ import { useOnboardingCompletion } from "../shared/hooks/useOnboardingCompletion
 import { Keyboard } from "../shared/ui/keyboard"
 import { LetterCell } from "../shared/ui/letter-cell"
 import { FiveLettersOnboarding } from "./five-letters-onboarding"
+import { vibrateOnError } from "../shared/helpers/vibrate"
 
 const limitToFiveLetters = (x: string) => {
     if (x.length > 5) {
@@ -34,9 +36,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
 
     const fiveLettersOnboardingCompletion = useOnboardingCompletion("fiveLetters2")
     const onboardingModal = useModalState(false, {
-        onClose: () => {
-            fiveLettersOnboardingCompletion.complete()
-        },
+        onClose: () => fiveLettersOnboardingCompletion.complete(),
     })
 
     useEffect(() => {
@@ -59,6 +59,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
             setValue("")
         },
         onError: () => {
+            vibrateOnError()
             setIsValueWithError(true)
         },
     })
@@ -69,6 +70,18 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
 
     const [value, setValue] = useState("")
     const [isValueWithError, setIsValueWithError] = useState(false)
+
+    useEffect(() => {
+        let timeout: NodeJS.Timeout
+
+        if (isValueWithError) {
+            timeout = setTimeout(() => {
+                setIsValueWithError(false)
+            }, 2000)
+        }
+
+        return () => clearTimeout(timeout)
+    }, [setIsValueWithError, isValueWithError])
 
     return (
         <>
@@ -216,12 +229,22 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 <FloatingPortal>
                     <div
                         className={cn(
-                            "fixed w-full bottom-0",
+                            "fixed w-full bottom-0 flex flex-col gap-2",
                             modal?.isOpenedAnimation
                                 ? "animate-content-appearing"
-                                : "animate-content-disappearing"
+                                : "animate-content-disappearing",
                         )}
                     >
+                        {isValueWithError && (
+                            <div
+                                className={
+                                    "bg-learning-red p-3 rounded-xl text-center animate-fade-in flex items-center justify-center gap-2"
+                                }
+                            >
+                                <Icon16ErrorCircleOutline width={20} height={20} />
+                                <span>Используйте существующие слова</span>
+                            </div>
+                        )}
                         <Keyboard
                             correctLetters={hideLetters ? [] : data?.correctLetters ?? []}
                             excludedLetters={hideLetters ? [] : data?.excludedLetters ?? []}
@@ -238,6 +261,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                                 if (isPending) return
                                 answer(value)
                             }}
+                            highlightEnter={value.length === 5}
                         />
                     </div>
                 </FloatingPortal>

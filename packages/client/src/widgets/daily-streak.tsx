@@ -17,7 +17,7 @@ export const DailyStreak = () => {
             <Icon28FireAltOutline />
             <Headline
                 weight={"2"}
-                children={dailyStreak?.streakCount || <Skeleton className={"w-[1ch]"} />}
+                children={isLoading ? <Skeleton className={"w-[1ch]"} /> : dailyStreak?.streakCount}
             />
         </div>
     )
