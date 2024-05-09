@@ -72,6 +72,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
     const playGameModal = useModalState()
     const duplicateStackModal = useModalState()
     const deleteStackModal = useModalState()
+    const showMore = useModalState()
 
     const modal = useModal()
     const utils = trpc.useUtils()
@@ -82,19 +83,12 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
         onClose?.() || modal?.onClose()
     }
 
-    const showMore = useModalState()
-
     const { mutate: deleteTranslationFromStack } = trpc.stacks.removeTranslation.useMutation({
         onSuccess: () => refetch(),
     })
 
-    const { mutate: hide } = trpc.stacks.hide.useMutation({
-        onSuccess: () => refetch(),
-    })
-
-    const { mutate: show } = trpc.stacks.show.useMutation({
-        onSuccess: () => refetch(),
-    })
+    const { mutate: hide } = trpc.stacks.hide.useMutation({ onSuccess: () => refetch() })
+    const { mutate: show } = trpc.stacks.show.useMutation({ onSuccess: () => refetch() })
 
     const { mutate: addTranslationToStack } = trpc.stacks.addTranslation.useMutation({
         onSuccess: () => {
@@ -105,20 +99,14 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
 
     const { mutate: addReaction } = trpc.stacks.addReaction.useMutation({
         onMutate: () => {
-            utils.stacks.getSingle.setData({ id }, (data) => ({
-                ...data,
-                isLiked: true,
-            }))
+            utils.stacks.getSingle.setData({ id }, (data) => ({ ...data, isLiked: true }))
         },
         onSuccess: () => refetch(),
     })
 
     const { mutate: removeReaction } = trpc.stacks.removeReaction.useMutation({
         onMutate: () => {
-            utils.stacks.getSingle.setData({ id }, (data) => ({
-                ...data,
-                isLiked: false,
-            }))
+            utils.stacks.getSingle.setData({ id }, (data) => ({ ...data, isLiked: false }))
         },
         onSuccess: () => refetch(),
     })
@@ -150,6 +138,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                             title={data?.name}
                             translationsCount={data?.translations?.length}
                             encodedBackground={data?.encodedBackground}
+                            isVerified={data?.isVerified}
                             authorAvatarUrl={getSuitableAvatarUrl(data?.author?.avatarUrls, 32)}
                             authorName={data?.author?.firstName}
                         />
