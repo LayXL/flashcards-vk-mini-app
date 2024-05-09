@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { useTimeout, useToggle, useUnmount } from "usehooks-ts"
 import { StackCard } from "../entities/stack/ui/stack-card"
-import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { SearchBar } from "../features/search/ui/search-bar"
@@ -146,7 +146,7 @@ export const New = () => {
                     ))}
                     className={"py-3 px-3"}
                 >
-                    <div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[100px]"}>
+                    <div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[106px]"}>
                         {(!isSuccess || !isAnimationCompleted) &&
                             Array.from({ length: 30 }).map((_, i) => (
                                 <div className={"row-span-2 animate-pulse"} key={i}>
@@ -184,7 +184,7 @@ export const New = () => {
                                     </div>
                                 ) : x.type === "translation" ? (
                                     <div className={"row-span-1"} key={i}>
-                                        <FeedTranslationCard
+                                        <TranslationCard
                                             foreign={x.translationData.foreign}
                                             vernacular={x.translationData.vernacular}
                                             authorName={x.translationData.author.firstName ?? ""}

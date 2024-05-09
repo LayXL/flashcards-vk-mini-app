@@ -14,7 +14,7 @@ import {
     SubnavigationButton,
 } from "@vkontakte/vkui"
 import { ComponentProps, useState } from "react"
-import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
@@ -120,7 +120,7 @@ export const UserTranslations = () => {
 }
 
 type TranslationCardWithModalProps = Omit<
-    ComponentProps<typeof FeedTranslationCard>,
+    ComponentProps<typeof TranslationCard>,
     "onAdd" | "onClick" | "onShowMore"
 > & {
     id: number
@@ -132,7 +132,7 @@ const TranslationCardWithModal = ({ id, ...props }: TranslationCardWithModalProp
 
     return (
         <>
-            <FeedTranslationCard
+            <TranslationCard
                 onAdd={addToStackModal.open}
                 onClick={viewTranslation.open}
                 {...props}

@@ -35,7 +35,7 @@ import {
 } from "@vkontakte/vkui"
 import { useState } from "react"
 import { StackCard } from "../entities/stack/ui/stack-card"
-import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWindow } from "../features/modal/ui/modal-window"
@@ -263,7 +263,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                                 />
                             ))}
                         {data?.translations?.map(({ translation }) => (
-                            <FeedTranslationCard
+                            <TranslationCard
                                 key={translation.id}
                                 foreign={translation.foreign}
                                 vernacular={translation.vernacular}

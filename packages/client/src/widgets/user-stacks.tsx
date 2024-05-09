@@ -81,7 +81,7 @@ export const UserStacks = () => {
                 loader={<></>}
                 dataLength={infiniteData?.length ?? 0}
             >
-                <Div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"}>
+                <Div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[224px]"}>
                     {isLoading &&
                         Array.from({ length: 20 }).map((_, i) => (
                             <div

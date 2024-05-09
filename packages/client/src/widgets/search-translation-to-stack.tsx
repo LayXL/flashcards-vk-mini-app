@@ -2,7 +2,7 @@ import { Icon56SearchOutline } from "@vkontakte/icons"
 import { Div, Placeholder, Search } from "@vkontakte/vkui"
 import { useState } from "react"
 import { useDebounceValue } from "usehooks-ts"
-import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalWindow } from "../features/modal/ui/modal-window"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
@@ -52,7 +52,7 @@ export const SearchTranslationToStack = ({ onSelect, stackId }: SearchTranslatio
             ) : (
                 <Div className={"grid gap-3 grid-cols-cards"}>
                     {data?.translations.map((translation) => (
-                        <FeedTranslationCard
+                        <TranslationCard
                             key={translation.id}
                             foreign={translation.foreign}
                             vernacular={translation.vernacular}
