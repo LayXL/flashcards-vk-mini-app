@@ -1,5 +1,6 @@
 import { Icon12Verified, Icon16Cards2, Icon24PlayCircle } from "@vkontakte/icons"
 import { Avatar, Caption, Subhead } from "@vkontakte/vkui"
+import { cn } from "../../../shared/helpers/cn"
 import { StackBackground } from "./stack-background"
 
 type StackCardProps = {
@@ -32,26 +33,28 @@ export const StackCard = ({
         >
             <div className={"flex-1 relative"}>
                 <div className={"p-1.5 flex"}>
-                    {isVerified ? (
+                    {(authorName || isVerified) && (
                         <div
-                            className={
-                                "flex gap-1 px-1.5 bg-learning-red rounded-xl h-5 items-center text-white"
+                            className={cn(
+                                "flex gap-1 rounded-xl h-5 items-center text-white p-[1px] bg-vk-accent pr-1.5",
+                                isVerified && "px-1.5 bg-learning-red"
+                            )}
+                            children={
+                                isVerified ? (
+                                    <>
+                                        <Caption children={"Лёрнинг"} level={"2"} />
+                                        <Icon12Verified />
+                                    </>
+                                ) : (
+                                    <>
+                                        {authorAvatarUrl && (
+                                            <Avatar src={authorAvatarUrl} size={18} />
+                                        )}
+                                        <Caption children={authorName} level={"2"} />
+                                    </>
+                                )
                             }
-                        >
-                            <Caption children={"Лёрнинг"} level={"2"} />
-                            <Icon12Verified />
-                        </div>
-                    ) : (
-                        authorName && (
-                            <div
-                                className={
-                                    "flex p-[1px] items-center gap-1 bg-vk-accent rounded-xl pr-1.5 text-white"
-                                }
-                            >
-                                {authorAvatarUrl && <Avatar src={authorAvatarUrl} size={18} />}
-                                <Caption children={authorName} level={"2"} />
-                            </div>
-                        )
+                        />
                     )}
                 </div>
                 <div className={"h-[calc(100%+0.375rem)] w-full bg-accent absolute -z-10 inset-0"}>
