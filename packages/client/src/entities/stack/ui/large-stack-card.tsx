@@ -26,7 +26,7 @@ export const LargeStackCard = ({
     return (
         <div
             className={
-                "press-scale w-full h-full cursor-pointer animate-fade-in rounded-xl flex flex-col overflow-hidden"
+                "press-scale w-full h-full cursor-pointer animate-fade-in rounded-xl flex flex-col overflow-hidden min-w-[140px] min-h-[216px]"
             }
             onClick={onClick}
         >
