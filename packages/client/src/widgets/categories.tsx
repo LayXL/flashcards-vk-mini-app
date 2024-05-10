@@ -57,27 +57,29 @@ export const Categories = () => {
                             />
                         }
                     />
-                    <CardScroll>
-                        <div className={"flex gap-3 [&>*]:w-[160px]"}>
-                            {category.stacks.map((stack) => (
-                                <StackCard
-                                    key={stack.id}
-                                    title={stack.name}
-                                    translationsCount={stack.translationsCount}
-                                    isVerified={stack.isVerified}
-                                    encodedBackground={stack.encodedBackground}
-                                    onClick={() => {
-                                        setSelectedStackId(stack.id)
-                                        stackViewModal.open()
-                                    }}
-                                    onPlay={() => {
-                                        setSelectedStackId(stack.id)
-                                        stackPlayModal.open()
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    </CardScroll>
+                    <Div className={"px-0"}>
+                        <CardScroll>
+                            <div className={"flex gap-3 [&>*]:w-[160px]"}>
+                                {category.stacks.map((stack) => (
+                                    <StackCard
+                                        key={stack.id}
+                                        title={stack.name}
+                                        translationsCount={stack.translationsCount}
+                                        isVerified={stack.isVerified}
+                                        encodedBackground={stack.encodedBackground}
+                                        onClick={() => {
+                                            setSelectedStackId(stack.id)
+                                            stackViewModal.open()
+                                        }}
+                                        onPlay={() => {
+                                            setSelectedStackId(stack.id)
+                                            stackPlayModal.open()
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </CardScroll>
+                    </Div>
                 </Group>
             ))}
 
