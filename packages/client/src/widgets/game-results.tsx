@@ -12,8 +12,8 @@ import { motion, useAnimationControls } from "framer-motion"
 import { DateTime } from "luxon"
 import { ReactNode, useState } from "react"
 import { useBoolean, useStep } from "usehooks-ts"
-import { AnswerCard } from "../entities/game/ui/answer-card"
 import { StackBackground } from "../entities/stack/ui/stack-background"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
@@ -275,31 +275,64 @@ export const GameResults = ({ id, onClose }: GameResultsProps) => {
                             )}
                         </Div>
 
-                        <Header children={"Ответы"} />
+                        <Header children={"Ответы"} mode={"secondary"} />
 
-                        <Div className={"flex-col gap-2 flex-1 overflow-scroll pb-36"}>
-                            {data?.translations
-                                ?.filter(({ status }) => status !== "unanswered")
-                                .map(({ translation, status, answerDuration }) => (
-                                    <AnswerCard
-                                        key={translation.id}
-                                        foreign={translation.foreign}
-                                        vernacular={translation.vernacular}
-                                        time={answerDuration}
-                                        type={status as "correct" | "incorrect"}
-                                        onClick={() => {
-                                            vibrateOnClick()
-                                            translationViewModal.open()
-                                            setSelectedTranslation(translation.id)
-                                        }}
-                                        onAdd={() => {
-                                            vibrateOnClick()
-                                            translationAddModal.open()
-                                            setSelectedTranslation(translation.id)
-                                        }}
+                        <div className={"flex-col flex-1 overflow-scroll pb-36"}>
+                            {data.translations.map((x) => (
+                                <>
+                                    <Header
+                                        mode={"primary"}
+                                        children={x.translation.vernacular}
+                                        indicator={<Caption children={x.answerDuration + " сек"} />}
                                     />
-                                ))}
-                        </Div>
+                                    <Div
+                                        key={x.translationId}
+                                        className={"flex gap-3 py-0 [&>*]:flex-1"}
+                                    >
+                                        {x.incorrectTranslation && (
+                                            <TranslationCard
+                                                foreign={x.incorrectTranslation?.foreign}
+                                                vernacular={x.incorrectTranslation?.vernacular}
+                                                onClick={() => {
+                                                    vibrateOnClick()
+                                                    translationViewModal.open()
+                                                    setSelectedTranslation(
+                                                        x.incorrectTranslation.id
+                                                    )
+                                                }}
+                                                onAdd={() => {
+                                                    vibrateOnClick()
+                                                    translationAddModal.open()
+                                                    setSelectedTranslation(
+                                                        x.incorrectTranslation.id
+                                                    )
+                                                }}
+                                                type={
+                                                    x.status === "incorrect"
+                                                        ? "incorrect"
+                                                        : "default"
+                                                }
+                                            />
+                                        )}
+                                        <TranslationCard
+                                            foreign={x.translation.foreign}
+                                            vernacular={x.translation.vernacular}
+                                            onClick={() => {
+                                                vibrateOnClick()
+                                                translationViewModal.open()
+                                                setSelectedTranslation(x.translation.id)
+                                            }}
+                                            onAdd={() => {
+                                                vibrateOnClick()
+                                                translationAddModal.open()
+                                                setSelectedTranslation(x.translation.id)
+                                            }}
+                                            type={x.status === "correct" ? "correct" : "default"}
+                                        />
+                                    </Div>
+                                </>
+                            ))}
+                        </div>
                     </motion.div>
                 </div>
             </div>

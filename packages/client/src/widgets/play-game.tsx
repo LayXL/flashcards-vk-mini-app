@@ -119,16 +119,14 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
     )
 
     const stopGame = useCallback(() => {
-        utils.game.getRatingAttemptsLeftToday.invalidate()
         gameModal.close()
         resetGameData()
-    }, [gameModal, resetGameData, utils.game.getRatingAttemptsLeftToday])
+    }, [gameModal, resetGameData])
 
     const endGame = useCallback(() => {
-        utils.game.getRatingAttemptsLeftToday.invalidate()
         gameModal.close()
         gameResultsModal.open()
-    }, [gameModal, gameResultsModal, utils.game.getRatingAttemptsLeftToday])
+    }, [gameModal, gameResultsModal])
 
     useEffect(() => {
         bridge.send("VKWebAppCheckNativeAds", { ad_format: EAdsFormats.INTERSTITIAL })

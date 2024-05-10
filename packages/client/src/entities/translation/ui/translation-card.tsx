@@ -1,6 +1,7 @@
 import { FloatingPortal } from "@floating-ui/react"
 import { Icon16MoreHorizontal, Icon20AddCircle, Icon28Delete } from "@vkontakte/icons"
 import { ActionSheet, ActionSheetItem, Caption, Subhead } from "@vkontakte/vkui"
+import { cn } from "../../../shared/helpers/cn"
 import { useModalState } from "../../../shared/hooks/useModalState"
 import { AuthorCard } from "../../../shared/ui/author-card"
 
@@ -13,6 +14,7 @@ type TranslationCardProps = {
     onClick: () => void
     onRemoveFromStack?: () => void
     isWithMore?: boolean
+    type?: "correct" | "incorrect" | "default"
 }
 
 export const TranslationCard = ({
@@ -24,15 +26,18 @@ export const TranslationCard = ({
     onClick,
     isWithMore,
     onRemoveFromStack,
+    type = "default",
 }: TranslationCardProps) => {
     const showMoreModal = useModalState()
 
     return (
         <>
             <div
-                className={
-                    "press-scale bg-secondary rounded-xl cursor-pointer animate-fade-in p-2 flex flex-col justify-between h-full box-border relative min-h-[106px]"
-                }
+                className={cn(
+                    "press-scale bg-secondary rounded-xl cursor-pointer animate-fade-in p-2 flex flex-col justify-between h-full box-border relative min-h-[106px]",
+                    type === "correct" && "border  border-solid border-dynamic-green",
+                    type === "incorrect" && "border  border-solid border-dynamic-red"
+                )}
                 onClick={onClick}
             >
                 {(isWithMore || onRemoveFromStack) && (
@@ -59,6 +64,26 @@ export const TranslationCard = ({
                     <div className={"flex-1 flex"}>
                         {authorName && (
                             <AuthorCard authorName={authorName} authorAvatarUrl={authorAvatarUrl} />
+                        )}
+                        {type === "correct" && (
+                            <div
+                                className={
+                                    "px-2 h-5 flex items-center bg-dynamic-green rounded-xl text-white"
+                                }
+                                children={
+                                    <Caption caps level={"2"} weight={"1"} children={"Верно"} />
+                                }
+                            />
+                        )}
+                        {type === "incorrect" && (
+                            <div
+                                className={
+                                    "px-2 h-5 flex items-center bg-dynamic-red rounded-xl text-white"
+                                }
+                                children={
+                                    <Caption caps level={"2"} weight={"1"} children={"Неверно"} />
+                                }
+                            />
                         )}
                     </div>
                     <Icon20AddCircle
