@@ -1,15 +1,9 @@
+import { Icon24Done } from "@vkontakte/icons"
 import bridge from "@vkontakte/vk-bridge"
 import { ClassValue } from "clsx"
 import { motion } from "framer-motion"
-import { cn } from "../helpers/cn"
 import { ReactNode } from "react"
-import {
-    Icon16Delete,
-    Icon16Done,
-    Icon16EraserOutline,
-    Icon24Back,
-    Icon24Done,
-} from "@vkontakte/icons"
+import { cn } from "../helpers/cn"
 
 const keys = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
@@ -35,9 +29,9 @@ const Key = ({ letter, onClick, className, type = "default" }: KeyProps) => {
                 type === "correct" && "bg-green-400 dark:bg-green-500",
                 type === "excluded" && "bg-gray-300 dark:bg-gray-500",
                 type === "misplaced" && "bg-yellow-400 dark:bg-yellow-500",
-                className,
+                className
             )}
-            onClick={() => {
+            onPointerUp={() => {
                 bridge.send("VKWebAppTapticSelectionChanged", {})
                 onClick?.()
             }}
@@ -79,7 +73,7 @@ export const Keyboard = ({
                             letter={<Icon24Done />}
                             className={cn(
                                 "w-auto flex-1 aspect-[unset] px-1 max-w-12",
-                                highlightEnter && "bg-learning-red",
+                                highlightEnter && "bg-learning-red"
                             )}
                             onClick={onEnter}
                         />
@@ -94,10 +88,10 @@ export const Keyboard = ({
                                 correctLetters?.includes(letter)
                                     ? "correct"
                                     : misplacedLetters?.includes(letter)
-                                      ? "misplaced"
-                                      : excludedLetters?.includes(letter)
-                                        ? "excluded"
-                                        : "default"
+                                    ? "misplaced"
+                                    : excludedLetters?.includes(letter)
+                                    ? "excluded"
+                                    : "default"
                             }
                         />
                     ))}

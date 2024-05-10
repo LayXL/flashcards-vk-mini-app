@@ -143,7 +143,7 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                     gameResultsModal.close()
                 }}
             >
-                <ModalBody fullscreen={true}>
+                <ModalBody fullscreen={true} disableDragToClose>
                     <GameResults
                         id={data?.gameSession.id ?? 0}
                         onClose={() => {
