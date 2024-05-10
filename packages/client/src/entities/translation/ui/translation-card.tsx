@@ -56,7 +56,7 @@ export const TranslationCard = ({
                     />
                 </div>
                 <div className={"flex justify-between"}>
-                    <div className={"flex-1"}>
+                    <div className={"flex-1 flex"}>
                         {authorName && (
                             <AuthorCard authorName={authorName} authorAvatarUrl={authorAvatarUrl} />
                         )}
