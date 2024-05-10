@@ -21,14 +21,16 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { httpBatchLink } from "@trpc/client"
 import bridge from "@vkontakte/vk-bridge"
 import { RouterProvider } from "@vkontakte/vk-mini-apps-router"
-import { AdaptivityProvider, AppRoot, ConfigProvider } from "@vkontakte/vkui"
 import { Settings } from "luxon"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { trpc } from "../shared/api"
 import "./index.css"
 import { Router, router } from "./router"
+import { ThemeProvider } from "./theme-provider"
 
 Settings.defaultLocale = "ru"
+
+bridge.send("VKWebAppInit", {})
 
 export const App = () => {
     const [queryClient] = useState(
@@ -51,22 +53,14 @@ export const App = () => {
         })
     )
 
-    useEffect(() => {
-        bridge.send("VKWebAppInit", {})
-    }, [])
-
     return (
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <QueryClientProvider client={queryClient}>
-                <ConfigProvider transitionMotionEnabled={false}>
-                    <AdaptivityProvider>
-                        <AppRoot>
-                            <RouterProvider router={router}>
-                                <Router />
-                            </RouterProvider>
-                        </AppRoot>
-                    </AdaptivityProvider>
-                </ConfigProvider>
+                <ThemeProvider>
+                    <RouterProvider router={router}>
+                        <Router />
+                    </RouterProvider>
+                </ThemeProvider>
             </QueryClientProvider>
         </trpc.Provider>
     )
