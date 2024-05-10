@@ -33,7 +33,7 @@ export const StackCard = ({
             onClick={onClick}
         >
             <div className={"flex-1 relative"}>
-                <div className={"p-1.5 flex"}>
+                <div className={"p-2 flex"}>
                     {(authorName || isVerified) && (
                         <div
                             className={cn(
