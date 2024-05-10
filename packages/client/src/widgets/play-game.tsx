@@ -70,7 +70,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
         },
         {
             enabled: gameSettings.stacks.length > 0,
-        },
+        }
     )
 
     const {
@@ -115,7 +115,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                 }))
             }
         },
-        [setGameSettings],
+        [setGameSettings]
     )
 
     const stopGame = useCallback(() => {
@@ -303,6 +303,9 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                         id={data?.gameSession.id ?? 0}
                         onClose={() => {
                             gameResultsModal.close()
+
+                            utils.stats.getDailyStreak.invalidate()
+                            utils.stats.getActiveDays.invalidate()
 
                             if (Math.random() <= 0.3) {
                                 bridge.send("VKWebAppShowNativeAds", {
