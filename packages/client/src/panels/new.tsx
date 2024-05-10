@@ -67,6 +67,7 @@ export const New = () => {
             vibrateOnClick()
             setSelectedStack(id)
             stackViewModal.open()
+            bridge.send("VKWebAppHideBannerAd")
         },
         [stackViewModal]
     )
@@ -76,6 +77,7 @@ export const New = () => {
             vibrateOnClick()
             setSelectedStack(id)
             playModal.open()
+            bridge.send("VKWebAppHideBannerAd")
         },
         [playModal]
     )
@@ -85,6 +87,7 @@ export const New = () => {
             vibrateOnClick()
             setSelectedTranslation(id)
             translationViewModal.open()
+            bridge.send("VKWebAppHideBannerAd")
         },
         [translationViewModal]
     )
@@ -94,6 +97,7 @@ export const New = () => {
             vibrateOnClick()
             setSelectedTranslation(id)
             translationAddModal.open()
+            bridge.send("VKWebAppHideBannerAd")
         },
         [translationAddModal]
     )
