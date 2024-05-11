@@ -86,6 +86,17 @@ export const Profile = () => {
                                     onClick={adminStatsModal.open}
                                 />
                             )}
+                            {/* {import.meta.env.DEV && (
+                                <Button
+                                    mode={"secondary"}
+                                    stretched
+                                    size={"l"}
+                                    before={<Icon24BoxingGloveOutline />}
+                                    onClick={() => {
+                                        window.location.replace("https://learning.layxl.dev/")
+                                    }}
+                                />
+                            )} */}
                         </ButtonGroup>
                     </Div>
                 )}

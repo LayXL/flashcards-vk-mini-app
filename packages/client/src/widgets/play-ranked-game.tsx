@@ -16,10 +16,14 @@ type PlayRankedGameProps = {
 }
 
 export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
-    const gameModal = useModalState()
-    const gameResultsModal = useModalState()
-
     const utils = trpc.useUtils()
+
+    const gameModal = useModalState()
+    const gameResultsModal = useModalState(false, {
+        onClose: () => {
+            utils.game.getRatingAttemptsLeftToday.invalidate()
+        },
+    })
 
     const {
         mutate: start,
@@ -43,10 +47,9 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
 
     const endGame = useCallback(() => {
         end()
-        utils.game.getRatingAttemptsLeftToday.invalidate()
         gameModal.close()
         gameResultsModal.open()
-    }, [end, gameModal, gameResultsModal, utils.game.getRatingAttemptsLeftToday])
+    }, [end, gameModal, gameResultsModal])
 
     return (
         <>
@@ -140,7 +143,7 @@ export const PlayRankedGame = ({ onClose }: PlayRankedGameProps) => {
                     gameResultsModal.close()
                 }}
             >
-                <ModalBody fullscreen={true}>
+                <ModalBody fullscreen={true} disableDragToClose>
                     <GameResults
                         id={data?.gameSession.id ?? 0}
                         onClose={() => {

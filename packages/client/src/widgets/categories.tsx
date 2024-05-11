@@ -13,7 +13,7 @@ import {
     Placeholder,
 } from "@vkontakte/vkui"
 import { useState } from "react"
-import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
+import { StackCard } from "../entities/stack/ui/stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
@@ -57,56 +57,56 @@ export const Categories = () => {
                             />
                         }
                     />
-                    <CardScroll>
-                        <div className={"flex gap-3 [&>*]:max-w-[160px]"}>
-                            {category.stacks.map((stack) => (
-                                <LargeStackCard
-                                    key={stack.id}
-                                    title={stack.name}
-                                    translationsCount={stack.translationsCount}
-                                    isVerified={stack.isVerified}
-                                    encodedBackground={stack.encodedBackground}
-                                    onClick={() => {
-                                        setSelectedStackId(stack.id)
-                                        stackViewModal.open()
-                                    }}
-                                    onPlay={() => {
-                                        setSelectedStackId(stack.id)
-                                        stackPlayModal.open()
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    </CardScroll>
+                    <Div className={"px-0"}>
+                        <CardScroll>
+                            <div className={"flex gap-3 [&>*]:w-[160px]"}>
+                                {category.stacks.map((stack) => (
+                                    <StackCard
+                                        key={stack.id}
+                                        title={stack.name}
+                                        translationsCount={stack.translationsCount}
+                                        isVerified={stack.isVerified}
+                                        encodedBackground={stack.encodedBackground}
+                                        onClick={() => {
+                                            setSelectedStackId(stack.id)
+                                            stackViewModal.open()
+                                        }}
+                                        onPlay={() => {
+                                            setSelectedStackId(stack.id)
+                                            stackPlayModal.open()
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </CardScroll>
+                    </Div>
                 </Group>
             ))}
 
             {data && (
-                <div className={"min-h-screen"}>
-                    <Placeholder
-                        icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
-                        header={"Не нашли подходящую коллекцию?"}
-                        children={
-                            "Вы можете найти коллекции от других пользователей или же создать собственные"
-                        }
-                        action={
-                            <ButtonGroup mode={"vertical"} align={"center"}>
-                                <Button
-                                    size={"l"}
-                                    children={"Перейти в ленту"}
-                                    onClick={() => routeNavigator.push("/new")}
-                                />
-                                <Button
-                                    size={"l"}
-                                    mode={"tertiary"}
-                                    children={"Создать свою коллекцию"}
-                                    before={<Icon24AddOutline />}
-                                    onClick={() => routeNavigator.push("/profile")}
-                                />
-                            </ButtonGroup>
-                        }
-                    />
-                </div>
+                <Placeholder
+                    icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
+                    header={"Не нашли подходящую коллекцию?"}
+                    children={
+                        "Вы можете найти коллекции от других пользователей или же создать собственные"
+                    }
+                    action={
+                        <ButtonGroup mode={"vertical"} align={"center"}>
+                            <Button
+                                size={"l"}
+                                children={"Перейти в ленту"}
+                                onClick={() => routeNavigator.push("/new")}
+                            />
+                            <Button
+                                size={"l"}
+                                mode={"tertiary"}
+                                children={"Создать свою коллекцию"}
+                                before={<Icon24AddOutline />}
+                                onClick={() => routeNavigator.push("/profile")}
+                            />
+                        </ButtonGroup>
+                    }
+                />
             )}
 
             <ModalWrapper isOpened={stackViewModal.isOpened} onClose={stackViewModal.close}>
@@ -132,7 +132,7 @@ export const Categories = () => {
 
                     <Div className={"grid grid-cols-cards gap-3 mb-safe-area-bottom"}>
                         {selectedCategory?.stacks.map((stack) => (
-                            <LargeStackCard
+                            <StackCard
                                 key={stack.id}
                                 title={stack.name}
                                 translationsCount={stack.translationsCount}

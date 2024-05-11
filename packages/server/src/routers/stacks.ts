@@ -299,6 +299,13 @@ export const stacks = router({
                             },
                         },
                     },
+                    author: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            avatarUrls: true,
+                        },
+                    },
                 },
             })
 

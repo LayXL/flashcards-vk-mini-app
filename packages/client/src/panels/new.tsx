@@ -4,8 +4,8 @@ import { PanelHeader, PullToRefresh, Spacing } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { useTimeout, useToggle, useUnmount } from "usehooks-ts"
-import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
-import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
+import { StackCard } from "../entities/stack/ui/stack-card"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { SearchBar } from "../features/search/ui/search-bar"
@@ -67,6 +67,7 @@ export const New = () => {
             vibrateOnClick()
             setSelectedStack(id)
             stackViewModal.open()
+            bridge.send("VKWebAppHideBannerAd")
         },
         [stackViewModal]
     )
@@ -76,6 +77,7 @@ export const New = () => {
             vibrateOnClick()
             setSelectedStack(id)
             playModal.open()
+            bridge.send("VKWebAppHideBannerAd")
         },
         [playModal]
     )
@@ -85,6 +87,7 @@ export const New = () => {
             vibrateOnClick()
             setSelectedTranslation(id)
             translationViewModal.open()
+            bridge.send("VKWebAppHideBannerAd")
         },
         [translationViewModal]
     )
@@ -94,6 +97,7 @@ export const New = () => {
             vibrateOnClick()
             setSelectedTranslation(id)
             translationAddModal.open()
+            bridge.send("VKWebAppHideBannerAd")
         },
         [translationAddModal]
     )
@@ -146,15 +150,7 @@ export const New = () => {
                     ))}
                     className={"py-3 px-3"}
                 >
-                    <div
-                        className={"grid gap-3"}
-                        // ref={gridRef}
-                        style={{
-                            gridAutoRows: 100,
-                            gridAutoFlow: "dense",
-                            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-                        }}
-                    >
+                    <div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[106px]"}>
                         {(!isSuccess || !isAnimationCompleted) &&
                             Array.from({ length: 30 }).map((_, i) => (
                                 <div className={"row-span-2 animate-pulse"} key={i}>
@@ -174,18 +170,25 @@ export const New = () => {
                             infiniteData?.map((x, i) =>
                                 x.type === "stack" ? (
                                     <div className={"row-span-2"} key={i}>
-                                        <LargeStackCard
+                                        <StackCard
                                             title={x.stackData.name}
                                             translationsCount={x.stackData.translationsCount}
                                             isVerified={x.stackData.isVerified}
                                             encodedBackground={x.stackData.encodedBackground}
                                             onClick={onClickStack(x.stackData.id)}
                                             onPlay={onPlayStack(x.stackData.id)}
+                                            authorAvatarUrl={
+                                                getSuitableAvatarUrl(
+                                                    x.stackData.author.avatarUrls,
+                                                    32
+                                                ) ?? ""
+                                            }
+                                            authorName={x.stackData.author.firstName}
                                         />
                                     </div>
                                 ) : x.type === "translation" ? (
                                     <div className={"row-span-1"} key={i}>
-                                        <FeedTranslationCard
+                                        <TranslationCard
                                             foreign={x.translationData.foreign}
                                             vernacular={x.translationData.vernacular}
                                             authorName={x.translationData.author.firstName ?? ""}

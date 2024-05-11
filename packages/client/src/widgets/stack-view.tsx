@@ -34,16 +34,14 @@ import {
     Subhead,
 } from "@vkontakte/vkui"
 import { useState } from "react"
-import { StackBackground } from "../entities/stack/ui/stack-background"
-import { FeedTranslationCard } from "../entities/translation/ui/feed-translation-card"
+import { StackCard } from "../entities/stack/ui/stack-card"
+import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWindow } from "../features/modal/ui/modal-window"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { trpc } from "../shared/api"
-import { cn } from "../shared/helpers/cn"
 import { getSuitableAvatarUrl } from "../shared/helpers/getSuitableAvatarUrl"
-import { decodeStackBackground } from "../shared/helpers/stackBackground"
 import { vibrateOnClick, vibrateOnSuccess } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { Skeleton } from "../shared/ui/skeleton"
@@ -74,6 +72,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
     const playGameModal = useModalState()
     const duplicateStackModal = useModalState()
     const deleteStackModal = useModalState()
+    const showMore = useModalState()
 
     const modal = useModal()
     const utils = trpc.useUtils()
@@ -84,19 +83,12 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
         onClose?.() || modal?.onClose()
     }
 
-    const showMore = useModalState()
-
     const { mutate: deleteTranslationFromStack } = trpc.stacks.removeTranslation.useMutation({
         onSuccess: () => refetch(),
     })
 
-    const { mutate: hide } = trpc.stacks.hide.useMutation({
-        onSuccess: () => refetch(),
-    })
-
-    const { mutate: show } = trpc.stacks.show.useMutation({
-        onSuccess: () => refetch(),
-    })
+    const { mutate: hide } = trpc.stacks.hide.useMutation({ onSuccess: () => refetch() })
+    const { mutate: show } = trpc.stacks.show.useMutation({ onSuccess: () => refetch() })
 
     const { mutate: addTranslationToStack } = trpc.stacks.addTranslation.useMutation({
         onSuccess: () => {
@@ -107,20 +99,14 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
 
     const { mutate: addReaction } = trpc.stacks.addReaction.useMutation({
         onMutate: () => {
-            utils.stacks.getSingle.setData({ id }, (data) => ({
-                ...data,
-                isLiked: true,
-            }))
+            utils.stacks.getSingle.setData({ id }, (data) => ({ ...data, isLiked: true }))
         },
         onSuccess: () => refetch(),
     })
 
     const { mutate: removeReaction } = trpc.stacks.removeReaction.useMutation({
         onMutate: () => {
-            utils.stacks.getSingle.setData({ id }, (data) => ({
-                ...data,
-                isLiked: false,
-            }))
+            utils.stacks.getSingle.setData({ id }, (data) => ({ ...data, isLiked: false }))
         },
         onSuccess: () => refetch(),
     })
@@ -132,49 +118,33 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
         },
     })
 
-    const decodedBackground = decodeStackBackground(data?.encodedBackground)
-
     const exploringStackProgress =
         ((data?.exploredTranslationsCount ?? 0) / (data?.translations?.length ?? 0)) * 100
 
     return (
         <>
-            <ModalPageHeader
-                before={<PanelHeaderBack onClick={close} />}
-                children={data?.name || <Skeleton className={"w-20 bg-vk-default/20"} />}
-            />
+            <ModalPageHeader before={<PanelHeaderBack onClick={close} />} children={"Коллекция"} />
 
             <div className={"flex flex-col relative"}>
-                <div
-                    style={{
-                        backgroundColor: decodedBackground?.primaryColor ?? "#fff",
-                    }}
-                    className={
-                        "absolute w-[360px] aspect-square -z-1 left-1/2 -translate-x-1/2 opacity-50 -top-[260px] rounded-full blur-3xl -z-20"
-                    }
-                ></div>
                 <div className={"flex flex-row items-center justify-center gap-6 py-3"}>
                     <div
-                        className={"rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"}
+                        className={"rounded-full p-2.5 bg-vk-secondary text-accent cursor-pointer"}
                         onClick={showMore.open}
                     >
                         <Icon24MoreHorizontal />
                     </div>
-                    <div
-                        className={cn(
-                            "w-[200px] aspect-square bg-vk-default rounded-xl overflow-hidden",
-                            !data && "animate-pulse bg-vk-accent"
-                        )}
-                    >
-                        {data?.encodedBackground && (
-                            <StackBackground
-                                encodedBackground={data.encodedBackground}
-                                // imageUrl={data?.imageUrl}
-                            />
-                        )}
+                    <div className={"max-w-[170px] w-full"}>
+                        <StackCard
+                            title={data?.name}
+                            translationsCount={data?.translations?.length}
+                            encodedBackground={data?.encodedBackground}
+                            isVerified={data?.isVerified}
+                            authorAvatarUrl={getSuitableAvatarUrl(data?.author?.avatarUrls, 32)}
+                            authorName={data?.author?.firstName}
+                        />
                     </div>
                     <div
-                        className={"rounded-full p-2.5 bg-vk-content text-accent cursor-pointer"}
+                        className={"rounded-full p-2.5 bg-vk-secondary text-accent cursor-pointer"}
                         onClick={() => {
                             vibrateOnClick()
                             data?.isLiked
@@ -293,7 +263,7 @@ export const StackView = ({ id, onClose }: StackViewProps) => {
                                 />
                             ))}
                         {data?.translations?.map(({ translation }) => (
-                            <FeedTranslationCard
+                            <TranslationCard
                                 key={translation.id}
                                 foreign={translation.foreign}
                                 vernacular={translation.vernacular}

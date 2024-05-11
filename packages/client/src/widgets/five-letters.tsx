@@ -14,12 +14,12 @@ import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalWindow } from "../features/modal/ui/modal-window"
 import { trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
+import { vibrateOnError } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
 import { useOnboardingCompletion } from "../shared/hooks/useOnboardingCompletion"
 import { Keyboard } from "../shared/ui/keyboard"
 import { LetterCell } from "../shared/ui/letter-cell"
 import { FiveLettersOnboarding } from "./five-letters-onboarding"
-import { vibrateOnError } from "../shared/helpers/vibrate"
 
 const limitToFiveLetters = (x: string) => {
     if (x.length > 5) {
@@ -56,6 +56,8 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
         onSuccess: (data) => {
             utils.fiveLetters.getTodayAttempts.setData(undefined, data)
             utils.getUser.invalidate()
+            utils.stats.getDailyStreak.invalidate()
+            utils.stats.getActiveDays.invalidate()
             setValue("")
         },
         onError: () => {
@@ -232,7 +234,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                             "fixed w-full bottom-0 flex flex-col gap-2",
                             modal?.isOpenedAnimation
                                 ? "animate-content-appearing"
-                                : "animate-content-disappearing",
+                                : "animate-content-disappearing"
                         )}
                     >
                         {isValueWithError && (

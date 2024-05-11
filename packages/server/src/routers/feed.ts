@@ -18,7 +18,17 @@ export const feed = router({
                             type: z.literal("stack"),
                             stackData: z.intersection(
                                 z.custom<
-                                    Prisma.StackGetPayload<{}> & { encodedBackground: string }
+                                    Prisma.StackGetPayload<{
+                                        include: {
+                                            author: {
+                                                select: {
+                                                    firstName: true
+                                                    lastName: true
+                                                    avatarUrls: true
+                                                }
+                                            }
+                                        }
+                                    }> & { encodedBackground: string }
                                 >(),
                                 z.object({
                                     translationsCount: z.number(),
@@ -64,10 +74,16 @@ export const feed = router({
                     },
                 },
                 include: {
-                    author: true,
+                    author: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            avatarUrls: true,
+                        },
+                    },
                 },
-                take: 2,
-                skip: input.cursor * 2,
+                take: 5,
+                skip: input.cursor * 5,
                 orderBy: {
                     id: "desc",
                 },

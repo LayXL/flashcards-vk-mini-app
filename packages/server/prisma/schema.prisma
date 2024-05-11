@@ -56,17 +56,18 @@ model Translation {
   isHiddenInFeed      Boolean  @default(false)
   forRanked           Boolean  @default(false)
 
-  stacks                     TranslationInStack[]
-  userTranslationRepetitions UserTranslationRepetition[]
-  tags                       Tag[]
-  author                     User                        @relation(fields: [authorId], references: [id])
-  language                   Language                    @relation(fields: [languageId], references: [id])
-  languageVariation          LanguageVariation?          @relation(fields: [languageVariationId], references: [id])
-  transcriptions             Transcription[]
-  reactions                  ReactionOnTranslation[]
-  comments                   Comment[]
-  TranslationInGameSession   TranslationInGameSession[]
-  ReportOnTranslation        ReportOnTranslation[]
+  stacks                            TranslationInStack[]
+  userTranslationRepetitions        UserTranslationRepetition[]
+  tags                              Tag[]
+  author                            User                        @relation(fields: [authorId], references: [id])
+  language                          Language                    @relation(fields: [languageId], references: [id])
+  languageVariation                 LanguageVariation?          @relation(fields: [languageVariationId], references: [id])
+  transcriptions                    Transcription[]
+  reactions                         ReactionOnTranslation[]
+  comments                          Comment[]
+  ReportOnTranslation               ReportOnTranslation[]
+  correctTranslationInGameSession   TranslationInGameSession[]  @relation("correct")
+  incorrectTranslationInGameSession TranslationInGameSession[]  @relation("incorrect")
 }
 
 model Comment {
@@ -242,15 +243,17 @@ enum TranslationInGameSessionStatus {
 }
 
 model TranslationInGameSession {
-  gameSessionId Int
-  translationId Int
-  order         Int
-  status        TranslationInGameSessionStatus @default(unanswered)
-  answeredAt    DateTime?
-  answer        String?
+  gameSessionId          Int
+  translationId          Int
+  incorrectTranslationId Int?
+  order                  Int
+  status                 TranslationInGameSessionStatus @default(unanswered)
+  answeredAt             DateTime?
+  answer                 String?
 
-  gameSession GameSession @relation(fields: [gameSessionId], references: [id])
-  translation Translation @relation(fields: [translationId], references: [id])
+  gameSession          GameSession  @relation(fields: [gameSessionId], references: [id])
+  translation          Translation  @relation(name: "correct", fields: [translationId], references: [id])
+  incorrectTranslation Translation? @relation(name: "incorrect", fields: [incorrectTranslationId], references: [id])
 
   @@id([gameSessionId, order])
 }

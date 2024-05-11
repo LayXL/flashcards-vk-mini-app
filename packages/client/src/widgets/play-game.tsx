@@ -70,7 +70,7 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
         },
         {
             enabled: gameSettings.stacks.length > 0,
-        },
+        }
     )
 
     const {
@@ -115,20 +115,18 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                 }))
             }
         },
-        [setGameSettings],
+        [setGameSettings]
     )
 
     const stopGame = useCallback(() => {
-        utils.game.getRatingAttemptsLeftToday.invalidate()
         gameModal.close()
         resetGameData()
-    }, [gameModal, resetGameData, utils.game.getRatingAttemptsLeftToday])
+    }, [gameModal, resetGameData])
 
     const endGame = useCallback(() => {
-        utils.game.getRatingAttemptsLeftToday.invalidate()
         gameModal.close()
         gameResultsModal.open()
-    }, [gameModal, gameResultsModal, utils.game.getRatingAttemptsLeftToday])
+    }, [gameModal, gameResultsModal])
 
     useEffect(() => {
         bridge.send("VKWebAppCheckNativeAds", { ad_format: EAdsFormats.INTERSTITIAL })
@@ -303,6 +301,9 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
                         id={data?.gameSession.id ?? 0}
                         onClose={() => {
                             gameResultsModal.close()
+
+                            utils.stats.getDailyStreak.invalidate()
+                            utils.stats.getActiveDays.invalidate()
 
                             if (Math.random() <= 0.3) {
                                 bridge.send("VKWebAppShowNativeAds", {

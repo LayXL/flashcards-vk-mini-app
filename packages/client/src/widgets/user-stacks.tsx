@@ -15,7 +15,7 @@ import {
 } from "@vkontakte/vkui"
 import { useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
-import { LargeStackCard } from "../entities/stack/ui/large-stack-card"
+import { StackCard } from "../entities/stack/ui/stack-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
 import { ModalWrapper } from "../features/modal/ui/modal-wrapper"
 import { RouterInput, trpc } from "../shared/api"
@@ -81,7 +81,7 @@ export const UserStacks = () => {
                 loader={<></>}
                 dataLength={infiniteData?.length ?? 0}
             >
-                <Div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[212px]"}>
+                <Div className={"grid grid-cols-cards gap-3 grid-flow-dense auto-rows-[224px]"}>
                     {isLoading &&
                         Array.from({ length: 20 }).map((_, i) => (
                             <div
@@ -151,7 +151,7 @@ const StackCardWithModal = ({
 
     return (
         <>
-            <LargeStackCard
+            <StackCard
                 title={name}
                 translationsCount={translationsCount}
                 onClick={() => {
