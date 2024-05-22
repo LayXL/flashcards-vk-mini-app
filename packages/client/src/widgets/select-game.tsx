@@ -16,7 +16,7 @@ import { Categories } from "./categories"
 import { FiveLetters } from "./five-letters"
 import { GetAdditionalAttempt } from "./get-additional-attempt"
 import { Leaderboard } from "./leaderboard"
-import { PlayGame } from "./play-game"
+import { PlayDefaultGame } from "./play-default-game"
 import { PlayRankedGame } from "./play-ranked-game"
 import { StoriesFeed } from "./stories-feed"
 
@@ -215,8 +215,8 @@ export const SelectGame = () => {
                 <Categories />
             </ModalWindow>
 
-            <ModalWindow {...playDefaultGameModal} fullscreen>
-                <PlayGame onClose={playDefaultGameModal.close} />
+            <ModalWindow {...playDefaultGameModal} fullscreen title={"Выберите коллекцию"}>
+                <PlayDefaultGame />
             </ModalWindow>
 
             <ModalWrapper {...playRatingGameModal}>

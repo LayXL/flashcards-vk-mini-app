@@ -690,6 +690,132 @@ export const game = router({
             translationsCount: stacksTranslationsCount.find((y) => y.id === x)?.count ?? 0,
         }))
     }),
+    getAvailableStacksForGame: privateProcedure
+        .input(
+            z.object({
+                filter: z.enum(["default", "verified", "created"]).optional().default("default"),
+                search: z.string().optional(),
+            })
+        )
+        .query(async ({ ctx, input }) => {
+            const cachedStacks = []
+            const stacksSet = new Set()
+
+            if (input?.filter === "default") {
+                const games = await ctx.prisma.gameSession.findMany({
+                    where: {
+                        userId: ctx.userId,
+                    },
+                    include: {
+                        stacks: {
+                            where: {
+                                name:
+                                    input.search?.length > 0
+                                        ? { search: input?.search ?? "" }
+                                        : undefined,
+                                isDeleted: false,
+                            },
+                            include: {
+                                author: true,
+                            },
+                        },
+                    },
+                    orderBy: {
+                        startedAt: "desc",
+                    },
+                    take: 20,
+                })
+
+                const stacks = games.map((x) => x.stacks).flatMap((x) => x)
+
+                stacks.forEach((x) => stacksSet.add(x.id))
+                cachedStacks.push(...stacks)
+            }
+
+            if (input.filter === "verified" || input.filter === "default") {
+                const stacks = await ctx.prisma.stack.findMany({
+                    where: {
+                        isVerified: true,
+                        isDeleted: false,
+                        name:
+                            input.search?.length > 0 ? { search: input?.search ?? "" } : undefined,
+                    },
+                    include: {
+                        author: true,
+                    },
+                })
+
+                stacks.forEach((x) => stacksSet.add(x.id))
+                cachedStacks.push(...stacks)
+            }
+
+            if (input.filter === "created" || input.filter === "default") {
+                const stacks = await ctx.prisma.stack.findMany({
+                    where: {
+                        authorId: ctx.userId,
+                        isDeleted: false,
+                        name:
+                            input.search?.length > 0 ? { search: input?.search ?? "" } : undefined,
+                    },
+                    include: {
+                        author: true,
+                    },
+                })
+
+                stacks.forEach((x) => stacksSet.add(x.id))
+                cachedStacks.push(...stacks)
+            }
+
+            if (input.search?.length > 0) {
+                const stacks = await ctx.prisma.stack.findMany({
+                    where: {
+                        AND: [
+                            {
+                                name: { search: input.search },
+                            },
+                            {
+                                OR: [
+                                    {
+                                        authorId: ctx.userId,
+                                    },
+                                    {
+                                        isPrivate: false,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    include: {
+                        author: true,
+                    },
+                })
+
+                stacks.forEach((x) => stacksSet.add(x.id))
+                cachedStacks.push(...stacks)
+            }
+
+            const stacksTranslationsCount = []
+
+            for (const stack of stacksSet) {
+                stacksTranslationsCount.push({
+                    id: stack,
+                    count: await ctx.prisma.translation.count({
+                        where: {
+                            stacks: {
+                                some: {
+                                    stackId: stack,
+                                },
+                            },
+                        },
+                    }),
+                })
+            }
+
+            return Array.from(stacksSet).map((x) => ({
+                ...cachedStacks.find((y) => y.id === x),
+                translationsCount: stacksTranslationsCount.find((y) => y.id === x)?.count ?? 0,
+            }))
+        }),
     getGameResults: privateProcedure.input(z.number()).query(async ({ ctx, input }) => {
         const data = await ctx.prisma.gameSession.findFirst({
             where: {
