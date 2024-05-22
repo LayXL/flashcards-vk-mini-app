@@ -136,7 +136,7 @@ export const New = () => {
 
                         if (!adsShown) {
                             bridge.send("VKWebAppShowBannerAd", {
-                                banner_location: BannerAdLocation.BOTTOM,
+                                banner_location: BannerAdLocation.TOP,
                                 can_close: true,
                             })
                             setToggleAdsShown(true)
