@@ -12,7 +12,7 @@ export const Game = () => {
     const createContentModal = useModalState()
 
     useEffect(() => {
-        bridge.send("VKWebAppShowBannerAd", { banner_location: BannerAdLocation.TOP })
+        bridge.send("VKWebAppShowBannerAd", { banner_location: BannerAdLocation.BOTTOM })
 
         return () => {
             bridge.send("VKWebAppHideBannerAd")
