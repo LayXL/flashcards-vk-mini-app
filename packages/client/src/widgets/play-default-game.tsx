@@ -158,8 +158,10 @@ export const PlayDefaultGame = () => {
 
             <div className={"pb-safe-area-bottom"} />
 
-            <ModalWindow {...stackViewModal}>
-                <StackView onClose={stackViewModal.close} id={selectedStackId} />
+            <ModalWindow {...stackViewModal} fullscreen>
+                {selectedStackId && (
+                    <StackView onClose={stackViewModal.close} id={selectedStackId} />
+                )}
             </ModalWindow>
 
             <ModalWindow {...gameSettingsModal} title={"Настройки"}>
