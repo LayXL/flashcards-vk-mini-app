@@ -52,7 +52,13 @@ export const StackCell = ({
                 </div>
             </div>
             {onPlay && (
-                <Icon24PlayCircle onClick={onPlay} className={"cursor-pointer text-accent"} />
+                <Icon24PlayCircle
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        onPlay?.()
+                    }}
+                    className={"cursor-pointer text-accent"}
+                />
             )}
         </div>
     )
