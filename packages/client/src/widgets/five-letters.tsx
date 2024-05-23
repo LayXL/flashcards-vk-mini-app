@@ -94,7 +94,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                 banner_location: BannerAdLocation.BOTTOM,
             })
         }
-    })
+    }, [])
 
     return (
         <>
