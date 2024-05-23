@@ -58,8 +58,8 @@ export const PlayGame = ({ stackId, onClose }: PlayGameProps) => {
         attemptCount: number | null
     }>({
         stacks: stackId ? [stackId] : [],
-        selectedModifiers: [],
-        gameDuration: 30,
+        selectedModifiers: ["time"],
+        gameDuration: 60,
         correctAnswerAddDuration: 1,
         attemptCount: 3,
     })

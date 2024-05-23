@@ -1,8 +1,4 @@
-import { Icon24AddOutline, Icon28HieroglyphCharacterOutline } from "@vkontakte/icons"
-import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router"
 import {
-    Button,
-    ButtonGroup,
     CardScroll,
     Div,
     Group,
@@ -11,7 +7,6 @@ import {
     ModalPageHeader,
     PanelHeader,
     PanelHeaderBack,
-    Placeholder,
     Spacing,
 } from "@vkontakte/vkui"
 import { useState } from "react"
@@ -22,6 +17,7 @@ import { SearchBar } from "../features/search/ui/search-bar"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
+import { NotFoundCollection } from "../widgets/not-found-collection"
 import { PlayGame } from "../widgets/play-game"
 import { StackView } from "../widgets/stack-view"
 
@@ -42,8 +38,6 @@ export const Stacks = () => {
     const stackViewModal = useModalState()
     const stackPlayModal = useModalState()
     const categoryViewModal = useModalState()
-
-    const routeNavigator = useRouteNavigator()
 
     return (
         <>
@@ -89,31 +83,7 @@ export const Stacks = () => {
                 </Group>
             ))}
 
-            {data && (
-                <Placeholder
-                    icon={<Icon28HieroglyphCharacterOutline height={56} width={56} />}
-                    header={"Не нашли подходящую коллекцию?"}
-                    children={
-                        "Вы можете найти коллекции от других пользователей или же создать собственные"
-                    }
-                    action={
-                        <ButtonGroup mode={"vertical"} align={"center"}>
-                            <Button
-                                size={"l"}
-                                children={"Перейти в ленту"}
-                                onClick={() => routeNavigator.push("/new")}
-                            />
-                            <Button
-                                size={"l"}
-                                mode={"tertiary"}
-                                children={"Создать свою коллекцию"}
-                                before={<Icon24AddOutline />}
-                                onClick={() => routeNavigator.push("/profile")}
-                            />
-                        </ButtonGroup>
-                    }
-                />
-            )}
+            {data && <NotFoundCollection />}
 
             <Spacing size={256} />
 
