@@ -9,20 +9,23 @@ import { Div, Search, SubnavigationBar, SubnavigationButton } from "@vkontakte/v
 import { useCallback, useEffect, useState } from "react"
 import { useDebounceValue } from "usehooks-ts"
 import { StackCell } from "../entities/stack/ui/stack-cell"
-import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalWindow } from "../features/modal/ui/modal-window"
 import { RouterInput, trpc } from "../shared/api"
 import { useModalState } from "../shared/hooks/useModalState"
 import { GameResults } from "./game-results"
 import { GameSettings } from "./game-settings"
 import { InGame } from "./in-game"
+import { StackView } from "./stack-view"
 
 export const PlayDefaultGame = () => {
-    const modal = useModal()
+    const [selectedStackId, setSelectedStackId] = useState<number | null>(null)
 
     const gameSettingsModal = useModalState()
     const gameModal = useModalState()
     const gameResultsModal = useModalState()
+    const stackViewModal = useModalState(false, {
+        onClose: () => setSelectedStackId(null),
+    })
 
     const [gameSettings, setGameSettings] = useState<{
         selectedModifiers: ("time" | "attempts" | "repeat")[]
@@ -143,14 +146,21 @@ export const PlayDefaultGame = () => {
                         translationsCount={stack.translationsCount}
                         authorName={stack.author.firstName}
                         isVerified={stack.isVerified}
-                        onClick={startWithStack(stack.id)}
+                        onClick={() => {
+                            setSelectedStackId(stack.id)
+                            stackViewModal.open()
+                        }}
                         onPlay={startWithStack(stack.id)}
                         encodedBackground={stack.encodedBackground}
                     />
                 ))}
             </Div>
 
-            <div className={"h-safe-area-bottom"} />
+            <div className={"pb-safe-area-bottom"} />
+
+            <ModalWindow {...stackViewModal}>
+                <StackView onClose={stackViewModal.close} id={selectedStackId} />
+            </ModalWindow>
 
             <ModalWindow {...gameSettingsModal} title={"Настройки"}>
                 <GameSettings
