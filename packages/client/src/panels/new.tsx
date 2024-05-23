@@ -1,9 +1,7 @@
-import { Icon24Refresh } from "@vkontakte/icons"
-import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge"
 import { PanelHeader, PullToRefresh, Spacing } from "@vkontakte/vkui"
 import { useCallback, useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
-import { useTimeout, useToggle, useUnmount } from "usehooks-ts"
+import { useTimeout } from "usehooks-ts"
 import { StackCard } from "../entities/stack/ui/stack-card"
 import { TranslationCard } from "../entities/translation/ui/translation-card"
 import { ModalBody } from "../features/modal/ui/modal-body"
@@ -22,19 +20,6 @@ import { StackView } from "../widgets/stack-view"
 import { TranslationAddToStack } from "../widgets/translation-add-to-stack"
 import { TranslationView } from "../widgets/translation-view"
 
-const ReleaseToRefresh = () => {
-    useEffect(() => {
-        vibrateOnClick()
-    })
-
-    return (
-        <div className={"py-4 opacity-60 flex items-center justify-center gap-2"}>
-            <Icon24Refresh className={"animate-spin"} />
-            <span>Отпустите для обновления</span>
-        </div>
-    )
-}
-
 export const New = () => {
     const [selectedStack, setSelectedStack] = useState<number | null>(null)
     const stackViewModal = useModalState()
@@ -43,8 +28,6 @@ export const New = () => {
     const [selectedTranslation, setSelectedTranslation] = useState<number | null>(null)
     const translationViewModal = useModalState()
     const translationAddModal = useModalState()
-
-    const [adsShown, _, setToggleAdsShown] = useToggle()
 
     const { data, fetchNextPage, hasNextPage, isSuccess, isLoading, isFetching, refetch } =
         trpc.feed.get.useInfiniteQuery(
@@ -67,7 +50,6 @@ export const New = () => {
             vibrateOnClick()
             setSelectedStack(id)
             stackViewModal.open()
-            bridge.send("VKWebAppHideBannerAd")
         },
         [stackViewModal]
     )
@@ -77,7 +59,6 @@ export const New = () => {
             vibrateOnClick()
             setSelectedStack(id)
             playModal.open()
-            bridge.send("VKWebAppHideBannerAd")
         },
         [playModal]
     )
@@ -87,7 +68,6 @@ export const New = () => {
             vibrateOnClick()
             setSelectedTranslation(id)
             translationViewModal.open()
-            bridge.send("VKWebAppHideBannerAd")
         },
         [translationViewModal]
     )
@@ -97,7 +77,6 @@ export const New = () => {
             vibrateOnClick()
             setSelectedTranslation(id)
             translationAddModal.open()
-            bridge.send("VKWebAppHideBannerAd")
         },
         [translationAddModal]
     )
@@ -109,11 +88,6 @@ export const New = () => {
 
         if (!isScrollable && hasNextPage) fetchNextPage()
     }, [fetchNextPage, hasNextPage, isLoading, isFetching, isScrollable, infiniteData])
-
-    useUnmount(() => {
-        bridge.send("VKWebAppHideBannerAd")
-        setToggleAdsShown(false)
-    })
 
     return (
         <>
@@ -133,14 +107,6 @@ export const New = () => {
                     hasMore={hasNextPage}
                     next={() => {
                         fetchNextPage()
-
-                        if (!adsShown) {
-                            bridge.send("VKWebAppShowBannerAd", {
-                                banner_location: BannerAdLocation.BOTTOM,
-                                can_close: true,
-                            })
-                            setToggleAdsShown(true)
-                        }
                     }}
                     loader={Array.from({ length: 30 }).map((_, i) => (
                         <div
