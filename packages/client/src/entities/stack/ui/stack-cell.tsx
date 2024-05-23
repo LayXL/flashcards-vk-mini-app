@@ -24,7 +24,7 @@ export const StackCell = ({
 }: StackCellProps) => {
     return (
         <div
-            className={cn("flex gap-3 items-center", onClick && "cursor-pointer")}
+            className={cn("flex gap-3 items-center press-scale", onClick && "cursor-pointer")}
             onClick={onClick}
         >
             <div className={"aspect-square rounded-xl w-20 overflow-hidden bg-secondary"}>
