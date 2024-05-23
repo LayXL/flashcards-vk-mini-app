@@ -22,7 +22,7 @@ export const PlayDefaultGame = () => {
 
     const gameSettingsModal = useModalState()
     const gameModal = useModalState()
-    const gameResultsModal = useModalState(false, { onClose: modal?.onClose })
+    const gameResultsModal = useModalState()
 
     const [gameSettings, setGameSettings] = useState<{
         selectedModifiers: ("time" | "attempts" | "repeat")[]
