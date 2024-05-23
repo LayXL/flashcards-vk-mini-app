@@ -6,6 +6,7 @@ import {
     Icon28InfoOutline,
     Icon28ViewOutline,
 } from "@vkontakte/icons"
+import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge"
 import { Div, ModalPageHeader, PanelHeaderBack, PanelHeaderButton, Spacing } from "@vkontakte/vkui"
 import { DateTime } from "luxon"
 import { useEffect, useRef, useState } from "react"
@@ -84,6 +85,16 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
 
         return () => clearTimeout(timeout)
     }, [setIsValueWithError, isValueWithError])
+
+    useEffect(() => {
+        bridge.send("VKWebAppHideBannerAd")
+
+        return () => {
+            bridge.send("VKWebAppShowBannerAd", {
+                banner_location: BannerAdLocation.BOTTOM,
+            })
+        }
+    })
 
     return (
         <>
