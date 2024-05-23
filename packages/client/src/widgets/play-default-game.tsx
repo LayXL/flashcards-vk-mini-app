@@ -15,6 +15,7 @@ import { useModalState } from "../shared/hooks/useModalState"
 import { GameResults } from "./game-results"
 import { GameSettings } from "./game-settings"
 import { InGame } from "./in-game"
+import { NotFoundCollection } from "./not-found-collection"
 import { StackView } from "./stack-view"
 
 export const PlayDefaultGame = () => {
@@ -155,6 +156,8 @@ export const PlayDefaultGame = () => {
                     />
                 ))}
             </Div>
+
+            <NotFoundCollection />
 
             <div className={"pb-safe-area-bottom"} />
 
