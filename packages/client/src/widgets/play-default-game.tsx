@@ -150,6 +150,8 @@ export const PlayDefaultGame = () => {
                 ))}
             </Div>
 
+            <div className={"h-safe-area-bottom"} />
+
             <ModalWindow {...gameSettingsModal} title={"Настройки"}>
                 <GameSettings
                     onClose={gameSettingsModal.close}
