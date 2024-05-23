@@ -43,7 +43,7 @@ export const StackCell = ({
                     </div>
                 </div>
                 <div className={"flex gap-1 px-0.5 select-none"}>
-                    <Icon16Cards2 />
+                    <Icon16Cards2 className={"text-accent"} />
                     <Caption
                         children={translationsCount}
                         level={"2"}
@@ -51,7 +51,9 @@ export const StackCell = ({
                     />
                 </div>
             </div>
-            {onPlay && <Icon24PlayCircle onClick={onPlay} className={"cursor-pointer"} />}
+            {onPlay && (
+                <Icon24PlayCircle onClick={onPlay} className={"cursor-pointer text-accent"} />
+            )}
         </div>
     )
 }
