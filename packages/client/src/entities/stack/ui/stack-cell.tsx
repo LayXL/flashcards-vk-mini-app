@@ -39,7 +39,7 @@ export const StackCell = ({
                             level={"1"}
                             className={"text-secondary"}
                         />
-                        {isVerified && <Icon12Verified />}
+                        {isVerified && <Icon12Verified className={"text-accent"} />}
                     </div>
                 </div>
                 <div className={"flex gap-1 px-0.5 select-none"}>
