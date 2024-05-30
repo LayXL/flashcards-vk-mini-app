@@ -75,7 +75,7 @@ export const SelectGame = () => {
 
                 <Div
                     className={
-                        "max-w-[390px] md:grid-cols-6 md:max-w-[940px] mx-auto grid grid-cols-3 gap-x-3 pt-0"
+                        "max-w-[390px] md:grid-cols-6 md:max-w-[960px] mx-auto grid grid-cols-3 gap-x-3 pt-0"
                     }
                 >
                     <GameModeCard
