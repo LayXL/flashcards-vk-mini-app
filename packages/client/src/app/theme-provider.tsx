@@ -22,11 +22,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
         })
     })
     return (
-        <ConfigProvider
-            appearance={vkConfig?.appearance}
-            platform={vkConfig?.scheme.includes("vkcom") ? "vkcom" : undefined}
-            transitionMotionEnabled={false}
-        >
+        <ConfigProvider appearance={vkConfig?.appearance} transitionMotionEnabled={false}>
             <AdaptivityProvider>
                 <AppRoot>{children}</AppRoot>
             </AdaptivityProvider>
