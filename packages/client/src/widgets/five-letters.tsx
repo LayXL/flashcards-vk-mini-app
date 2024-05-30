@@ -124,10 +124,10 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
             {
                 sticker_type: "native",
                 sticker: {
-                    action_type: "text",
+                    action_type: "link",
                     action: {
-                        text: "Играть!",
-                        link: "https://vk.com/app7555177",
+                        title: "Играть!",
+                        link: "https://vk.com/app51843841#/fiveLetters",
                     },
                     transform: {
                         translation_y: 0.25,
