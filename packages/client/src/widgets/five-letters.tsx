@@ -35,18 +35,18 @@ const limitToFiveLetters = (x: string) => {
     return x
 }
 
-const imageUrlToBase64 = async (url) => {
+const imageUrlToBase64 = async (url: string): Promise<string> => {
     const response = await fetch(url)
     const blob = await response.blob()
-    return new Promise((onSuccess, onError) => {
+    return new Promise((resolve, reject) => {
         try {
             const reader = new FileReader()
             reader.onload = function () {
-                onSuccess(this.result)
+                resolve(this.result as string)
             }
             reader.readAsDataURL(blob)
         } catch (e) {
-            onError(e)
+            reject(e)
         }
     })
 }
