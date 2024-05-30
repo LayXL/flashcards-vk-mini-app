@@ -2,18 +2,26 @@ import { FloatingPortal } from "@floating-ui/react"
 import {
     Icon16Cancel,
     Icon16ErrorCircleOutline,
+    Icon24ShareOutline,
     Icon28HideOutline,
     Icon28InfoOutline,
     Icon28ViewOutline,
 } from "@vkontakte/icons"
 import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge"
-import { Div, ModalPageHeader, PanelHeaderBack, PanelHeaderButton, Spacing } from "@vkontakte/vkui"
+import {
+    Button,
+    Div,
+    ModalPageHeader,
+    PanelHeaderBack,
+    PanelHeaderButton,
+    Spacing,
+} from "@vkontakte/vkui"
 import { DateTime } from "luxon"
 import { useEffect, useRef, useState } from "react"
 import { isDesktop } from "react-device-detect"
 import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalWindow } from "../features/modal/ui/modal-window"
-import { trpc } from "../shared/api"
+import { RouterOutput, trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
 import { vibrateOnError } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
@@ -23,11 +31,111 @@ import { LetterCell } from "../shared/ui/letter-cell"
 import { FiveLettersOnboarding } from "./five-letters-onboarding"
 
 const limitToFiveLetters = (x: string) => {
-    if (x.length > 5) {
-        return x.slice(0, 5)
-    }
-
+    if (x.length > 5) return x.slice(0, 5)
     return x
+}
+
+const imageUrlToBase64 = async (url) => {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    return new Promise((onSuccess, onError) => {
+        try {
+            const reader = new FileReader()
+            reader.onload = function () {
+                onSuccess(this.result)
+            }
+            reader.readAsDataURL(blob)
+        } catch (e) {
+            onError(e)
+        }
+    })
+}
+
+const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts"]) => {
+    const background = await imageUrlToBase64("/fiveLetters/background.png")
+
+    const canvas = document.createElement("canvas")
+
+    const squareSize = 128
+    const gap = 16
+
+    canvas.width = squareSize * 5 + gap * 4
+    canvas.height = squareSize * data.attempts.length + gap * (data.attempts.length - 1)
+
+    const ctx = canvas.getContext("2d")
+
+    const rows: ("excluded" | "correct" | "misplaced" | null)[][] = Array.from({ length: 6 }, () =>
+        Array.from({ length: 5 }, () => null)
+    )
+
+    rows.forEach((row, i) => {
+        row.forEach((_, j) => {
+            const status = ((data.attempts[i] ?? [])[j] ?? []).type ?? null
+
+            if (!ctx) return
+
+            ctx.fillStyle =
+                status === "correct"
+                    ? "#22C55D"
+                    : status === "misplaced"
+                    ? "#EBB305"
+                    : status === "excluded"
+                    ? "#6B7280"
+                    : "#232324"
+
+            ctx.beginPath()
+            ctx.roundRect(
+                j * squareSize + (j === 0 ? 0 : gap * j),
+                i * squareSize + (i === 0 ? 0 : gap * i),
+                squareSize,
+                squareSize,
+                [squareSize * 0.25]
+            )
+            ctx.closePath()
+            ctx.fill()
+        })
+    })
+
+    bridge.send("VKWebAppShowStoryBox", {
+        background_type: "image",
+        blob: background,
+        stickers: [
+            {
+                sticker_type: "native",
+                sticker: {
+                    action_type: "text",
+                    action: {
+                        text: "Отгадай 5 букв",
+                        alignment: "center",
+                    },
+                    transform: {
+                        translation_y: -0.25,
+                    },
+                },
+            },
+            {
+                sticker_type: "renderable",
+                sticker: {
+                    content_type: "image",
+                    blob: canvas.toDataURL("image/png"),
+                    can_delete: false,
+                },
+            },
+            {
+                sticker_type: "native",
+                sticker: {
+                    action_type: "text",
+                    action: {
+                        text: "Играть!",
+                        link: "https://vk.com/app7555177",
+                    },
+                    transform: {
+                        translation_y: 0.25,
+                    },
+                },
+            },
+        ],
+    })
 }
 
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
@@ -209,7 +317,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                         </div>
 
                         {data?.status === "lost" && data?.answer && (
-                            <div className={"flex-row gap-1 mx-auto py-8"}>
+                            <div className={"flex-row gap-1 mx-auto pt-8"}>
                                 {data.answer
                                     ?.toUpperCase()
                                     .split("")
@@ -218,6 +326,15 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                                     ))}
                             </div>
                         )}
+
+                        <div className={"mx-auto pt-4"}>
+                            <Button
+                                size={"l"}
+                                before={<Icon24ShareOutline />}
+                                children={"Поделиться результатом"}
+                                onClick={() => generateStory(data)}
+                            />
+                        </div>
 
                         {/* <div className={"py-3 mx-auto"}>
                             <Button
