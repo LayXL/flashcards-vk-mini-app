@@ -212,6 +212,8 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
     const [hideLetters, setHideLetters] = useState(false)
 
+    const [isStoryBoxLoading, setIsStoryBoxLoading] = useState(false)
+
     const modal = useModal()
 
     const fiveLettersOnboardingCompletion = useOnboardingCompletion("fiveLetters2")
@@ -400,10 +402,15 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
 
                         <div className={"mx-auto pt-4"}>
                             <Button
+                                loading={isStoryBoxLoading}
                                 size={"l"}
                                 before={<Icon24ShareOutline />}
                                 children={"Поделиться результатом"}
-                                onClick={() => generateStory(data)}
+                                onClick={async () => {
+                                    setIsStoryBoxLoading(true)
+                                    await generateStory(data)
+                                    setIsStoryBoxLoading(false)
+                                }}
                             />
                         </div>
 
