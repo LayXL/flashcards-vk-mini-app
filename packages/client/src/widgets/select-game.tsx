@@ -63,10 +63,10 @@ export const SelectGame = ({ openFiveLetters }: { openFiveLetters?: boolean }) =
     const ratingDaysLeft = DateTime.fromISO(currentSeason?.season?.endsAt ?? "")
         .diffNow()
         .rescale()
-        .shiftTo("days")
-        .toHuman({
-            maximumFractionDigits: 0,
-        })
+        .set({ millisecond: 0, second: 0 })
+        .rescale()
+        .toHuman({ maximumFractionDigits: 0 })
+        .replace(/\s/g, " ")
 
     return (
         <>
