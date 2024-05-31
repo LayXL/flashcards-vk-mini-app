@@ -52,17 +52,58 @@ const imageUrlToBase64 = async (url: string): Promise<string> => {
 }
 
 const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts"]) => {
+    const userInfo = await bridge.send("VKWebAppGetUserInfo")
+
+    const avatar = await imageUrlToBase64(userInfo.photo_200)
     const background = await imageUrlToBase64("/fiveLetters/background.png")
+    const phone = await imageUrlToBase64("/fiveLetters/phone.png")
 
     const canvas = document.createElement("canvas")
 
-    const squareSize = 128
-    const gap = 16
+    const squareSize = 140
+    const gap = 14
 
-    canvas.width = squareSize * 5 + gap * 4
-    canvas.height = squareSize * data.attempts.length + gap * (data.attempts.length - 1)
+    canvas.width = 987
+    canvas.height = 1888
 
     const ctx = canvas.getContext("2d")
+
+    async function drawImage(
+        image: string,
+        x = 0,
+        y = 0,
+        width: number,
+        height: number,
+        rounded?: boolean
+    ) {
+        return new Promise<void>((resolve) => {
+            const phoneImage = new Image()
+
+            phoneImage.src = image
+
+            phoneImage.onload = () => {
+                if (!ctx) return
+
+                ctx.save()
+
+                if (rounded) {
+                    ctx.beginPath()
+                    ctx.arc(x + width / 2, y + height / 2, width / 2, 0, Math.PI * 2, true)
+                    ctx.closePath()
+                    ctx.clip()
+                }
+
+                ctx.drawImage(phoneImage, x, y, width, height)
+
+                ctx.restore()
+
+                resolve()
+            }
+        })
+    }
+
+    await drawImage(phone, 0, 0, 987, 1888)
+    await drawImage(avatar, 354, 311, 280, 280, true)
 
     const rows: ("excluded" | "correct" | "misplaced" | null)[][] = Array.from({ length: 6 }, () =>
         Array.from({ length: 5 }, () => null)
@@ -78,15 +119,15 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                 status === "correct"
                     ? "#22C55D"
                     : status === "misplaced"
-                    ? "#EBB305"
+                    ? "#FFA000"
                     : status === "excluded"
-                    ? "#6B7280"
-                    : "#232324"
+                    ? "#FF3A72"
+                    : "#D5E9FD"
 
             ctx.beginPath()
             ctx.roundRect(
-                j * squareSize + (j === 0 ? 0 : gap * j),
-                i * squareSize + (i === 0 ? 0 : gap * i),
+                116 + (j * squareSize + (j === 0 ? 0 : gap * j)),
+                682 + (i * squareSize + (i === 0 ? 0 : gap * i)),
                 squareSize,
                 squareSize,
                 [squareSize * 0.25]
@@ -105,11 +146,50 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                 sticker: {
                     action_type: "text",
                     action: {
-                        text: "Отгадай 5 букв",
+                        text: "Сможешь угадать слово?",
                         alignment: "center",
                     },
                     transform: {
-                        translation_y: -0.25,
+                        translation_y: -0.4,
+                        relation_width: 0.8,
+                    },
+                },
+            },
+            {
+                sticker_type: "renderable",
+                sticker: {
+                    clickable_zones: [
+                        {
+                            action_type: "link",
+                            action: {
+                                title: "Играть!",
+                                link: "https://vk.com/app51843841#/fiveLetters",
+                            },
+                            clickable_area: [
+                                {
+                                    x: 0,
+                                    y: 0,
+                                },
+                                {
+                                    x: 987,
+                                    y: 0,
+                                },
+                                {
+                                    x: 987,
+                                    y: 1888,
+                                },
+                                {
+                                    x: 0,
+                                    y: 1888,
+                                },
+                            ],
+                        },
+                    ],
+                    content_type: "image",
+                    blob: await imageUrlToBase64("/fiveLetters/button.png"),
+                    can_delete: false,
+                    transform: {
+                        translation_y: -0.28,
                     },
                 },
             },
@@ -119,18 +199,9 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                     content_type: "image",
                     blob: canvas.toDataURL("image/png"),
                     can_delete: false,
-                },
-            },
-            {
-                sticker_type: "native",
-                sticker: {
-                    action_type: "text",
-                    action: {
-                        text: "Играть!",
-                        link: "https://vk.com/app51843841#/fiveLetters",
-                    },
                     transform: {
-                        translation_y: 0.25,
+                        relation_width: 0.71,
+                        translation_y: 0.22,
                     },
                 },
             },
