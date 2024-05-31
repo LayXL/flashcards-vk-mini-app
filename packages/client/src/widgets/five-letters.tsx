@@ -158,6 +158,8 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
             {
                 sticker_type: "renderable",
                 sticker: {
+                    original_width: 974,
+                    original_height: 140,
                     clickable_zones: [
                         {
                             action_type: "link",
