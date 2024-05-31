@@ -395,7 +395,11 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                                     ?.toUpperCase()
                                     .split("")
                                     .map((letter, i) => (
-                                        <LetterCell letter={letter} key={i} type={"correct"} />
+                                        <LetterCell
+                                            letter={!hideLetters ? letter : undefined}
+                                            key={i}
+                                            type={"correct"}
+                                        />
                                     ))}
                             </div>
                         )}
