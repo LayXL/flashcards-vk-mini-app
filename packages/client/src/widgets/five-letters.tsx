@@ -150,8 +150,7 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                         alignment: "center",
                     },
                     transform: {
-                        gravity: "center_bottom",
-                        translation_y: -0.86,
+                        translation_y: -0.37,
                         relation_width: 0.8,
                     },
                 },
@@ -168,24 +167,24 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                                 title: "Играть!",
                                 link: "https://vk.com/app51843841#/fiveLetters",
                             },
-                            clickable_area: [
-                                {
-                                    x: 0,
-                                    y: 0,
-                                },
-                                {
-                                    x: 9999,
-                                    y: 0,
-                                },
-                                {
-                                    x: 9999,
-                                    y: 9999,
-                                },
-                                {
-                                    x: 0,
-                                    y: 9999,
-                                },
-                            ],
+                            // clickable_area: [
+                            //     {
+                            //         x: 0,
+                            //         y: 0,
+                            //     },
+                            //     {
+                            //         x: 9999,
+                            //         y: 0,
+                            //     },
+                            //     {
+                            //         x: 9999,
+                            //         y: 9999,
+                            //     },
+                            //     {
+                            //         x: 0,
+                            //         y: 9999,
+                            //     },
+                            // ],
                         },
                     ],
                     content_type: "image",
@@ -205,7 +204,7 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                     can_delete: false,
                     transform: {
                         relation_width: 0.71,
-                        translation_y: 0.17,
+                        translation_y: 0.21,
                     },
                 },
             },
