@@ -8,7 +8,7 @@ import { CreateContent } from "../widgets/create-content"
 import { DailyStreak } from "../widgets/daily-streak"
 import { SelectGame } from "../widgets/select-game"
 
-export const Game = () => {
+export const Game = ({ openFiveLetters }: { openFiveLetters?: boolean }) => {
     const createContentModal = useModalState()
 
     useTimeout(() => {
@@ -28,7 +28,7 @@ export const Game = () => {
                 }
             />
 
-            <SelectGame />
+            <SelectGame openFiveLetters={openFiveLetters} />
 
             <TabBar />
 

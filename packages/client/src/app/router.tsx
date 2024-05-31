@@ -6,12 +6,10 @@ import {
     useParams,
     useRouteNavigator,
 } from "@vkontakte/vk-mini-apps-router"
-import { useLocation } from "@vkontakte/vk-mini-apps-router/dist/hooks/hooks"
 import { Epic, Panel, Root, SplitCol, SplitLayout, View } from "@vkontakte/vkui"
 import { useEffect } from "react"
 import { TabBar } from "../features/tab-bar/ui/tab-bar"
 import { Game } from "../panels/game"
-import { Home } from "../panels/home"
 import { New } from "../panels/new"
 import { Profile } from "../panels/profile"
 import { Stacks } from "../panels/stacks"
@@ -78,7 +76,6 @@ export const Router = () => {
 
     const { view, panel } = useActiveVkuiLocation()
     const routeNavigator = useRouteNavigator()
-    const location = useLocation()
 
     const {
         data: onboardingCompleted,
@@ -149,9 +146,9 @@ export const Router = () => {
                 <Epic activeStory={"root"}>
                     <Root nav={"root"} activeView={view!}>
                         <View nav={"main"} activePanel={panel!}>
-                            <Panel nav={"home"} children={<Home />} />
+                            <Panel nav={"home"} children={<Game />} />
                             <Panel nav={"stack"} children={<ViewStack />} />
-                            <Panel nav={"fiveLetters"} children={<Home openFiveLetters />} />
+                            <Panel nav={"fiveLetters"} children={<Game openFiveLetters />} />
                         </View>
                         <View nav={"stacks"} activePanel={panel!}>
                             <Panel nav={"stacks"} children={<Stacks />} />

@@ -36,13 +36,13 @@ const AnimatedImage = (props: { src: string } & HTMLMotionProps<"img">) => {
     )
 }
 
-export const SelectGame = () => {
+export const SelectGame = ({ openFiveLetters }: { openFiveLetters?: boolean }) => {
     const utils = trpc.useUtils()
 
     const playOfficialStacksModal = useModalState()
     const playDefaultGameModal = useModalState()
     const playRatingGameModal = useModalState()
-    const playFiveLettersGameModal = useModalState()
+    const playFiveLettersGameModal = useModalState(openFiveLetters ?? false)
     const leaderboardModal = useModalState()
 
     const { data: currentSeason } = trpc.rating.getCurrentSeason.useQuery()
