@@ -58,6 +58,11 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
     const background = await imageUrlToBase64("/fiveLetters/background.png")
     const phone = await imageUrlToBase64("/fiveLetters/phone.png")
 
+    const defaultSquare = await imageUrlToBase64("/fiveLetters/default.png")
+    const correctSquare = await imageUrlToBase64("/fiveLetters/correct.png")
+    const excludedSquare = await imageUrlToBase64("/fiveLetters/excluded.png")
+    const misplacedSquare = await imageUrlToBase64("/fiveLetters/misplaced.png")
+
     const canvas = document.createElement("canvas")
 
     const squareSize = 140
@@ -109,33 +114,27 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
         Array.from({ length: 5 }, () => null)
     )
 
-    rows.forEach((row, i) => {
-        row.forEach((_, j) => {
+    for (const i in rows) {
+        for (const j in rows[i]) {
             const status = ((data.attempts[i] ?? [])[j] ?? []).type ?? null
 
             if (!ctx) return
 
-            ctx.fillStyle =
+            await drawImage(
                 status === "correct"
-                    ? "#22C55D"
+                    ? correctSquare
                     : status === "misplaced"
-                    ? "#FFA000"
+                    ? misplacedSquare
                     : status === "excluded"
-                    ? "#FF3A72"
-                    : "#D5E9FD"
-
-            ctx.beginPath()
-            ctx.roundRect(
-                116 + (j * squareSize + (j === 0 ? 0 : gap * j)),
-                682 + (i * squareSize + (i === 0 ? 0 : gap * i)),
+                    ? excludedSquare
+                    : defaultSquare,
+                116 + (parseInt(j) * squareSize + (parseInt(j) === 0 ? 0 : gap * parseInt(j))),
+                682 + (parseInt(i) * squareSize + (parseInt(i) === 0 ? 0 : gap * parseInt(i))),
                 squareSize,
-                squareSize,
-                [squareSize * 0.25]
+                squareSize
             )
-            ctx.closePath()
-            ctx.fill()
-        })
-    })
+        }
+    }
 
     bridge.send("VKWebAppShowStoryBox", {
         background_type: "image",
