@@ -150,7 +150,8 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                         alignment: "center",
                     },
                     transform: {
-                        translation_y: -0.4,
+                        gravity: "center_bottom",
+                        translation_y: -0.86,
                         relation_width: 0.8,
                     },
                 },
@@ -204,7 +205,7 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                     can_delete: false,
                     transform: {
                         relation_width: 0.71,
-                        translation_y: 0.22,
+                        translation_y: 0.17,
                     },
                 },
             },
