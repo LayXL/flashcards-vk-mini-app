@@ -192,6 +192,7 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                     can_delete: false,
                     transform: {
                         translation_y: -0.28,
+                        relation_width: 0.9,
                     },
                 },
             },
