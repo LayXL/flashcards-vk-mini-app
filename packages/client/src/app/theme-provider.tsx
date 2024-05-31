@@ -23,7 +23,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     })
     return (
         <ConfigProvider appearance={vkConfig?.appearance} transitionMotionEnabled={false}>
-            <AdaptivityProvider>
+            <AdaptivityProvider sizeX={"compact"}>
                 <AppRoot>{children}</AppRoot>
             </AdaptivityProvider>
         </ConfigProvider>

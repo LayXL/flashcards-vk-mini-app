@@ -2,18 +2,26 @@ import { FloatingPortal } from "@floating-ui/react"
 import {
     Icon16Cancel,
     Icon16ErrorCircleOutline,
+    Icon24ShareOutline,
     Icon28HideOutline,
     Icon28InfoOutline,
     Icon28ViewOutline,
 } from "@vkontakte/icons"
 import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge"
-import { Div, ModalPageHeader, PanelHeaderBack, PanelHeaderButton, Spacing } from "@vkontakte/vkui"
+import {
+    Button,
+    Div,
+    ModalPageHeader,
+    PanelHeaderBack,
+    PanelHeaderButton,
+    Spacing,
+} from "@vkontakte/vkui"
 import { DateTime } from "luxon"
 import { useEffect, useRef, useState } from "react"
 import { isDesktop } from "react-device-detect"
 import { useModal } from "../features/modal/contexts/modal-context"
 import { ModalWindow } from "../features/modal/ui/modal-window"
-import { trpc } from "../shared/api"
+import { RouterOutput, trpc } from "../shared/api"
 import { cn } from "../shared/helpers/cn"
 import { vibrateOnError } from "../shared/helpers/vibrate"
 import { useModalState } from "../shared/hooks/useModalState"
@@ -23,11 +31,182 @@ import { LetterCell } from "../shared/ui/letter-cell"
 import { FiveLettersOnboarding } from "./five-letters-onboarding"
 
 const limitToFiveLetters = (x: string) => {
-    if (x.length > 5) {
-        return x.slice(0, 5)
+    if (x.length > 5) return x.slice(0, 5)
+    return x
+}
+
+const imageUrlToBase64 = async (url: string): Promise<string> => {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    return new Promise((resolve, reject) => {
+        try {
+            const reader = new FileReader()
+            reader.onload = function () {
+                resolve(this.result as string)
+            }
+            reader.readAsDataURL(blob)
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts"]) => {
+    const userInfo = await bridge.send("VKWebAppGetUserInfo")
+
+    const avatar = await imageUrlToBase64(userInfo.photo_200)
+    const background = await imageUrlToBase64("/fiveLetters/background.png")
+    const phone = await imageUrlToBase64("/fiveLetters/phone.png")
+
+    const defaultSquare = await imageUrlToBase64("/fiveLetters/default.png")
+    const correctSquare = await imageUrlToBase64("/fiveLetters/correct.png")
+    const excludedSquare = await imageUrlToBase64("/fiveLetters/excluded.png")
+    const misplacedSquare = await imageUrlToBase64("/fiveLetters/misplaced.png")
+
+    const canvas = document.createElement("canvas")
+
+    const squareSize = 140
+    const gap = 14
+
+    canvas.width = 987
+    canvas.height = 1888
+
+    const ctx = canvas.getContext("2d")
+
+    async function drawImage(
+        image: string,
+        x = 0,
+        y = 0,
+        width: number,
+        height: number,
+        rounded?: boolean
+    ) {
+        return new Promise<void>((resolve) => {
+            const phoneImage = new Image()
+
+            phoneImage.src = image
+
+            phoneImage.onload = () => {
+                if (!ctx) return
+
+                ctx.save()
+
+                if (rounded) {
+                    ctx.beginPath()
+                    ctx.arc(x + width / 2, y + height / 2, width / 2, 0, Math.PI * 2, true)
+                    ctx.closePath()
+                    ctx.clip()
+                }
+
+                ctx.drawImage(phoneImage, x, y, width, height)
+
+                ctx.restore()
+
+                resolve()
+            }
+        })
     }
 
-    return x
+    await drawImage(phone, 0, 0, 987, 1888)
+    await drawImage(avatar, 354, 311, 280, 280, true)
+
+    const rows: ("excluded" | "correct" | "misplaced" | null)[][] = Array.from({ length: 6 }, () =>
+        Array.from({ length: 5 }, () => null)
+    )
+
+    for (const i in rows) {
+        for (const j in rows[i]) {
+            const status = ((data.attempts[i] ?? [])[j] ?? []).type ?? null
+
+            if (!ctx) return
+
+            await drawImage(
+                status === "correct"
+                    ? correctSquare
+                    : status === "misplaced"
+                    ? misplacedSquare
+                    : status === "excluded"
+                    ? excludedSquare
+                    : defaultSquare,
+                116 + (parseInt(j) * squareSize + (parseInt(j) === 0 ? 0 : gap * parseInt(j))),
+                682 + (parseInt(i) * squareSize + (parseInt(i) === 0 ? 0 : gap * parseInt(i))),
+                squareSize,
+                squareSize
+            )
+        }
+    }
+
+    bridge.send("VKWebAppShowStoryBox", {
+        background_type: "image",
+        blob: background,
+        stickers: [
+            {
+                sticker_type: "renderable",
+                sticker: {
+                    original_width: 974,
+                    original_height: 140,
+                    clickable_zones: [
+                        {
+                            action_type: "link",
+                            action: {
+                                title: "Играть!",
+                                link: "https://vk.com/app51843841#/fiveLetters",
+                            },
+                            clickable_area: [
+                                {
+                                    x: 0,
+                                    y: 0,
+                                },
+                                {
+                                    x: 9999,
+                                    y: 0,
+                                },
+                                {
+                                    x: 9999,
+                                    y: 9999,
+                                },
+                                {
+                                    x: 0,
+                                    y: 9999,
+                                },
+                            ],
+                        },
+                    ],
+                    content_type: "image",
+                    blob: await imageUrlToBase64("/fiveLetters/button.png"),
+                    can_delete: false,
+                    transform: {
+                        translation_y: -0.28,
+                        relation_width: 0.9,
+                    },
+                },
+            },
+            {
+                sticker_type: "renderable",
+                sticker: {
+                    content_type: "image",
+                    blob: canvas.toDataURL("image/png"),
+                    can_delete: false,
+                    transform: {
+                        relation_width: 0.71,
+                        translation_y: 0.21,
+                    },
+                },
+            },
+            {
+                sticker_type: "renderable",
+                sticker: {
+                    content_type: "image",
+                    blob: await imageUrlToBase64("/fiveLetters/text.png"),
+                    can_delete: true,
+                    transform: {
+                        translation_y: -0.37,
+                        relation_width: 0.9,
+                    },
+                },
+            },
+        ],
+    })
 }
 
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
@@ -209,7 +388,7 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                         </div>
 
                         {data?.status === "lost" && data?.answer && (
-                            <div className={"flex-row gap-1 mx-auto py-8"}>
+                            <div className={"flex-row gap-1 mx-auto pt-8"}>
                                 {data.answer
                                     ?.toUpperCase()
                                     .split("")
@@ -218,6 +397,15 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                                     ))}
                             </div>
                         )}
+
+                        <div className={"mx-auto pt-4"}>
+                            <Button
+                                size={"l"}
+                                before={<Icon24ShareOutline />}
+                                children={"Поделиться результатом"}
+                                onClick={() => generateStory(data)}
+                            />
+                        </div>
 
                         {/* <div className={"py-3 mx-auto"}>
                             <Button
