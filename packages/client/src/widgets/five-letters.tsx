@@ -142,20 +142,6 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
         blob: background,
         stickers: [
             {
-                sticker_type: "native",
-                sticker: {
-                    action_type: "text",
-                    action: {
-                        text: "Сможешь угадать слово?",
-                        alignment: "center",
-                    },
-                    transform: {
-                        translation_y: -0.37,
-                        relation_width: 0.8,
-                    },
-                },
-            },
-            {
                 sticker_type: "renderable",
                 sticker: {
                     original_width: 974,
@@ -167,24 +153,24 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                                 title: "Играть!",
                                 link: "https://vk.com/app51843841#/fiveLetters",
                             },
-                            // clickable_area: [
-                            //     {
-                            //         x: 0,
-                            //         y: 0,
-                            //     },
-                            //     {
-                            //         x: 9999,
-                            //         y: 0,
-                            //     },
-                            //     {
-                            //         x: 9999,
-                            //         y: 9999,
-                            //     },
-                            //     {
-                            //         x: 0,
-                            //         y: 9999,
-                            //     },
-                            // ],
+                            clickable_area: [
+                                {
+                                    x: 0,
+                                    y: 0,
+                                },
+                                {
+                                    x: 9999,
+                                    y: 0,
+                                },
+                                {
+                                    x: 9999,
+                                    y: 9999,
+                                },
+                                {
+                                    x: 0,
+                                    y: 9999,
+                                },
+                            ],
                         },
                     ],
                     content_type: "image",
@@ -205,6 +191,18 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                     transform: {
                         relation_width: 0.71,
                         translation_y: 0.21,
+                    },
+                },
+            },
+            {
+                sticker_type: "renderable",
+                sticker: {
+                    content_type: "image",
+                    blob: await imageUrlToBase64("/fiveLetters/text.png"),
+                    can_delete: true,
+                    transform: {
+                        translation_y: -0.37,
+                        relation_width: 0.9,
                     },
                 },
             },
