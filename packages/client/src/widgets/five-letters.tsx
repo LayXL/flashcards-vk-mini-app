@@ -154,19 +154,19 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                             },
                             clickable_area: [
                                 {
-                                    x: 0,
-                                    y: 0,
+                                    x: -9999,
+                                    y: -9999,
                                 },
                                 {
                                     x: 9999,
-                                    y: 0,
+                                    y: -9999,
                                 },
                                 {
                                     x: 9999,
                                     y: 9999,
                                 },
                                 {
-                                    x: 0,
+                                    x: -9999,
                                     y: 9999,
                                 },
                             ],
