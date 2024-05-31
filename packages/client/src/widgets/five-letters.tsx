@@ -171,16 +171,16 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
                                     y: 0,
                                 },
                                 {
-                                    x: 987,
+                                    x: 9999,
                                     y: 0,
                                 },
                                 {
-                                    x: 987,
-                                    y: 1888,
+                                    x: 9999,
+                                    y: 9999,
                                 },
                                 {
                                     x: 0,
-                                    y: 1888,
+                                    y: 9999,
                                 },
                             ],
                         },
