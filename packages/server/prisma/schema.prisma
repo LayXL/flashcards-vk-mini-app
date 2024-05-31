@@ -39,6 +39,7 @@ model User {
   FiveLetterWordOfDayUserProgress FiveLetterWordOfDayUserProgress[]
   ReportOnTranslation             ReportOnTranslation[]
   UserViewedStory                 UserViewedStory[]
+  UserAction                      UserAction[]
 }
 
 model Translation {
@@ -364,4 +365,13 @@ model UserViewedStory {
   // story Story @relation(fields: [storyId], references: [id])
 
   @@id([userId, storyId])
+}
+
+model UserAction {
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+
+  @@id([createdAt, userId])
 }

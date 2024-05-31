@@ -212,6 +212,8 @@ const generateStory = async (data: RouterOutput["fiveLetters"]["getTodayAttempts
 export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
     const [hideLetters, setHideLetters] = useState(false)
 
+    const { mutate: createFiveLettersStory } = trpc.stats.createFiveLettersStory.useMutation()
+
     const [isStoryBoxLoading, setIsStoryBoxLoading] = useState(false)
 
     const modal = useModal()
@@ -413,24 +415,11 @@ export const FiveLetters = ({ onClose }: { onClose: () => void }) => {
                                 onClick={async () => {
                                     setIsStoryBoxLoading(true)
                                     await generateStory(data)
+                                    createFiveLettersStory()
                                     setIsStoryBoxLoading(false)
                                 }}
                             />
                         </div>
-
-                        {/* <div className={"py-3 mx-auto"}>
-                            <Button
-                                size={"l"}
-                                mode={"secondary"}
-                                onClick={() => {
-                                    bridge.send("VKWebAppShare", {
-                                        link: "https://vk.com",
-                                    })
-                                }}
-                                before={<Icon28ShareOutline />}
-                                children={"Поделиться с друзьями"}
-                            />
-                        </div> */}
                     </Div>
                 )}
 

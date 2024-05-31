@@ -94,4 +94,12 @@ export const stats = router({
             },
         }
     }),
+    createFiveLettersStory: privateProcedure.mutation(async ({ ctx }) => {
+        return await ctx.prisma.userAction.create({
+            data: {
+                action: "fiveLettersStoryCreated",
+                userId: ctx.userId,
+            },
+        })
+    }),
 })
