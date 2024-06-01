@@ -1,4 +1,4 @@
-import { CardScroll, Div } from "@vkontakte/vkui"
+import { CardScroll } from "@vkontakte/vkui"
 import { createElement } from "react"
 import { storiesContent } from "../entities/story/lib/content"
 import { StoryCard } from "../entities/story/ui/story-card"
@@ -9,7 +9,7 @@ export const StoriesFeed = () => {
 
     return (
         <CardScroll>
-            <Div className={"px-0 flex gap-3"}>
+            <div className={"flex gap-3"}>
                 {isLoading &&
                     Array.from({ length: 6 }).map((_, i) => (
                         <div className={"size-24 bg-secondary rounded-xl animate-pulse"} key={i} />
@@ -25,7 +25,7 @@ export const StoriesFeed = () => {
                         previewUrl={story.previewUrl}
                     />
                 ))}
-            </Div>
+            </div>
         </CardScroll>
     )
 }
