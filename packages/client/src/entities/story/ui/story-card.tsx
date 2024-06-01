@@ -31,7 +31,7 @@ export const StoryCard = ({ id, title, content, previewUrl, isViewed }: StoryCar
                     if (!isViewed) mutate({ id })
                 }}
                 className={cn(
-                    "rounded-xl p-[2px] bg-vk-accent size-24 box-border cursor-pointer",
+                    "rounded-xl p-[2px] bg-vk-accent size-24 box-border cursor-pointer press-scale",
                     isViewed && "bg-[#818C99]"
                 )}
             >

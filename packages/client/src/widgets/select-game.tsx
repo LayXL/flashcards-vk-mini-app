@@ -18,7 +18,6 @@ import { GetAdditionalAttempt } from "./get-additional-attempt"
 import { Leaderboard } from "./leaderboard"
 import { PlayDefaultGame } from "./play-default-game"
 import { PlayRankedGame } from "./play-ranked-game"
-import { StoriesFeed } from "./stories-feed"
 
 const AnimatedImage = (props: { src: string } & HTMLMotionProps<"img">) => {
     const [imageLoaded, setImageLoaded] = useState(false)
@@ -71,8 +70,6 @@ export const SelectGame = ({ openFiveLetters }: { openFiveLetters?: boolean }) =
     return (
         <>
             <Group>
-                <StoriesFeed />
-
                 <Div
                     className={
                         "max-w-[390px] md:grid-cols-6 md:max-w-[960px] mx-auto grid grid-cols-3 gap-x-3 pt-0"
