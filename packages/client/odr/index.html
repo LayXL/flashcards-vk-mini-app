@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, viewport-fit=cover">
+    <title>VK Mini App</title>
+
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <script>
+        vkBridge.send('VKWebAppInit');
+    </script>
+
+</head>
+
+<body>
+    <div id="root" class="vkui__root"></div>
+
+    <script type="module" crossorigin src="https://learning.layxl.dev/assets/index.js"></script>
+    <link rel="stylesheet" crossorigin href="https://learning.layxl.dev/assets/index.css">
+</body>
+
+</html>
