@@ -133,7 +133,11 @@ export const Leaderboard = ({ onClose, minimized, defaultTab }: LeaderboardProps
                     .map(({ user, points }, i) => (
                         <RatingUserCard
                             key={user.id}
-                            avatar={getSuitableAvatarUrl(user.avatarUrls, 64)}
+                            avatar={
+                                user.avatarUrls
+                                    ? getSuitableAvatarUrl(user.avatarUrls, 64)
+                                    : undefined
+                            }
                             name={user.fullName}
                             points={points}
                             place={i + 4}
