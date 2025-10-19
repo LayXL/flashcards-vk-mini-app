@@ -23,6 +23,4 @@ WORKDIR /usr/local/packages/server
 
 RUN tsc
 
-RUN npx prisma migrate deploy
-
-CMD ["node", "./dist/server.js"]
+CMD npx prisma migrate deploy && node ./dist/server.js
