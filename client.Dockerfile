@@ -4,9 +4,6 @@ FROM node:20-alpine AS build
 # Set the working directory
 WORKDIR /app
 
-# Install yarn globally
-RUN npm install -g yarn
-
 # Copy package.json and yarn.lock to install dependencies
 COPY package.json yarn.lock ./
 
