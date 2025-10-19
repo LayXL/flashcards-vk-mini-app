@@ -13,11 +13,8 @@ RUN bun install
 # Copy the rest of the application source code
 COPY . .
 
-#
-WORKDIR /app/packages/client
-
 # Build the application
-RUN bun run build
+RUN cd packages/client && bun run build
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
