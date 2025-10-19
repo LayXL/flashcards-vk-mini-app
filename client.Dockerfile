@@ -1,20 +1,23 @@
 # Stage 1: Build the application
-FROM oven/bun:1 AS build
+FROM node:20-alpine AS build
 
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and bun.lockb to install dependencies
-COPY package.json ./
+# Install yarn globally
+RUN npm install -g yarn
 
-# Install dependencies
-RUN bun install
+# Copy package.json and yarn.lock to install dependencies
+COPY package.json yarn.lock ./
+
+# Install dependencies with Yarn
+RUN yarn install --frozen-lockfile
 
 # Copy the rest of the application source code
 COPY . .
 
-# Build the application
-RUN cd packages/client && bun run build
+# Build the application (adjust to your actual build script name if needed)
+RUN cd packages/client && yarn build
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
