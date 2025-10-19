@@ -8,6 +8,8 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 COPY packages/client/package.json ./packages/client/
+COPY packages/shared/package.json ./packages/shared/
+COPY packages/server/package.json ./packages/server/
 
 # Install dependencies with Yarn
 RUN yarn install --frozen-lockfile
