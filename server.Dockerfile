@@ -1,10 +1,5 @@
-FROM node:slim
+FROM node:22.4-slim
 WORKDIR /usr/local
-
-# Try to install openssl1.1 compatibility
-RUN apk update \
-  && apk add --no-cache openssl1.1-compat \
-  || : # If not found, fail silently (try next step)
 
 COPY package.json .
 
