@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:slim
 WORKDIR /usr/local
 
 # Try to install openssl1.1 compatibility
