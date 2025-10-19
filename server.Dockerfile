@@ -1,6 +1,8 @@
 FROM node:22.4-slim
 WORKDIR /usr/local
 
+RUN apt-get update -y && apt-get install -y openssl
+
 COPY package.json .
 
 RUN mkdir packages
